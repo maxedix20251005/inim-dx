@@ -4,67 +4,342 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio | Professional Synergy</title>
+    <title>inim-dx | Fragrance Experience Landing Page</title>
     <link rel="stylesheet" href="css/style.css">
     <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&family=Noto+Sans+JP:wght@300;500&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
         rel="stylesheet">
 </head>
 
 <body>
-    <header>
-        <nav>
-            <div class="logo">PORTFOLIO</div>
-            <ul>
-                <li><a href="#about">About</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="works.html">Works</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+    <button class="hamburger" type="button" aria-label="メニューを開く" aria-expanded="false" aria-controls="sidebar">
+        <span></span><span></span><span></span>
+    </button>
 
-    <main>
-        <section class="hero">
-            <div class="hero-content">
-                <h1>Logic & Sensation</h1>
-                <p>PMO / Developer / Creative Curator</p>
-                <div class="scroll-down"></div>
-            </div>
-        </section>
+    <div class="page-shell">
+        <aside class="sidebar" id="sidebar">
+            <a class="sidebar__brand" href="#top" aria-label="inim-dx top">
+                <span class="sidebar__brand-note">Fragrance Experience Platform</span>
+                <span class="sidebar__brand-title">inim-dx</span>
+            </a>
 
-        <section id="about" class="section">
-            <div class="container">
-                <h2>About</h2>
-                <p>システム開発からPMO、そして音楽や香りといった感性の領域まで。<br>
-                    論理的な思考と、五感を刺激する創造性を融合させたソリューションを提供します。</p>
-            </div>
-        </section>
+            <nav class="sidebar__nav" aria-label="サイドナビゲーション">
+                <div class="sidebar__group">
+                    <p class="sidebar__label">ブランド</p>
+                    <a href="#about">ブランドストーリー</a>
+                    <a href="#hero-banner">世界観</a>
+                    <a href="#contact">お問い合わせ</a>
+                </div>
 
-        <section id="services" class="section bg-light">
-            <div class="container">
-                <h2>Services</h2>
-                <div class="card-grid">
-                    <div class="card">
-                        <h3>PMO & Dev</h3>
-                        <p>Java/Web技術を駆使したシステム開発と、緻密なプロジェクト管理。</p>
-                    </div>
-                    <div class="card">
-                        <h3>Musical Instruments</h3>
-                        <p>楽器店経営で培った、音へのこだわりとマーケット視点。</p>
-                    </div>
-                    <div class="card">
-                        <h3>Fragrance Design</h3>
-                        <p>感性を形にする、香りのブランディングとウェブ表現。</p>
+                <div class="sidebar__group">
+                    <p class="sidebar__label">アイテム</p>
+                    <a href="#new-arrivals">ハンドクリーム</a>
+                    <a href="#new-arrivals">アロマオイル</a>
+                    <a href="#new-arrivals">ディフューザー</a>
+                    <a href="#pickup">ギフトセット</a>
+                </div>
+
+                <div class="sidebar__group">
+                    <p class="sidebar__label">香りから探す</p>
+                    <a href="#pickup">Calm</a>
+                    <a href="#pickup">Refresh</a>
+                    <a href="#pickup">Focus</a>
+                </div>
+
+                <div class="sidebar__group">
+                    <p class="sidebar__label">香りと遊ぶ</p>
+                    <a href="#experience">香游について</a>
+                    <a href="#journey">体験の流れ</a>
+                    <a href="#hero-banner">体験を始める</a>
+                </div>
+
+                <div class="sidebar__group">
+                    <p class="sidebar__label">店舗・ガイド</p>
+                    <a href="#stores">実店舗</a>
+                    <a href="#footer-links">ショッピングガイド</a>
+                    <a href="#footer-links">マイアカウント</a>
+                </div>
+            </nav>
+        </aside>
+
+        <div class="page-content">
+            <header class="site-header">
+                <div class="notice-bar">
+                    <p>配送・返品・お支払いに関する最新情報をご案内しています。</p>
+                    <div class="notice-bar__actions">
+                        <a href="#footer-links">ショッピングガイド</a>
+                        <a href="#contact">お問い合わせ</a>
                     </div>
                 </div>
-            </div>
-        </section>
-    </main>
 
-    <footer>
-        <p>&copy; 2026 Portfolio. All Rights Reserved.</p>
-    </footer>
+                <div class="utility-header">
+                    <a class="utility-header__brand" href="#top">inim-dx top page</a>
+                    <div class="utility-header__tools">
+                        <a href="#pickup">検索</a>
+                        <a href="#footer-links">マイアカウント</a>
+                        <a href="#contact">カート</a>
+                    </div>
+                </div>
+
+                <nav class="category-nav" aria-label="グローバルナビゲーション">
+                    <a href="#about">ブランド</a>
+                    <a href="#new-arrivals">アイテム</a>
+                    <a href="#pickup">香りから探す</a>
+                    <a href="#experience">香りと遊ぶ！香游</a>
+                    <a href="#journal">記事</a>
+                    <a href="#pickup">Sale</a>
+                    <a href="#stores">実店舗</a>
+                </nav>
+
+                <div class="news-strip">
+                    <span>Latest</span>
+                    <p>デジタル調香体験からワークショップ予約までをつなぐ新しいトップページ構成を公開しました。</p>
+                </div>
+            </header>
+
+            <main>
+                <section class="hero" id="top">
+                    <div class="hero-slider" aria-hidden="true">
+                        <div class="hero-slider__slide is-active">
+                            <img src="images/slider/others_ (4).png" alt="">
+                        </div>
+                        <div class="hero-slider__slide">
+                            <img src="images/slider/others_ (6).png" alt="">
+                        </div>
+                        <div class="hero-slider__slide">
+                            <img src="images/slider/others_ (9).png" alt="">
+                        </div>
+                    </div>
+                    <div class="hero__overlay"></div>
+                    <div class="hero__content">
+                        <p class="hero__eyebrow">Digital Perfumery Experience</p>
+                        <h1>色と粒子で、あなたの香りを立ち上げる。</h1>
+                        <p class="hero__lead">TOP からデジタル調香体験へ、そして実店舗での完成体験へ。inim-dx が香りの入り口を設計します。</p>
+                        <div class="hero__actions">
+                            <a class="button button--primary" href="#experience">体験する</a>
+                            <a class="button button--ghost" href="#journey">体験の流れを見る</a>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="experience-banner" id="hero-banner">
+                    <div class="experience-banner__content">
+                        <p class="section-kicker">Experience Banner</p>
+                        <h2>香りと遊ぶ！香游</h2>
+                        <p>色 × 粒子 × サウンドで、感覚的に香りを編集するデジタル調香体験。科学に寄せすぎず、詩的で直感的なUIへ誘導します。</p>
+                        <div class="experience-banner__actions">
+                            <a class="button button--primary" href="#experience">体験する</a>
+                            <a class="button button--secondary" href="#journey">体験の流れを見る</a>
+                        </div>
+                    </div>
+                    <div class="experience-banner__visual">
+                        <img src="images/others/others_ (14).png" alt="香り体験のイメージ">
+                    </div>
+                </section>
+
+                <section class="journey section" id="journey">
+                    <div class="section-heading">
+                        <p class="section-kicker">Experience Flow</p>
+                        <h2>体験の流れ</h2>
+                    </div>
+                    <div class="journey__grid">
+                        <article class="journey-card">
+                            <span>STEP 1</span>
+                            <h3>デジタル調香</h3>
+                            <p>ムード、カラー、広がりを操作し、視覚で香りの個性を立ち上げます。</p>
+                        </article>
+                        <article class="journey-card">
+                            <span>STEP 2</span>
+                            <h3>実店舗体験</h3>
+                            <p>オンラインで描いた香りを持って店舗へ。感覚と対話で微調整します。</p>
+                        </article>
+                        <article class="journey-card">
+                            <span>STEP 3</span>
+                            <h3>香り完成</h3>
+                            <p>自分だけの香りとして仕上げ、ギフトや定番アイテムへ展開します。</p>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="section" id="pickup">
+                    <div class="section-heading">
+                        <p class="section-kicker">Pick Up</p>
+                        <h2>注目の体験とプロダクト</h2>
+                    </div>
+                    <div class="pickup-grid">
+                        <article class="feature-card feature-card--large">
+                            <img src="images/Workshop/Workshop_ (4).png" alt="ワークショップ">
+                            <div class="feature-card__body">
+                                <h3>Workshop Reservation</h3>
+                                <p>デジタル体験の結果を持ち込んで、実店舗で香りを完成させる予約導線。</p>
+                            </div>
+                        </article>
+                        <article class="feature-card">
+                            <img src="images/Diffuser/Fragrance diffuser_1.png" alt="ディフューザー">
+                            <div class="feature-card__body">
+                                <h3>Diffuser Collection</h3>
+                                <p>空間に香りの余韻を残すシグネチャーアイテム。</p>
+                            </div>
+                        </article>
+                        <article class="feature-card">
+                            <img src="images/Hand cream_1/image/Hand cream_image_1.png" alt="ハンドクリーム">
+                            <div class="feature-card__body">
+                                <h3>Hand Care Ritual</h3>
+                                <p>日常に取り入れやすいケア体験として提案する定番シリーズ。</p>
+                            </div>
+                        </article>
+                        <article class="feature-card">
+                            <img src="images/Aroma oil/image/Aroma oil_image_ (1).png" alt="アロマオイル">
+                            <div class="feature-card__body">
+                                <h3>Aroma Oil Notes</h3>
+                                <p>ノートごとのキャラクターを視覚的に比較できる香りの入口。</p>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="cta-panel" id="experience">
+                    <div class="cta-panel__content">
+                        <p class="section-kicker">Digital Blend</p>
+                        <h2>あなたの香りを“見て・聴いて”立ち上げる</h2>
+                        <p>トップページからそのままデジタル調香ページへ遷移し、サウンドとビジュアルを伴った体験導線を設計します。</p>
+                    </div>
+                    <a class="button button--primary" href="#stores">実店舗体験へつなぐ</a>
+                </section>
+
+                <section class="section" id="new-arrivals">
+                    <div class="section-heading">
+                        <p class="section-kicker">New Arrivals</p>
+                        <h2>新着商品</h2>
+                    </div>
+                    <div class="product-grid">
+                        <article class="product-card">
+                            <img src="images/Hand cream_2/Hand cream2_item_ (1).png" alt="新作ハンドクリーム">
+                            <h3>Hand Cream / Citrus Veil</h3>
+                        </article>
+                        <article class="product-card">
+                            <img src="images/Hand cream_2/Hand cream2_item_ (5).png" alt="新作ハンドクリーム">
+                            <h3>Hand Cream / Soft Bloom</h3>
+                        </article>
+                        <article class="product-card">
+                            <img src="images/Diffuser/Fragrance diffuser_2.png" alt="新作ディフューザー">
+                            <h3>Diffuser / Quiet Amber</h3>
+                        </article>
+                        <article class="product-card">
+                            <img src="images/Aroma oil/item/Aroma oil_item_ (10).png" alt="新作アロマオイル">
+                            <h3>Aroma Oil / Clear Air</h3>
+                        </article>
+                        <article class="product-card">
+                            <img src="images/Aroma oil/item/Aroma oil_item_ (14).png" alt="新作アロマオイル">
+                            <h3>Aroma Oil / Night Tone</h3>
+                        </article>
+                        <article class="product-card">
+                            <img src="images/others/others_ (11).png" alt="ギフトセット">
+                            <h3>Gift Set / Discovery Box</h3>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="section section--split" id="about">
+                    <div class="section-heading">
+                        <p class="section-kicker">About</p>
+                        <h2>ブランドの考え方</h2>
+                    </div>
+                    <div class="split-layout">
+                        <div class="split-layout__copy">
+                            <p>inim-dx は、香りを買う前に「自分で変化をつくる感覚」を体験させるためのブランド設計を行います。EC と実店舗を分断せず、デジタルで興味を立ち上げ、現地で完成させる一連の体験をつなぎます。</p>
+                            <p>トップページはその入口として、世界観、体験導線、商品訴求、予約アクションが自然につながる構成にしています。</p>
+                        </div>
+                        <div class="split-layout__panel" id="journal">
+                            <h3>Journal / Notes</h3>
+                            <ul class="simple-list">
+                                <li>香りの視覚化に関するUI研究</li>
+                                <li>ワークショップ設計の裏側</li>
+                                <li>季節別の香りセレクション</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="stores section" id="stores">
+                    <div class="section-heading">
+                        <p class="section-kicker">Store Experience</p>
+                        <h2>実店舗で仕上げる</h2>
+                    </div>
+                    <div class="stores__panel">
+                        <p>東京・横浜の体験店舗では、デジタル調香で作成した結果をもとにスタッフが香りの最終調整をサポートします。</p>
+                        <div class="stores__meta">
+                            <span>Tokyo Atelier</span>
+                            <span>Yokohama Lab</span>
+                            <span>Workshop Reservation Available</span>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <footer class="site-footer" id="contact">
+                <div class="site-footer__grid" id="footer-links">
+                    <div>
+                        <p class="site-footer__title">Store Info</p>
+                        <p>inim-dx flagship atelier<br>Fragrance workshop and consultation by reservation.</p>
+                    </div>
+                    <div>
+                        <p class="site-footer__title">Guide</p>
+                        <a href="#top">Top</a>
+                        <a href="#footer-links">配送・送料について</a>
+                        <a href="#footer-links">返品について</a>
+                        <a href="#footer-links">お支払い方法について</a>
+                    </div>
+                    <div>
+                        <p class="site-footer__title">Support</p>
+                        <a href="#footer-links">プライバシーポリシー</a>
+                        <a href="#footer-links">メルマガ登録・解除</a>
+                        <a href="#footer-links">RSS / ATOM</a>
+                    </div>
+                    <div>
+                        <p class="site-footer__title">Account</p>
+                        <a href="#footer-links">マイアカウント</a>
+                        <a href="#footer-links">会員登録</a>
+                        <a href="#footer-links">ログイン</a>
+                        <a href="#contact">お問い合わせ</a>
+                    </div>
+                </div>
+                <p class="site-footer__copy">inim-dx landing page inspired by the referenced project wireframe.</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        (() => {
+            const slides = document.querySelectorAll('.hero-slider__slide');
+            const sidebar = document.querySelector('.sidebar');
+            const hamburger = document.querySelector('.hamburger');
+
+            if (slides.length) {
+                let activeIndex = 0;
+
+                window.setInterval(() => {
+                    slides[activeIndex].classList.remove('is-active');
+                    activeIndex = (activeIndex + 1) % slides.length;
+                    slides[activeIndex].classList.add('is-active');
+                }, 3000);
+            }
+
+            if (sidebar && hamburger) {
+                hamburger.addEventListener('click', () => {
+                    const isOpen = sidebar.classList.toggle('is-open');
+                    hamburger.setAttribute('aria-expanded', String(isOpen));
+                });
+
+                sidebar.querySelectorAll('a').forEach((link) => {
+                    link.addEventListener('click', () => {
+                        sidebar.classList.remove('is-open');
+                        hamburger.setAttribute('aria-expanded', 'false');
+                    });
+                });
+            }
+        })();
+    </script>
 </body>
 
 </html>
