@@ -7,6 +7,52 @@
     <title>Workshop | inim-dx</title>
     <link rel="stylesheet" href="../css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .sticky-note-wrap {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: -0.75rem;
+            margin-bottom: 2.5rem;
+            padding: 0 1.5rem;
+        }
+
+        .sticky-note {
+            max-width: 320px;
+            padding: 1.2rem 1.25rem 1.4rem;
+            background: linear-gradient(180deg, #fff7a8 0%, #f5e27f 100%);
+            color: #4b3b10;
+            border: 1px solid rgba(120, 96, 12, 0.18);
+            border-radius: 0.35rem;
+            box-shadow: 0 14px 30px rgba(85, 68, 14, 0.18);
+            transform: rotate(1.5deg);
+        }
+
+        .sticky-note::before {
+            content: "";
+            display: block;
+            width: 86px;
+            height: 20px;
+            margin: -1.95rem auto 0.8rem;
+            background: rgba(255, 255, 255, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 0.2rem;
+            transform: rotate(-7deg);
+        }
+
+        .sticky-note__label {
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .sticky-note p {
+            margin: 0;
+            line-height: 1.7;
+        }
+    </style>
 </head>
 
 <body>
@@ -215,6 +261,13 @@
                         </div>
                     </div>
                 </section>
+
+                <div class="sticky-note-wrap" aria-label="今後検討したい内容のメモ">
+                    <aside class="sticky-note">
+                        <span class="sticky-note__label">Memo</span>
+                        <p>オンラインショップ購入者にはワークショップ割引クーポンを配布、ワークショップ参加者にはオンラインショップ用クーポンを配布する案を今後検討。</p>
+                    </aside>
+                </div>
 
                 <section class="cta-panel workshop-reserve" id="reserve">
                     <div class="cta-panel__content">
