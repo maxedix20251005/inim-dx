@@ -4,699 +4,119 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>prototype12-experience-layout-v6</title>
-  <style>
-    :root {
-      --bg: #f3f3f3;
-      --line: #c9c9c3;
-      --text: #2d2d2d;
-      --muted: #6f7681;
-      --accent: #8fd8df;
-      --button: #f0cf62;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      height: 100%;
-    }
-
-    body {
-      margin: 0;
-      background:
-        linear-gradient(rgba(0, 0, 0, .04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 0, 0, .04) 1px, transparent 1px),
-        var(--bg);
-      background-size: 24px 24px, 24px 24px, auto;
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    .app {
-      min-height: 100vh;
-      display: grid;
-      grid-template-rows: auto 1fr;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      padding: 18px 28px;
-      border-bottom: 1px solid #d8d8d3;
-      background: rgba(255, 255, 255, .62);
-      backdrop-filter: blur(8px);
-    }
-
-    .title {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: .02em;
-    }
-
-    .subhead {
-      color: var(--muted);
-      font-size: 13px;
-      margin-top: 4px;
-    }
-
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-shrink: 0;
-    }
-
-    .sound-pill {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 16px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, .72);
-      position: relative;
-      transition: box-shadow .22s ease, background .22s ease;
-    }
-
-    .sound-pill.active {
-      box-shadow:
-        0 0 0 1px rgba(143, 216, 223, .45) inset,
-        0 0 0 6px rgba(143, 216, 223, .10),
-        0 10px 20px rgba(0, 0, 0, .05);
-      background: rgba(255, 255, 255, .86);
-    }
-
-    .toggle {
-      position: relative;
-      width: 52px;
-      height: 30px;
-      border-radius: 999px;
-      background: #ddd;
-      cursor: pointer;
-      transition: .2s ease;
-    }
-
-    .toggle::after {
-      content: "";
-      position: absolute;
-      top: 3px;
-      left: 3px;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: white;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, .15);
-      transition: .2s ease;
-    }
-
-    .toggle.on {
-      background: #a6dfe5;
-    }
-
-    .toggle.on::after {
-      left: 25px;
-    }
-
-    .exit {
-      padding: 12px 18px;
-      border-radius: 999px;
-      border: 1px solid #8f8f8c;
-      background: transparent;
-      color: #333;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    .num {
-      width: 34px;
-      height: 34px;
-      border-radius: 999px;
-      display: grid;
-      place-items: center;
-      font-weight: 700;
-      color: #22646d;
-      background: linear-gradient(135deg, #a7e8ef, #8fd8df);
-      border: 1px solid #5cc7d0;
-      flex: 0 0 auto;
-    }
-
-    .content {
-      display: grid;
-      grid-template-columns: minmax(0, 1.28fr) minmax(380px, .72fr);
-      gap: 18px;
-      padding: 18px;
-      min-height: calc(100vh - 84px);
-      align-items: start;
-    }
-
-    .experience-pane,
-    .control-pane {
-      min-width: 0;
-    }
-
-    .experience-shell {
-      position: relative;
-      min-height: calc(100vh - 120px);
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 20% 18%, rgba(255, 255, 255, .92), rgba(255, 255, 255, 0) 36%),
-        radial-gradient(circle at 78% 15%, rgba(255, 255, 255, .66), rgba(255, 255, 255, 0) 28%),
-        linear-gradient(180deg, #f9f8f5 0%, #f3f1ec 100%);
-    }
-
-    .overlay-top {
-      position: absolute;
-      top: 18px;
-      left: 18px;
-      right: 18px;
-      z-index: 3;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .overlay-pill {
-      padding: 10px 14px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, .72);
-      backdrop-filter: blur(6px);
-      color: #5f6772;
-      font-size: 13px;
-    }
-
-    .overlay-result {
-      position: absolute;
-      left: 18px;
-      right: 18px;
-      top: 88px;
-      bottom: auto;
-      z-index: 3;
-      max-width: min(760px, calc(100% - 36px));
-      padding: 18px 20px;
-      border-radius: 22px;
-      border: 1px solid rgba(201, 201, 195, 0.72);
-      background: rgba(255, 255, 255, 0.46);
-      backdrop-filter: blur(6px);
-      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.04);
-    }
-
-    .result-kicker {
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: .08em;
-      color: #7c8490;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-
-    .result-title {
-      font-size: 28px;
-      line-height: 1.1;
-      margin: 0 0 10px;
-      font-weight: 700;
-      letter-spacing: .01em;
-    }
-
-    .result-copy {
-      margin: 0 0 14px;
-      font-size: 14px;
-      line-height: 1.8;
-      color: #5f6976;
-      min-height: 0;
-    }
-
-    .result-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px 14px;
-    }
-
-    .result-item {
-      min-width: 0;
-    }
-
-    .result-item.wide {
-      grid-column: 1 / -1;
-    }
-
-    .result-item .label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: .06em;
-      color: #7b8591;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-    }
-
-    .result-item .value {
-      font-size: 13px;
-      line-height: 1.65;
-      color: rgba(52, 57, 64, 0.92);
-      min-width: 0;
-    }
-
-    canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    .control-pane {
-      position: sticky;
-      top: 18px;
-      align-self: start;
-      height: calc(100vh - 36px);
-      min-height: 0;
-    }
-
-    .control-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      height: 100%;
-      min-height: 0;
-    }
-
-    .panel {
-      position: relative;
-      isolation: isolate;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background: transparent;
-      padding: 16px;
-      min-width: 0;
-      overflow: hidden;
-      flex: 0 0 auto;
-    }
-
-    .panel::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      background: rgba(255, 255, 255, .68);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      z-index: -1;
-    }
-
-    /* Prevent intermittent blanking in scrollable notes list (Chrome/Edge GPU bug) */
-    .notes-panel::before {
-      backdrop-filter: none;
-      -webkit-backdrop-filter: none;
-      background: rgba(255, 255, 255, .78);
-    }
-
-    .notes-panel {
-      display: flex;
-      flex-direction: column;
-      flex: 0 0 auto;
-      /* Fixed so FN doesn't resize with other panels.
-         Sized to keep at least ~3 rows (6 cards) visible. */
-      height: 360px;
-      min-height: 0;
-      overflow: hidden;
-    }
-
-    .panel-head {
-      margin-bottom: 12px;
-      flex: 0 0 auto;
-    }
-
-    .panel-title {
-      font-size: 15px;
-      font-weight: 800;
-      color: #4b525c;
-    }
-
-    .panel-sub {
-      font-size: 12px;
-      color: #7a828d;
-      margin-top: 4px;
-    }
-
-    .notes-grid {
-      flex: 1 1 auto;
-      min-height: 0;
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding-right: 6px;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      align-content: start;
-      grid-auto-rows: min-content;
-      transform: translateZ(0);
-      scroll-padding-top: 10px;
-    }
-
-    .fragrance-item,
-    .placeholder-item {
-      display: block;
-      min-width: 0;
-    }
-
-    .fragrance-item input {
-      position: absolute;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .fragrance-card,
-    .placeholder-card {
-      display: grid;
-      grid-template-columns: 42px minmax(0, 1fr);
-      gap: 10px;
-      min-height: 72px;
-      border-radius: 16px;
-      overflow: hidden;
-      width: 100%;
-    }
-
-    .fragrance-card {
-      border: 2px solid transparent;
-      background: rgba(255, 255, 255, .84);
-      cursor: pointer;
-      transition: transform .16s ease, box-shadow .18s ease, border-color .18s ease;
-    }
-
-    .fragrance-card:hover {
-      transform: translateY(-1px);
-    }
-
-    .fragrance-item input:checked + .fragrance-card {
-      border-color: currentColor;
-      box-shadow:
-        0 0 0 4px rgba(255, 255, 255, .68) inset,
-        0 8px 24px rgba(0, 0, 0, .08);
-      transform: translateY(-1px);
-    }
-
-    .placeholder-card {
-      border: 2px dashed #c9c9c3;
-      background: rgba(255, 255, 255, .58);
-    }
-
-    .fragrance-index,
-    .placeholder-index {
-      display: grid;
-      place-items: center;
-      font-size: 14px;
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: .04em;
-    }
-
-    .fragrance-body,
-    .placeholder-body {
-      padding: 9px 10px 9px 0;
-      min-width: 0;
-    }
-
-    .fragrance-name {
-      font-size: 13px;
-      font-weight: 800;
-      line-height: 1.1;
-      margin: 0 0 4px;
-      color: #544a44;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .fragrance-jp {
-      font-size: 11px;
-      color: #6d757f;
-      margin-bottom: 5px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .tag-row {
-      display: flex;
-      gap: 5px;
-      flex-wrap: wrap;
-      min-width: 0;
-    }
-
-    .tag {
-      padding: 3px 7px;
-      border-radius: 999px;
-      font-size: 10px;
-      font-weight: 700;
-      line-height: 1;
-      color: #5b514c;
-      white-space: nowrap;
-    }
-
-    .placeholder-title {
-      font-weight: 800;
-      letter-spacing: .04em;
-      color: #5b5652;
-      margin-bottom: 3px;
-      font-size: 11px;
-      line-height: 1.2;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .placeholder-sub {
-      color: #7d7771;
-      font-size: 10px;
-      line-height: 1.3;
-    }
-
-    .adjust-panel {
-      display: grid;
-      gap: 10px;
-    }
-
-    .adjust-head {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .adjust-title {
-      font-size: 14px;
-      font-weight: 800;
-      color: #4f555e;
-    }
-
-    .active-name {
-      font-size: 14px;
-      color: #6a717c;
-      font-weight: 600;
-      min-width: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .slider-wrap {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 14px;
-      align-items: center;
-      width: 100%;
-    }
-
-    input[type="range"] {
-      width: 100%;
-      min-width: 0;
-      appearance: none;
-      height: 10px;
-      border-radius: 999px;
-      background: #dadada;
-      outline: none;
-      display: block;
-    }
-
-    input[type="range"]::-webkit-slider-thumb {
-      appearance: none;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #4d7fa4;
-      border: none;
-      cursor: pointer;
-    }
-
-    input[type="range"]::-moz-range-thumb {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #4d7fa4;
-      border: none;
-      cursor: pointer;
-    }
-
-    .slider-value {
-      min-width: 36px;
-      text-align: right;
-      font-size: 16px;
-      font-weight: 800;
-      color: #5f6977;
-    }
-
-    .adjust-help {
-      font-size: 12px;
-      line-height: 1.7;
-      color: #75808d;
-    }
-
-    .action-panel {
-      display: grid;
-      gap: 14px;
-    }
-
-    .cta-row {
-      display: grid;
-      grid-template-columns: 1fr 120px;
-      gap: 10px;
-    }
-
-    .cta {
-      min-height: 56px;
-      border-radius: 18px;
-      font-size: 16px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: transform .12s ease, box-shadow .18s ease;
-      padding: 14px 16px;
-      line-height: 1.35;
-    }
-
-    .cta.primary {
-      border: none;
-      background: var(--button);
-      color: #111;
-      box-shadow: inset 0 0 0 2px #1e1e1e;
-    }
-
-    .cta.secondary {
-      border: 1px solid #bbb8b3;
-      background: #f5f5f2;
-      color: #444;
-    }
-
-    .cta:active {
-      transform: translateY(1px);
-    }
-
-    .cta.flash {
-      box-shadow:
-        inset 0 0 0 2px #1e1e1e,
-        0 0 0 6px rgba(240, 207, 98, .18),
-        0 10px 24px rgba(0, 0, 0, .08);
-    }
-
-    .mini-bars {
-      display: grid;
-      gap: 8px;
-      max-height: 220px;
-      overflow: auto;
-      padding-right: 6px;
-      align-content: start;
-    }
-
-    .mini-bar {
-      display: grid;
-      grid-template-columns: 82px minmax(0, 1fr) 36px;
-      gap: 10px;
-      align-items: center;
-      font-size: 12px;
-    }
-
-    .mini-bar-name {
-      color: #5b5b58;
-      font-weight: 700;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .mini-track {
-      height: 10px;
-      border-radius: 999px;
-      background: #ececea;
-      overflow: hidden;
-    }
-
-    .mini-fill {
-      height: 100%;
-      border-radius: 999px;
-    }
-
-    @media (max-width: 1180px) {
-      .content {
-        grid-template-columns: 1fr;
-      }
-
-      .experience-shell {
-        min-height: 62vh;
-      }
-
-      .control-pane {
-        position: static;
-        height: auto;
-      }
-
-      .control-stack {
-        height: auto;
-        max-height: none;
-      }
-
-      .notes-panel {
-        flex: 0 0 auto;
-      }
-
-      .notes-grid {
-        min-height: 240px;
-      }
-    }
-
-    @media (max-width: 720px) {
-      .topbar {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .top-actions {
-        justify-content: space-between;
-      }
-
-      .notes-grid,
-      .result-grid,
-      .cta-row {
-        grid-template-columns: 1fr;
-      }
-
-      .result-item.wide {
-        grid-column: auto;
-      }
-
-      .overlay-result {
-        max-width: none;
-      }
-    }
-  </style>
+  <title>Smart Scent Design | inim-dx</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/smart-scent-design-app.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
-  <div class="app">
+  <button class="hamburger" type="button" aria-label="メニューを開く" aria-expanded="false" aria-controls="sidebar">
+    <span></span><span></span><span></span>
+  </button>
+
+  <div class="page-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="sidebar__brand" href="../index.html" aria-label="inim-dx top">
+        <img class="sidebar__brand-logo" src="../images/logo/logo-inim-dx.jpg" alt="inim-dx logo">
+        <span class="sidebar__brand-note">Fragrance Experience Platform</span>
+      </a>
+
+      <nav class="sidebar__nav" aria-label="サイドナビゲーション">
+        <details class="sidebar__group sidebar__group--drilldown">
+          <summary class="sidebar__summary">ブランド</summary>
+          <div class="sidebar__links">
+            <a href="../index.html#about">ブランドストーリー</a>
+            <a href="../index.html#hero-banner">世界観</a>
+            <a href="../index.html#contact">お問い合わせ</a>
+          </div>
+        </details>
+
+        <details class="sidebar__group sidebar__group--drilldown">
+          <summary class="sidebar__summary">アイテム</summary>
+          <div class="sidebar__links">
+            <a href="../index.html#new-arrivals">ハンドクリーム</a>
+            <a href="../index.html#new-arrivals">アロマオイル</a>
+            <a href="../index.html#new-arrivals">ディフューザー</a>
+            <a href="../index.html#pickup">ギフトセット</a>
+          </div>
+        </details>
+
+        <details class="sidebar__group sidebar__group--drilldown">
+          <summary class="sidebar__summary">香りから探す</summary>
+          <div class="sidebar__links">
+            <a href="../index.html#pickup">Calm</a>
+            <a href="../index.html#pickup">Refresh</a>
+            <a href="../index.html#pickup">Focus</a>
+          </div>
+        </details>
+
+        <details class="sidebar__group sidebar__group--drilldown" open>
+          <summary class="sidebar__summary">香りと遊ぶ</summary>
+          <div class="sidebar__links">
+            <a href="./workshop.html">香りで遊ぶ！香游</a>
+            <a href="./smart-scent-design.html">Smart Scent Design</a>
+            <a href="../index.html#journey">体験の流れ</a>
+            <a href="../index.html#stores">実店舗体験へ</a>
+          </div>
+        </details>
+
+        <details class="sidebar__group sidebar__group--drilldown">
+          <summary class="sidebar__summary">実店舗</summary>
+          <div class="sidebar__links">
+            <a href="../index.html#stores">浅草店</a>
+            <a href="../index.html#stores">柴又店</a>
+            <a href="../index.html#stores">ソラマチ店</a>
+          </div>
+        </details>
+
+        <div class="sidebar__standalone">
+          <a href="../index.html#footer-links">ショッピングガイド</a>
+          <a href="../index.html#footer-links">マイアカウント</a>
+          <a href="../index.html#footer-links">会員登録</a>
+          <a href="../index.html#footer-links">ログイン</a>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="page-content">
+      <header class="site-header">
+        <div class="notice-bar">
+          <p>デジタル調香から実店舗体験へつなぐフレグランス体験ページです。</p>
+          <div class="notice-bar__actions">
+            <a href="../index.html#footer-links">ショッピングガイド</a>
+            <a href="../index.html#contact">お問い合わせ</a>
+          </div>
+        </div>
+
+        <div class="utility-header">
+          <a class="utility-header__brand" href="../index.html#top">inim-dx smart scent design</a>
+          <div class="utility-header__tools">
+            <a href="../index.html#pickup">検索</a>
+            <a href="../index.html#footer-links">マイアカウント</a>
+            <a href="../index.html#contact">カート</a>
+          </div>
+        </div>
+
+        <nav class="category-nav" aria-label="グローバルナビゲーション">
+          <a href="../index.html#about">ブランド</a>
+          <a href="../index.html#new-arrivals">アイテム</a>
+          <a href="../index.html#pickup">香りから探す</a>
+          <a href="./workshop.html">香りと遊ぶ</a>
+          <a href="../index.html#stores">実店舗</a>
+        </nav>
+
+        <div class="news-strip">
+          <span>Latest</span>
+          <p>色・粒子・サウンドを使って、自分の香りを視覚的に編集するデジタル調香ページです。</p>
+        </div>
+      </header>
+
+      <main>
+        <section class="experience-page">
+          <div class="app">
     <div class="topbar">
       <div>
         <div class="title">香りと遊ぶ！ 香游（デジタル調香）</div>
@@ -704,11 +124,9 @@
       </div>
       <div class="top-actions">
         <div id="soundPill" class="sound-pill">
-          <div class="num">4</div>
           <div style="font-weight:700">Sound</div>
           <div id="soundToggle" class="toggle" aria-label="sound toggle"></div>
         </div>
-        <button class="exit">Exit</button>
       </div>
     </div>
 
@@ -791,9 +209,87 @@
         </div>
       </aside>
     </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="site-footer__grid" id="footer-links">
+          <div>
+            <p class="site-footer__title">Store Info</p>
+            <p>inim-dx flagship atelier<br>Fragrance workshop and consultation by reservation.</p>
+          </div>
+          <div>
+            <p class="site-footer__title">Guide</p>
+            <a href="../index.html#top">Top</a>
+            <a href="../index.html#footer-links">配送・送料について</a>
+            <a href="../index.html#footer-links">返品について</a>
+            <a href="../index.html#footer-links">お支払い方法について</a>
+          </div>
+          <div>
+            <p class="site-footer__title">Support</p>
+            <a href="../index.html#footer-links">プライバシーポリシー</a>
+            <a href="../index.html#footer-links">メルマガ登録・解除</a>
+            <a href="../index.html#footer-links">RSS / ATOM</a>
+          </div>
+          <div>
+            <p class="site-footer__title">Account</p>
+            <a href="../index.html#footer-links">マイアカウント</a>
+            <a href="../index.html#footer-links">会員登録</a>
+            <a href="../index.html#footer-links">ログイン</a>
+            <a href="../index.html#contact">お問い合わせ</a>
+          </div>
+        </div>
+        <p class="site-footer__copy">inim-dx smart scent design page aligned to the project wireframe and design guide.</p>
+      </footer>
+    </div>
   </div>
 
   <script src="https://unpkg.com/tone@14.8.49/build/Tone.js"></script>
+  <script>
+    (() => {
+      const sidebar = document.querySelector('.sidebar');
+      const hamburger = document.querySelector('.hamburger');
+      const globalNav = document.querySelector('.category-nav');
+
+      if (sidebar && hamburger) {
+        hamburger.addEventListener('click', () => {
+          const isOpen = sidebar.classList.toggle('is-open');
+          hamburger.setAttribute('aria-expanded', String(isOpen));
+        });
+
+        sidebar.querySelectorAll('a').forEach((link) => {
+          link.addEventListener('click', () => {
+            sidebar.classList.remove('is-open');
+            hamburger.setAttribute('aria-expanded', 'false');
+          });
+        });
+      }
+
+      if (globalNav) {
+        const updateFloatingNav = () => {
+          const navTop = globalNav.dataset.initialTop
+            ? Number(globalNav.dataset.initialTop)
+            : globalNav.offsetTop;
+
+          if (!globalNav.dataset.initialTop) {
+            globalNav.dataset.initialTop = String(navTop);
+          }
+
+          globalNav.classList.toggle('is-floating', window.scrollY > navTop);
+        };
+
+        updateFloatingNav();
+        window.addEventListener('scroll', updateFloatingNav, { passive: true });
+        window.addEventListener('resize', () => {
+          delete globalNav.dataset.initialTop;
+          updateFloatingNav();
+        });
+      }
+
+    })();
+  </script>
+
   <script>
     (() => {
       const fragrances = [
@@ -1049,7 +545,7 @@
 
       function renderNotesGrid() {
         const fragranceHtml = fragrances.map(f => {
-          const tags = f.tags.map(tag => `<span class="tag" style="background:${alphaColor(f.color, .26)}"># ${tag}</span>`).join("");
+          const tags = f.tags.map(tag => `#${tag}`).join("  ");
           return `
             <label class="fragrance-item">
               <input type="radio" name="fragranceRadio" value="${f.id}" ${f.id === state.selectedId ? "checked" : ""} />
@@ -1057,8 +553,7 @@
                 <div class="fragrance-index" style="background:${f.color}">${f.no}</div>
                 <div class="fragrance-body">
                   <div class="fragrance-name">${f.en}</div>
-                  <div class="fragrance-jp">${f.jp}</div>
-                  <div class="tag-row">${tags}</div>
+                  <div class="fragrance-meta">${f.jp}  ${tags}</div>
                 </div>
               </div>
             </label>
