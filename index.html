@@ -7,7 +7,7 @@
     <title>inim-dx | Fragrance Experience Landing Page</title>
     <link rel="stylesheet" href="css/style.css">
     <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap"
         rel="stylesheet">
 </head>
 
@@ -24,40 +24,57 @@
             </a>
 
             <nav class="sidebar__nav" aria-label="サイドナビゲーション">
-                <div class="sidebar__group">
-                    <p class="sidebar__label">ブランド</p>
-                    <a href="#about">ブランドストーリー</a>
-                    <a href="#hero-banner">世界観</a>
-                    <a href="#contact">お問い合わせ</a>
-                </div>
+                <details class="sidebar__group sidebar__group--drilldown">
+                    <summary class="sidebar__summary">ブランド</summary>
+                    <div class="sidebar__links">
+                        <a href="#about">ブランドストーリー</a>
+                        <a href="#hero-banner">世界観</a>
+                        <a href="#contact">お問い合わせ</a>
+                    </div>
+                </details>
 
-                <div class="sidebar__group">
-                    <p class="sidebar__label">アイテム</p>
-                    <a href="#new-arrivals">ハンドクリーム</a>
-                    <a href="#new-arrivals">アロマオイル</a>
-                    <a href="#new-arrivals">ディフューザー</a>
-                    <a href="#pickup">ギフトセット</a>
-                </div>
+                <details class="sidebar__group sidebar__group--drilldown">
+                    <summary class="sidebar__summary">アイテム</summary>
+                    <div class="sidebar__links">
+                        <a href="#new-arrivals">ハンドクリーム</a>
+                        <a href="#new-arrivals">アロマオイル</a>
+                        <a href="#new-arrivals">ディフューザー</a>
+                        <a href="#pickup">ギフトセット</a>
+                    </div>
+                </details>
 
-                <div class="sidebar__group">
-                    <p class="sidebar__label">香りから探す</p>
-                    <a href="#pickup">Calm</a>
-                    <a href="#pickup">Refresh</a>
-                    <a href="#pickup">Focus</a>
-                </div>
+                <details class="sidebar__group sidebar__group--drilldown">
+                    <summary class="sidebar__summary">香りから探す</summary>
+                    <div class="sidebar__links">
+                        <a href="#pickup">Calm</a>
+                        <a href="#pickup">Refresh</a>
+                        <a href="#pickup">Focus</a>
+                    </div>
+                </details>
 
-                <div class="sidebar__group">
-                    <p class="sidebar__label">香りと遊ぶ</p>
-                    <a href="#experience">香游について</a>
-                    <a href="#journey">体験の流れ</a>
-                    <a href="#hero-banner">体験を始める</a>
-                </div>
+                <details class="sidebar__group sidebar__group--drilldown">
+                    <summary class="sidebar__summary">香りと遊ぶ</summary>
+                    <div class="sidebar__links">
+                        <a href="#experience">香游について</a>
+                        <a href="#journey">体験の流れ</a>
+                        <a href="#hero-banner">体験を始める</a>
+                    </div>
+                </details>
 
-                <div class="sidebar__group">
-                    <p class="sidebar__label">店舗・ガイド</p>
-                    <a href="#stores">実店舗</a>
+                <details class="sidebar__group sidebar__group--drilldown">
+                    <summary class="sidebar__summary">実店舗</summary>
+                    <div class="sidebar__links">
+                        <a href="#stores">浅草店</a>
+                        <a href="#stores">柴又店</a>
+                        <a href="#stores">ソラマチ店</a>
+                    </div>
+                </details>
+
+                <div class="sidebar__standalone">
                     <a href="#footer-links">ショッピングガイド</a>
                     <a href="#footer-links">マイアカウント</a>
+                    <a href="#footer-links">会員登録</a>
+                    <a href="#footer-links">ログイン</a>
                 </div>
             </nav>
         </aside>
@@ -85,9 +102,7 @@
                     <a href="#about">ブランド</a>
                     <a href="#new-arrivals">アイテム</a>
                     <a href="#pickup">香りから探す</a>
-                    <a href="#experience">香りと遊ぶ！香游</a>
-                    <a href="#journal">記事</a>
-                    <a href="#pickup">Sale</a>
+                    <a href="#experience">香りと遊ぶ</a>
                     <a href="#stores">実店舗</a>
                 </nav>
 
@@ -167,11 +182,11 @@
                         <h2>注目の体験とプロダクト</h2>
                     </div>
                     <div class="pickup-grid">
-                        <article class="feature-card feature-card--large">
-                            <img src="images/Workshop/Workshop_ (4).png" alt="ワークショップ">
+                        <article class="feature-card">
+                            <img src="images/Aroma oil/item/Aroma oil_item_ (1).png" alt="アロマオイル">
                             <div class="feature-card__body">
-                                <h3>Workshop Reservation</h3>
-                                <p>デジタル体験の結果を持ち込んで、実店舗で香りを完成させる予約導線。</p>
+                                <h3>Aroma Oil Notes</h3>
+                                <p>香りのノートごとの輪郭を比較しながら、自分に合う方向性を見つける導線。</p>
                             </div>
                         </article>
                         <article class="feature-card">
@@ -182,17 +197,17 @@
                             </div>
                         </article>
                         <article class="feature-card">
-                            <img src="images/Hand cream_1/image/Hand cream_image_1.png" alt="ハンドクリーム">
+                            <img src="images/Hand cream_1/item/Hand cream_item_1.png" alt="ハンドクリーム">
                             <div class="feature-card__body">
                                 <h3>Hand Care Ritual</h3>
                                 <p>日常に取り入れやすいケア体験として提案する定番シリーズ。</p>
                             </div>
                         </article>
                         <article class="feature-card">
-                            <img src="images/Aroma oil/image/Aroma oil_image_ (1).png" alt="アロマオイル">
+                            <img src="images/Hand cream_2/Hand cream2_item_ (1).png" alt="ハンドクリーム 2">
                             <div class="feature-card__body">
-                                <h3>Aroma Oil Notes</h3>
-                                <p>ノートごとのキャラクターを視覚的に比較できる香りの入口。</p>
+                                <h3>Hand Cream Essentials</h3>
+                                <p>ギフトにも日常使いにも展開しやすい、入口商品としてのハンドケア提案。</p>
                             </div>
                         </article>
                     </div>
@@ -218,24 +233,24 @@
                             <h3>Hand Cream / Citrus Veil</h3>
                         </article>
                         <article class="product-card">
-                            <img src="images/Hand cream_2/Hand cream2_item_ (5).png" alt="新作ハンドクリーム">
+                            <img src="images/Hand cream_2/Hand cream2_item_ (2).png" alt="新作ハンドクリーム">
                             <h3>Hand Cream / Soft Bloom</h3>
                         </article>
                         <article class="product-card">
-                            <img src="images/Diffuser/Fragrance diffuser_2.png" alt="新作ディフューザー">
+                            <img src="images/Diffuser/Fragrance diffuser_1.png" alt="新作ディフューザー">
                             <h3>Diffuser / Quiet Amber</h3>
                         </article>
                         <article class="product-card">
-                            <img src="images/Aroma oil/item/Aroma oil_item_ (10).png" alt="新作アロマオイル">
+                            <img src="images/Aroma oil/item/Aroma oil_item_ (1).png" alt="新作アロマオイル">
                             <h3>Aroma Oil / Clear Air</h3>
                         </article>
                         <article class="product-card">
-                            <img src="images/Aroma oil/item/Aroma oil_item_ (14).png" alt="新作アロマオイル">
+                            <img src="images/Aroma oil/item/Aroma oil_item_ (2).png" alt="新作アロマオイル">
                             <h3>Aroma Oil / Night Tone</h3>
                         </article>
                         <article class="product-card">
-                            <img src="images/others/others_ (11).png" alt="ギフトセット">
-                            <h3>Gift Set / Discovery Box</h3>
+                            <img src="images/Diffuser/Fragrance diffuser_2.png" alt="新作ディフューザー">
+                            <h3>Diffuser / Discovery Blend</h3>
                         </article>
                     </div>
                 </section>
@@ -314,6 +329,7 @@
             const slides = document.querySelectorAll('.hero-slider__slide');
             const sidebar = document.querySelector('.sidebar');
             const hamburger = document.querySelector('.hamburger');
+            const globalNav = document.querySelector('.category-nav');
 
             if (slides.length) {
                 let activeIndex = 0;
@@ -336,6 +352,27 @@
                         sidebar.classList.remove('is-open');
                         hamburger.setAttribute('aria-expanded', 'false');
                     });
+                });
+            }
+
+            if (globalNav) {
+                const updateFloatingNav = () => {
+                    const navTop = globalNav.dataset.initialTop
+                        ? Number(globalNav.dataset.initialTop)
+                        : globalNav.offsetTop;
+
+                    if (!globalNav.dataset.initialTop) {
+                        globalNav.dataset.initialTop = String(navTop);
+                    }
+
+                    globalNav.classList.toggle('is-floating', window.scrollY > navTop);
+                };
+
+                updateFloatingNav();
+                window.addEventListener('scroll', updateFloatingNav, { passive: true });
+                window.addEventListener('resize', () => {
+                    delete globalNav.dataset.initialTop;
+                    updateFloatingNav();
                 });
             }
         })();
