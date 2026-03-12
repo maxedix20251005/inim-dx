@@ -1,4 +1,4 @@
-(() => {
+﻿(() => {
     const body = document.body;
     const root = body.dataset.root || '.';
     const pageKey = body.dataset.pageKey || 'home';

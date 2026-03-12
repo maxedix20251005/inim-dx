@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ワークショップ詳細 | inim-dx Fragrance Experience</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            /* デザインガイドライン 06-design-guide に基づく p01: ジャパニーズ・モダン */
+            --bg: #F9F8F4;
+            --panel: #EAE4D3;
+            --line: #2C2C2C;
+            --text: #1A1A1A;
+            --accent: #B24531;
+            --button: #B24531;
+            --muted: #666666;
+            --glass: rgba(255, 255, 255, 0.8);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* 視線誘導を阻害しないヘッダー */
+        header {
+            position: fixed; top: 0; width: 100%; height: 70px;
+            background: var(--glass); backdrop-filter: blur(10px);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 40px; z-index: 1000; border-bottom: 1px solid rgba(44, 44, 44, 0.1);
+        }
+        .logo { font-weight: 900; letter-spacing: 3px; font-size: 20px; }
+
+        /* Hero Section: 一滴を主役にする */
+        .hero {
+            height: 90vh; display: flex; align-items: center; justify-content: center;
+            text-align: center; position: relative; padding: 0 20px;
+            background: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), url('https://images.unsplash.com/photo-1615485290382-441e4d0c9cb5?auto=format&fit=crop&q=80&w=2000') no-repeat center center/cover;
+            color: #fff;
+        }
+        .hero-content { z-index: 2; max-width: 800px; }
+        .hero h1 { font-size: 3.5rem; font-weight: 200; margin-bottom: 20px; letter-spacing: 0.1em; }
+        .hero p { font-size: 1.2rem; margin-bottom: 40px; opacity: 0.9; }
+
+        /* Floating CTA: 常に予約への道筋を示す */
+        .floating-cta {
+            position: fixed; bottom: 30px; right: 30px; z-index: 999;
+            background: var(--button); color: #fff; padding: 15px 40px;
+            border-radius: 50px; text-decoration: none; font-weight: bold;
+            box-shadow: 0 10px 30px rgba(178, 69, 49, 0.3);
+            display: flex; align-items: center; gap: 10px;
+            transition: transform 0.3s;
+        }
+        .floating-cta:hover { transform: scale(1.05); }
+
+        /* Section Layout: 安心感（論理）と情緒の交互配置 */
+        section { padding: 100px 10vw; position: relative; }
+        .section-tag { font-size: 12px; color: var(--accent); letter-spacing: 0.3em; margin-bottom: 10px; display: block; }
+        h2 { font-size: 2.5rem; font-weight: 300; margin-bottom: 50px; }
+
+        /* Step Section */
+        .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+        .step-card { background: #fff; padding: 40px; border-radius: 4px; border-bottom: 4px solid var(--panel); }
+        .step-num { font-size: 40px; color: var(--panel); font-weight: 900; line-height: 1; margin-bottom: 20px; }
+        .step-card h3 { margin-bottom: 15px; }
+
+        /* Program Table: デザインガイドラインのUI-Tableを応用 */
+        .ui-table {
+            width: 100%; border-collapse: collapse; margin-top: 40px; background: #fff;
+            border-radius: 8px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        .ui-table th { background: var(--line); color: #fff; padding: 20px; text-align: left; }
+        .ui-table td { padding: 20px; border-bottom: 1px solid #eee; }
+        .ui-table tr:last-child td { border-bottom: none; }
+        .price-tag { font-weight: bold; color: var(--accent); font-size: 1.2rem; }
+
+        /* Smart Scent Design Bridge */
+        .digital-bridge {
+            background: var(--line); color: #fff; text-align: center;
+            border-radius: 20px; padding: 80px 40px;
+        }
+        .btn-outline {
+            border: 1px solid #fff; color: #fff; padding: 12px 30px;
+            text-decoration: none; display: inline-block; margin-top: 20px;
+            transition: all 0.3s;
+        }
+        .btn-outline:hover { background: #fff; color: var(--line); }
+
+        /* FAQ Section: 不安の解消 */
+        .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .faq-item { background: var(--panel); padding: 20px; border-radius: 8px; }
+        .faq-q { font-weight: bold; margin-bottom: 10px; color: var(--accent); }
+
+        footer { padding: 60px 10vw; background: var(--line); color: rgba(255,255,255,0.6); font-size: 12px; }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .steps, .faq-grid { grid-template-columns: 1fr; }
+            section { padding: 60px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">inim-dx</div>
+    <nav style="font-size: 14px; letter-spacing: 1px;">
+        <span style="margin-left: 20px;">CONCEPT</span>
+        <span style="margin-left: 20px;">FLOW</span>
+        <span style="margin-left: 20px;">RESERVE</span>
+    </nav>
+</header>
+
+<a href="#reserve" class="floating-cta">
+    <span>空き状況を確認・予約</span>
+    <i class="fas fa-calendar-alt"></i>
+</a>
+
+<div class="hero">
+    <div class="hero-content">
+        <span style="letter-spacing: 5px; opacity: 0.8;">WORKSHOP</span>
+        <h1>自分を設計する、一滴。</h1>
+        <p>26種類の香料から、あなたの物語を組み立てる。デジタルと身体性が交差する、新しい調香体験。</p>
+        <a href="#overview" style="color:#fff; text-decoration:none; border-bottom:1px solid #fff; padding-bottom:5px;">Scroll to Explore</a>
+    </div>
+</div>
+
+<section id="overview">
+    <span class="section-tag">OVERVIEW</span>
+    <h2>ワークショップで得られるもの</h2>
+    <div class="steps">
+        <div class="step-card">
+            <div class="step-num">01</div>
+            <h3>感覚を言語化する</h3>
+            <p>100通りの組み合わせから、今の気分に合う「香りの輪郭」を見つけ出します。初心者の方でもスタッフが丁寧にサポートします。</p>
+        </div>
+        <div class="step-card">
+            <div class="step-num">02</div>
+            <h3>一滴の重みを知る</h3>
+            <p>トップ・ミドル・ベースの比率を調整し、時間の経過とともに変化するあなただけの物語を完成させます。</p>
+        </div>
+        <div class="step-card">
+            <div class="step-num">03</div>
+            <h3>日常へ持ち帰る</h3>
+            <p>完成した香水（30ml）に加え、ブレンドに使用した**「原液4種類」**をそのままお持ち帰りいただけます。自宅での再現も可能です。</p>
+        </div>
+    </div>
+</section>
+
+<section style="background-color: #fff;">
+    <div class="digital-bridge">
+        <span class="section-tag" style="color:#fff;">PRE-EXPERIENCE</span>
+        <h2 style="margin-bottom: 20px;">まず、デジタルで香りを描く</h2>
+        <p>実店舗に来る前に、オンラインで「香りのシミュレーション」が可能です。<br>ここで生まれたレシピを、当日店頭で形にすることができます。</p>
+        <a href="#" class="btn-outline">Smart Scent Design を試す</a>
+    </div>
+</section>
+
+<section id="reserve">
+    <span class="section-tag">PROGRAM & PRICE</span>
+    <h2>選べる体験プラン</h2>
+    <table class="ui-table">
+        <thead>
+            <tr>
+                <th>プラン名</th>
+                <th>内容</th>
+                <th>所要時間</th>
+                <th>料金(税込)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Trial Session</strong></td>
+                <td>手軽に香りの世界に触れたい方向け。基本ブレンド体験。</td>
+                <td>約45分</td>
+                <td class="price-tag">¥5,500</td>
+            </tr>
+            <tr>
+                <td><strong>Signature Blend</strong></td>
+                <td>じっくりと自分を向き合うフルカスタマイズ。原液持ち帰り付。</td>
+                <td>約90分</td>
+                <td class="price-tag">¥14,850</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<section>
+    <span class="section-tag">FAQ</span>
+    <h2>よくあるご質問</h2>
+    <div class="faq-grid">
+        <div class="faq-item">
+            <div class="faq-q">Q. 初めてでも大丈夫ですか？</div>
+            <div class="faq-a">A. もちろんです。専門の調香スタッフが、あなたの好みを聞きながらマンツーマンに近い形でサポートいたします。</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-q">Q. 持ち物はありますか？</div>
+            <div class="faq-a">A. 特にございません。手ぶらでお越しいただけます。</div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div style="margin-bottom: 20px;">
+        <strong>inim-dx</strong><br>
+        東京都台東区浅草 1-X-X<br>
+        Open: 11:00 - 19:00
+    </div>
+    <p>&copy; 2026 inim-dx Fragrance Experience Project.</p>
+</footer>
+
+</body>
+</html>
