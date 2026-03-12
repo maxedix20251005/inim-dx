@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 
 <head>
@@ -6,114 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>inim-dx | Fragrance Experience Landing Page</title>
     <link rel="stylesheet" href="css/style.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 
-<body>
-    <button class="hamburger" type="button" aria-label="メニューを開く" aria-expanded="false" aria-controls="sidebar">
-        <span></span><span></span><span></span>
-    </button>
-
-    <div class="page-shell">
-        <aside class="sidebar" id="sidebar">
-            <a class="sidebar__brand" href="index.html" aria-label="inim-dx top">
-                <img class="sidebar__brand-logo" src="images/logo/logo-inim-dx.jpg" alt="inim-dx logo">
-                <span class="sidebar__brand-note">Fragrance Experience Platform</span>
-            </a>
-
-            <nav class="sidebar__nav" aria-label="サイドナビゲーション">
-                <details class="sidebar__group sidebar__group--drilldown">
-                    <summary class="sidebar__summary">ブランド</summary>
-                    <div class="sidebar__links">
-                        <a href="#about">ブランドストーリー</a>
-                        <a href="#hero-banner">世界観</a>
-                        <a href="#contact">お問い合わせ</a>
-                    </div>
-                </details>
-
-                <details class="sidebar__group sidebar__group--drilldown">
-                    <summary class="sidebar__summary">アイテム</summary>
-                    <div class="sidebar__links">
-                        <a href="#new-arrivals">ハンドクリーム</a>
-                        <a href="#new-arrivals">アロマオイル</a>
-                        <a href="#new-arrivals">ディフューザー</a>
-                        <a href="#pickup">ギフトセット</a>
-                    </div>
-                </details>
-
-                <details class="sidebar__group sidebar__group--drilldown">
-                    <summary class="sidebar__summary">香りから探す</summary>
-                    <div class="sidebar__links">
-                        <a href="#pickup">Calm</a>
-                        <a href="#pickup">Refresh</a>
-                        <a href="#pickup">Focus</a>
-                    </div>
-                </details>
-
-                <details class="sidebar__group sidebar__group--drilldown">
-                    <summary class="sidebar__summary">香りと遊ぶ</summary>
-                    <div class="sidebar__links">
-                        <a href="subpages/workshop.html">香游について</a>
-                        <a href="#journey">体験の流れ</a>
-                        <a href="subpages/smart-scent-design.html">体験を始める</a>
-                    </div>
-                </details>
-
-                <details class="sidebar__group sidebar__group--drilldown">
-                    <summary class="sidebar__summary">実店舗</summary>
-                    <div class="sidebar__links">
-                        <a href="#stores">浅草店</a>
-                        <a href="#stores">柴又店</a>
-                        <a href="#stores">ソラマチ店</a>
-                    </div>
-                </details>
-
-                <div class="sidebar__standalone">
-                    <a href="#footer-links">ショッピングガイド</a>
-                    <a href="#footer-links">マイアカウント</a>
-                    <a href="#footer-links">会員登録</a>
-                    <a href="#footer-links">ログイン</a>
-                </div>
-            </nav>
-        </aside>
-
-        <div class="page-content">
-            <header class="site-header">
-                <div class="notice-bar">
-                    <p>配送・返品・お支払いに関する最新情報をご案内しています。</p>
-                    <div class="notice-bar__actions">
-                        <a href="#footer-links">ショッピングガイド</a>
-                        <a href="#contact">お問い合わせ</a>
-                    </div>
-                </div>
-
-                <div class="utility-header">
-                    <a class="utility-header__brand" href="#top">inim-dx top page</a>
-                    <div class="utility-header__tools">
-                        <a href="#pickup">検索</a>
-                        <a href="#footer-links">マイアカウント</a>
-                        <a href="#contact">カート</a>
-                    </div>
-                </div>
-
-                <nav class="category-nav" aria-label="グローバルナビゲーション">
-                    <a href="#about">ブランド</a>
-                    <a href="#new-arrivals">アイテム</a>
-                    <a href="#pickup">香りから探す</a>
-                    <a href="#experience">香りと遊ぶ</a>
-                    <a href="#stores">実店舗</a>
-                </nav>
-
-                <div class="news-strip">
-                    <span>Latest</span>
-                    <p>デジタル調香体験からワークショップ予約までをつなぐ新しいトップページ構成を公開しました。</p>
-                </div>
-            </header>
-
-            <main>
-                <section class="hero" id="top">
+<body data-root="." data-page-key="home">
+    <main id="page-main">
+<section class="hero" id="top">
                     <div class="hero-slider" aria-hidden="true">
                         <div class="hero-slider__slide is-active">
                             <img src="images/slider/others_ (4).png" alt="">
@@ -290,92 +188,21 @@
                         </div>
                     </div>
                 </section>
-            </main>
-
-            <footer class="site-footer" id="contact">
-                <div class="site-footer__grid" id="footer-links">
-                    <div>
-                        <p class="site-footer__title">Store Info</p>
-                        <p>inim-dx flagship atelier<br>Fragrance workshop and consultation by reservation.</p>
-                    </div>
-                    <div>
-                        <p class="site-footer__title">Guide</p>
-                        <a href="#top">Top</a>
-                        <a href="#footer-links">配送・送料について</a>
-                        <a href="#footer-links">返品について</a>
-                        <a href="#footer-links">お支払い方法について</a>
-                    </div>
-                    <div>
-                        <p class="site-footer__title">Support</p>
-                        <a href="#footer-links">プライバシーポリシー</a>
-                        <a href="#footer-links">メルマガ登録・解除</a>
-                        <a href="#footer-links">RSS / ATOM</a>
-                    </div>
-                    <div>
-                        <p class="site-footer__title">Account</p>
-                        <a href="#footer-links">マイアカウント</a>
-                        <a href="#footer-links">会員登録</a>
-                        <a href="#footer-links">ログイン</a>
-                        <a href="#contact">お問い合わせ</a>
-                    </div>
-                </div>
-                <p class="site-footer__copy">inim-dx landing page inspired by the referenced project wireframe.</p>
-            </footer>
-        </div>
-    </div>
-
+    </main>
+    <script src="js/site-shell.js"></script>
     <script>
-        (() => {
+        document.addEventListener('site-shell:ready', () => {
             const slides = document.querySelectorAll('.hero-slider__slide');
-            const sidebar = document.querySelector('.sidebar');
-            const hamburger = document.querySelector('.hamburger');
-            const globalNav = document.querySelector('.category-nav');
-
-            if (slides.length) {
-                let activeIndex = 0;
-
-                window.setInterval(() => {
-                    slides[activeIndex].classList.remove('is-active');
-                    activeIndex = (activeIndex + 1) % slides.length;
-                    slides[activeIndex].classList.add('is-active');
-                }, 3000);
+            if (!slides.length) {
+                return;
             }
-
-            if (sidebar && hamburger) {
-                hamburger.addEventListener('click', () => {
-                    const isOpen = sidebar.classList.toggle('is-open');
-                    hamburger.setAttribute('aria-expanded', String(isOpen));
-                });
-
-                sidebar.querySelectorAll('a').forEach((link) => {
-                    link.addEventListener('click', () => {
-                        sidebar.classList.remove('is-open');
-                        hamburger.setAttribute('aria-expanded', 'false');
-                    });
-                });
-            }
-
-            if (globalNav) {
-                const updateFloatingNav = () => {
-                    const navTop = globalNav.dataset.initialTop
-                        ? Number(globalNav.dataset.initialTop)
-                        : globalNav.offsetTop;
-
-                    if (!globalNav.dataset.initialTop) {
-                        globalNav.dataset.initialTop = String(navTop);
-                    }
-
-                    globalNav.classList.toggle('is-floating', window.scrollY > navTop);
-                };
-
-                updateFloatingNav();
-                window.addEventListener('scroll', updateFloatingNav, { passive: true });
-                window.addEventListener('resize', () => {
-                    delete globalNav.dataset.initialTop;
-                    updateFloatingNav();
-                });
-            }
-        })();
+            let activeIndex = 0;
+            window.setInterval(() => {
+                slides[activeIndex].classList.remove('is-active');
+                activeIndex = (activeIndex + 1) % slides.length;
+                slides[activeIndex].classList.add('is-active');
+            }, 3000);
+        });
     </script>
 </body>
 

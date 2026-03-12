@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Scent Design | inim-dx</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/smart-scent-design-app.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <button class="hamburger" type="button" aria-label="メニューを開く" aria-expanded="false" aria-controls="sidebar">
+    <span></span><span></span><span></span>
+  </button>
+
+  <div class="page-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="sidebar__brand" href="../index.html" aria-label="inim-dx top">
+        <img class="sidebar__brand-logo" src="../images/logo/logo-inim-dx.jpg" alt="inim-dx logo">
+        <span class="sidebar__brand-note">Fragrance Experience Platform</span>
+      </a>
+
+      <nav class="sidebar__nav" aria-label="サイドナビゲーション">
+        <details class="sidebar__group sidebar__group--drilldown">
+          <summary class="sidebar__summary">ブランド</summary>
+          <div class="sidebar__links">
+            <a href="../index.html#about">ブランドストーリー</a>
+            <a href="../index.html#hero-banner">世界観</a>
+            <a href="../index.html#contact">お問い合わせ</a>
+          </div>
+        </details>
+
+        <details class="sidebar__group sidebar__group--drilldown">
+          <summary class="sidebar__summary">アイテム</summary>
+          <div class="sidebar__links">
+            <a href="../index.html#new-arrivals">ハンドクリーム</a>
+            <a href="../index.html#new-arrivals">アロマオイル</a>
+            <a href="../index.html#new-arrivals">ディフューザー</a>
+            <a href="../index.html#pickup">ギフトセット</a>
+          </div>
+        </details>
+
+        <details class="sidebar__group sidebar__group--drilldown">
+          <summary class="sidebar__summary">香りから探す</summary>
+          <div class="sidebar__links">
+            <a href="../index.html#pickup">Calm</a>
+            <a href="../index.html#pickup">Refresh</a>
+            <a href="../index.html#pickup">Focus</a>
+          </div>
+        </details>
+
+        <details class="sidebar__group sidebar__group--drilldown" open>
+          <summary class="sidebar__summary">香りと遊ぶ</summary>
+          <div class="sidebar__links">
+            <a href="./workshop.html">香游について</a>
+            <a href="../index.html#journey">体験の流れ</a>
+            <a href="./smart-scent-design.html">体験を始める</a>
+          </div>
+        </details>
+
+        <details class="sidebar__group sidebar__group--drilldown">
+          <summary class="sidebar__summary">実店舗</summary>
+          <div class="sidebar__links">
+            <a href="../index.html#stores">浅草店</a>
+            <a href="../index.html#stores">柴又店</a>
+            <a href="../index.html#stores">ソラマチ店</a>
+          </div>
+        </details>
+
+        <div class="sidebar__standalone">
+          <a href="../index.html#footer-links">ショッピングガイド</a>
+          <a href="../index.html#footer-links">マイアカウント</a>
+          <a href="../index.html#footer-links">会員登録</a>
+          <a href="../index.html#footer-links">ログイン</a>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="page-content">
+      <header class="site-header">
+        <div class="notice-bar">
+          <p>デジタル調香から実店舗体験へつなぐフレグランス体験ページです。</p>
+          <div class="notice-bar__actions">
+            <a href="../index.html#footer-links">ショッピングガイド</a>
+            <a href="../index.html#contact">お問い合わせ</a>
+          </div>
+        </div>
+
+        <div class="utility-header">
+          <a class="utility-header__brand" href="../index.html#top">inim-dx smart scent design</a>
+          <div class="utility-header__tools">
+            <a href="../index.html#pickup">検索</a>
+            <a href="../index.html#footer-links">マイアカウント</a>
+            <a href="../index.html#contact">カート</a>
+          </div>
+        </div>
+
+        <nav class="category-nav" aria-label="グローバルナビゲーション">
+          <a href="../index.html">Home</a>
+          <a href="../index.html#about">ブランド</a>
+          <a href="../index.html#new-arrivals">アイテム</a>
+          <a href="../index.html#pickup">香りから探す</a>
+          <a href="./workshop.html">香りと遊ぶ</a>
+          <a href="../index.html#stores">実店舗</a>
+        </nav>
+
+        <div class="news-strip">
+          <span>Latest</span>
+          <p>色・粒子・サウンドを使って、自分の香りを視覚的に編集するデジタル調香ページです。</p>
+        </div>
+      </header>
+
+      <main>
+        <section class="experience-page">
+          <div class="app">
+    <div class="topbar">
+      <div>
+        <div class="title">香りと遊ぶ！ 香游（デジタル調香）</div>
+        <div class="subhead">12種類の香りノートを選択し、比率を重ねて調香します</div>
+      </div>
+      <div class="top-actions">
+        <div id="soundPill" class="sound-pill">
+          <div style="font-weight:700">Sound</div>
+          <div id="soundToggle" class="toggle" aria-label="sound toggle"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <section class="experience-pane">
+        <div id="experienceShell" class="experience-shell">
+          <div class="overlay-top">
+            <div class="overlay-pill">選択中ノート：<span id="activeVizName">BERGAMOT</span></div>
+            <div class="overlay-pill">Blend Score：<span id="blendScore">72</span></div>
+            <div class="overlay-pill" id="soundStatusText">Sound：OFF</div>
+          </div>
+
+          <div class="overlay-result">
+            <div class="result-kicker">Your Fragrance</div>
+            <h2 id="resultName" class="result-title">Citrus Bloom Veil</h2>
+            <p id="resultCopy" class="result-copy">明るいシトラスに、透明な花とやわらかなムスクが重なる、軽やかで清潔感のある香りです。</p>
+
+            <div class="result-grid">
+              <div class="result-item">
+                <div class="label">Top Blend</div>
+                <div id="resultTopBlend" class="value">ベルガモット 28 / レモン 18 / ミュゲ 14</div>
+              </div>
+              <div class="result-item">
+                <div class="label">Profile</div>
+                <div id="resultProfile" class="value">さっぱり・スッキリ・万人受け</div>
+              </div>
+              <div class="result-item">
+                <div class="label">Character</div>
+                <div id="resultCharacter" class="value">シトラスフローラル / 透明感 / やわらかな余韻</div>
+              </div>
+              <div class="result-item">
+                <div class="label">Impression</div>
+                <div id="resultImpression" class="value">朝の光のように軽く、親しみやすく、清潔感のあるブレンド</div>
+              </div>
+              <div class="result-item wide">
+                <div class="label">Ratio Summary</div>
+                <div id="resultRatioSummary" class="value">柑橘 46% / フローラル 22% / ティー&ハーブ 8% / ベースノート 24%</div>
+              </div>
+            </div>
+          </div>
+
+          <canvas id="scene"></canvas>
+        </div>
+      </section>
+
+      <aside class="control-pane">
+        <div class="control-stack">
+          <section class="panel notes-panel">
+            <div class="panel-head">
+              <div class="panel-title">Fragrance Notes</div>
+              <div class="panel-sub">16 Items / Select a note</div>
+            </div>
+            <div id="notesGrid" class="notes-grid"></div>
+          </section>
+
+          <section class="panel adjust-panel">
+            <div class="adjust-head">
+              <div class="adjust-title">Adjust Active Note</div>
+              <div id="activeName" class="active-name">BERGAMOT / ベルガモット</div>
+            </div>
+
+            <div id="sliderWrap" class="slider-wrap">
+              <input id="ratioSlider" type="range" min="0" max="100" value="28" />
+              <div id="sliderValue" class="slider-value">28</div>
+            </div>
+
+            <div class="adjust-help">
+              選択中ノートの比率を調整します。変更はビジュアルとサウンドに即時反映されます。
+            </div>
+          </section>
+
+          <section class="panel action-panel">
+            <div class="cta-row">
+              <button id="generateBtn" class="cta primary">この香りを見る</button>
+              <button id="resetBtn" class="cta secondary">リセット</button>
+            </div>
+
+            <div id="miniBars" class="mini-bars"></div>
+          </section>
+        </div>
+      </aside>
+    </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="site-footer__grid" id="footer-links">
+          <div>
+            <p class="site-footer__title">Store Info</p>
+            <p>inim-dx flagship atelier<br>Fragrance workshop and consultation by reservation.</p>
+          </div>
+          <div>
+            <p class="site-footer__title">Guide</p>
+            <a href="../index.html#top">Top</a>
+            <a href="../index.html#footer-links">配送・送料について</a>
+            <a href="../index.html#footer-links">返品について</a>
+            <a href="../index.html#footer-links">お支払い方法について</a>
+          </div>
+          <div>
+            <p class="site-footer__title">Support</p>
+            <a href="../index.html#footer-links">プライバシーポリシー</a>
+            <a href="../index.html#footer-links">メルマガ登録・解除</a>
+            <a href="../index.html#footer-links">RSS / ATOM</a>
+          </div>
+          <div>
+            <p class="site-footer__title">Account</p>
+            <a href="../index.html#footer-links">マイアカウント</a>
+            <a href="../index.html#footer-links">会員登録</a>
+            <a href="../index.html#footer-links">ログイン</a>
+            <a href="../index.html#contact">お問い合わせ</a>
+          </div>
+        </div>
+        <p class="site-footer__copy">inim-dx smart scent design page aligned to the project wireframe and design guide.</p>
+      </footer>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/tone@14.8.49/build/Tone.js"></script>
+  <script>
+    (() => {
+      const sidebar = document.querySelector('.sidebar');
+      const hamburger = document.querySelector('.hamburger');
+      const globalNav = document.querySelector('.category-nav');
+
+      if (sidebar && hamburger) {
+        hamburger.addEventListener('click', () => {
+          const isOpen = sidebar.classList.toggle('is-open');
+          hamburger.setAttribute('aria-expanded', String(isOpen));
+        });
+
+        sidebar.querySelectorAll('a').forEach((link) => {
+          link.addEventListener('click', () => {
+            sidebar.classList.remove('is-open');
+            hamburger.setAttribute('aria-expanded', 'false');
+          });
+        });
+      }
+
+      if (globalNav) {
+        const updateFloatingNav = () => {
+          const navTop = globalNav.dataset.initialTop
+            ? Number(globalNav.dataset.initialTop)
+            : globalNav.offsetTop;
+
+          if (!globalNav.dataset.initialTop) {
+            globalNav.dataset.initialTop = String(navTop);
+          }
+
+          globalNav.classList.toggle('is-floating', window.scrollY > navTop);
+        };
+
+        updateFloatingNav();
+        window.addEventListener('scroll', updateFloatingNav, { passive: true });
+        window.addEventListener('resize', () => {
+          delete globalNav.dataset.initialTop;
+          updateFloatingNav();
+        });
+      }
+
+    })();
+  </script>
+
+  <script>
+    (() => {
+      const fragrances = [
+        { id: "bergamot", no: "01", en: "BERGAMOT", jp: "ベルガモット", color: "#b8cc59", tags: ["さっぱり", "大人っぽい"], family: "citrus", weightGroup: "top", character: ["bright", "fresh", "clean"], hue: 76 },
+        { id: "lemon", no: "02", en: "LEMON", jp: "レモン", color: "#ecd94a", tags: ["スッキリ", "ナチュラル"], family: "citrus", weightGroup: "top", character: ["sharp", "fresh", "clean"], hue: 55 },
+        { id: "grapefruit", no: "03", en: "GRAPEFRUIT", jp: "グレープフルーツ", color: "#d89aa1", tags: ["ジューシー", "さわやか"], family: "citrus", weightGroup: "top", character: ["juicy", "fresh", "playful"], hue: 352 },
+        { id: "lavender", no: "04", en: "LAVENDER", jp: "ラベンダー", color: "#9a97cd", tags: ["ハーブ", "ナチュラル"], family: "herbal", weightGroup: "middle", character: ["calm", "herbal", "natural"], hue: 246 },
+        { id: "muguet", no: "05", en: "MUGUET", jp: "ミュゲ", color: "#b7d8cf", tags: ["さわやか", "万人受け"], family: "floral", weightGroup: "middle", character: ["clean", "airy", "friendly"], hue: 164 },
+        { id: "damask_rose", no: "06", en: "DAMASK ROSE", jp: "ダマスクローズ", color: "#d96a7a", tags: ["大人っぽい", "甘い"], family: "floral", weightGroup: "middle", character: ["elegant", "sweet", "rich"], hue: 348 },
+        { id: "assam_tea", no: "07", en: "ASSAM TEA", jp: "アッサムティー", color: "#d09a77", tags: ["すっきり", "万人受け"], family: "tea", weightGroup: "middle", character: ["smooth", "gentle", "balanced"], hue: 23 },
+        { id: "cassis", no: "08", en: "CASSIS", jp: "カシス", color: "#a06bc1", tags: ["甘い", "ジューシー"], family: "fruity", weightGroup: "top", character: ["sweet", "juicy", "bold"], hue: 278 },
+        { id: "magnolia", no: "09", en: "MAGNOLIA", jp: "マグノリア", color: "#eadfbe", tags: ["大人っぽい", "やわらか"], family: "floral", weightGroup: "middle", character: ["soft", "elegant", "creamy"], hue: 45 },
+        { id: "musk", no: "10", en: "MUSK", jp: "ムスク", color: "#a7988d", tags: ["甘い", "万人受け"], family: "base", weightGroup: "base", character: ["soft", "clean", "skin"], hue: 23 },
+        { id: "amber", no: "11", en: "AMBER", jp: "アンバー", color: "#8190bf", tags: ["大人っぽい", "さっぱり"], family: "base", weightGroup: "base", character: ["warm", "deep", "elegant"], hue: 225 },
+        { id: "sandalwood", no: "12", en: "SANDAL WOOD", jp: "サンダルウッド", color: "#aba04a", tags: ["ウッディ", "ナチュラル"], family: "woody", weightGroup: "base", character: ["woody", "calm", "dry"], hue: 53 }
+      ];
+
+      const placeholders = [
+        { id: "option_a", no: "13", title: "OPTION COLOR A", sub: "Placeholder for future accent color", color: "#8ecae6" },
+        { id: "option_b", no: "14", title: "OPTION COLOR B", sub: "Placeholder for future accent color", color: "#ffb4a2" },
+        { id: "option_c", no: "15", title: "OPTION COLOR C", sub: "Placeholder for future accent color", color: "#cdb4db" },
+        { id: "option_d", no: "16", title: "OPTION COLOR D", sub: "Placeholder for future accent color", color: "#bde0a8" }
+      ];
+
+      const state = {
+        selectedId: fragrances[0].id,
+        ratios: Object.fromEntries(fragrances.map((f, i) => [f.id, i === 0 ? 28 : i === 1 ? 18 : i === 4 ? 14 : i === 9 ? 10 : i === 10 ? 8 : 0])),
+        flash: 0,
+        soundOn: false,
+        audioReady: false
+      };
+
+      // ---------- Scale / Chord tables (manual maintenance) ----------
+      // Semitones from root in one octave. Arpeggio spans 1.5–2 octaves by repeating with +12.
+      const SCALE_TABLE = {
+        pentatonicMajor: [0, 2, 4, 7, 9],           // 明るい: C D E G A
+        pentatonicMinor: [0, 3, 5, 7, 10],         // やや暗めの明るさ用
+        blues: [0, 3, 5, 6, 7, 10]                 // 濃厚: ブルーノート (6=blue note)
+      };
+      // Mood -> scale id (明るい = pentatonic, 濃厚 = blues)
+      const MOOD_SCALE = {
+        citrus: "pentatonicMajor",
+        floral: "pentatonicMajor",
+        airy: "pentatonicMajor",
+        deep: "blues",
+        balanced: "pentatonicMajor"
+      };
+      // Jazz chord extras by level (調香具合). 0=triad only, 1=add 6/maj7, 2=add Sus4/Aug/6/maj7.
+      // Semitones: 5=sus4, 8=aug5, 9=6th, 11=maj7
+      const JAZZ_CHORD_EXTRAS = {
+        0: [],
+        1: [9, 11],
+        2: [5, 8, 9, 11]
+      };
+      // Arpeggio range: 1.5–2 octaves = 18–24 semitones from root
+      const ARPEGGIO_OCTAVES = { min: 1.5, max: 2 };
+
+      const notesGrid = document.getElementById("notesGrid");
+      const ratioSlider = document.getElementById("ratioSlider");
+      const sliderValue = document.getElementById("sliderValue");
+      const activeName = document.getElementById("activeName");
+      const activeVizName = document.getElementById("activeVizName");
+      const miniBars = document.getElementById("miniBars");
+      const resultName = document.getElementById("resultName");
+      const resultCopy = document.getElementById("resultCopy");
+      const resultTopBlend = document.getElementById("resultTopBlend");
+      const resultProfile = document.getElementById("resultProfile");
+      const resultCharacter = document.getElementById("resultCharacter");
+      const resultImpression = document.getElementById("resultImpression");
+      const resultRatioSummary = document.getElementById("resultRatioSummary");
+      const blendScoreEl = document.getElementById("blendScore");
+      const generateBtn = document.getElementById("generateBtn");
+      const resetBtn = document.getElementById("resetBtn");
+      const soundToggle = document.getElementById("soundToggle");
+      const soundPill = document.getElementById("soundPill");
+      const soundStatusText = document.getElementById("soundStatusText");
+
+      const canvas = document.getElementById("scene");
+      const ctx = canvas.getContext("2d");
+      const shell = document.getElementById("experienceShell");
+
+      let dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      let w = 0, h = 0, tick = 0;
+      let particles = [];
+      let lastSliderSoundAt = 0;
+
+      function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+      function hsl(h, s, l, a = 1) { return `hsla(${((h % 360) + 360) % 360}, ${s}%, ${l}%, ${a})`; }
+
+      function totalRatio() {
+        return fragrances.reduce((sum, f) => sum + (state.ratios[f.id] || 0), 0);
+      }
+
+      function selectedFragrance() {
+        return fragrances.find(f => f.id === state.selectedId);
+      }
+
+      function activeFragrances() {
+        return fragrances.filter(f => (state.ratios[f.id] || 0) > 0);
+      }
+
+      function sortedByRatio() {
+        return [...fragrances]
+          .map(f => ({ ...f, ratio: state.ratios[f.id] || 0 }))
+          .sort((a, b) => b.ratio - a.ratio);
+      }
+
+      function normalizedRatios() {
+        const total = totalRatio();
+        if (total <= 0) return fragrances.map(f => ({ ...f, ratio: 0, share: 0 }));
+        return fragrances.map(f => {
+          const ratio = state.ratios[f.id] || 0;
+          return { ...f, ratio, share: ratio / total };
+        });
+      }
+
+      function familySummary() {
+        const acc = { citrus: 0, floral: 0, herbal: 0, tea: 0, fruity: 0, woody: 0, base: 0 };
+        normalizedRatios().forEach(f => { acc[f.family] += f.share; });
+        return acc;
+      }
+
+      function weightedHue() {
+        const items = normalizedRatios().filter(f => f.share > 0);
+        if (!items.length) return 140;
+        let x = 0, y = 0;
+        items.forEach(f => {
+          const rad = (f.hue * Math.PI) / 180;
+          x += Math.cos(rad) * f.share;
+          y += Math.sin(rad) * f.share;
+        });
+        return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+      }
+
+      function weightedLightness() {
+        const items = normalizedRatios();
+        let l = 66;
+        items.forEach(f => { l += f.share * (f.weightGroup === "top" ? 8 : f.weightGroup === "base" ? -6 : 0); });
+        return clamp(l, 54, 78);
+      }
+
+      function weightedSaturation() {
+        const items = normalizedRatios();
+        let s = 58;
+        items.forEach(f => { s += f.share * (f.family === "citrus" || f.family === "fruity" ? 22 : f.family === "base" ? -8 : 6); });
+        return clamp(s, 48, 82);
+      }
+
+      function getBlendScore() {
+        const active = activeFragrances().length;
+        const total = totalRatio();
+        const normalized = normalizedRatios();
+        const evenness = normalized.reduce((sum, f) => sum + (f.share > 0 ? Math.sqrt(f.share) : 0), 0);
+        return Math.round(clamp(38 + active * 6 + Math.min(total, 180) * 0.08 + evenness * 12, 18, 96));
+      }
+
+      function buildProfileWords() {
+        const topItems = sortedByRatio().filter(f => f.ratio > 0).slice(0, 4);
+        const tagPool = [];
+        topItems.forEach(f => tagPool.push(...f.tags));
+        const counts = {};
+        tagPool.forEach(tag => counts[tag] = (counts[tag] || 0) + 1);
+        return Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([tag]) => tag).join("・") || "未調香";
+      }
+
+      function buildCharacterText() {
+        const fam = familySummary();
+        const parts = [];
+        if (fam.citrus + fam.fruity > 0.35) parts.push("シトラスフルーティ");
+        else if (fam.floral > 0.30) parts.push("フローラル");
+        else if (fam.woody + fam.base > 0.34) parts.push("ウッディアンバー");
+        else if (fam.herbal + fam.tea > 0.24) parts.push("ハーバルティー");
+        else parts.push("バランスドブレンド");
+
+        if (fam.base > 0.22 || fam.woody > 0.22) parts.push("深い余韻");
+        else if (fam.citrus > 0.28) parts.push("透明感");
+        else parts.push("やわらかな余韻");
+
+        if (fam.floral > 0.22) parts.push("やさしい花感");
+        else if (fam.herbal > 0.18) parts.push("静かなナチュラル感");
+        else if (fam.fruity > 0.18) parts.push("ジューシーさ");
+
+        return parts.join(" / ");
+      }
+
+      function buildImpressionText() {
+        const fam = familySummary();
+        const top = sortedByRatio().filter(f => f.ratio > 0).slice(0, 2);
+        if (!top.length) return "まだ香りが選ばれていません。";
+
+        if (fam.citrus > 0.30 && fam.floral > 0.15) return "朝の光のように軽く、清潔感と親しみやすさを感じるブレンド";
+        if (fam.base + fam.woody > 0.34 && fam.floral > 0.12) return "落ち着きとやわらかさが共存する、大人っぽい奥行きのあるブレンド";
+        if (fam.fruity + fam.citrus > 0.34) return "明るくみずみずしく、弾けるようなジューシーさが前に出るブレンド";
+        if (fam.herbal + fam.tea > 0.24) return "穏やかでナチュラル、気負わず使えるクリーンなブレンド";
+
+        return `${top[0].jp}を軸に${top[1] ? "、" + top[1].jp + "が" : ""}表情を加えるバランスの良いブレンド`;
+      }
+
+      function buildRatioSummaryText() {
+        const fam = familySummary();
+        const pct = v => `${Math.round(v * 100)}%`;
+        return `柑橘 ${pct(fam.citrus)} / フローラル ${pct(fam.floral)} / ティー&ハーブ ${pct(fam.herbal + fam.tea)} / フルーティ ${pct(fam.fruity)} / ベース&ウッド ${pct(fam.base + fam.woody)}`;
+      }
+
+      function buildResultName() {
+        const top = sortedByRatio().filter(f => f.ratio > 0).slice(0, 3);
+        if (!top.length) return "Blank Formula";
+        const first = top[0].en.split(" ")[0];
+        const second = top[1] ? top[1].en.split(" ")[0] : "Aura";
+        const moodWord =
+          familySummary().citrus > 0.28 ? "Veil" :
+          familySummary().floral > 0.28 ? "Bloom" :
+          familySummary().base + familySummary().woody > 0.30 ? "Depth" :
+          "Blend";
+        return `${toTitle(first)} ${toTitle(second)} ${moodWord}`;
+      }
+
+      function toTitle(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+      }
+
+      function buildResultCopy() {
+        const top = sortedByRatio().filter(f => f.ratio > 0).slice(0, 3);
+        if (!top.length) return "12種類の香りからノートを選び、比率を重ねると、ここにブレンド結果が表示されます。";
+
+        const lead = top[0].jp;
+        const second = top[1] ? top[1].jp : null;
+        const third = top[2] ? top[2].jp : null;
+        const fam = familySummary();
+
+        let text = `${lead}`;
+        if (second) text += `に${second}`;
+        if (third) text += `、${third}`;
+        text += `が重なり、`;
+
+        if (fam.citrus > 0.30 && fam.floral > 0.15) text += "明るさと透明感を持ちながら、やさしく広がる香りです。";
+        else if (fam.base + fam.woody > 0.34) text += "落ち着いた深みと、肌に残るような穏やかな余韻を持つ香りです。";
+        else if (fam.fruity + fam.citrus > 0.34) text += "みずみずしさとジューシーさが際立つ、軽快で印象的な香りです。";
+        else if (fam.herbal + fam.tea > 0.24) text += "ナチュラルで気持ちのよい清潔感を持つ、穏やかな香りです。";
+        else text += "複数の表情がなめらかに重なった、バランスの良い香りです。";
+
+        return text;
+      }
+
+      function alphaColor(hex, alpha) {
+        const clean = hex.replace("#", "");
+        const bigint = parseInt(clean, 16);
+        const r = (bigint >> 16) & 255;
+        const g = (bigint >> 8) & 255;
+        const b = bigint & 255;
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      }
+
+      function renderNotesGrid() {
+        const fragranceHtml = fragrances.map(f => {
+          const tags = f.tags.map(tag => `#${tag}`).join("  ");
+          return `
+            <label class="fragrance-item">
+              <input type="radio" name="fragranceRadio" value="${f.id}" ${f.id === state.selectedId ? "checked" : ""} />
+              <div class="fragrance-card" style="color:${f.color}">
+                <div class="fragrance-index" style="background:${f.color}">${f.no}</div>
+                <div class="fragrance-body">
+                  <div class="fragrance-name">${f.en}</div>
+                  <div class="fragrance-meta">${f.jp}  ${tags}</div>
+                </div>
+              </div>
+            </label>
+          `;
+        }).join("");
+
+        const placeholderHtml = placeholders.map(p => `
+          <div class="placeholder-item">
+            <div class="placeholder-card">
+              <div class="placeholder-index" style="background:${p.color}">${p.no}</div>
+              <div class="placeholder-body">
+                <div class="placeholder-title">${p.title}</div>
+                <div class="placeholder-sub">${p.sub}</div>
+              </div>
+            </div>
+          </div>
+        `).join("");
+
+        notesGrid.innerHTML = fragranceHtml + placeholderHtml;
+
+        const ensureNoteCardInView = (labelEl) => {
+          if (!labelEl) return;
+          const scroller = notesGrid;
+          if (!scroller) return;
+          const scrollerRect = scroller.getBoundingClientRect();
+          const itemRect = labelEl.getBoundingClientRect();
+
+          // Already fully visible inside scroller.
+          if (itemRect.top >= scrollerRect.top && itemRect.bottom <= scrollerRect.bottom) return;
+
+          // Compute desired scrollTop without using scrollIntoView (can trigger GPU blanking).
+          const margin = 10;
+          const itemTop = labelEl.offsetTop;
+          const itemBottom = itemTop + labelEl.offsetHeight;
+          const viewTop = scroller.scrollTop;
+          const viewBottom = viewTop + scroller.clientHeight;
+
+          let next = viewTop;
+          if (itemTop - margin < viewTop) {
+            // Prefer aligning the row to the top (avoid half-cut rows).
+            next = itemTop - margin;
+          } else if (itemBottom + margin > viewBottom) {
+            next = itemTop - margin;
+            if (next + labelEl.offsetHeight + margin > itemBottom + margin) {
+              // fallback (shouldn't happen, but keep safe)
+              next = itemBottom + margin - scroller.clientHeight;
+            }
+          }
+
+          scroller.scrollTop = Math.max(0, next);
+        };
+
+        notesGrid.querySelectorAll('input[name="fragranceRadio"]').forEach(input => {
+          input.addEventListener("change", async () => {
+            state.selectedId = input.value;
+            syncSlider();
+            updateCheckedState();
+
+            const label = input.closest(".fragrance-item");
+            ensureNoteCardInView(label);
+
+            if (state.soundOn) {
+              try {
+                const f = selectedFragrance();
+                await audioEngine.playPreviewForFragrance(f, state.ratios[f.id] || 40);
+              } catch (err) {
+                console.error("Preview error:", err);
+              }
+            }
+          });
+        });
+      }
+
+      function updateCheckedState() {
+        notesGrid.querySelectorAll('input[name="fragranceRadio"]').forEach(input => {
+          input.checked = input.value === state.selectedId;
+        });
+      }
+
+      function syncSlider() {
+        const selected = selectedFragrance();
+        const value = state.ratios[selected.id] || 0;
+        ratioSlider.disabled = false;
+        ratioSlider.value = value;
+        sliderValue.textContent = value;
+        activeName.textContent = `${selected.en} / ${selected.jp}`;
+        activeVizName.textContent = selected.en;
+      }
+
+      function updateMiniBars() {
+        const active = sortedByRatio().filter(f => f.ratio > 0);
+        miniBars.innerHTML = active.length
+          ? active.map(f => `
+            <div class="mini-bar">
+              <div class="mini-bar-name">${f.jp}</div>
+              <div class="mini-track"><div class="mini-fill" style="width:${f.ratio}%; background:${f.color}"></div></div>
+              <div style="text-align:right; color:#6d7580; font-weight:800">${f.ratio}</div>
+            </div>
+          `).join("")
+          : `<div class="adjust-help">まだ比率が入っていません。カードを選んでスライダーを動かしてください。</div>`;
+      }
+
+      function updateResults() {
+        resultName.textContent = buildResultName();
+        resultCopy.textContent = buildResultCopy();
+        resultTopBlend.textContent = sortedByRatio().filter(f => f.ratio > 0).slice(0, 3).map(f => `${f.jp} ${f.ratio}`).join(" / ") || "未調香";
+        resultProfile.textContent = buildProfileWords();
+        resultCharacter.textContent = buildCharacterText();
+        resultImpression.textContent = buildImpressionText();
+        resultRatioSummary.textContent = buildRatioSummaryText();
+        blendScoreEl.textContent = getBlendScore();
+      }
+
+      class BlendAudioEngine {
+        constructor() {
+          this.ready = false;
+          this.primed = false;
+          this.lastError = "";
+          this.master = null;
+          this.comp = null;
+          this.reverb = null;
+          this.delay = null;
+          this.toneFilter = null;
+          this.chorus = null;
+          this.widener = null;
+          this.bellBus = null;
+          this.stringMain = null;
+          this.stringDouble = null;
+          this.stringTail = null;
+          this.previewMain = null;
+          this.sparkle = null;
+          this.sparklePluck = null;
+          this.guitarSampler = null;
+          this.samplerReady = false;
+        }
+
+        async init() {
+          if (this.ready) return;
+
+          try {
+            await Tone.start();
+          } catch (err) {
+            this.lastError = err?.message ? String(err.message) : String(err);
+            throw err;
+          }
+
+          this.master = new Tone.Gain(0.90);
+          this.comp = new Tone.Compressor({
+            threshold: -22,
+            ratio: 2.2,
+            attack: 0.01,
+            release: 0.16
+          });
+
+          this.reverb = new Tone.Reverb({
+            decay: 3.2,
+            wet: 0.20
+          });
+          await this.reverb.generate();
+
+          this.delay = new Tone.FeedbackDelay({
+            delayTime: 0.18,
+            feedback: 0.10,
+            wet: 0.018
+          });
+
+          // Some Tone builds/envs might not expose these nodes; fall back safely.
+          this.chorus = Tone.Chorus
+            ? new Tone.Chorus({ frequency: 1.1, delayTime: 3.5, depth: 0.35, wet: 0.12 }).start()
+            : new Tone.Gain(1);
+
+          this.widener = Tone.StereoWidener ? new Tone.StereoWidener(0.22) : new Tone.Gain(1);
+
+          this.toneFilter = new Tone.Filter({
+            type: "lowpass",
+            frequency: 8600,
+            rolloff: -24
+          });
+
+          this.stringMain = new Tone.PluckSynth({
+            attackNoise: 0.05,
+            dampening: 8200,
+            resonance: 0.985
+          });
+
+          this.stringDouble = new Tone.PluckSynth({
+            attackNoise: 0.03,
+            dampening: 9000,
+            resonance: 0.972
+          });
+
+          this.stringTail = new Tone.Synth({
+            oscillator: { type: "triangle" },
+            envelope: {
+              attack: 0.02,
+              decay: 0.12,
+              sustain: 0.03,
+              release: 0.85
+            }
+          });
+
+          this.previewMain = new Tone.PluckSynth({
+            attackNoise: 0.04,
+            dampening: 8400,
+            resonance: 0.975
+          });
+
+          // Real string samples (Berklee Sound Library via Tonejs/audio).
+          // This is the primary sound source for the "harp / 12-string" feel.
+          this.samplerReady = false;
+          this.guitarSampler = new Tone.Sampler({
+            urls: {
+              "E2": "https://raw.githubusercontent.com/Tonejs/audio/master/berklee/guitar_LowEstring1.mp3",
+              "A2": "https://raw.githubusercontent.com/Tonejs/audio/master/berklee/guitar_Astring.mp3",
+              "D3": "https://raw.githubusercontent.com/Tonejs/audio/master/berklee/guitar_Dstring.mp3",
+              "G3": "https://raw.githubusercontent.com/Tonejs/audio/master/berklee/guitar_Gstring.mp3",
+              "B3": "https://raw.githubusercontent.com/Tonejs/audio/master/berklee/guitar_Bstring.mp3",
+              "E4": "https://raw.githubusercontent.com/Tonejs/audio/master/berklee/guitar_highEstring.mp3"
+            },
+            attack: 0.004,
+            release: 1.4,
+            onload: () => { this.samplerReady = true; }
+          });
+          this.guitarSampler.volume.value = -10;
+
+          // Sparkle layer: use another bright pluck (less "synthy" than FM).
+          this.sparklePluck = new Tone.PluckSynth({
+            attackNoise: 0.02,
+            dampening: 10500,
+            resonance: 0.992
+          });
+          this.sparklePluck.volume.value = -14;
+
+          // Routing: instruments -> (chorus/widener) -> (reverb/delay/filter) -> master -> comp -> destination
+          this.stringMain.connect(this.chorus);
+          this.stringDouble.connect(this.chorus);
+          this.previewMain.connect(this.chorus);
+          this.sparklePluck.connect(this.chorus);
+          this.guitarSampler.connect(this.chorus);
+
+          this.stringTail.connect(this.toneFilter);
+
+          this.chorus.connect(this.widener);
+          this.widener.connect(this.reverb);
+          this.widener.connect(this.delay);
+          this.widener.connect(this.toneFilter);
+
+          this.reverb.connect(this.master);
+          this.delay.connect(this.master);
+          this.toneFilter.connect(this.master);
+          this.master.connect(this.comp);
+          this.comp.toDestination();
+
+          this.ready = true;
+        }
+
+        async resume() {
+          await this.init();
+          if (Tone.context.state !== "running") {
+            await Tone.context.resume();
+          }
+        }
+
+        getNormalizedBlend() {
+          const total = totalRatio();
+          if (total <= 0) return [];
+          return sortedByRatio().filter(f => f.ratio > 0).map(f => ({ ...f, share: f.ratio / total }));
+        }
+
+        rootFromHue(hue) {
+          const h = ((hue % 360) + 360) % 360;
+          // Slightly higher root for lighter harp feel (1.5–2 oct range stays in bright register)
+          if (h < 45) return "G4";
+          if (h < 90) return "A4";
+          if (h < 140) return "B4";
+          if (h < 200) return "C5";
+          if (h < 260) return "D5";
+          if (h < 320) return "E5";
+          return "A4";
+        }
+
+        velocityFromRatio(ratio) {
+          return Math.max(0.18, Math.min(0.82, ratio / 100));
+        }
+
+        brightnessFromColor(sat, light) {
+          return Math.max(0.2, Math.min(1, (sat / 100) * 0.52 + (light / 100) * 0.48));
+        }
+
+        getBlendMood(fam) {
+          if (fam.citrus + fam.fruity > 0.38) return "citrus";
+          if (fam.floral > 0.30) return "floral";
+          if (fam.herbal + fam.tea > 0.26) return "airy";
+          if (fam.woody + fam.base > 0.34) return "deep";
+          return "balanced";
+        }
+
+        getScaleForMood(mood) {
+          const scaleId = MOOD_SCALE[mood] || "pentatonicMajor";
+          const oneOctave = SCALE_TABLE[scaleId] || SCALE_TABLE.pentatonicMajor;
+          const twoOctaves = [...oneOctave, ...oneOctave.map(s => s + 12)];
+          return twoOctaves.sort((a, b) => a - b);
+        }
+
+        getJazzLevel(totalRatio, activeCount) {
+          const score = totalRatio * 0.015 + activeCount * 2;
+          if (score >= 14) return 2;
+          if (score >= 8) return 1;
+          return 0;
+        }
+
+        getMelodyPattern(mood) {
+          const map = {
+            citrus: [0, 1, 2, 3, 4, 5, 4, 3],
+            floral: [0, 2, 4, 3, 1, 3, 2],
+            airy: [0, 1, 3, 2, 4, 2],
+            deep: [0, 1, 2, 3, 2, 1],
+            balanced: [0, 1, 2, 3, 4, 3, 2]
+          };
+          return map[mood] || map.balanced;
+        }
+
+        getStepForMood(mood) {
+          if (mood === "citrus") return 0.12;
+          if (mood === "floral") return 0.14;
+          if (mood === "airy") return 0.15;
+          if (mood === "deep") return 0.16;
+          return 0.13;
+        }
+
+        getRepeatForMood(mood, total) {
+          if (mood === "citrus" && total > 100) return 2;
+          if (mood === "floral" && total > 90) return 2;
+          return 1;
+        }
+
+        updateGlobalTone(fam) {
+          const sat = weightedSaturation();
+          const light = weightedLightness();
+          const brightness = this.brightnessFromColor(sat, light);
+
+          const deep = fam.base + fam.woody;
+          const airy = fam.herbal + fam.tea;
+          const citrus = fam.citrus + fam.fruity;
+
+          // Brighter overall, with "deep" blends slightly darker/longer.
+          this.toneFilter.frequency.rampTo(4200 + brightness * 5600 - deep * 1100, 0.10);
+          this.reverb.wet.rampTo(0.12 + (1 - brightness) * 0.12 + deep * 0.07, 0.10);
+          this.delay.wet.rampTo(0.016 + brightness * 0.028 + citrus * 0.012, 0.10);
+          if (this.chorus?.wet?.rampTo) {
+            // Keep chorus subtle to avoid "synth pop" feel.
+            this.chorus.wet.rampTo(0.03 + fam.floral * 0.10 + airy * 0.04, 0.10);
+          } else if (this.chorus?.wet) {
+            this.chorus.wet.value = 0.03 + fam.floral * 0.10 + airy * 0.04;
+          }
+
+          const widthTarget = 0.18 + citrus * 0.16 + fam.floral * 0.10;
+          if (this.widener?.width?.rampTo) {
+            this.widener.width.rampTo(widthTarget, 0.09);
+          } else if (this.widener?.width) {
+            this.widener.width.value = widthTarget;
+          }
+
+          const masterGain = 0.9 + (fam.citrus + fam.fruity) * 0.03 - (fam.base + fam.woody) * 0.03;
+          this.master.gain.rampTo(Math.max(0.84, Math.min(0.95, masterGain)), 0.08);
+        }
+
+        buildChordSemis(fam) {
+          const deep = fam.base + fam.woody;
+          const citrus = fam.citrus + fam.fruity;
+          const floral = fam.floral;
+          const total = totalRatio();
+          const activeCount = activeFragrances().length;
+          const jazzLevel = this.getJazzLevel(total, activeCount);
+          const extras = JAZZ_CHORD_EXTRAS[jazzLevel] || [];
+
+          const minor = deep > 0.33 && citrus < 0.28;
+          const base = minor ? [0, 3, 7] : [0, 4, 7];
+          const withExtras = [...base];
+          if (extras.includes(5)) withExtras.push(5);   // Sus4
+          if (extras.includes(8)) withExtras.push(8);   // Aug5 (jazzLevel 2 option)
+          if (extras.includes(9)) withExtras.push(9);   // 6th
+          if (extras.includes(11)) withExtras.push(11); // maj7
+          withExtras.push(12);
+          return [...new Set(withExtras)].sort((a, b) => a - b);
+        }
+
+        trigger12StringLike(note, time, velocity, mood, isAccent = false, durHint = 0.28) {
+          const vel = Math.max(0.12, Math.min(0.9, velocity));
+          const dur = Math.max(0.18, Math.min(1.2, durHint));
+
+          // Primary: sampler if available, fallback to synth plucks.
+          if (this.guitarSampler && this.samplerReady) {
+            const freq = Tone.Frequency(note);
+            const midi = freq.toMidi();
+            const isLow = midi < Tone.Frequency("C4").toMidi();
+
+            // 12-string-ish: octave doubling on lower range, subtle unison above.
+            const doubleNote = isLow ? freq.transpose(12).toNote() : freq.transpose(0.06).toNote();
+
+            this.guitarSampler.triggerAttackRelease(note, dur, time, vel * 0.92);
+            this.guitarSampler.triggerAttackRelease(doubleNote, dur, time + 0.012, vel * 0.52);
+          } else {
+            this.stringMain.triggerAttackRelease(note, Math.min(0.22, dur * 0.55), time, vel);
+          }
+
+          let doubleNote = note;
+          if (mood === "citrus" || mood === "floral") {
+            doubleNote = Tone.Frequency(note).transpose(12).toNote();
+          } else if (mood === "airy") {
+            doubleNote = Tone.Frequency(note).transpose(7).toNote();
+          } else {
+            doubleNote = Tone.Frequency(note).transpose(0.08).toNote();
+          }
+
+          // Fallback layer (kept quiet) to avoid "one-note only" cases.
+          this.stringDouble.triggerAttackRelease(doubleNote, Math.min(0.18, dur * 0.45), time + 0.018, vel * 0.18);
+
+          if (isAccent && this.sparklePluck) {
+            const sparkleNote =
+              mood === "deep"
+                ? Tone.Frequency(note).transpose(12).toNote()
+                : Tone.Frequency(note).transpose(19).toNote(); // +12 +7
+            this.sparklePluck.triggerAttackRelease(sparkleNote, 0.06, time + 0.010, Math.min(0.34, vel * 0.24));
+          }
+        }
+
+        async playBlend() {
+          try {
+            await this.resume();
+          } catch (err) {
+            this.lastError = err?.message ? String(err.message) : String(err);
+            throw err;
+          }
+
+          if (!this.primed) {
+            const primer = new Tone.Synth({ volume: -60 }).toDestination();
+            primer.triggerAttackRelease("C5", 0.01, Tone.now());
+            setTimeout(() => primer.dispose(), 200);
+            this.primed = true;
+          }
+
+          const fam = familySummary();
+          const total = totalRatio();
+          const hue = weightedHue();
+          const mood = this.getBlendMood(fam);
+          const root = Tone.Frequency(this.rootFromHue(hue));
+          const scale = this.getScaleForMood(mood);
+          const pattern = this.getMelodyPattern(mood);
+          const step = this.getStepForMood(mood);
+          const repeat = this.getRepeatForMood(mood, total);
+
+          this.updateGlobalTone(fam);
+
+          const now = Tone.now() + 0.04;
+          const blend = this.getNormalizedBlend();
+          const topShare = blend.filter(f => f.family === "citrus" || f.family === "fruity" || f.family === "floral").reduce((s, f) => s + f.share, 0);
+          const baseShare = fam.base + fam.woody;
+          const chord = this.buildChordSemis(fam);
+
+          let cursor = 0;
+
+          const strumCount = Math.min(3, chord.length);
+          for (let i = 0; i < strumCount; i++) {
+            const semi = chord[i];
+            const n = root.transpose(semi + (mood === "deep" ? -12 : 0)).toNote();
+            const t = now + i * 0.018;
+            this.trigger12StringLike(n, t, 0.20 + i * 0.02, mood, i === 0 || i === strumCount - 1, 0.28);
+          }
+          cursor += 0.07;
+
+          for (let r = 0; r < repeat; r++) {
+            for (let i = 0; i < pattern.length; i++) {
+              const degree = pattern[i];
+              const scaleLen = scale.length;
+              const semi = scale[degree % scaleLen];
+              const octaveBias = mood === "deep" ? -12 : 0;
+
+              const note = root.transpose(semi + octaveBias).toNote();
+
+              const velocity =
+                0.26 +
+                topShare * 0.14 -
+                baseShare * 0.04 +
+                (mood === "citrus" ? 0.06 : 0) +
+                (i === pattern.length - 1 ? 0.03 : 0);
+
+              const humanize = (Math.random() - 0.5) * 0.010;
+              const durHint = step * 1.5;
+              this.trigger12StringLike(
+                note,
+                now + cursor + humanize,
+                Math.max(0.18, Math.min(0.58, velocity)),
+                mood,
+                i === 0 || i === pattern.length - 1,
+                durHint
+              );
+
+              const elastic = 1 + (mood === "citrus" ? 0.06 : mood === "deep" ? -0.02 : 0);
+              cursor += step * elastic;
+            }
+          }
+
+          const tailSemi = scale[Math.min(2, scale.length - 1)];
+          const tailNote = root.transpose(tailSemi + (mood === "deep" ? -12 : 0)).toNote();
+          this.stringTail.triggerAttackRelease(tailNote, 0.35 + baseShare * 0.2, now + cursor * 0.3, 0.04 + baseShare * 0.02);
+        }
+
+        async playPreviewForFragrance(fragrance, ratio = 40) {
+          try {
+            await this.resume();
+          } catch (err) {
+            this.lastError = err?.message ? String(err.message) : String(err);
+            throw err;
+          }
+
+          const baseRoot = Tone.Frequency(this.rootFromHue(fragrance.hue || 120));
+          let offset = 0;
+
+          if (fragrance.family === "citrus") offset = 7;
+          else if (fragrance.family === "fruity") offset = 9;
+          else if (fragrance.family === "floral") offset = 4;
+          else if (fragrance.family === "herbal") offset = 2;
+          else if (fragrance.family === "tea") offset = 5;
+          else if (fragrance.family === "woody") offset = 0;
+          else if (fragrance.family === "base") offset = -2;
+
+          const note = baseRoot.transpose(offset).toNote();
+          const vel = this.velocityFromRatio(ratio) * 0.4;
+
+          if (this.guitarSampler && this.samplerReady) {
+            this.guitarSampler.triggerAttackRelease(note, 0.22, Tone.now() + 0.01, vel * 0.9);
+          } else {
+            this.previewMain.triggerAttackRelease(note, 0.08, Tone.now() + 0.01, vel);
+          }
+        }
+
+        async playSliderPreview(fragrance, ratio = 40) {
+          try {
+            await this.resume();
+          } catch (err) {
+            this.lastError = err?.message ? String(err.message) : String(err);
+            throw err;
+          }
+
+          const root = Tone.Frequency(this.rootFromHue(fragrance.hue || 120));
+          const interval = ratio < 20 ? 0 : ratio < 45 ? 2 : ratio < 70 ? 4 : 7;
+          const note = root.transpose(interval).toNote();
+          const vel = this.velocityFromRatio(ratio) * 0.28;
+
+          if (this.guitarSampler && this.samplerReady) {
+            this.guitarSampler.triggerAttackRelease(note, 0.16, Tone.now() + 0.01, vel * 0.85);
+          } else {
+            this.previewMain.triggerAttackRelease(note, 0.06, Tone.now() + 0.01, vel);
+          }
+        }
+      }
+
+      const audioEngine = new BlendAudioEngine();
+
+      function resize() {
+        const rect = shell.getBoundingClientRect();
+        w = Math.round(rect.width);
+        h = Math.round(rect.height);
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+        canvas.style.width = w + "px";
+        canvas.style.height = h + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        makeParticles();
+      }
+
+      function makeParticles() {
+        const total = totalRatio();
+        const normalized = clamp(total / 180, 0.12, 1);
+        const count = Math.round(2200 + normalized * 12500);
+
+        particles = Array.from({ length: count }, () => ({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * (0.4 + normalized * 0.8),
+          vy: (Math.random() - 0.5) * (0.3 + normalized * 0.7),
+          size: 0.8 + Math.random() * 2.4,
+          seed: Math.random() * Math.PI * 2,
+          drift: 0.15 + Math.random() * 0.85
+        }));
+      }
+
+      function drawBackground() {
+        ctx.clearRect(0, 0, w, h);
+
+        const hue = weightedHue();
+        const sat = weightedSaturation();
+        const lig = weightedLightness();
+
+        const bg = ctx.createLinearGradient(0, 0, w, h);
+        bg.addColorStop(0, hsl(hue - 18, sat * 0.46, lig + 18, 0.44));
+        bg.addColorStop(0.55, "rgba(255,255,255,0.16)");
+        bg.addColorStop(1, hsl(hue + 22, sat * 0.40, lig + 12, 0.34));
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+
+        const fam = familySummary();
+
+        const topGlow = ctx.createRadialGradient(w * 0.28, h * 0.22, 0, w * 0.28, h * 0.22, Math.max(w, h) * 0.58);
+        topGlow.addColorStop(0, hsl(hue, sat + 12, lig + 22, 0.28 + fam.citrus * 0.20));
+        topGlow.addColorStop(1, hsl(hue, sat, lig, 0));
+        ctx.fillStyle = topGlow;
+        ctx.fillRect(0, 0, w, h);
+
+        const lowGlow = ctx.createRadialGradient(w * 0.72, h * 0.78, 0, w * 0.72, h * 0.78, Math.max(w, h) * 0.62);
+        lowGlow.addColorStop(0, hsl(hue - 14, sat - 6, lig - 2, 0.22 + (fam.base + fam.woody) * 0.18));
+        lowGlow.addColorStop(1, hsl(hue, sat, lig, 0));
+        ctx.fillStyle = lowGlow;
+        ctx.fillRect(0, 0, w, h);
+      }
+
+      function drawVeils() {
+        const hue = weightedHue();
+        const sat = weightedSaturation();
+        const lig = weightedLightness();
+        const fam = familySummary();
+
+        const wave1 = Math.sin(tick * 0.008) * 24;
+        const wave2 = Math.cos(tick * 0.006) * 18;
+
+        ctx.fillStyle = hsl(hue + 8, sat * 0.78, lig + 16, 0.14 + fam.floral * 0.18);
+        ctx.beginPath();
+        ctx.moveTo(0, h * 0.38 + wave1);
+        ctx.bezierCurveTo(w * 0.14, h * 0.18, w * 0.40, h * 0.54, w * 0.66, h * 0.30);
+        ctx.bezierCurveTo(w * 0.82, h * 0.16, w * 0.94, h * 0.34, w, h * 0.28);
+        ctx.lineTo(w, h);
+        ctx.lineTo(0, h);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = hsl(hue - 10, sat * 0.62, lig + 6, 0.10 + (fam.herbal + fam.tea) * 0.14);
+        ctx.beginPath();
+        ctx.moveTo(0, h * 0.52 + wave2);
+        ctx.bezierCurveTo(w * 0.20, h * 0.40, w * 0.46, h * 0.66, w * 0.70, h * 0.46);
+        ctx.bezierCurveTo(w * 0.86, h * 0.34, w * 0.96, h * 0.50, w, h * 0.44);
+        ctx.lineTo(w, h);
+        ctx.lineTo(0, h);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = hsl(hue - 18, sat * 0.52, lig - 2, 0.10 + (fam.base + fam.woody) * 0.16);
+        ctx.beginPath();
+        ctx.moveTo(0, h * 0.84);
+        ctx.bezierCurveTo(w * 0.20, h * 0.72, w * 0.44, h * 0.94, w * 0.70, h * 0.82);
+        ctx.bezierCurveTo(w * 0.88, h * 0.72, w * 0.97, h * 0.86, w, h * 0.82);
+        ctx.lineTo(w, h);
+        ctx.lineTo(0, h);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      function drawParticles() {
+        const hue = weightedHue();
+        const sat = weightedSaturation();
+        const lig = weightedLightness();
+        const total = totalRatio();
+        const normalized = clamp(total / 180, 0.10, 1);
+        const fam = familySummary();
+
+        for (const p of particles) {
+          const flowX = (fam.citrus + fam.fruity) * 0.18 - (fam.base + fam.woody) * 0.10;
+          const flowY = -fam.citrus * 0.12 + (fam.base + fam.woody) * 0.10;
+
+          p.x += p.vx + Math.sin(tick * 0.01 + p.seed) * 0.24 * p.drift + flowX;
+          p.y += p.vy + Math.cos(tick * 0.008 + p.seed) * 0.18 * p.drift + flowY;
+
+          if (p.x < -20) p.x = w + 20;
+          if (p.x > w + 20) p.x = -20;
+          if (p.y < -20) p.y = h + 20;
+          if (p.y > h + 20) p.y = -20;
+
+          const alpha = 0.10 + normalized * 0.20 + Math.sin(tick * 0.012 + p.seed) * 0.03;
+          ctx.fillStyle = hsl(hue + Math.sin(p.seed) * 10, sat + 4, lig + 8, alpha);
+          ctx.fillRect(p.x, p.y, p.size, p.size);
+
+          if (p.size > 1.8) {
+            ctx.fillStyle = hsl(hue, sat + 10, lig + 18, alpha * 0.26);
+            ctx.fillRect(p.x - 0.6, p.y - 0.6, p.size + 1.1, p.size + 1.1);
+          }
+        }
+      }
+
+      function drawFlash() {
+        if (state.flash <= 0.001) return;
+
+        const hue = weightedHue();
+        const sat = weightedSaturation();
+        const lig = weightedLightness();
+        const glow = ctx.createRadialGradient(w * 0.5, h * 0.48, 0, w * 0.5, h * 0.48, Math.max(w, h) * 0.5);
+        glow.addColorStop(0, hsl(hue, sat + 10, lig + 18, 0.18 * state.flash));
+        glow.addColorStop(0.45, hsl(hue, sat, lig + 6, 0.08 * state.flash));
+        glow.addColorStop(1, hsl(hue, sat, lig, 0));
+        ctx.fillStyle = glow;
+        ctx.fillRect(0, 0, w, h);
+      }
+
+      function animate() {
+        tick++;
+        state.flash *= 0.92;
+        if (state.flash < 0.01) state.flash = 0;
+        drawBackground();
+        drawVeils();
+        drawParticles();
+        drawFlash();
+        requestAnimationFrame(animate);
+      }
+
+      function applyCurrentSlider() {
+        const id = state.selectedId;
+        state.ratios[id] = Number(ratioSlider.value);
+        sliderValue.textContent = String(state.ratios[id]);
+        updateMiniBars();
+        updateResults();
+        makeParticles();
+      }
+
+      function updateGenerateLabel() {
+        generateBtn.textContent = state.soundOn ? "この香りを見る（音が流れます）" : "この香りを見る";
+      }
+
+      function updateSoundUI() {
+        soundToggle.classList.toggle("on", state.soundOn);
+        soundPill.classList.toggle("active", state.soundOn);
+        soundStatusText.textContent = `Sound：${state.soundOn ? "ON" : "OFF"}`;
+        updateGenerateLabel();
+      }
+
+      ratioSlider.addEventListener("input", async () => {
+        applyCurrentSlider();
+
+        if (!state.soundOn) return;
+
+        const now = performance.now();
+        if (now - lastSliderSoundAt < 90) return;
+        lastSliderSoundAt = now;
+
+        try {
+          await audioEngine.playSliderPreview(selectedFragrance(), Number(ratioSlider.value));
+        } catch (err) {
+          console.error("Slider preview error:", err);
+        }
+      });
+
+      soundToggle.addEventListener("click", async () => {
+        state.soundOn = !state.soundOn;
+
+        if (state.soundOn && !state.audioReady) {
+          try {
+            await audioEngine.resume();
+            state.audioReady = true;
+          } catch (err) {
+            console.error("Audio init error:", err);
+            state.soundOn = false;
+            soundStatusText.textContent = `Sound：ERROR`;
+            if (audioEngine?.lastError) {
+              soundStatusText.textContent = `Sound：ERROR (${audioEngine.lastError})`;
+            }
+          }
+        }
+
+        updateSoundUI();
+      });
+
+      generateBtn.addEventListener("click", async () => {
+        state.flash = 1;
+        generateBtn.classList.add("flash");
+        setTimeout(() => generateBtn.classList.remove("flash"), 260);
+        updateResults();
+
+        if (!state.soundOn) return;
+
+        try {
+          await audioEngine.playBlend();
+        } catch (err) {
+          console.error("Audio playback error:", err);
+          soundStatusText.textContent = `Sound：ERROR`;
+          if (audioEngine?.lastError) {
+            soundStatusText.textContent = `Sound：ERROR (${audioEngine.lastError})`;
+          }
+        }
+      });
+
+      resetBtn.addEventListener("click", () => {
+        fragrances.forEach(f => state.ratios[f.id] = 0);
+        state.ratios[fragrances[0].id] = 24;
+        state.selectedId = fragrances[0].id;
+        updateCheckedState();
+        syncSlider();
+        updateMiniBars();
+        updateResults();
+        makeParticles();
+        state.flash = 0.65;
+
+        if (notesGrid) {
+          notesGrid.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      });
+
+      window.addEventListener("resize", resize);
+
+      renderNotesGrid();
+      syncSlider();
+      updateMiniBars();
+      updateResults();
+      updateSoundUI();
+      resize();
+      animate();
+    })();
+  </script>
+</body>
+
+</html>
