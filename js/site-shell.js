@@ -61,6 +61,8 @@
     const currentPage = pages[pageKey] || pages.home;
     let currentSession = null;
     let currentUser = null;
+    let currentProfile = null;
+    let currentPreferences = null;
     const siteConfig = window.INIM_SITE_CONFIG || {};
     const supabaseConfig = {
         url: siteConfig.supabaseUrl || '',
@@ -80,6 +82,7 @@
         account: "マイアカウント",
         profile: "プロファイル編集",
         password: "パスワード変更",
+        preferences: "好みの設定",
         delete: "退会手続き"
     };
     const t = {
@@ -411,9 +414,62 @@
         openModal(requestedMode);
     };
 
+    const loadOwnProfile = async () => {
+        if (!supabase || !currentUser) {
+            currentProfile = null;
+            currentPreferences = null;
+            return;
+        }
+
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('id, full_name, display_name, email, status, favorite_store, created_at, deleted_at')
+            .eq('id', currentUser.id)
+            .maybeSingle();
+
+        if (error || !data || data.deleted_at) {
+            currentProfile = null;
+            return;
+        }
+
+        currentProfile = data;
+        if (modal.getAttribute('aria-hidden') === 'false' && ['account', 'profile'].includes(modal.dataset.mode)) {
+            openModal(modal.dataset.mode);
+        }
+    };
+
+    const loadOwnPreferences = async () => {
+        if (!supabase || !currentUser) {
+            currentPreferences = null;
+            return;
+        }
+
+        const { data, error } = await supabase
+            .from('customer_preferences')
+            .select('profile_id, preferred_scent_family, preferred_experience, notes')
+            .eq('profile_id', currentUser.id)
+            .maybeSingle();
+
+        if (error || !data) {
+            currentPreferences = null;
+            return;
+        }
+
+        currentPreferences = data;
+        if (modal.getAttribute('aria-hidden') === 'false' && modal.dataset.mode === 'account') {
+            openModal('account');
+        }
+    };
+
     const applyAuthSession = (session) => {
         currentSession = session;
         currentUser = session?.user || null;
+        if (!currentUser) {
+            currentProfile = null;
+        } else {
+            void loadOwnProfile();
+            void loadOwnPreferences();
+        }
         syncAuthUi();
         syncModalLanding();
     };
@@ -482,6 +538,41 @@
         joinedAt: '2026-03-12'
     };
 
+    const toDateLabel = (value) => value ? String(value).split('T')[0] : accountSample.joinedAt;
+    const toStatusLabel = (value) => ({ active: '有効', inactive: '停止', pending: '確認待ち' }[value] || value || accountSample.status);
+    const getAccountViewModel = () => {
+        const metadata = currentUser?.user_metadata || {};
+        return {
+            name: currentProfile?.full_name || metadata.name || accountSample.name,
+            displayName: currentProfile?.display_name || metadata.display_name || accountSample.displayName,
+            email: currentProfile?.email || currentUser?.email || accountSample.email,
+            status: toStatusLabel(currentProfile?.status),
+            store: currentProfile?.favorite_store || accountSample.store,
+            joinedAt: toDateLabel(currentProfile?.created_at || currentUser?.created_at)
+        };
+    };
+
+    const getPreferencesSummaryItems = () => {
+        if (!currentPreferences) {
+            return [];
+        }
+
+        return [
+            ['好みの香調', currentPreferences.preferred_scent_family],
+            ['希望する体験', currentPreferences.preferred_experience],
+            ['メモ', currentPreferences.notes]
+        ].filter(([, value]) => Boolean(value));
+    };
+
+    const renderPreferencesSummary = () => {
+        const items = getPreferencesSummaryItems();
+        if (!items.length) {
+            return '<div><span>今後の機能</span><strong>予約履歴 / 調香履歴 / お気に入り</strong></div>';
+        }
+
+        return items.map(([label, value]) => `<div><span>${label}</span><strong>${value}</strong></div>`).join('');
+    };
+
     const modalLeads = {
         login: 'ご登録済みのお客様はこちらからログインしてください。今後、予約情報や調香履歴もここに連携されます。',
         register: '予約情報やお好みデータを管理する会員アカウントを作成します。',
@@ -489,6 +580,7 @@
         account: 'お客様向けのアカウント画面です。今後、予約状況やお気に入り情報もここに集約します。',
         profile: 'お名前・表示名・メールアドレスを編集できます。',
         password: '現在のパスワードを確認しながら、安全に変更します。',
+        preferences: '香りの好みや体験の希望を記録して、今後の提案に活かします。',
         delete: '退会には再認証と最終確認が必要です。'
     };
 
@@ -496,25 +588,29 @@
     const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
     const renderAccountView = (mode) => {
+        const accountViewModel = getAccountViewModel();
         if (mode === 'login') {
             return `<form class="account-form" novalidate><label class="account-field"><span>メールアドレス</span><input type="email" name="email" placeholder="you@example.com" autocomplete="email"></label>${fieldErrorHtml('email')}<label class="account-field"><span>パスワード</span><input type="password" name="password" placeholder="8文字以上" autocomplete="current-password"></label>${fieldErrorHtml('password')}<p class="account-form__status" data-account-status role="status" aria-live="polite" hidden></p><label class="account-check"><input type="checkbox" name="remember"><span>ログイン状態を保持する</span></label><div class="account-form__actions"><button class="button" type="submit">${t.login}</button></div><div class="account-inline-links"><a href="#forgot" data-account-switch="forgot">パスワードをお忘れですか？</a><a href="#register" data-account-switch="register">${t.register}</a></div></form>`;
         }
         if (mode === 'register') {
-            return `<form class="account-form" novalidate><label class="account-field"><span>お名前</span><input type="text" name="name" placeholder="${accountSample.name}" autocomplete="name"></label>${fieldErrorHtml('name')}<label class="account-field"><span>表示名</span><input type="text" name="display_name" placeholder="${accountSample.displayName}" autocomplete="nickname"></label>${fieldErrorHtml('display_name')}<label class="account-field"><span>メールアドレス</span><input type="email" name="email" placeholder="you@example.com" autocomplete="email"></label>${fieldErrorHtml('email')}<p class="account-form__status" data-account-status role="status" aria-live="polite" hidden></p><div class="account-form__split"><div><label class="account-field"><span>パスワード</span><input type="password" name="password" placeholder="8文字以上" autocomplete="new-password"></label>${fieldErrorHtml('password')}</div><div><label class="account-field"><span>パスワード確認</span><input type="password" name="password_confirm" placeholder="もう一度入力" autocomplete="new-password"></label>${fieldErrorHtml('password_confirm')}</div></div><label class="account-check"><input type="checkbox" name="terms"><span>利用規約とプライバシーポリシーに同意します。</span></label>${fieldErrorHtml('terms')}<div class="account-form__actions"><button class="button" type="submit">${t.register}</button></div><div class="account-inline-links"><a href="#login" data-account-switch="login">${t.login}</a></div></form>`;
+            return `<form class="account-form" novalidate><label class="account-field"><span>お名前</span><input type="text" name="name" placeholder="${accountViewModel.name}" autocomplete="name"></label>${fieldErrorHtml('name')}<label class="account-field"><span>表示名</span><input type="text" name="display_name" placeholder="${accountViewModel.displayName}" autocomplete="nickname"></label>${fieldErrorHtml('display_name')}<label class="account-field"><span>メールアドレス</span><input type="email" name="email" placeholder="you@example.com" autocomplete="email"></label>${fieldErrorHtml('email')}<p class="account-form__status" data-account-status role="status" aria-live="polite" hidden></p><div class="account-form__split"><div><label class="account-field"><span>パスワード</span><input type="password" name="password" placeholder="8文字以上" autocomplete="new-password"></label>${fieldErrorHtml('password')}</div><div><label class="account-field"><span>パスワード確認</span><input type="password" name="password_confirm" placeholder="もう一度入力" autocomplete="new-password"></label>${fieldErrorHtml('password_confirm')}</div></div><label class="account-check"><input type="checkbox" name="terms"><span>利用規約とプライバシーポリシーに同意します。</span></label>${fieldErrorHtml('terms')}<div class="account-form__actions"><button class="button" type="submit">${t.register}</button></div><div class="account-inline-links"><a href="#login" data-account-switch="login">${t.login}</a></div></form>`;
         }
         if (mode === 'forgot') {
             return `<form class="account-form" novalidate><label class="account-field"><span>ご登録メールアドレス</span><input type="email" name="email" placeholder="you@example.com" autocomplete="email"></label>${fieldErrorHtml('email')}<p class="account-form__status" data-account-status role="status" aria-live="polite" hidden></p><div class="account-form__actions"><button class="button" type="submit">再設定メールを送信</button></div><div class="account-inline-links"><a href="#login" data-account-switch="login">${t.login}</a></div></form>`;
         }
         if (mode === 'profile') {
-            return `<form class="account-form" novalidate><div class="account-summary"><div><span>登録日</span><strong>${accountSample.joinedAt}</strong></div><div><span>状態</span><strong>${accountSample.status}</strong></div></div><label class="account-field"><span>お名前</span><input type="text" name="name" value="${accountSample.name}"></label><label class="account-field"><span>表示名</span><input type="text" name="display_name" value="${accountSample.displayName}"></label><label class="account-field"><span>メールアドレス</span><input type="email" name="email" value="${accountSample.email}"></label><div class="account-form__actions"><button class="button" type="submit">保存</button><a class="button button--ghost" href="#account" data-account-switch="account">戻る</a></div></form>`;
+            return `<form class="account-form" novalidate><div class="account-summary"><div><span>登録日</span><strong>${accountViewModel.joinedAt}</strong></div><div><span>状態</span><strong>${accountViewModel.status}</strong></div></div><label class="account-field"><span>お名前</span><input type="text" name="name" value="${accountViewModel.name}"></label>${fieldErrorHtml('name')}<label class="account-field"><span>表示名</span><input type="text" name="display_name" value="${accountViewModel.displayName}"></label>${fieldErrorHtml('display_name')}<label class="account-field"><span>メールアドレス</span><input type="email" name="email" value="${accountViewModel.email}"></label>${fieldErrorHtml('email')}<p class="account-form__status" data-account-status role="status" aria-live="polite" hidden></p><div class="account-form__actions"><button class="button" type="submit">保存</button><a class="button button--ghost" href="#account" data-account-switch="account">戻る</a></div></form>`;
+        }
+        if (mode === 'preferences') {
+            return `<form class="account-form" novalidate><label class="account-field"><span>好みの香調</span><input type="text" name="preferred_scent_family" value="${currentPreferences?.preferred_scent_family || ''}" placeholder="例: citrus / woody / floral"></label><label class="account-field"><span>希望する体験</span><input type="text" name="preferred_experience" value="${currentPreferences?.preferred_experience || ''}" placeholder="例: workshop / custom blend"></label><label class="account-field"><span>メモ</span><input type="text" name="notes" value="${currentPreferences?.notes || ''}" placeholder="ご希望があれば記入"></label><p class="account-form__status" data-account-status role="status" aria-live="polite" hidden></p><div class="account-form__actions"><button class="button" type="submit">保存</button><a class="button button--ghost" href="#account" data-account-switch="account">戻る</a></div></form>`;
         }
         if (mode === 'password') {
-            return `<form class="account-form" novalidate><label class="account-field"><span>現在のパスワード</span><input type="password" name="current_password" placeholder="現在のパスワード"></label><label class="account-field"><span>新しいパスワード</span><input type="password" name="next_password" placeholder="8文字以上"></label><label class="account-field"><span>新しいパスワード確認</span><input type="password" name="next_password_confirm" placeholder="もう一度入力"></label><div class="account-form__actions"><button class="button" type="submit">更新</button><a class="button button--ghost" href="#account" data-account-switch="account">戻る</a></div></form>`;
+            return `<form class="account-form" novalidate><label class="account-field"><span>現在のパスワード</span><input type="password" name="current_password" placeholder="現在のパスワード"></label>${fieldErrorHtml('current_password')}<label class="account-field"><span>新しいパスワード</span><input type="password" name="next_password" placeholder="8文字以上"></label>${fieldErrorHtml('next_password')}<label class="account-field"><span>新しいパスワード確認</span><input type="password" name="next_password_confirm" placeholder="もう一度入力"></label>${fieldErrorHtml('next_password_confirm')}<p class="account-form__status" data-account-status role="status" aria-live="polite" hidden></p><div class="account-form__actions"><button class="button" type="submit">更新</button><a class="button button--ghost" href="#account" data-account-switch="account">戻る</a></div></form>`;
         }
         if (mode === 'delete') {
             return `<div class="account-danger"><p>退会には再認証が必要です。実装段階では、即時削除ではなく soft delete もしくは退会フローを用意する想定です。</p><form class="account-form" novalidate><label class="account-field"><span>確認用パスワード</span><input type="password" name="confirm_password" placeholder="現在のパスワード"></label><div class="account-form__actions"><button class="button button--danger" type="submit">退会する</button><a class="button button--ghost" href="#account" data-account-switch="account">キャンセル</a></div></form></div>`;
         }
-        return `<div class="account-card-grid"><article class="account-card account-card--accent"><p class="account-card__label">状態</p><strong>${accountSample.status}</strong><span>認証連携済み</span></article><article class="account-card"><p class="account-card__label">よく利用する店舗</p><strong>${accountSample.store}</strong><span>予約導線と連携予定</span></article></div><div class="account-summary account-summary--stack"><div><span>お名前</span><strong>${accountSample.name}</strong></div><div><span>表示名</span><strong>${accountSample.displayName}</strong></div><div><span>メールアドレス</span><strong>${accountSample.email}</strong></div><div><span>今後の機能</span><strong>予約履歴 / 調香履歴 / お気に入り</strong></div></div><div class="account-panel-actions"><a class="button" href="#profile" data-account-switch="profile">プロファイル編集</a><a class="button button--secondary" href="#password" data-account-switch="password">パスワード変更</a><a class="button button--ghost" href="#delete" data-account-switch="delete">退会手続き</a></div>`;
+        return `<div class="account-card-grid"><article class="account-card account-card--accent"><p class="account-card__label">状態</p><strong>${accountViewModel.status}</strong><span>認証連携済み</span></article><article class="account-card"><p class="account-card__label">よく利用する店舗</p><strong>${accountViewModel.store}</strong><span>予約導線と連携予定</span></article></div><div class="account-summary account-summary--stack"><div><span>お名前</span><strong>${accountViewModel.name}</strong></div><div><span>表示名</span><strong>${accountViewModel.displayName}</strong></div><div><span>メールアドレス</span><strong>${accountViewModel.email}</strong></div>${renderPreferencesSummary()}</div><div class="account-panel-actions"><a class="button" href="#profile" data-account-switch="profile">プロファイル編集</a><a class="button button--secondary" href="#preferences" data-account-switch="preferences">好みの設定</a><a class="button button--secondary" href="#password" data-account-switch="password">パスワード変更</a><a class="button button--ghost" href="#delete" data-account-switch="delete">退会手続き</a></div>`;
     };
 
     const setFieldError = (form, name, message = '') => {
@@ -557,21 +653,42 @@
             message = 'パスワードを入力してください。';
         }
 
-        if (mode === 'register') {
+        if (mode === 'password') {
+            if (name === 'current_password' && !value) {
+                message = '現在のパスワードを入力してください。';
+            }
+            if (name === 'next_password') {
+                if (!value) {
+                    message = '新しいパスワードを入力してください。';
+                } else if (String(value).length < 8) {
+                    message = '新しいパスワードは8文字以上で入力してください。';
+                }
+            }
+            if (name === 'next_password_confirm') {
+                const nextPassword = form.elements.next_password?.value || '';
+                if (!value) {
+                    message = '確認用の新しいパスワードを入力してください。';
+                } else if (String(value) !== nextPassword) {
+                    message = '新しいパスワードが一致していません。';
+                }
+            }
+        }
+
+        if (mode === 'register' || mode === 'profile') {
             if (name === 'name' && !value) {
                 message = 'お名前を入力してください。';
             }
             if (name === 'display_name' && !value) {
                 message = '表示名を入力してください。';
             }
-            if (name === 'password') {
+            if (mode === 'register' && name === 'password') {
                 if (!value) {
                     message = 'パスワードを入力してください。';
                 } else if (String(value).length < 8) {
                     message = 'パスワードは8文字以上で入力してください。';
                 }
             }
-            if (name === 'password_confirm') {
+            if (mode === 'register' && name === 'password_confirm') {
                 const password = form.elements.password?.value || '';
                 if (!value) {
                     message = '確認用パスワードを入力してください。';
@@ -579,7 +696,7 @@
                     message = 'パスワードが一致していません。';
                 }
             }
-            if (name === 'terms' && !value) {
+            if (mode === 'register' && name === 'terms' && !value) {
                 message = '利用規約とプライバシーポリシーへの同意が必要です。';
             }
         }
@@ -592,7 +709,10 @@
         const fieldNames = {
             login: ['email', 'password'],
             forgot: ['email'],
-            register: ['name', 'display_name', 'email', 'password', 'password_confirm', 'terms']
+            register: ['name', 'display_name', 'email', 'password', 'password_confirm', 'terms'],
+            profile: ['name', 'display_name', 'email'],
+            password: ['current_password', 'next_password', 'next_password_confirm'],
+            preferences: []
         }[mode] || [];
 
         let firstInvalid = null;
@@ -704,7 +824,7 @@
     modalBody.addEventListener('focusout', (event) => {
         const field = event.target.closest('input');
         const mode = modal.dataset.mode;
-        if (!field || !['login', 'forgot', 'register'].includes(mode)) {
+        if (!field || !['login', 'forgot', 'register', 'profile', 'password', 'preferences'].includes(mode)) {
             return;
         }
 
@@ -719,7 +839,7 @@
     modalBody.addEventListener('input', (event) => {
         const field = event.target.closest('input');
         const mode = modal.dataset.mode;
-        if (!field || !['login', 'forgot', 'register'].includes(mode) || field.type === 'checkbox') {
+        if (!field || !['login', 'forgot', 'register', 'profile', 'password', 'preferences'].includes(mode) || field.type === 'checkbox') {
             return;
         }
 
@@ -737,7 +857,7 @@
     modalBody.addEventListener('change', (event) => {
         const field = event.target.closest('input');
         const mode = modal.dataset.mode;
-        if (!field || !['login', 'forgot', 'register'].includes(mode)) {
+        if (!field || !['login', 'forgot', 'register', 'profile', 'password', 'preferences'].includes(mode)) {
             return;
         }
 
@@ -757,7 +877,7 @@
 
         const form = event.target.closest('form');
         const mode = modal.dataset.mode;
-        if (!form || !['login', 'forgot', 'register'].includes(mode)) {
+        if (!form || !['login', 'forgot', 'register', 'profile', 'password', 'preferences'].includes(mode)) {
             return;
         }
 
@@ -822,6 +942,74 @@
                 return;
             }
 
+            if (mode === 'password') {
+                const currentPassword = form.elements.current_password?.value || '';
+                const nextPassword = form.elements.next_password?.value || '';
+                if (!currentUser?.email) {
+                    throw new Error('現在のユーザー情報を確認できませんでした。');
+                }
+                setModalStatus('パスワードを更新しています...', 'info');
+                const { error: signInError } = await supabase.auth.signInWithPassword({
+                    email: currentUser.email,
+                    password: currentPassword
+                });
+                if (signInError) {
+                    throw signInError;
+                }
+                const { error: updateError } = await supabase.auth.updateUser({ password: nextPassword });
+                if (updateError) {
+                    throw updateError;
+                }
+                setModalStatus('パスワードを更新しました。', 'success');
+                openModal('account');
+                return;
+            }
+
+            if (mode === 'profile') {
+                const fullName = form.elements.name?.value?.trim() || '';
+                const displayName = form.elements.display_name?.value?.trim() || '';
+                setModalStatus('プロファイルを保存しています...', 'info');
+                const { data, error } = await supabase
+                    .from('profiles')
+                    .update({
+                        full_name: fullName,
+                        display_name: displayName,
+                        email
+                    })
+                    .eq('id', currentUser?.id)
+                    .select('id, full_name, display_name, email, status, favorite_store, created_at, deleted_at')
+                    .maybeSingle();
+                if (error) {
+                    throw error;
+                }
+                currentProfile = data || currentProfile;
+                setModalStatus('プロファイルを保存しました。', 'success');
+                openModal('account');
+                return;
+            }
+
+            if (mode === 'preferences') {
+                setModalStatus('好みの設定を保存しています...', 'info');
+                const payload = {
+                    profile_id: currentUser?.id,
+                    preferred_scent_family: form.elements.preferred_scent_family?.value?.trim() || null,
+                    preferred_experience: form.elements.preferred_experience?.value?.trim() || null,
+                    notes: form.elements.notes?.value?.trim() || null
+                };
+                const { data, error } = await supabase
+                    .from('customer_preferences')
+                    .upsert(payload, { onConflict: 'profile_id' })
+                    .select('profile_id, preferred_scent_family, preferred_experience, notes')
+                    .maybeSingle();
+                if (error) {
+                    throw error;
+                }
+                currentPreferences = data || payload;
+                setModalStatus('好みの設定を保存しました。', 'success');
+                openModal('account');
+                return;
+            }
+
             setModalStatus('再設定メールを送信しています...', 'info');
             const { error } = await supabase.auth.resetPasswordForEmail(
                 email,
@@ -860,6 +1048,9 @@
 
     document.dispatchEvent(new CustomEvent('site-shell:ready', { detail: { pageKey, root } }));
 })();
+
+
+
 
 
 
