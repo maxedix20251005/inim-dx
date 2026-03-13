@@ -608,7 +608,7 @@
             return `<form class="account-form" novalidate><label class="account-field"><span>現在のパスワード</span><input type="password" name="current_password" placeholder="現在のパスワード"></label>${fieldErrorHtml('current_password')}<label class="account-field"><span>新しいパスワード</span><input type="password" name="next_password" placeholder="8文字以上"></label>${fieldErrorHtml('next_password')}<label class="account-field"><span>新しいパスワード確認</span><input type="password" name="next_password_confirm" placeholder="もう一度入力"></label>${fieldErrorHtml('next_password_confirm')}<p class="account-form__status" data-account-status role="status" aria-live="polite" hidden></p><div class="account-form__actions"><button class="button" type="submit">更新</button><a class="button button--ghost" href="#account" data-account-switch="account">戻る</a></div></form>`;
         }
         if (mode === 'delete') {
-            return `<div class="account-danger"><p>退会には再認証が必要です。実装段階では、即時削除ではなく soft delete もしくは退会フローを用意する想定です。</p><form class="account-form" novalidate><label class="account-field"><span>確認用パスワード</span><input type="password" name="confirm_password" placeholder="現在のパスワード"></label><div class="account-form__actions"><button class="button button--danger" type="submit">退会する</button><a class="button button--ghost" href="#account" data-account-switch="account">キャンセル</a></div></form></div>`;
+            return `<div class="account-danger"><p>退会には再認証が必要です。実装段階では、即時削除ではなく soft delete で無効化します。</p><form class="account-form" novalidate><label class="account-field"><span>確認用パスワード</span><input type="password" name="confirm_password" placeholder="現在のパスワード"></label>${fieldErrorHtml('confirm_password')}<p class="account-form__status" data-account-status role="status" aria-live="polite" hidden></p><div class="account-form__actions"><button class="button button--danger" type="submit">退会する</button><a class="button button--ghost" href="#account" data-account-switch="account">キャンセル</a></div></form></div>`;
         }
         return `<div class="account-card-grid"><article class="account-card account-card--accent"><p class="account-card__label">状態</p><strong>${accountViewModel.status}</strong><span>認証連携済み</span></article><article class="account-card"><p class="account-card__label">よく利用する店舗</p><strong>${accountViewModel.store}</strong><span>予約導線と連携予定</span></article></div><div class="account-summary account-summary--stack"><div><span>お名前</span><strong>${accountViewModel.name}</strong></div><div><span>表示名</span><strong>${accountViewModel.displayName}</strong></div><div><span>メールアドレス</span><strong>${accountViewModel.email}</strong></div>${renderPreferencesSummary()}</div><div class="account-panel-actions"><a class="button" href="#profile" data-account-switch="profile">プロファイル編集</a><a class="button button--secondary" href="#preferences" data-account-switch="preferences">好みの設定</a><a class="button button--secondary" href="#password" data-account-switch="password">パスワード変更</a><a class="button button--ghost" href="#delete" data-account-switch="delete">退会手続き</a></div>`;
     };
@@ -712,7 +712,8 @@
             register: ['name', 'display_name', 'email', 'password', 'password_confirm', 'terms'],
             profile: ['name', 'display_name', 'email'],
             password: ['current_password', 'next_password', 'next_password_confirm'],
-            preferences: []
+            preferences: [],
+            delete: ['confirm_password']
         }[mode] || [];
 
         let firstInvalid = null;
@@ -824,7 +825,7 @@
     modalBody.addEventListener('focusout', (event) => {
         const field = event.target.closest('input');
         const mode = modal.dataset.mode;
-        if (!field || !['login', 'forgot', 'register', 'profile', 'password', 'preferences'].includes(mode)) {
+        if (!field || !['login', 'forgot', 'register', 'profile', 'password', 'preferences', 'delete'].includes(mode)) {
             return;
         }
 
@@ -839,7 +840,7 @@
     modalBody.addEventListener('input', (event) => {
         const field = event.target.closest('input');
         const mode = modal.dataset.mode;
-        if (!field || !['login', 'forgot', 'register', 'profile', 'password', 'preferences'].includes(mode) || field.type === 'checkbox') {
+        if (!field || !['login', 'forgot', 'register', 'profile', 'password', 'preferences', 'delete'].includes(mode) || field.type === 'checkbox') {
             return;
         }
 
@@ -857,7 +858,7 @@
     modalBody.addEventListener('change', (event) => {
         const field = event.target.closest('input');
         const mode = modal.dataset.mode;
-        if (!field || !['login', 'forgot', 'register', 'profile', 'password', 'preferences'].includes(mode)) {
+        if (!field || !['login', 'forgot', 'register', 'profile', 'password', 'preferences', 'delete'].includes(mode)) {
             return;
         }
 
@@ -877,7 +878,7 @@
 
         const form = event.target.closest('form');
         const mode = modal.dataset.mode;
-        if (!form || !['login', 'forgot', 'register', 'profile', 'password', 'preferences'].includes(mode)) {
+        if (!form || !['login', 'forgot', 'register', 'profile', 'password', 'preferences', 'delete'].includes(mode)) {
             return;
         }
 
@@ -985,6 +986,33 @@
                 currentProfile = data || currentProfile;
                 setModalStatus('プロファイルを保存しました。', 'success');
                 openModal('account');
+                return;
+            }
+
+            if (mode === 'delete') {
+                const confirmPassword = form.elements.confirm_password?.value || '';
+                if (!currentUser?.email) {
+                    throw new Error('現在のユーザー情報を確認できませんでした。');
+                }
+                setModalStatus('退会処理を進めています...', 'info');
+                const { error: signInError } = await supabase.auth.signInWithPassword({
+                    email: currentUser.email,
+                    password: confirmPassword
+                });
+                if (signInError) {
+                    throw signInError;
+                }
+                const { error: deleteError } = await supabase
+                    .from('profiles')
+                    .update({ deleted_at: new Date().toISOString(), status: 'inactive' })
+                    .eq('id', currentUser.id);
+                if (deleteError) {
+                    throw deleteError;
+                }
+                currentProfile = null;
+                currentPreferences = null;
+                await supabase.auth.signOut();
+                closeModal();
                 return;
             }
 

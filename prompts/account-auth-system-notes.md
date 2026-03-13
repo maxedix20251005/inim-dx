@@ -20,7 +20,7 @@
 - サイトは静的 HTML ベース
 - 共通 UI shell は JavaScript で注入している
 - 会員機能は `Supabase Auth` を利用
-- 会員詳細は `public.profiles` テーブルを前提にしている
+- 会員詳細は `public.profiles` と `public.customer_preferences` を前提にしている
 - 管理者が Supabase ダッシュボードへログインするためのアカウントと、inim-dx サイト会員は完全に別物
 
 ## 参照すべき設計資料
@@ -54,33 +54,9 @@
 - `prompts/next-chat-handoff.md`
 - `prompts/account-auth-system-notes.md` ← この文書
 
-## 現在の実装方針
-
-### UI 構成
-
-- Header / Left Side Navi / Footer / アカウントモーダルは `js/site-shell.js` で共通注入する
-- アカウント系ページ
-  - `subpages/login.html`
-  - `subpages/register.html`
-  - `subpages/account.html`
-  は個別ページを持つが、実体は共通モーダルで表示する
-- モーダルスタイルは `css/style.css` に集約する
-
-### 会員システムの責務分離
-
-- `Supabase Auth`
-  - サイト会員の認証情報を持つ
-  - email / password / auth user id を管理する
-- `public.profiles`
-  - 会員詳細を持つ
-  - 氏名、表示名、状態、よく利用する店舗などを持つ
-- Supabase ダッシュボードの管理者ログイン情報
-  - サイト会員とは無関係
-  - フロント実装で使わない
-
 ## 現在の Supabase 接続設定
 
-現在の設定ファイル:
+設定ファイル:
 
 - `js/site-config.js`
 
@@ -94,11 +70,11 @@ window.INIM_SITE_CONFIG = {
 };
 ```
 
-### 重要な注意
+重要な注意:
 
-- `supabasePublishableKey` は公開可能なキー
+- `publishable key` は公開可能
 - `service_role key` は絶対にフロントへ置かない
-- 安全性はキー秘匿より RLS / policy 設計に依存する
+- 安全性はキー秘匿より RLS / policy に依存する
 
 ## GitHub Pages / Supabase Auth URL 設定
 
@@ -106,7 +82,7 @@ window.INIM_SITE_CONFIG = {
 
 - `https://maxedix20251005.github.io/inim-dx/`
 
-Supabase 側で設定済みの前提:
+Supabase 側設定:
 
 - `Authentication > URL Configuration > Site URL`
   - `https://maxedix20251005.github.io/inim-dx/`
@@ -114,15 +90,15 @@ Supabase 側で設定済みの前提:
   - `https://maxedix20251005.github.io/inim-dx/subpages/account.html`
   - `https://maxedix20251005.github.io/inim-dx/subpages/login.html`
 
-### 重要な注意
+補足:
 
-- 確認メール / パスワード再設定メールのリンク先は、メール送信時点の設定とコードに依存する
-- GitHub Pages が未反映の状態で送ったメールは、古い `redirect_to` を持つ可能性がある
-- GitHub Pages は通常 1〜3 分程度で反映されるが、5〜10 分程度かかることもある
+- 確認メール / 再設定メールのリンク先は送信時点の設定に依存する
+- GitHub Pages の反映前に送ったメールは古い `redirect_to` を持つ可能性がある
+- GitHub Pages は通常 1〜3 分、遅いと 5〜10 分程度かかることがある
 
 ## Supabase DB スキーマ前提
 
-`supabase/customer-account-schema.sql` により、以下が定義されている。
+`supabase/customer-account-schema.sql` により次が定義されている。
 
 ### `public.profiles`
 
@@ -168,26 +144,26 @@ Supabase 側で設定済みの前提:
 
 ## 1. 共通モーダル基盤
 
-`js/site-shell.js` と `css/style.css` にて以下を復旧 / 実装済み。
+`js/site-shell.js` と `css/style.css` にて以下を実装済み。
 
 - アカウントモーダル DOM 生成
 - backdrop close
 - close button
 - `Escape` キーで閉じる
 - `data-account-modal` クリックで開く
-- `data-account-switch` でモーダル内画面切替
+- `data-account-switch` によるモーダル内画面切替
 - `#login` などのハッシュとモーダル表示の連動
 - `subpages/login.html`, `subpages/register.html`, `subpages/account.html` の共通モーダル表示
 
 ## 2. UI 調整
 
-以下を設計資料に合わせて調整済み。
+設計資料に合わせて次を調整済み。
 
 - モーダルの overlay / dialog / close button / spacing
-- `login` モーダルは原則スクロールなしになるよう余白調整
-- `register` / `profile` は軽いスクロールを許容する方針
-- `Forgot password` / `新規会員登録` 等の補助導線をリンク表現へ変更
-- visited 表現が効くよう、一部導線を `button` ではなく `a` 要素へ変更
+- `login` は原則スクロールなしになるよう余白調整
+- `register` / `profile` は軽いスクロールを許容
+- 補助導線をリンク表現へ変更
+- visited 表現が効くよう一部導線を `a` 要素化
 - `Save` と `Back / Cancel` を色分離
 - `Back / Cancel` は Top Page と統一感のある neutral / ghost 系へ調整
 - 用語を `プロフィール` ではなく `プロファイル` に統一
@@ -199,6 +175,8 @@ Supabase 側で設定済みの前提:
 - `login`
 - `register`
 - `forgot`
+- `profile`
+- `password`
 
 実装済み内容:
 
@@ -213,24 +191,14 @@ Supabase 側で設定済みの前提:
 
 ### login
 
-使用 API:
-
-- `supabase.auth.signInWithPassword(...)`
-
-実装状況:
-
+- API: `supabase.auth.signInWithPassword(...)`
 - 実装済み
 - 成功時は `account` ビューへ遷移
-- 失敗時はモーダル内メッセージ表示
+- 失敗時はモーダル内にメッセージ表示
 
 ### register
 
-使用 API:
-
-- `supabase.auth.signUp(...)`
-
-実装状況:
-
+- API: `supabase.auth.signUp(...)`
 - 実装済み
 - 最低限の入力検証あり
 - `emailRedirectTo` を `authRedirectUrl` から指定
@@ -239,24 +207,14 @@ Supabase 側で設定済みの前提:
 
 ### forgot password
 
-使用 API:
-
-- `supabase.auth.resetPasswordForEmail(...)`
-
-実装状況:
-
+- API: `supabase.auth.resetPasswordForEmail(...)`
 - 実装済み
 - `redirectTo` を `authRedirectUrl` から指定
 - 成功 / 失敗メッセージ表示あり
 
 ### logout
 
-使用 API:
-
-- `supabase.auth.signOut()`
-
-実装状況:
-
+- API: `supabase.auth.signOut()`
 - 実装済み
 
 ## 5. セッション反映
@@ -284,7 +242,7 @@ Supabase 側で設定済みの前提:
 
 - ログイン済みなら `account` モーダル自動表示
 - 未ログインなら `login` モーダル自動表示
-- `profile` / `password` / `delete` の深い画面にも対応する土台あり
+- `profile` / `preferences` / `password` / `delete` の深い画面にも対応する土台あり
 
 ## 7. profiles 読取 / 保存
 
@@ -333,34 +291,71 @@ SQL に追加済みの要素:
 - これは SQL を Supabase 側へ適用して初めて有効になる
 - 既存の Auth ユーザーに対しては自動で backfill されない
 
-### SQL 適用後に必要なこと
+SQL 適用後に必要なこと:
 
 - Supabase `SQL Editor` で `supabase/customer-account-schema.sql` を実行する
 - 既存ユーザー用に必要であれば backfill SQL を別途実行する
+
+## 9. customer_preferences 読取 / 保存
+
+現時点で `customer_preferences` の読取と保存を実装済み。
+
+対象列:
+
+- `preferred_scent_family`
+- `preferred_experience`
+- `notes`
+
+実装仕様:
+
+- ログイン済み時に `customer_preferences` を読取
+- `account` summary に取得値を表示
+- `好みの設定` モードから `upsert` で保存
+- 行が無い場合は従来の fallback 表示を維持
+
+## 10. パスワード変更
+
+現時点で `password` モードの実処理を実装済み。
+
+実装仕様:
+
+- `current_password` で再認証
+- `updateUser({ password })` を実行
+- field-level validation あり
+- 成功 / 失敗メッセージをモーダル内表示
 
 ## まだ未実装の機能
 
 以下は未実装、または stub のまま。
 
-- `profiles` の保存更新
-- `customer_preferences` の読取 / 保存
-- `パスワード変更` の実処理
 - `退会` の実処理
 - soft delete 実装
+- Auth 側 email 更新との完全同期
 - email confirmation 済み後の成功メッセージ導線の最終最適化
 - 再送 confirmation email 導線
+- `preferences` モードの validation を厳密化するかどうかの判断
 
 ## 強く推奨する次の実装順
 
-## 1. `profiles` 保存
+## 1. 退会フロー
 
-`プロファイル編集` 画面から次を update:
+`delete` モードはまだ stub なので、次は soft delete 方針を実装する。
 
-- `full_name`
-- `display_name`
-- `email`
+推奨順:
 
-ただし email 更新は Auth 側との整合に注意すること。
+- 再認証
+- `profiles.deleted_at` を設定
+- 必要に応じて UI 上はログアウト
+
+## 2. Auth email 更新の整合
+
+`profile` 画面では `profiles.email` を更新済みだが、`auth.users.email` との完全同期はまだ未対応。
+
+次に整理すべき点:
+
+- Auth 側 email を変更するか
+- 変更時に確認メールを要求するか
+- `profiles.email` を Auth 側に追従専用にするか
 
 ## 2. 再送 confirmation email
 
@@ -373,9 +368,10 @@ SQL に追加済みの要素:
 - 既存ユーザー相手に `signUp()` を再実行しても、confirmation 再送としては不適切
 - Supabase は存在隠蔽や rate limit の都合で期待通りの見え方をしないことがある
 
-## 3. パスワード変更 / 退会
+## 3. UI 仕上げ
 
-この 2 つは再認証や認証状態確認が絡むため、`profiles` 自動作成 / 保存より後でよい。
+- `preferences` モードに field-level validation を入れるか判断する
+- `delete` モードを設計ガイドに沿って整える
 
 ## 運用上の注意点
 
@@ -441,10 +437,22 @@ SQL に追加済みの要素:
 - メール送信が通る
 - 送信先 redirect が期待値どおり
 
-## profiles 読取
+## profiles 読取 / 保存
 
 - `profiles` に行があると account / profile 表示が実データになる
+- `profile` 保存で DB 更新と UI 反映が行われる
 - 行がなくても UI が壊れない
+
+## パスワード変更
+
+- `current_password` で再認証される
+- `next_password` へ更新できる
+- エラー時にモーダル内へ表示される
+
+## customer_preferences 読取 / 保存
+
+- `好みの設定` モードから保存できる
+- `account` summary に反映される
 
 ## 変更時のルール
 
@@ -469,6 +477,7 @@ SQL に追加済みの要素:
 - 共通 account UI は 1 箇所に集約する
 - 認証情報は Supabase Auth に持たせる
 - 会員詳細は `profiles` に分離する
+- 補助的な嗜好情報は `customer_preferences` に分離する
 - `service_role` をフロントへ出さない
 - redirect URL はコードと Supabase 設定の両方で明示する
 - `profiles` 自動作成は DB トリガーを優先検討する
