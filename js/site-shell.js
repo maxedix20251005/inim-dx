@@ -386,10 +386,36 @@
         renderFooterAccountLinks();
     };
 
+    const getRequestedModalMode = () => {
+        const requestedMode = window.location.hash.replace('#', '');
+        return modalTitles[requestedMode] ? requestedMode : pageKey;
+    };
+
+    const syncModalLanding = () => {
+        if (!modalPageKeys.has(pageKey)) {
+            return;
+        }
+
+        const requestedMode = getRequestedModalMode();
+        if (pageKey === 'account') {
+            if (!currentUser) {
+                openModal(requestedMode === 'register' ? 'register' : 'login');
+                return;
+            }
+
+            const accountMode = ['profile', 'password', 'delete'].includes(requestedMode) ? requestedMode : 'account';
+            openModal(accountMode);
+            return;
+        }
+
+        openModal(requestedMode);
+    };
+
     const applyAuthSession = (session) => {
         currentSession = session;
         currentUser = session?.user || null;
         syncAuthUi();
+        syncModalLanding();
     };
 
     const initAuthState = async () => {
@@ -830,13 +856,11 @@
         updateFloatingNav();
     });
 
-    if (modalPageKeys.has(pageKey)) {
-        const requestedMode = window.location.hash.replace('#', '') || pageKey;
-        openModal(modalTitles[requestedMode] ? requestedMode : pageKey);
-    }
+    syncModalLanding();
 
     document.dispatchEvent(new CustomEvent('site-shell:ready', { detail: { pageKey, root } }));
 })();
+
 
 
 
