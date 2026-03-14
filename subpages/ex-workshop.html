@@ -1,0 +1,191 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop | inim-dx</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .sticky-note-wrap {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: -0.75rem;
+            margin-bottom: 2.5rem;
+            padding: 0 1.5rem;
+        }
+
+        .sticky-note {
+            max-width: 320px;
+            padding: 1.2rem 1.25rem 1.4rem;
+            background: linear-gradient(180deg, #fff7a8 0%, #f5e27f 100%);
+            color: #4b3b10;
+            border: 1px solid rgba(120, 96, 12, 0.18);
+            border-radius: 0.35rem;
+            box-shadow: 0 14px 30px rgba(85, 68, 14, 0.18);
+            transform: rotate(1.5deg);
+        }
+
+        .sticky-note::before {
+            content: "";
+            display: block;
+            width: 86px;
+            height: 20px;
+            margin: -1.95rem auto 0.8rem;
+            background: rgba(255, 255, 255, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 0.2rem;
+            transform: rotate(-7deg);
+        }
+
+        .sticky-note__label {
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .sticky-note p {
+            margin: 0;
+            line-height: 1.7;
+        }
+    </style>
+</head>
+
+<body data-root=".." data-page-key="workshop">
+    <main id="page-main">
+<section class="experience-banner workshop-hero" id="workshop-top">
+                    <div class="experience-banner__content">
+                        <p class="section-kicker">Workshop</p>
+                        <h1 class="workshop-hero__title">香りで遊ぶ！香游</h1>
+                        <p>季節の香材やブランドの代表ノートを手に取りながら、自分の感覚で香りを組み立てるワークショップページです。デジタル調香で得た印象を持ち込み、店頭で会話しながら仕上げる導線にしています。</p>
+                        <div class="experience-banner__actions">
+                            <a class="button button--primary" href="#reserve">予約する</a>
+                            <a class="button button--secondary" href="./smart-scent-design.html">Smart Scent Design を試す</a>
+                        </div>
+                    </div>
+                    <div class="experience-banner__visual">
+                        <img src="../images/Workshop/Workshop_ (3).png" alt="ワークショップ体験のイメージ">
+                    </div>
+                </section>
+
+                <section class="section">
+                    <div class="section-heading">
+                        <p class="section-kicker">Overview</p>
+                        <h2>ワークショップでできること</h2>
+                    </div>
+                    <div class="journey__grid">
+                        <article class="journey-card">
+                            <span>01</span>
+                            <h3>香りを試す</h3>
+                            <p>トップ、ミドル、ベースの香りを順に比較しながら、好みの輪郭を言葉と感覚で整理します。</p>
+                        </article>
+                        <article class="journey-card">
+                            <span>02</span>
+                            <h3>自分で組み立てる</h3>
+                            <p>スタッフのガイドを受けつつ、比率や余韻の違いを試しながら香りの方向性を決めます。</p>
+                        </article>
+                        <article class="journey-card">
+                            <span>03</span>
+                            <h3>店頭で仕上げる</h3>
+                            <p>完成したブレンドは、ディフューザーやオイルなどの展開アイテムに接続できます。</p>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="section section--split" id="workshop-flow">
+                    <div class="section-heading">
+                        <p class="section-kicker">Flow</p>
+                        <h2>当日の流れ</h2>
+                    </div>
+                    <div class="split-layout">
+                        <div class="split-layout__copy">
+                            <p>最初に香りの好みや最近気になっているイメージをヒアリングし、テーブル上の香材から候補を選びます。気分、季節、使うシーンなどの会話を交えながら、体験を進めます。</p>
+                            <p>その後、実際にノートを重ねて香りの変化を確かめます。必要に応じて Smart Scent Design の結果も参照しながら、オンライン体験と実店舗体験をつなげます。</p>
+                        </div>
+                        <div class="split-layout__panel">
+                            <h3>所要時間</h3>
+                            <ul class="simple-list">
+                                <li>カウンセリング: 約15分</li>
+                                <li>香り選定と調整: 約30分</li>
+                                <li>仕上げと撮影: 約15分</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section" id="program">
+                    <div class="section-heading">
+                        <p class="section-kicker">Program</p>
+                        <h2>選べるプログラム</h2>
+                    </div>
+                    <div class="pickup-grid workshop-program-grid">
+                        <article class="feature-card">
+                            <img src="../images/Workshop/Workshop_ (6).png" alt="ライトプラン">
+                            <div class="feature-card__body">
+                                <h3>Trial Session</h3>
+                                <p>短時間で香りの方向性をつかみたい方向けの入門プログラム。</p>
+                            </div>
+                        </article>
+                        <article class="feature-card">
+                            <img src="../images/Workshop/Workshop_ (7).png" alt="スタンダードプラン">
+                            <div class="feature-card__body">
+                                <h3>Signature Blend</h3>
+                                <p>自分用の香りを丁寧に組み立てる、標準的なワークショッププラン。</p>
+                            </div>
+                        </article>
+                        <article class="feature-card">
+                            <img src="../images/Workshop/Workshop_ (8).png" alt="ギフトプラン">
+                            <div class="feature-card__body">
+                                <h3>Gift Workshop</h3>
+                                <p>記念日やギフト向けに、二人で香りをつくるペア体験プラン。</p>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="stores section">
+                    <div class="section-heading">
+                        <p class="section-kicker">Location</p>
+                        <h2>開催店舗と予約枠</h2>
+                    </div>
+                    <div class="stores__panel">
+                        <p>浅草店、柴又店、ソラマチ店で予約を受け付けています。各店舗で扱う香材や空間演出が少しずつ異なるため、気分に合わせて選べます。</p>
+                        <div class="stores__meta workshop-meta">
+                            <span>浅草店 / Fri - Sun</span>
+                            <span>柴又店 / Sat - Mon</span>
+                            <span>ソラマチ店 / Daily</span>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="sticky-note-wrap" aria-label="今後検討したい内容のメモ">
+                    <aside class="sticky-note">
+                        <span class="sticky-note__label">Memo</span>
+                        <p>オンラインショップ購入者にはワークショップ割引クーポンを配布、ワークショップ参加者にはオンラインショップ用クーポンを配布する案を今後検討。</p>
+                    </aside>
+                </div>
+
+                <section class="cta-panel workshop-reserve" id="reserve">
+                    <div class="cta-panel__content">
+                        <p class="section-kicker">Reservation</p>
+                        <h2>予約して、店頭で香りを完成させる</h2>
+                        <p>デジタルで触れた香りの印象を、そのまま実際の素材へつなげる予約導線です。初回体験、ギフト相談、スタッフ指名予約にも対応します。</p>
+                    </div>
+                    <div class="workshop-reserve__actions">
+                        <a class="button button--primary" href="../index.html#contact">予約フォームへ</a>
+                        <a class="button button--secondary" href="./smart-scent-design.html">先にデジタル調香を試す</a>
+                    </div>
+                </section>
+    </main>
+    <script src="../js/site-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/site-shell.js"></script>
+</body>
+
+</html>
+
+

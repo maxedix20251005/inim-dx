@@ -15,7 +15,7 @@
         brandCocktailSoap: { path: 'subpages/brand-cocktail-soap.html', label: 'COCKTAIL SOAP', title: 'Brand / COCKTAIL SOAP', latest: 'ブランド詳細ページは現在作成準備中です。' },
         brandEnjoyth: { path: 'subpages/brand-enjoyth.html', label: 'ENJOYNTH', title: 'Brand / ENJOYNTH', latest: 'ブランド詳細ページは現在作成準備中です。' },
         brandAwaji: { path: 'subpages/brand-awaji.html', label: 'AWAJI', title: 'Brand / AWAJI', latest: 'ブランド詳細ページは現在作成準備中です。' },
-        brandPropolis: { path: 'subpages/brand-propolis.html', label: '日プロポリース', title: 'Brand / 日プロポリース', latest: 'ブランド詳細ページは現在作成準備中です。' },
+        brandOldAroma: { path: 'subpages/brand-old-aroma.html', label: '旧アロマシリーズ', title: 'Brand / 旧アロマシリーズ', latest: 'ブランド詳細ページは現在作成準備中です。' },
         items: { path: 'subpages/items.html', label: 'アイテム', title: 'Items', latest: 'アイテムカテゴリページは現在作成準備中です。' },
         itemHomeFragrance: { path: 'subpages/item-home-fragrance.html', label: 'ホームフレグランス', title: 'Item / Home Fragrance', latest: 'アイテム詳細ページは現在作成準備中です。' },
         itemBodyCare: { path: 'subpages/item-body-care.html', label: 'ボディケア', title: 'Item / Body Care', latest: 'アイテム詳細ページは現在作成準備中です。' },
@@ -63,7 +63,7 @@
         {
             title: 'ブランド',
             key: 'brand',
-            items: ['brandGroundbreakers', 'brandNezs', 'brandAromaCrops', 'brandKosaido', 'brandWatoyo', 'brandCocktailSoap', 'brandEnjoyth', 'brandAwaji', 'brandPropolis']
+            items: ['brandGroundbreakers', 'brandNezs', 'brandAromaCrops', 'brandKosaido', 'brandWatoyo', 'brandCocktailSoap', 'brandEnjoyth', 'brandAwaji', 'brandOldAroma']
         },
         {
             title: 'アイテム',
@@ -136,7 +136,7 @@
         brandCocktailSoap: 'brand',
         brandEnjoyth: 'brand',
         brandAwaji: 'brand',
-        brandPropolis: 'brand',
+        brandOldAroma: 'brand',
         items: 'items',
         itemHomeFragrance: 'items',
         itemBodyCare: 'items',
@@ -206,7 +206,7 @@
         </div>
         <nav class="category-nav" aria-label="グローバルナビゲーション">
             <a class="${isCurrent('home').trim()}" href="${link('home')}">Home</a>
-            <a class="${['about', 'brand', 'brandGroundbreakers', 'brandNezs', 'brandAromaCrops', 'brandKosaido', 'brandWatoyo', 'brandCocktailSoap', 'brandEnjoyth', 'brandAwaji', 'brandPropolis'].includes(pageKey) ? 'is-current' : ''}" href="${link('brand')}">ブランド</a>
+            <a class="${['about', 'brand', 'brandGroundbreakers', 'brandNezs', 'brandAromaCrops', 'brandKosaido', 'brandWatoyo', 'brandCocktailSoap', 'brandEnjoyth', 'brandAwaji', 'brandOldAroma'].includes(pageKey) ? 'is-current' : ''}" href="${link('brand')}">ブランド</a>
             <a class="${['items', 'itemHomeFragrance', 'itemBodyCare', 'itemDiy', 'itemSale', 'itemEcology', 'itemRefillTools', 'itemGiftSet'].includes(pageKey) ? 'is-current' : ''}" href="${link('items')}">アイテム</a>
             <a class="${['scentSearch', 'searchStoreInfo', 'searchProjects', 'searchEvents'].includes(pageKey) ? 'is-current' : ''}" href="${link('scentSearch')}">香りから探す</a>
             <a class="${['workshop', 'smartScent'].includes(pageKey) ? 'is-current' : ''}" href="${link('workshop')}">香りと遊ぶ</a>

@@ -6,6 +6,8 @@
     }
     const root = body.dataset.root || '.';
     const pageKey = body.dataset.pageKey || 'home';
+    const initialHash = window.location.hash.startsWith('#') ? window.location.hash.slice(1) : '';
+    const initialHashParams = initialHash.includes('=') ? new URLSearchParams(initialHash) : new URLSearchParams();
 
     const pages = {
         home: { path: 'index.html', label: 'Home', title: 'inim-dx top page', latest: 'デジタル調香体験からワークショップ予約までをつなぐ新しいトップページ構成を公開しました。' },
@@ -19,7 +21,7 @@
         brandCocktailSoap: { path: 'subpages/brand-cocktail-soap.html', label: 'COCKTAIL SOAP', title: 'Brand / COCKTAIL SOAP', latest: 'ブランド詳細ページは現在作成準備中です。' },
         brandEnjoyth: { path: 'subpages/brand-enjoyth.html', label: 'ENJOYNTH', title: 'Brand / ENJOYNTH', latest: 'ブランド詳細ページは現在作成準備中です。' },
         brandAwaji: { path: 'subpages/brand-awaji.html', label: 'AWAJI', title: 'Brand / AWAJI', latest: 'ブランド詳細ページは現在作成準備中です。' },
-        brandPropolis: { path: 'subpages/brand-propolis.html', label: '日プロポリース', title: 'Brand / 日プロポリース', latest: 'ブランド詳細ページは現在作成準備中です。' },
+        brandOldAroma: { path: 'subpages/brand-old-aroma.html', label: '旧アロマシリーズ', title: 'Brand / 旧アロマシリーズ', latest: 'ブランド詳細ページは現在作成準備中です。' },
         items: { path: 'subpages/items.html', label: 'アイテム', title: 'Items', latest: 'アイテムカテゴリページは現在作成準備中です。' },
         itemHomeFragrance: { path: 'subpages/item-home-fragrance.html', label: 'ホームフレグランス', title: 'Item / Home Fragrance', latest: 'アイテム詳細ページは現在作成準備中です。' },
         itemBodyCare: { path: 'subpages/item-body-care.html', label: 'ボディケア', title: 'Item / Body Care', latest: 'アイテム詳細ページは現在作成準備中です。' },
@@ -63,6 +65,8 @@
     let currentUser = null;
     let currentProfile = null;
     let currentPreferences = null;
+    let authStateReady = false;
+    let recoveryFlowActive = initialHashParams.get('type') === 'recovery';
     const siteConfig = window.INIM_SITE_CONFIG || {};
     const supabaseConfig = {
         url: siteConfig.supabaseUrl || '',
@@ -101,7 +105,7 @@
         {
             title: 'ブランド',
             key: 'brand',
-            items: ['brandGroundbreakers', 'brandNezs', 'brandAromaCrops', 'brandKosaido', 'brandWatoyo', 'brandCocktailSoap', 'brandEnjoyth', 'brandAwaji', 'brandPropolis']
+            items: ['brandGroundbreakers', 'brandNezs', 'brandAromaCrops', 'brandKosaido', 'brandWatoyo', 'brandCocktailSoap', 'brandEnjoyth', 'brandAwaji', 'brandOldAroma']
         },
         {
             title: 'アイテム',
@@ -166,7 +170,7 @@
         ? `<a class="${isCurrent(item.key).trim()}" href="${accountHref(item.modal)}" data-account-modal="${item.modal}">${item.label}</a>`
         : `<a class="${isCurrent(item.key).trim()}" href="${link(item.key)}">${item.label}</a>`;
 
-    const openGroups = new Set(['brand', 'items', 'scentSearch', 'workshop', 'stores']);
+    const openGroups = new Set();
     const currentTopLevel = {
         about: 'brand',
         brand: 'brand',
@@ -178,7 +182,7 @@
         brandCocktailSoap: 'brand',
         brandEnjoyth: 'brand',
         brandAwaji: 'brand',
-        brandPropolis: 'brand',
+        brandOldAroma: 'brand',
         items: 'items',
         itemHomeFragrance: 'items',
         itemBodyCare: 'items',
@@ -248,7 +252,7 @@
         </div>
         <nav class="category-nav" aria-label="グローバルナビゲーション">
             <a class="${isCurrent('home').trim()}" href="${link('home')}">Home</a>
-            <a class="${['about', 'brand', 'brandGroundbreakers', 'brandNezs', 'brandAromaCrops', 'brandKosaido', 'brandWatoyo', 'brandCocktailSoap', 'brandEnjoyth', 'brandAwaji', 'brandPropolis'].includes(pageKey) ? 'is-current' : ''}" href="${link('brand')}">ブランド</a>
+            <a class="${['about', 'brand', 'brandGroundbreakers', 'brandNezs', 'brandAromaCrops', 'brandKosaido', 'brandWatoyo', 'brandCocktailSoap', 'brandEnjoyth', 'brandAwaji', 'brandOldAroma'].includes(pageKey) ? 'is-current' : ''}" href="${link('brand')}">ブランド</a>
             <a class="${['items', 'itemHomeFragrance', 'itemBodyCare', 'itemDiy', 'itemSale', 'itemEcology', 'itemRefillTools', 'itemGiftSet'].includes(pageKey) ? 'is-current' : ''}" href="${link('items')}">アイテム</a>
             <a class="${['scentSearch', 'searchStoreInfo', 'searchProjects', 'searchEvents'].includes(pageKey) ? 'is-current' : ''}" href="${link('scentSearch')}">香りから探す</a>
             <a class="${['workshop', 'smartScent'].includes(pageKey) ? 'is-current' : ''}" href="${link('workshop')}">香りと遊ぶ</a>
@@ -364,7 +368,7 @@
         if (!tools) { return; }
         tools.innerHTML = currentUser
             ? `<a href="${link('scentSearch')}">検索</a>${accountModalLink('account', 'マイアカウント')}${accountLogoutLink()}<a href="${link('cart')}">カート</a>`
-            : `<a href="${link('scentSearch')}">検索</a>${accountModalLink('login', 'ログイン')}${accountModalLink('register', '会員登録') }<a href="${link('cart')}">カート</a>`;
+            : `<a href="${link('scentSearch')}">検索</a>${accountModalLink('login', 'ログイン')}${accountModalLink('register', '会員登録')}<a href="${link('cart')}">カート</a>`;
     };
 
     const renderSidebarAccountLinks = () => {
@@ -380,7 +384,7 @@
         if (!accountColumn) { return; }
         accountColumn.innerHTML = currentUser
             ? `<p class="site-footer__title">Account</p>${accountModalLink('account', 'マイアカウント')}${accountLogoutLink()}<a href="${link('contact')}">お問い合わせ</a>`
-            : `<p class="site-footer__title">Account</p>${accountModalLink('register', '会員登録')}${accountModalLink('login', 'ログイン') }<a href="${link('contact')}">お問い合わせ</a>`;
+            : `<p class="site-footer__title">Account</p>${accountModalLink('register', '会員登録')}${accountModalLink('login', 'ログイン')}<a href="${link('contact')}">お問い合わせ</a>`;
     };
 
     const syncAuthUi = () => {
@@ -389,13 +393,31 @@
         renderFooterAccountLinks();
     };
 
+    const hasPendingAuthHash = () => ['access_token', 'refresh_token', 'type', 'error', 'error_code', 'error_description']
+        .some((key) => initialHashParams.has(key));
+
     const getRequestedModalMode = () => {
+        const authType = initialHashParams.get('type');
+        if (authType === 'recovery') {
+            return 'password';
+        }
+        if (authType === 'signup') {
+            return 'account';
+        }
+        if (initialHashParams.get('error')) {
+            return 'login';
+        }
+
         const requestedMode = window.location.hash.replace('#', '');
         return modalTitles[requestedMode] ? requestedMode : pageKey;
     };
 
     const syncModalLanding = () => {
         if (!modalPageKeys.has(pageKey)) {
+            return;
+        }
+
+        if (!authStateReady && hasPendingAuthHash()) {
             return;
         }
 
@@ -406,7 +428,7 @@
                 return;
             }
 
-            const accountMode = ['profile', 'password', 'delete'].includes(requestedMode) ? requestedMode : 'account';
+            const accountMode = ['profile', 'preferences', 'password', 'delete'].includes(requestedMode) ? requestedMode : 'account';
             openModal(accountMode);
             return;
         }
@@ -427,8 +449,20 @@
             .eq('id', currentUser.id)
             .maybeSingle();
 
-        if (error || !data || data.deleted_at) {
+        if (error || !data) {
             currentProfile = null;
+            return;
+        }
+
+        if (data.deleted_at || data.status === 'inactive') {
+            currentProfile = data;
+            currentPreferences = null;
+            modalFlashStatus = {
+                mode: 'login',
+                message: '退会済みアカウントのためログインできません。必要な場合はお問い合わせください。',
+                type: 'error'
+            };
+            await supabase.auth.signOut();
             return;
         }
 
@@ -466,6 +500,7 @@
         currentUser = session?.user || null;
         if (!currentUser) {
             currentProfile = null;
+            currentPreferences = null;
         } else {
             void loadOwnProfile();
             void loadOwnPreferences();
@@ -476,12 +511,20 @@
 
     const initAuthState = async () => {
         syncAuthUi();
-        if (!supabase) { return; }
+        if (!supabase) {
+            authStateReady = true;
+            syncModalLanding();
+            return;
+        }
         const { data, error } = await supabase.auth.getSession();
+        authStateReady = true;
         if (!error) {
             applyAuthSession(data.session);
+        } else {
+            syncModalLanding();
         }
         supabase.auth.onAuthStateChange((_event, session) => {
+            authStateReady = true;
             applyAuthSession(session);
         });
     };
@@ -518,6 +561,7 @@
     const modalLead = document.getElementById('account-modal-lead');
     const modalBody = document.getElementById('account-modal-body');
     let previousFocus = null;
+    let modalFlashStatus = null;
 
     const setModalStatus = (message = '', type = 'info') => {
         const status = modalBody.querySelector('[data-account-status]');
@@ -534,7 +578,7 @@
         displayName: 'Hanako',
         email: 'hanako@example.com',
         status: '有効',
-        store: '浅草店',
+        store: '未設定',
         joinedAt: '2026-03-12'
     };
 
@@ -573,6 +617,16 @@
         return items.map(([label, value]) => `<div><span>${label}</span><strong>${value}</strong></div>`).join('');
     };
 
+    const consumeModalFlashStatus = (mode) => {
+        if (!modalFlashStatus || modalFlashStatus.mode !== mode) {
+            return '';
+        }
+
+        const flash = modalFlashStatus;
+        modalFlashStatus = null;
+        return `<p class="account-form__status" data-state="${flash.type}" role="status" aria-live="polite">${flash.message}</p>`;
+    };
+
     const modalLeads = {
         login: 'ご登録済みのお客様はこちらからログインしてください。今後、予約情報や調香履歴もここに連携されます。',
         register: '予約情報やお好みデータを管理する会員アカウントを作成します。',
@@ -590,7 +644,7 @@
     const renderAccountView = (mode) => {
         const accountViewModel = getAccountViewModel();
         if (mode === 'login') {
-            return `<form class="account-form" novalidate><label class="account-field"><span>メールアドレス</span><input type="email" name="email" placeholder="you@example.com" autocomplete="email"></label>${fieldErrorHtml('email')}<label class="account-field"><span>パスワード</span><input type="password" name="password" placeholder="8文字以上" autocomplete="current-password"></label>${fieldErrorHtml('password')}<p class="account-form__status" data-account-status role="status" aria-live="polite" hidden></p><label class="account-check"><input type="checkbox" name="remember"><span>ログイン状態を保持する</span></label><div class="account-form__actions"><button class="button" type="submit">${t.login}</button></div><div class="account-inline-links"><a href="#forgot" data-account-switch="forgot">パスワードをお忘れですか？</a><a href="#register" data-account-switch="register">${t.register}</a></div></form>`;
+            return `${consumeModalFlashStatus('login')}<form class="account-form" novalidate><label class="account-field"><span>メールアドレス</span><input type="email" name="email" placeholder="you@example.com" autocomplete="email"></label>${fieldErrorHtml('email')}<label class="account-field"><span>パスワード</span><input type="password" name="password" placeholder="8文字以上" autocomplete="current-password"></label>${fieldErrorHtml('password')}<p class="account-form__status" data-account-status role="status" aria-live="polite" hidden></p><label class="account-check"><input type="checkbox" name="remember"><span>ログイン状態を保持する</span></label><div class="account-form__actions"><button class="button" type="submit">${t.login}</button></div><div class="account-inline-links"><a href="#forgot" data-account-switch="forgot">パスワードをお忘れですか？</a><a href="#register" data-account-switch="register">${t.register}</a></div></form>`;
         }
         if (mode === 'register') {
             return `<form class="account-form" novalidate><label class="account-field"><span>お名前</span><input type="text" name="name" placeholder="${accountViewModel.name}" autocomplete="name"></label>${fieldErrorHtml('name')}<label class="account-field"><span>表示名</span><input type="text" name="display_name" placeholder="${accountViewModel.displayName}" autocomplete="nickname"></label>${fieldErrorHtml('display_name')}<label class="account-field"><span>メールアドレス</span><input type="email" name="email" placeholder="you@example.com" autocomplete="email"></label>${fieldErrorHtml('email')}<p class="account-form__status" data-account-status role="status" aria-live="polite" hidden></p><div class="account-form__split"><div><label class="account-field"><span>パスワード</span><input type="password" name="password" placeholder="8文字以上" autocomplete="new-password"></label>${fieldErrorHtml('password')}</div><div><label class="account-field"><span>パスワード確認</span><input type="password" name="password_confirm" placeholder="もう一度入力" autocomplete="new-password"></label>${fieldErrorHtml('password_confirm')}</div></div><label class="account-check"><input type="checkbox" name="terms"><span>利用規約とプライバシーポリシーに同意します。</span></label>${fieldErrorHtml('terms')}<div class="account-form__actions"><button class="button" type="submit">${t.register}</button></div><div class="account-inline-links"><a href="#login" data-account-switch="login">${t.login}</a></div></form>`;
@@ -605,12 +659,12 @@
             return `<form class="account-form" novalidate><label class="account-field"><span>好みの香調</span><input type="text" name="preferred_scent_family" value="${currentPreferences?.preferred_scent_family || ''}" placeholder="例: citrus / woody / floral"></label><label class="account-field"><span>希望する体験</span><input type="text" name="preferred_experience" value="${currentPreferences?.preferred_experience || ''}" placeholder="例: workshop / custom blend"></label><label class="account-field"><span>メモ</span><input type="text" name="notes" value="${currentPreferences?.notes || ''}" placeholder="ご希望があれば記入"></label><p class="account-form__status" data-account-status role="status" aria-live="polite" hidden></p><div class="account-form__actions"><button class="button" type="submit">保存</button><a class="button button--ghost" href="#account" data-account-switch="account">戻る</a></div></form>`;
         }
         if (mode === 'password') {
-            return `<form class="account-form" novalidate><label class="account-field"><span>現在のパスワード</span><input type="password" name="current_password" placeholder="現在のパスワード"></label>${fieldErrorHtml('current_password')}<label class="account-field"><span>新しいパスワード</span><input type="password" name="next_password" placeholder="8文字以上"></label>${fieldErrorHtml('next_password')}<label class="account-field"><span>新しいパスワード確認</span><input type="password" name="next_password_confirm" placeholder="もう一度入力"></label>${fieldErrorHtml('next_password_confirm')}<p class="account-form__status" data-account-status role="status" aria-live="polite" hidden></p><div class="account-form__actions"><button class="button" type="submit">更新</button><a class="button button--ghost" href="#account" data-account-switch="account">戻る</a></div></form>`;
+            return `<form class="account-form" novalidate>${recoveryFlowActive ? '<p class="account-form__status" data-state="info" role="status" aria-live="polite">再設定メールから遷移しました。新しいパスワードを設定してください。</p>' : `<label class="account-field"><span>現在のパスワード</span><input type="password" name="current_password" placeholder="現在のパスワード"></label>${fieldErrorHtml('current_password')}`}<label class="account-field"><span>新しいパスワード</span><input type="password" name="next_password" placeholder="8文字以上"></label>${fieldErrorHtml('next_password')}<label class="account-field"><span>新しいパスワード確認</span><input type="password" name="next_password_confirm" placeholder="もう一度入力"></label>${fieldErrorHtml('next_password_confirm')}<p class="account-form__status" data-account-status role="status" aria-live="polite" hidden></p><div class="account-form__actions"><button class="button" type="submit">更新</button><a class="button button--ghost" href="#account" data-account-switch="account">戻る</a></div></form>`;
         }
         if (mode === 'delete') {
             return `<div class="account-danger"><p>退会には再認証が必要です。実装段階では、即時削除ではなく soft delete で無効化します。</p><form class="account-form" novalidate><label class="account-field"><span>確認用パスワード</span><input type="password" name="confirm_password" placeholder="現在のパスワード"></label>${fieldErrorHtml('confirm_password')}<p class="account-form__status" data-account-status role="status" aria-live="polite" hidden></p><div class="account-form__actions"><button class="button button--danger" type="submit">退会する</button><a class="button button--ghost" href="#account" data-account-switch="account">キャンセル</a></div></form></div>`;
         }
-        return `<div class="account-card-grid"><article class="account-card account-card--accent"><p class="account-card__label">状態</p><strong>${accountViewModel.status}</strong><span>認証連携済み</span></article><article class="account-card"><p class="account-card__label">よく利用する店舗</p><strong>${accountViewModel.store}</strong><span>予約導線と連携予定</span></article></div><div class="account-summary account-summary--stack"><div><span>お名前</span><strong>${accountViewModel.name}</strong></div><div><span>表示名</span><strong>${accountViewModel.displayName}</strong></div><div><span>メールアドレス</span><strong>${accountViewModel.email}</strong></div>${renderPreferencesSummary()}</div><div class="account-panel-actions"><a class="button" href="#profile" data-account-switch="profile">プロファイル編集</a><a class="button button--secondary" href="#preferences" data-account-switch="preferences">好みの設定</a><a class="button button--secondary" href="#password" data-account-switch="password">パスワード変更</a><a class="button button--ghost" href="#delete" data-account-switch="delete">退会手続き</a></div>`;
+        return `${consumeModalFlashStatus('account')}<div class="account-card-grid"><article class="account-card account-card--accent"><p class="account-card__label">状態</p><strong>${accountViewModel.status}</strong><span>認証連携済み</span></article><article class="account-card"><p class="account-card__label">よく利用する店舗</p><strong>${accountViewModel.store}</strong><span>予約導線と連携予定</span></article></div><div class="account-summary account-summary--stack"><div><span>お名前</span><strong>${accountViewModel.name}</strong></div><div><span>表示名</span><strong>${accountViewModel.displayName}</strong></div><div><span>メールアドレス</span><strong>${accountViewModel.email}</strong></div>${renderPreferencesSummary()}</div><div class="account-panel-actions"><a class="button" href="#profile" data-account-switch="profile">プロファイル編集</a><a class="button button--secondary" href="#preferences" data-account-switch="preferences">好みの設定</a><a class="button button--secondary" href="#password" data-account-switch="password">パスワード変更</a><a class="button button--ghost" href="#delete" data-account-switch="delete">退会手続き</a></div>`;
     };
 
     const setFieldError = (form, name, message = '') => {
@@ -654,7 +708,7 @@
         }
 
         if (mode === 'password') {
-            if (name === 'current_password' && !value) {
+            if (!recoveryFlowActive && name === 'current_password' && !value) {
                 message = '現在のパスワードを入力してください。';
             }
             if (name === 'next_password') {
@@ -672,6 +726,10 @@
                     message = '新しいパスワードが一致していません。';
                 }
             }
+        }
+
+        if (mode === 'delete' && name === 'confirm_password' && !value) {
+            message = '確認用パスワードを入力してください。';
         }
 
         if (mode === 'register' || mode === 'profile') {
@@ -711,7 +769,7 @@
             forgot: ['email'],
             register: ['name', 'display_name', 'email', 'password', 'password_confirm', 'terms'],
             profile: ['name', 'display_name', 'email'],
-            password: ['current_password', 'next_password', 'next_password_confirm'],
+            password: recoveryFlowActive ? ['next_password', 'next_password_confirm'] : ['current_password', 'next_password', 'next_password_confirm'],
             preferences: [],
             delete: ['confirm_password']
         }[mode] || [];
@@ -788,7 +846,15 @@
         if (logoutTrigger) {
             event.preventDefault();
             if (supabase) {
-                void supabase.auth.signOut();
+                void (async () => {
+                    await supabase.auth.signOut();
+                    if (modalPageKeys.has(pageKey)) {
+                        syncModalLanding();
+                        return;
+                    }
+                    closeModal();
+                })();
+                return;
             }
             closeModal();
             return;
@@ -944,24 +1010,29 @@
             }
 
             if (mode === 'password') {
-                const currentPassword = form.elements.current_password?.value || '';
                 const nextPassword = form.elements.next_password?.value || '';
                 if (!currentUser?.email) {
                     throw new Error('現在のユーザー情報を確認できませんでした。');
                 }
                 setModalStatus('パスワードを更新しています...', 'info');
-                const { error: signInError } = await supabase.auth.signInWithPassword({
-                    email: currentUser.email,
-                    password: currentPassword
-                });
-                if (signInError) {
-                    throw signInError;
+
+                if (!recoveryFlowActive) {
+                    const currentPassword = form.elements.current_password?.value || '';
+                    const { error: signInError } = await supabase.auth.signInWithPassword({
+                        email: currentUser.email,
+                        password: currentPassword
+                    });
+                    if (signInError) {
+                        throw signInError;
+                    }
                 }
+
                 const { error: updateError } = await supabase.auth.updateUser({ password: nextPassword });
                 if (updateError) {
                     throw updateError;
                 }
-                setModalStatus('パスワードを更新しました。', 'success');
+                recoveryFlowActive = false;
+                modalFlashStatus = { mode: 'account', message: 'パスワードを更新しました。', type: 'success' };
                 openModal('account');
                 return;
             }
@@ -984,7 +1055,7 @@
                     throw error;
                 }
                 currentProfile = data || currentProfile;
-                setModalStatus('プロファイルを保存しました。', 'success');
+                modalFlashStatus = { mode: 'account', message: 'プロファイルを保存しました。', type: 'success' };
                 openModal('account');
                 return;
             }
@@ -1012,6 +1083,10 @@
                 currentProfile = null;
                 currentPreferences = null;
                 await supabase.auth.signOut();
+                if (modalPageKeys.has(pageKey)) {
+                    syncModalLanding();
+                    return;
+                }
                 closeModal();
                 return;
             }
@@ -1033,7 +1108,7 @@
                     throw error;
                 }
                 currentPreferences = data || payload;
-                setModalStatus('好みの設定を保存しました。', 'success');
+                modalFlashStatus = { mode: 'account', message: '好みの設定を保存しました。', type: 'success' };
                 openModal('account');
                 return;
             }

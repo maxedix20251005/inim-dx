@@ -9,7 +9,7 @@ $pages = @(
     @{ File = 'subpages/brand-cocktail-soap.html'; Key = 'brandCocktailSoap'; Title = 'COCKTAIL SOAP | inim-dx' },
     @{ File = 'subpages/brand-enjoyth.html'; Key = 'brandEnjoyth'; Title = 'ENJOYNTH | inim-dx' },
     @{ File = 'subpages/brand-awaji.html'; Key = 'brandAwaji'; Title = 'AWAJI | inim-dx' },
-    @{ File = 'subpages/brand-propolis.html'; Key = 'brandPropolis'; Title = '日プロポリース | inim-dx' },
+    @{ File = 'subpages/brand-old-aroma.html'; Key = 'brandOldAroma'; Title = '旧アロマシリーズ | inim-dx' },
     @{ File = 'subpages/items.html'; Key = 'items'; Title = 'Items | inim-dx' },
     @{ File = 'subpages/item-home-fragrance.html'; Key = 'itemHomeFragrance'; Title = 'Home Fragrance | inim-dx' },
     @{ File = 'subpages/item-body-care.html'; Key = 'itemBodyCare'; Title = 'Body Care | inim-dx' },

@@ -16,7 +16,7 @@
 
 ## 前提
 
-- リポジトリルート: `c:\academia\src\inim-dx`
+- リポジトリルート: `c:\Users\maxsh\OneDrive\Documents\EDIX\src\inim-dx`
 - サイトは静的 HTML ベース
 - 共通 UI shell は JavaScript で注入している
 - 会員機能は `Supabase Auth` を利用
@@ -177,6 +177,7 @@ Supabase 側設定:
 - `forgot`
 - `profile`
 - `password`
+- `delete`
 
 実装済み内容:
 
@@ -217,6 +218,11 @@ Supabase 側設定:
 - API: `supabase.auth.signOut()`
 - 実装済み
 
+### recovery password flow
+
+- recovery link (`type=recovery`) 到達時の着地を実装済み
+- recovery flow 中は `current_password` を要求せず `updateUser({ password })` を使う
+
 ## 5. セッション反映
 
 使用 API:
@@ -235,6 +241,7 @@ Supabase 側設定:
 - ログイン済み時
   - `マイアカウント`
   - `ログアウト`
+- `deleted_at` / `status = inactive` ユーザーはセッション維持せず login へ戻す
 
 ## 6. 認証後の account 着地制御
 
@@ -243,6 +250,7 @@ Supabase 側設定:
 - ログイン済みなら `account` モーダル自動表示
 - 未ログインなら `login` モーダル自動表示
 - `profile` / `preferences` / `password` / `delete` の深い画面にも対応する土台あり
+- recovery link (`type=recovery`) からの着地時は `password` モーダルを優先する
 
 ## 7. profiles 読取 / 保存
 
@@ -260,7 +268,7 @@ where id = currentUser.id
 
 - ログイン済み時に `public.profiles` を読む
 - 行がない場合は fallback 表示
-- `deleted_at` が入っている場合は fallback 扱い
+- `deleted_at` または `status = inactive` の場合は `signOut()` して login へ戻す
 - `account` / `profile` 画面では `profiles` を優先表示
 - `profile` モードでは `full_name`, `display_name`, `email` を update できる
 - fallback は次の順
@@ -328,26 +336,14 @@ SQL 適用後に必要なこと:
 
 以下は未実装、または stub のまま。
 
-- `退会` の実処理
-- soft delete 実装
 - Auth 側 email 更新との完全同期
-- email confirmation 済み後の成功メッセージ導線の最終最適化
 - 再送 confirmation email 導線
 - `preferences` モードの validation を厳密化するかどうかの判断
+- `deleted_at` 済みユーザーへの案内文や再入会方針の最終整理
 
 ## 強く推奨する次の実装順
 
-## 1. 退会フロー
-
-`delete` モードはまだ stub なので、次は soft delete 方針を実装する。
-
-推奨順:
-
-- 再認証
-- `profiles.deleted_at` を設定
-- 必要に応じて UI 上はログアウト
-
-## 2. Auth email 更新の整合
+## 1. Auth email 更新の整合
 
 `profile` 画面では `profiles.email` を更新済みだが、`auth.users.email` との完全同期はまだ未対応。
 
@@ -371,7 +367,41 @@ SQL 適用後に必要なこと:
 ## 3. UI 仕上げ
 
 - `preferences` モードに field-level validation を入れるか判断する
-- `delete` モードを設計ガイドに沿って整える
+- `deleted_at` 済みユーザーをどう案内するか整理する
+
+## 追加実装済みの機能
+
+### 11. 退会フロー
+
+現時点で `delete` モードの実処理を実装済み。
+
+実装仕様:
+
+- `confirm_password` で再認証
+- `profiles.deleted_at` を現在時刻で更新
+- `profiles.status = 'inactive'` を更新
+- その後 `signOut()` を実行
+- `subpages/account.html` 系の landing page 上でも、退会後は未ログイン landing へ戻す
+
+### 12. 再設定メールからのパスワード変更
+
+現時点で recovery link からの着地を実装済み。
+
+実装仕様:
+
+- URL hash に `type=recovery` を含む場合は `password` モーダルへ着地
+- recovery flow 中は `current_password` を要求しない
+- `updateUser({ password })` で新しいパスワードを反映
+- 更新成功後は `account` へ戻し、成功メッセージを表示
+
+### 13. deleted_at 済みユーザーの扱い
+
+現時点で soft delete 済みユーザーのログイン抑止を実装済み。
+
+実装仕様:
+
+- `profiles.deleted_at` または `status = 'inactive'` を検知した場合は、そのセッションを `signOut()` する
+- login モーダルにエラーメッセージを出し、問い合わせ導線を促す
 
 ## 運用上の注意点
 

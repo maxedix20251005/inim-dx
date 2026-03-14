@@ -1,191 +1,1093 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workshop | inim-dx</title>
+    <title>調香ワークショップ | inim-dx</title>
     <link rel="stylesheet" href="../css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        .sticky-note-wrap {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: -0.75rem;
-            margin-bottom: 2.5rem;
-            padding: 0 1.5rem;
+        .workshop-page {
+            display: grid;
+            gap: 0;
         }
 
-        .sticky-note {
-            max-width: 320px;
-            padding: 1.2rem 1.25rem 1.4rem;
-            background: linear-gradient(180deg, #fff7a8 0%, #f5e27f 100%);
-            color: #4b3b10;
-            border: 1px solid rgba(120, 96, 12, 0.18);
-            border-radius: 0.35rem;
-            box-shadow: 0 14px 30px rgba(85, 68, 14, 0.18);
-            transform: rotate(1.5deg);
-        }
-
-        .sticky-note::before {
-            content: "";
+        .workshop-hero {
+            position: relative;
+            overflow: hidden;
             display: block;
-            width: 86px;
-            height: 20px;
-            margin: -1.95rem auto 0.8rem;
-            background: rgba(255, 255, 255, 0.45);
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            border-radius: 0.2rem;
-            transform: rotate(-7deg);
+            min-height: 620px;
+            background:
+                linear-gradient(135deg, rgba(247, 242, 233, 0.94), rgba(255, 255, 255, 0.90)),
+                radial-gradient(circle at top right, rgba(178, 69, 49, 0.16), rgba(178, 69, 49, 0));
         }
 
-        .sticky-note__label {
-            display: inline-block;
-            margin-bottom: 0.5rem;
-            font-size: 0.76rem;
+        .workshop-hero::before,
+        .workshop-hero::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .workshop-hero::before {
+            inset: 0;
+            width: auto;
+            height: auto;
+            border-radius: 0;
+            background:
+                linear-gradient(90deg,
+                    rgba(247, 242, 233, 0.98) 0%,
+                    rgba(247, 242, 233, 0.94) 18%,
+                    rgba(247, 242, 233, 0.78) 34%,
+                    rgba(247, 242, 233, 0.38) 52%,
+                    rgba(247, 242, 233, 0.10) 66%,
+                    rgba(247, 242, 233, 0.00) 78%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.18)),
+                url("../images/Workshop/Workshop_ (4).png") center center / cover no-repeat;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .workshop-hero::after {
+            top: -100px;
+            right: -70px;
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle, rgba(178, 69, 49, 0.12), rgba(178, 69, 49, 0));
+            z-index: 1;
+        }
+
+        .workshop-hero__title {
+            max-width: 12em;
+            font-size: clamp(2.8rem, 5.2vw, 4.2rem);
+            line-height: 1.2;
+            letter-spacing: 0.04em;
+        }
+
+        .workshop-hero__lead {
+            margin-top: 16px;
+        }
+
+        .workshop-hero .experience-banner__content {
+            position: relative;
+            z-index: 2;
+            max-width: 820px;
+            min-height: 100%;
+            padding: 28px 0;
+        }
+
+        .workshop-hero .experience-banner__visual {
+            display: none;
+        }
+
+        .workshop-proof {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 26px;
+            max-width: 820px;
+        }
+
+        .workshop-proof__item {
+            padding: 14px 16px;
+            border: 1px solid rgba(207, 201, 188, 0.9);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.76);
+            backdrop-filter: blur(8px);
+        }
+
+        .workshop-proof__label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--color-accent);
+        }
+
+        .workshop-proof__value {
+            display: block;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--color-ink);
+        }
+
+        .workshop-anchor-nav {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 24px;
+            max-width: 820px;
+        }
+
+        .workshop-anchor-nav a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 40px;
+            padding: 0 16px;
+            border: 1px solid rgba(207, 201, 188, 0.9);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--color-main);
+            font-size: 0.84rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+
+        .workshop-anchor-nav a:hover,
+        .workshop-anchor-nav a:focus-visible {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(44, 44, 44, 0.10);
+            border-color: rgba(178, 69, 49, 0.38);
+            color: var(--color-accent);
+        }
+
+        .workshop-rhythm {
+            display: grid;
+            gap: 72px;
+            padding-top: 96px;
+        }
+
+        .workshop-hero .experience-banner__actions {
+            max-width: 820px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            align-items: stretch;
+        }
+
+        .workshop-hero .experience-banner__actions .button {
+            width: 100%;
+        }
+
+        .workshop-rhythm__section {
+            display: grid;
+            grid-template-columns: 1.04fr 0.96fr;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .workshop-rhythm__section--value {
+            position: relative;
+            grid-template-columns: 0.78fr 1.22fr;
+            overflow: hidden;
+            min-height: 520px;
+            padding: 42px;
+            border-radius: 28px;
+            background:
+                linear-gradient(90deg,
+                    rgba(247, 242, 233, 0.00) 0%,
+                    rgba(247, 242, 233, 0.00) 20%,
+                    rgba(247, 242, 233, 0.22) 36%,
+                    rgba(247, 242, 233, 0.56) 54%,
+                    rgba(247, 242, 233, 0.84) 74%,
+                    rgba(247, 242, 233, 0.97) 100%),
+                url("../images/The image used/Lineup image_ (6).png") center center / cover no-repeat;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .workshop-rhythm__section--value .workshop-rhythm__copy {
+            grid-column: 2;
+            position: relative;
+            z-index: 1;
+            max-width: 500px;
+            margin-left: auto;
+        }
+
+        .workshop-rhythm__section--scene {
+            position: relative;
+            grid-template-columns: 1.12fr 0.88fr;
+            overflow: hidden;
+            min-height: 520px;
+            padding: 42px;
+            border-radius: 28px;
+            background: linear-gradient(90deg,
+                    rgba(247, 242, 233, 0.98) 0%,
+                    rgba(247, 242, 233, 0.95) 34%,
+                    rgba(247, 242, 233, 0.88) 56%,
+                    rgba(247, 242, 233, 0.76) 74%,
+                    rgba(247, 242, 233, 0.66) 100%);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .workshop-rhythm__section--scene::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 28%;
+            background: url("../images/others/others_ (8-1).png") right center / auto 100% no-repeat;
+            z-index: 0;
+            -webkit-mask-image: linear-gradient(90deg,
+                    rgba(0, 0, 0, 0.00) 0%,
+                    rgba(0, 0, 0, 0.08) 16%,
+                    rgba(0, 0, 0, 0.28) 30%,
+                    rgba(0, 0, 0, 0.56) 46%,
+                    rgba(0, 0, 0, 0.82) 64%,
+                    rgba(0, 0, 0, 1.00) 100%);
+            mask-image: linear-gradient(90deg,
+                    rgba(0, 0, 0, 0.00) 0%,
+                    rgba(0, 0, 0, 0.08) 16%,
+                    rgba(0, 0, 0, 0.28) 30%,
+                    rgba(0, 0, 0, 0.56) 46%,
+                    rgba(0, 0, 0, 0.82) 64%,
+                    rgba(0, 0, 0, 1.00) 100%);
+            pointer-events: none;
+        }
+
+        .workshop-rhythm__section--scene .workshop-rhythm__copy {
+            position: relative;
+            z-index: 1;
+            max-width: 520px;
+        }
+
+        .workshop-rhythm__copy {
+            display: grid;
+            gap: 20px;
+        }
+
+        .workshop-rhythm__copy h2,
+        .workshop-flow__heading h2,
+        .workshop-program-heading h2,
+        .workshop-cta-band h2,
+        .workshop-faq-heading h2,
+        .workshop-location-heading h2 {
+            margin: 0;
+            font-size: clamp(2rem, 3vw, 3rem);
+            line-height: 1.35;
+            letter-spacing: 0.03em;
+        }
+
+        .section-kicker {
+            font-size: 0.92rem;
+            letter-spacing: 0.18em;
+        }
+
+        .workshop-rhythm__copy p,
+        .workshop-flow__heading p,
+        .workshop-step p,
+        .workshop-program-card p,
+        .workshop-cta-band p,
+        .workshop-faq-item p,
+        .workshop-location-panel p,
+        .workshop-store-note p {
+            margin: 0;
+            line-height: 1.85;
+            color: var(--color-muted);
+        }
+
+        .workshop-rhythm__badge {
+            display: inline-flex;
+            align-items: center;
+            min-height: 34px;
+            padding: 0 14px;
+            border-radius: 999px;
+            background: rgba(178, 69, 49, 0.10);
+            color: var(--color-accent);
+            font-size: 0.78rem;
             font-weight: 700;
             letter-spacing: 0.08em;
             text-transform: uppercase;
         }
 
-        .sticky-note p {
+        .workshop-bullet-list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .workshop-bullet {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 14px;
+            align-items: start;
+            padding: 16px 18px;
+            border: 1px solid rgba(207, 201, 188, 0.82);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.94);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .workshop-bullet strong,
+        .workshop-step strong,
+        .workshop-faq-item strong,
+        .workshop-store-note strong {
+            color: var(--color-main);
+        }
+
+        .workshop-bullet__num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(178, 69, 49, 0.12);
+            color: var(--color-accent);
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+        }
+
+        .workshop-bullet h3 {
+            margin: 0 0 8px;
+            font-size: 1.18rem;
+        }
+
+        .workshop-cta-band {
+            margin-top: 84px;
+            padding: 30px 34px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(38, 50, 44, 0.98), rgba(80, 55, 49, 0.92));
+            box-shadow: var(--shadow-strong);
+            color: #fff;
+            display: grid;
+            grid-template-columns: 1.2fr auto;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .workshop-cta-band .section-kicker,
+        .workshop-cta-band h2,
+        .workshop-cta-band p {
+            color: #fff;
+        }
+
+        .workshop-cta-band__actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .workshop-flow {
+            padding-top: 96px;
+        }
+
+        .workshop-flow__heading,
+        .workshop-program-heading,
+        .workshop-faq-heading,
+        .workshop-location-heading {
+            margin-bottom: 28px;
+        }
+
+        .workshop-steps {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 76px;
+            align-items: stretch;
+        }
+
+        .workshop-step {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+            padding: 28px 24px 24px;
+            border: 1px solid rgba(207, 201, 188, 0.82);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .workshop-step:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            right: -74px;
+            width: 68px;
+            height: 38px;
+            background: url("../images/arrow/arrow05_rolling.png") center center / contain no-repeat;
+            transform: translateY(-50%);
+        }
+
+        .workshop-step__index {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 48px;
+            height: 48px;
+            margin-bottom: 16px;
+            border-radius: 50%;
+            background: rgba(178, 69, 49, 0.12);
+            color: var(--color-accent);
+            font-size: 0.84rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+        }
+
+        .workshop-step h3 {
+            margin: 0 0 10px;
+            font-size: 1.24rem;
+        }
+
+        .workshop-step-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: auto;
+            padding-top: 18px;
+        }
+
+        .workshop-step-meta span {
+            display: inline-flex;
+            align-items: center;
+            min-height: 34px;
+            padding: 0 12px;
+            border-radius: 999px;
+            background: rgba(247, 242, 233, 0.9);
+            color: var(--color-main);
+            font-size: 0.82rem;
+        }
+
+        .workshop-programs {
+            padding-top: 96px;
+        }
+
+        .workshop-program-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
+        }
+
+        .workshop-program-card {
+            overflow: hidden;
+            border: 1px solid rgba(207, 201, 188, 0.82);
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .workshop-program-card img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            display: block;
+        }
+
+        .workshop-program-card__body {
+            padding: 24px;
+        }
+
+        .workshop-program-card__intro {
+            padding: 24px 24px 0;
+        }
+
+        .workshop-program-card__details {
+            padding: 24px;
+        }
+
+        .workshop-program-card__eyebrow {
+            display: inline-flex;
+            align-items: center;
+            min-height: 28px;
+            padding: 0 10px;
+            border-radius: 999px;
+            background: rgba(178, 69, 49, 0.10);
+            color: var(--color-accent);
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .workshop-program-card__body h3,
+        .workshop-program-card__intro h3 {
+            margin: 14px 0 10px;
+            font-size: 1.42rem;
+        }
+
+        .workshop-program-card__meta,
+        .workshop-program-card__points {
+            display: grid;
+            gap: 10px;
+        }
+
+        .workshop-program-card__meta {
+            margin: 16px 0;
+        }
+
+        .workshop-program-card__meta span {
+            display: block;
+            padding: 11px 14px;
+            border-radius: 12px;
+            background: rgba(247, 242, 233, 0.9);
+            color: var(--color-main);
+            font-size: 0.9rem;
+        }
+
+        .workshop-program-card__points {
             margin: 0;
-            line-height: 1.7;
+            padding-left: 18px;
+            color: var(--color-muted);
+            line-height: 1.8;
+        }
+
+        .workshop-program-card__actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .workshop-program-card--image-last {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .workshop-program-card--image-last img {
+            order: 2;
+            margin-top: auto;
+        }
+
+        .workshop-program-card--image-last .workshop-program-card__body {
+            order: 1;
+        }
+
+        .workshop-faq {
+            padding-top: 96px;
+        }
+
+        .workshop-faq-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .workshop-faq-item {
+            padding: 24px;
+            border: 1px solid rgba(207, 201, 188, 0.82);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .workshop-faq-item h3 {
+            margin: 0 0 10px;
+            font-size: 1.16rem;
+        }
+
+        .workshop-location {
+            padding-top: 96px;
+        }
+
+        .workshop-location-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        .workshop-location-panel,
+        .workshop-store-note {
+            padding: 28px;
+            border: 1px solid rgba(207, 201, 188, 0.82);
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .workshop-store-note {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .workshop-location-panel h3,
+        .workshop-store-note h3 {
+            margin: 0 0 12px;
+            font-size: 1.28rem;
+        }
+
+        .workshop-map-picker {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .workshop-map-chip {
+            display: inline-flex;
+            align-items: center;
+            min-height: 38px;
+            padding: 0 14px;
+            border: 1px solid rgba(207, 201, 188, 0.82);
+            border-radius: 999px;
+            background: rgba(247, 242, 233, 0.9);
+            color: var(--color-main);
+            font-size: 0.82rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .workshop-map-chip:hover,
+        .workshop-map-chip:focus-visible {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(44, 44, 44, 0.10);
+            border-color: rgba(178, 69, 49, 0.34);
+        }
+
+        .workshop-map-chip.is-active {
+            background: rgba(178, 69, 49, 0.12);
+            border-color: rgba(178, 69, 49, 0.34);
+            color: var(--color-accent);
+        }
+
+        .workshop-map-frame {
+            margin-top: 18px;
+            flex: 1;
+            min-height: 320px;
+            overflow: hidden;
+            border: 1px solid rgba(207, 201, 188, 0.82);
+            border-radius: 18px;
+            box-shadow: var(--shadow-soft);
+            background: rgba(247, 242, 233, 0.4);
+        }
+
+        .workshop-map-frame iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 320px;
+            border: 0;
+            display: block;
+        }
+
+        .workshop-store-list {
+            display: grid;
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .workshop-store-card {
+            padding: 16px 18px;
+            border: 1px solid rgba(207, 201, 188, 0.82);
+            border-radius: 14px;
+            background: rgba(247, 242, 233, 0.66);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .workshop-store-card.is-active {
+            transform: translateY(-2px);
+            border-color: rgba(178, 69, 49, 0.34);
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 14px 30px rgba(44, 44, 44, 0.12);
+        }
+
+        .workshop-store-card p {
+            margin-top: 8px;
+        }
+
+        .workshop-reserve {
+            margin-top: 84px;
+            margin-bottom: 12px;
+        }
+
+        .workshop-reserve__actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        @media (max-width: 1180px) {
+
+            .workshop-proof,
+            .workshop-rhythm__section,
+            .workshop-cta-band,
+            .workshop-steps,
+            .workshop-program-grid,
+            .workshop-faq-grid,
+            .workshop-location-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .workshop-step:not(:last-child)::after {
+                top: auto;
+                right: 50%;
+                bottom: -42px;
+                width: 58px;
+                height: 32px;
+                transform: translateX(50%) rotate(90deg);
+            }
+
+            .workshop-cta-band__actions {
+                justify-content: flex-start;
+            }
+
+            .workshop-hero .experience-banner__actions,
+            .workshop-proof,
+            .workshop-anchor-nav {
+                max-width: none;
+            }
+
+            .workshop-hero {
+                min-height: auto;
+            }
+        }
+
+        @media (max-width: 720px) {
+
+            .workshop-rhythm,
+            .workshop-flow,
+            .workshop-programs,
+            .workshop-faq,
+            .workshop-location {
+                padding-top: 56px;
+            }
+
+            .workshop-rhythm {
+                gap: 56px;
+            }
+
+            .workshop-hero .experience-banner__actions,
+            .workshop-anchor-nav {
+                grid-template-columns: 1fr;
+            }
+
+            .workshop-cta-band,
+            .workshop-step,
+            .workshop-program-card__body,
+            .workshop-program-card__intro,
+            .workshop-program-card__details,
+            .workshop-faq-item,
+            .workshop-location-panel,
+            .workshop-store-note {
+                padding: 22px;
+            }
+
+            .workshop-step:not(:last-child)::after {
+                bottom: -34px;
+            }
         }
     </style>
 </head>
 
 <body data-root=".." data-page-key="workshop">
-    <main id="page-main">
-<section class="experience-banner workshop-hero" id="workshop-top">
-                    <div class="experience-banner__content">
-                        <p class="section-kicker">Workshop</p>
-                        <h1 class="workshop-hero__title">香りで遊ぶ！香游</h1>
-                        <p>季節の香材やブランドの代表ノートを手に取りながら、自分の感覚で香りを組み立てるワークショップページです。デジタル調香で得た印象を持ち込み、店頭で会話しながら仕上げる導線にしています。</p>
-                        <div class="experience-banner__actions">
-                            <a class="button button--primary" href="#reserve">予約する</a>
-                            <a class="button button--secondary" href="./smart-scent-design.html">Smart Scent Design を試す</a>
-                        </div>
-                    </div>
-                    <div class="experience-banner__visual">
-                        <img src="../images/Workshop/Workshop_ (3).png" alt="ワークショップ体験のイメージ">
-                    </div>
-                </section>
-
-                <section class="section">
-                    <div class="section-heading">
-                        <p class="section-kicker">Overview</p>
-                        <h2>ワークショップでできること</h2>
-                    </div>
-                    <div class="journey__grid">
-                        <article class="journey-card">
-                            <span>01</span>
-                            <h3>香りを試す</h3>
-                            <p>トップ、ミドル、ベースの香りを順に比較しながら、好みの輪郭を言葉と感覚で整理します。</p>
-                        </article>
-                        <article class="journey-card">
-                            <span>02</span>
-                            <h3>自分で組み立てる</h3>
-                            <p>スタッフのガイドを受けつつ、比率や余韻の違いを試しながら香りの方向性を決めます。</p>
-                        </article>
-                        <article class="journey-card">
-                            <span>03</span>
-                            <h3>店頭で仕上げる</h3>
-                            <p>完成したブレンドは、ディフューザーやオイルなどの展開アイテムに接続できます。</p>
-                        </article>
-                    </div>
-                </section>
-
-                <section class="section section--split" id="workshop-flow">
-                    <div class="section-heading">
-                        <p class="section-kicker">Flow</p>
-                        <h2>当日の流れ</h2>
-                    </div>
-                    <div class="split-layout">
-                        <div class="split-layout__copy">
-                            <p>最初に香りの好みや最近気になっているイメージをヒアリングし、テーブル上の香材から候補を選びます。気分、季節、使うシーンなどの会話を交えながら、体験を進めます。</p>
-                            <p>その後、実際にノートを重ねて香りの変化を確かめます。必要に応じて Smart Scent Design の結果も参照しながら、オンライン体験と実店舗体験をつなげます。</p>
-                        </div>
-                        <div class="split-layout__panel">
-                            <h3>所要時間</h3>
-                            <ul class="simple-list">
-                                <li>カウンセリング: 約15分</li>
-                                <li>香り選定と調整: 約30分</li>
-                                <li>仕上げと撮影: 約15分</li>
-                            </ul>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="section" id="program">
-                    <div class="section-heading">
-                        <p class="section-kicker">Program</p>
-                        <h2>選べるプログラム</h2>
-                    </div>
-                    <div class="pickup-grid workshop-program-grid">
-                        <article class="feature-card">
-                            <img src="../images/Workshop/Workshop_ (6).png" alt="ライトプラン">
-                            <div class="feature-card__body">
-                                <h3>Trial Session</h3>
-                                <p>短時間で香りの方向性をつかみたい方向けの入門プログラム。</p>
-                            </div>
-                        </article>
-                        <article class="feature-card">
-                            <img src="../images/Workshop/Workshop_ (7).png" alt="スタンダードプラン">
-                            <div class="feature-card__body">
-                                <h3>Signature Blend</h3>
-                                <p>自分用の香りを丁寧に組み立てる、標準的なワークショッププラン。</p>
-                            </div>
-                        </article>
-                        <article class="feature-card">
-                            <img src="../images/Workshop/Workshop_ (8).png" alt="ギフトプラン">
-                            <div class="feature-card__body">
-                                <h3>Gift Workshop</h3>
-                                <p>記念日やギフト向けに、二人で香りをつくるペア体験プラン。</p>
-                            </div>
-                        </article>
-                    </div>
-                </section>
-
-                <section class="stores section">
-                    <div class="section-heading">
-                        <p class="section-kicker">Location</p>
-                        <h2>開催店舗と予約枠</h2>
-                    </div>
-                    <div class="stores__panel">
-                        <p>浅草店、柴又店、ソラマチ店で予約を受け付けています。各店舗で扱う香材や空間演出が少しずつ異なるため、気分に合わせて選べます。</p>
-                        <div class="stores__meta workshop-meta">
-                            <span>浅草店 / Fri - Sun</span>
-                            <span>柴又店 / Sat - Mon</span>
-                            <span>ソラマチ店 / Daily</span>
-                        </div>
-                    </div>
-                </section>
-
-                <div class="sticky-note-wrap" aria-label="今後検討したい内容のメモ">
-                    <aside class="sticky-note">
-                        <span class="sticky-note__label">Memo</span>
-                        <p>オンラインショップ購入者にはワークショップ割引クーポンを配布、ワークショップ参加者にはオンラインショップ用クーポンを配布する案を今後検討。</p>
-                    </aside>
+    <main id="page-main" class="workshop-page">
+        <section class="experience-banner workshop-hero" id="workshop-top">
+            <div class="experience-banner__content">
+                <p class="section-kicker">Workshop</p>
+                <h1 class="workshop-hero__title">香りをつくるひととき、<br>大切な思い出に</h1>
+                <p class="workshop-hero__lead">
+                    季節の香材やブランドの代表ノートを試しながら、自分の感覚で香りを組み立てる店頭ワークショップです。完成した香りは、その場の体験だけで終わらず、日常に持ち帰れる一本として仕上げます。</p>
+                <div class="experience-banner__actions">
+                    <a class="button button--primary" href="#reserve">予約する</a>
+                    <a class="button button--secondary" href="#program">プランを見る</a>
+                    <a class="button button--secondary" href="./smart-scent-design.html">先にデジタル調香を試す</a>
                 </div>
+                <div class="workshop-proof" aria-label="ワークショップの概要">
+                    <div class="workshop-proof__item">
+                        <span class="workshop-proof__label">For</span>
+                        <span class="workshop-proof__value">初心者、一人参加、ギフト相談にも対応。</span>
+                    </div>
+                    <div class="workshop-proof__item">
+                        <span class="workshop-proof__label">Time</span>
+                        <span class="workshop-proof__value">45分から90分。観光や食事と組み合わせやすい長さ。</span>
+                    </div>
+                    <div class="workshop-proof__item">
+                        <span class="workshop-proof__label">Store</span>
+                        <span class="workshop-proof__value">浅草店、柴又店、ソラマチ店で開催。</span>
+                    </div>
+                    <div class="workshop-proof__item">
+                        <span class="workshop-proof__label">Flow</span>
+                        <span class="workshop-proof__value">選ぶ、試す、整えるの3段階で迷いにくい進行。</span>
+                    </div>
+                </div>
+                <nav class="workshop-anchor-nav" aria-label="ページ内導線">
+                    <a href="#story">魅力を知る</a>
+                    <a href="#flow">流れを見る</a>
+                    <a href="#program">プランを選ぶ</a>
+                    <a href="#faq">不安を解消する</a>
+                    <a href="#reserve">予約する</a>
+                </nav>
+            </div>
+            <div class="experience-banner__visual">
+                <img src="../images/Workshop/Workshop_ (3).png" alt="香りを試しながら調香体験を楽しむワークショップの様子">
+            </div>
+        </section>
 
-                <section class="cta-panel workshop-reserve" id="reserve">
-                    <div class="cta-panel__content">
-                        <p class="section-kicker">Reservation</p>
-                        <h2>予約して、店頭で香りを完成させる</h2>
-                        <p>デジタルで触れた香りの印象を、そのまま実際の素材へつなげる予約導線です。初回体験、ギフト相談、スタッフ指名予約にも対応します。</p>
+        <div class="workshop-rhythm" id="story">
+            <section class="workshop-rhythm__section workshop-rhythm__section--value">
+                <div class="workshop-rhythm__copy">
+                    <p class="section-kicker">Value</p>
+                    <h2>ただ作るだけでなく、<br>時間ごと持ち帰る</h2>
+                    <p>このワークショップの魅力は、完成品だけではありません。どの香りに惹かれたのか、どんな記憶や気分を残したいのかを会話しながら掘り起こし、一滴ずつ自分の感覚を形にしていく過程そのものが体験価値になります。
+                    </p>
+                    <div class="workshop-bullet-list">
+                        <article class="workshop-bullet">
+                            <span class="workshop-bullet__num">01</span>
+                            <div>
+                                <h3>感覚を言葉にできる</h3>
+                                <p>香りが詳しくなくても、好き嫌いの印象を会話で整理しながら進められます。</p>
+                            </div>
+                        </article>
+                        <article class="workshop-bullet">
+                            <span class="workshop-bullet__num">02</span>
+                            <div>
+                                <h3>一滴ごとの差が分かる</h3>
+                                <p>トップ、ミドル、ベースの重なり方をその場で確かめながら整えられます。</p>
+                            </div>
+                        </article>
                     </div>
-                    <div class="workshop-reserve__actions">
-                        <a class="button button--primary" href="../index.html#contact">予約フォームへ</a>
-                        <a class="button button--secondary" href="./smart-scent-design.html">先にデジタル調香を試す</a>
+                </div>
+            </section>
+
+            <section class="workshop-rhythm__section workshop-rhythm__section--scene">
+                <div class="workshop-rhythm__copy">
+                    <p class="section-kicker">Scene</p>
+                    <h2>思い出に残る日に、<br>無理なく組み込める</h2>
+                    <p>浅草や柴又の散策と合わせて立ち寄る体験としても、誰かへの贈り物を相談しながら過ごす時間としても相性が良い構成です。自分用、ペア、ギフトと用途が分かれているので、参加目的を決めるだけでも予約の迷いは大きく減ります。
+                    </p>
+                    <span class="workshop-rhythm__badge">自分用 / ギフト / 記念日</span>
+                </div>
+            </section>
+        </div>
+
+        <section class="workshop-flow" id="flow">
+            <div class="workshop-flow__heading">
+                <p class="section-kicker">Flow</p>
+                <h2>ご予約の流れ</h2>
+                <!-- <p>ページの中でも体験の進み方が一目で分かるように、当日の流れを矢印でつないでいます。初心者でも何をするか想像しやすい構成です。</p> -->
+            </div>
+            <div class="workshop-steps">
+                <article class="workshop-step">
+                    <span class="workshop-step__index">STEP 1</span>
+                    <h3>気分や目的をヒアリング</h3>
+                    <p>最近気になる香り、使いたいシーン、贈る相手などを会話しながら整理します。専門知識よりも「どんな印象が好きか」が分かれば十分です。</p>
+                    <div class="workshop-step-meta">
+                        <span>約15分</span>
+                        <span>初心者歓迎</span>
                     </div>
-                </section>
+                </article>
+                <article class="workshop-step">
+                    <span class="workshop-step__index">STEP 2</span>
+                    <h3>香材を試して方向性を決める</h3>
+                    <p>複数のノートを比べながら、軽さ、奥行き、余韻の違いを確認します。必要に応じて Smart Scent Design の結果も参照できます。</p>
+                    <div class="workshop-step-meta">
+                        <span>約30分</span>
+                        <span>比較しながら調整</span>
+                    </div>
+                </article>
+                <article class="workshop-step">
+                    <span class="workshop-step__index">STEP 3</span>
+                    <h3>配合を整えて完成へ</h3>
+                    <p>一滴ずつ比率を調整しながら、納得できる一本に仕上げます。完成後はその場の高揚感だけでなく、日常に持ち帰れる香りになります。</p>
+                    <div class="workshop-step-meta">
+                        <span>約15分</span>
+                        <span>撮影や相談も可</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- <section class="workshop-cta-band" aria-label="プラン比較への導線">
+            <div>
+                <p class="section-kicker">Decision</p>
+                <h2>ご自分に合う体験をお選びください</h2>
+                <p>短時間で試したいのか、一本をしっかり作りたいのか、二人で記念に残したいのか。目的から選べるように整理しています。</p>
+            </div>
+            <div class="workshop-cta-band__actions">
+                <a class="button button--primary" href="#program">プラン比較へ進む</a>
+                <a class="button button--ghost" href="./smart-scent-design.html">先にデジタル調香を試す</a>
+            </div>
+        </section>
+ -->
+        <section class="workshop-programs" id="program">
+            <div class="workshop-program-heading">
+                <p class="section-kicker">Program</p>
+                <h2>目的に合わせて選べる、3つのコース</h2>
+            </div>
+            <div class="workshop-program-grid">
+                <article class="workshop-program-card workshop-program-card--image-last">
+                    <div class="workshop-program-card__body">
+                        <!-- <span class="workshop-program-card__eyebrow">Trial</span> -->
+                        <h3>Trial Session</h3>
+                        <p>まずは気軽に香りの方向性を掴みたい人向け。旅程の合間にも組み込みやすい入門プランです。</p>
+                        <div class="workshop-program-card__meta">
+                            <span>所要時間: 約45分</span>
+                            <span>向いている人: 初参加 / 一人旅 / 下見体験</span>
+                            <span>得られるもの: 香りの方向性と体験の輪郭</span>
+                        </div>
+                        <ul class="workshop-program-card__points">
+                            <li>短時間でブランドの世界観に触れられる</li>
+                            <li>スタッフと一緒に好みを整理しやすい</li>
+                            <li>Smart Scent Design との接続にも向く</li>
+                        </ul>
+                        <div class="workshop-program-card__actions">
+                            <a class="button button--primary" href="../index.html#contact">このプランで予約する</a>
+                        </div>
+                    </div>
+                    <img src="../images/Workshop/Workshop_ (9-1).png" alt="短時間で調香の方向性を探るトライアルプラン">
+                </article>
+
+                <article class="workshop-program-card">
+                    <div class="workshop-program-card__intro">
+                        <span class="workshop-program-card__eyebrow">お客様満足度トップ</span>
+                        <h3>Signature Blend</h3>
+                        <p>自分用の一本を丁寧に仕上げたい人向け。香りの変化を比べながら、納得感のあるブレンドを目指します。</p>
+                    </div>
+                    <img src="../images/Workshop/Workshop_ (2-1).png" alt="自分だけの香りを丁寧に作るシグネチャープラン">
+                    <div class="workshop-program-card__details">
+                        <div class="workshop-program-card__meta">
+                            <span>所要時間: 約60分から75分</span>
+                            <span>向いている人: 自分用 / 記念の一本 / 深掘り体験</span>
+                            <span>得られるもの: 日常で使える完成した香り</span>
+                        </div>
+                        <ul class="workshop-program-card__points">
+                            <li>トップから余韻までバランスを調整できる</li>
+                            <li>完成イメージを相談しながら詰められる</li>
+                            <li>最も標準的で選びやすい中心プラン</li>
+                        </ul>
+                        <div class="workshop-program-card__actions">
+                            <a class="button button--primary" href="../index.html#contact">一番人気で予約する</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="workshop-program-card workshop-program-card--image-last">
+                    <div class="workshop-program-card__body">
+                        <!-- <span class="workshop-program-card__eyebrow">Gift</span> -->
+                        <h3>Gift Workshop</h3>
+                        <p>記念日や贈り物の相談をしながら、二人で香りを作る体験。会話の時間まで含めて思い出に残したい人に向いています。</p>
+                        <div class="workshop-program-card__meta">
+                            <span>所要時間: 約75分から90分</span>
+                            <span>向いている人: ペア参加 / 記念日 / ギフト相談</span>
+                            <span>得られるもの: 贈る相手を意識した香り設計</span>
+                        </div>
+                        <ul class="workshop-program-card__points">
+                            <li>二人で好みをすり合わせる過程も楽しめる</li>
+                            <li>スタッフが用途に応じた提案を補助する</li>
+                            <li>記念撮影や会話体験との相性が高い</li>
+                        </ul>
+                        <div class="workshop-program-card__actions">
+                            <a class="button button--primary" href="../index.html#contact">ペア体験を予約する</a>
+                        </div>
+                    </div>
+                    <img src="../images/Workshop/Workshop_ (7).png" alt="二人で記念に香りを作るギフトプラン">
+                </article>
+            </div>
+        </section>
+
+        <section class="workshop-faq" id="faq">
+            <div class="workshop-faq-heading">
+                <p class="section-kicker">FAQ</p>
+                <h2>よくあるご質問</h2>
+            </div>
+            <div class="workshop-faq-grid">
+                <article class="workshop-faq-item">
+                    <h3>香りに詳しくなくても参加できますか？</h3>
+                    <p>問題ありません。好みや気分を会話しながら整理する進行なので、香水やアロマの知識がなくても参加しやすい設計です。</p>
+                </article>
+                <article class="workshop-faq-item">
+                    <h3>一人でも浮きませんか？</h3>
+                    <p>一人参加でも体験しやすい構成です。観光の途中に立ち寄る来店や、自分用の一本を作りたい来店との相性が高いです。</p>
+                </article>
+                <article class="workshop-faq-item">
+                    <h3>ギフトとして相談したい場合は？</h3>
+                    <p>贈る相手のイメージやシーンに合わせた相談ができます。記念日やペア体験なら Gift Workshop から検討するのが分かりやすいです。</p>
+                </article>
+                <article class="workshop-faq-item">
+                    <h3>事前に準備しておくと良いことはありますか？</h3>
+                    <p>必須ではありませんが、Smart Scent Design を先に試して好みの方向性を見ておくと、店頭での比較や会話がよりスムーズになります。</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="workshop-location" id="location">
+            <div class="workshop-location-heading">
+                <p class="section-kicker">Location</p>
+                <h2>行き先を選ぶ</h2>
+            </div>
+            <div class="workshop-location-grid">
+                <article class="workshop-location-panel">
+                    <h3>開催店舗</h3>
+                    <p>浅草店、柴又店、ソラマチ店で予約を受け付けています。どの店舗も同じ体験軸を持ちつつ、空間の雰囲気や立ち寄り方に違いがあります。</p>
+                    <div class="workshop-store-list">
+                        <div class="workshop-store-card is-active" data-store-card="asakusa">
+                            <strong>浅草店</strong>
+                            <p>観光動線と合わせやすく、旅の記憶を香りに接続しやすいロケーションです。</p>
+                        </div>
+                        <div class="workshop-store-card" data-store-card="shibamata">
+                            <strong>柴又店</strong>
+                            <p>落ち着いた時間の中で、会話を重ねながら香りを組み立てたい人に向いています。</p>
+                        </div>
+                        <div class="workshop-store-card" data-store-card="solamachi">
+                            <strong>ソラマチ店</strong>
+                            <p>アクセスしやすく、日常の延長で立ち寄る体験としても組み込みやすい店舗です。</p>
+                        </div>
+                    </div>
+                </article>
+                <article class="workshop-store-note">
+                    <h3>下記の3店舗よりお選びいただけます</h3>
+                    <!-- <p>希望店舗、参加人数、第一希望日時、目的を一言添えておくと案内がスムーズです。迷っている場合は「初心者向け希望」「ギフト相談希望」と書くだけでも十分です。</p> -->
+                    <div class="workshop-map-picker" aria-label="店舗を選択して地図を表示">
+                        <button class="workshop-map-chip is-active" type="button" data-map-target="asakusa"
+                            data-map-label="浅草店" data-map-query="東武浅草駅">浅草店 / Fri - Sun</button>
+                        <button class="workshop-map-chip" type="button" data-map-target="shibamata" data-map-label="柴又店"
+                            data-map-query="葛飾区柴又 帝釈天">柴又店 / Sat - Mon</button>
+                        <button class="workshop-map-chip" type="button" data-map-target="solamachi"
+                            data-map-label="ソラマチ店" data-map-query="スカイツリー">ソラマチ店 / Daily</button>
+                    </div>
+                    <div class="workshop-map-frame">
+                        <iframe id="workshop-store-map" title="浅草店の地図" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            src="https://www.google.com/maps?q=%E6%9D%B1%E6%AD%A6%E6%B5%85%E8%8D%89%E9%A7%85&output=embed"></iframe>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="cta-panel workshop-reserve" id="reserve">
+            <div class="cta-panel__content">
+                <p class="section-kicker">Reservation</p>
+                <h2>ご予予約はこちらから</h2>
+                <p>「予約フォームに進む」より、ワークショップのご予約にお進みください。<br>「デジタル調香を試す」より、ワークショップご参加前に画面上でデジタル調香をご体験いただけます。
+                </p>
+            </div>
+            <div class="workshop-reserve__actions">
+                <a class="button button--primary" href="../index.html#contact">予約フォームへ進む</a>
+                <!-- <a class="button button--secondary" href="#program">もう一度プランを見る</a> -->
+                <a class="button button--secondary" href="./smart-scent-design.html">デジタル調香を試す</a>
+            </div>
+        </section>
     </main>
     <script src="../js/site-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/site-shell.js"></script>
+    <script>
+        (() => {
+            const mapFrame = document.getElementById("workshop-store-map");
+            const mapChips = Array.from(document.querySelectorAll(".workshop-map-chip"));
+            const storeCards = Array.from(document.querySelectorAll(".workshop-store-card"));
+            if (!mapFrame || mapChips.length === 0) return;
+
+            const setActiveMap = (chip) => {
+                const query = chip.dataset.mapQuery;
+                const label = chip.dataset.mapLabel;
+                const target = chip.dataset.mapTarget;
+                if (!query || !label) return;
+
+                mapFrame.src = `https://www.google.com/maps?q=${encodeURIComponent(query)}&output=embed`;
+                mapFrame.title = `${label}の地図`;
+
+                mapChips.forEach((item) => {
+                    item.classList.toggle("is-active", item === chip);
+                });
+
+                storeCards.forEach((card) => {
+                    card.classList.toggle("is-active", card.dataset.storeCard === target);
+                });
+            };
+
+            mapChips.forEach((chip) => {
+                chip.addEventListener("click", () => {
+                    setActiveMap(chip);
+                });
+            });
+        })();
+    </script>
 </body>
 
 </html>
-
-

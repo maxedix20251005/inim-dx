@@ -494,6 +494,40 @@ main {
     border-radius: 22px;
 }
 
+#hero-banner {
+    position: relative;
+    overflow: hidden;
+    min-height: 420px;
+    background:
+        linear-gradient(90deg,
+            rgba(247, 242, 233, 0.94) 0%,
+            rgba(247, 242, 233, 0.88) 24%,
+            rgba(247, 242, 233, 0.52) 50%,
+            rgba(247, 242, 233, 0.18) 72%,
+            rgba(247, 242, 233, 0.00) 100%),
+        url("../images/The image used/Lineup image_ (6).png") center center / cover no-repeat;
+}
+
+#hero-banner .experience-banner__content {
+    position: relative;
+    z-index: 1;
+    max-width: 50%;
+}
+
+#hero-banner .experience-banner__actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: min(100%, 280px);
+}
+
+#hero-banner .experience-banner__actions .button {
+    width: 100%;
+}
+
+#hero-banner .experience-banner__visual {
+    display: none;
+}
+
 .section {
     padding-top: 96px;
 }
@@ -513,7 +547,7 @@ main {
 
 .journey__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 22px;
+    gap: 72px;
 }
 
 .journey-card,
@@ -526,7 +560,19 @@ main {
 }
 
 .journey-card {
+    position: relative;
     padding: 28px;
+}
+
+.journey-card:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -74px;
+    width: 68px;
+    height: 38px;
+    background: url("../images/arrow/arrow05_rolling.png") center center / contain no-repeat;
+    transform: translateY(-50%);
 }
 
 .journey-card span {
@@ -639,6 +685,138 @@ main {
     color: var(--color-muted);
 }
 
+.placeholder-page {
+    padding-top: 72px;
+}
+
+.placeholder-stage {
+    display: flex;
+    justify-content: center;
+}
+
+.placeholder-panel {
+    width: min(100%, 860px);
+    padding: 40px;
+    border: 1px solid rgba(207, 201, 188, 0.82);
+    border-radius: 24px;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 242, 233, 0.92));
+    box-shadow: var(--shadow-soft);
+}
+
+.placeholder-illustration {
+    position: relative;
+    min-height: 200px;
+    margin-bottom: 28px;
+    border-radius: 22px;
+    background:
+        radial-gradient(circle at top left, rgba(178, 69, 49, 0.14), rgba(178, 69, 49, 0)),
+        linear-gradient(135deg, rgba(247, 242, 233, 0.96), rgba(255, 255, 255, 0.98));
+    border: 1px solid rgba(207, 201, 188, 0.78);
+    overflow: hidden;
+}
+
+.placeholder-sign {
+    position: absolute;
+    top: 34px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-2deg);
+    display: grid;
+    gap: 4px;
+    width: min(72%, 360px);
+    padding: 18px 22px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(207, 201, 188, 0.92);
+    box-shadow: 0 16px 30px rgba(44, 44, 44, 0.10);
+    text-align: center;
+}
+
+.placeholder-sign span:first-child {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+}
+
+.placeholder-sign span:last-child {
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--color-main);
+}
+
+.placeholder-cone {
+    position: absolute;
+    bottom: 26px;
+    width: 76px;
+    height: 112px;
+    border-radius: 18px 18px 8px 8px;
+    background:
+        repeating-linear-gradient(135deg,
+            rgba(243, 191, 63, 0.98) 0 16px,
+            rgba(33, 33, 33, 0.98) 16px 32px);
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+    box-shadow: 0 12px 24px rgba(44, 44, 44, 0.14);
+}
+
+.placeholder-cone--left {
+    left: 64px;
+}
+
+.placeholder-cone--right {
+    right: 64px;
+}
+
+.placeholder-tool {
+    position: absolute;
+    bottom: 54px;
+    left: 50%;
+    width: 170px;
+    height: 12px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(44, 44, 44, 0.18), rgba(44, 44, 44, 0.42));
+    transform: translateX(-50%) rotate(-16deg);
+    box-shadow: 0 10px 16px rgba(44, 44, 44, 0.10);
+}
+
+.placeholder-tool::after {
+    content: "";
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(178, 69, 49, 0.14);
+    border: 2px solid rgba(178, 69, 49, 0.34);
+    transform: translateY(-50%);
+}
+
+.placeholder-kicker {
+    margin: 0 0 14px;
+    font-size: 0.84rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+}
+
+.placeholder-panel h1 {
+    margin: 0;
+    font-size: clamp(2.8rem, 5vw, 4.4rem);
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+}
+
+.placeholder-panel p:last-child {
+    margin: 18px 0 0;
+    max-width: 620px;
+    line-height: 1.9;
+    color: var(--color-muted);
+}
+
 .site-footer {
     padding-top: 48px;
     padding-bottom: 56px;
@@ -735,6 +913,10 @@ main {
         flex-direction: column;
         align-items: start;
     }
+
+    #hero-banner .experience-banner__content {
+        max-width: none;
+    }
 }
 
 @media (max-width: 980px) {
@@ -815,6 +997,27 @@ main {
     .site-footer__grid {
         grid-template-columns: 1fr;
     }
+
+    .journey-card:not(:last-child)::after {
+        top: auto;
+        right: 50%;
+        bottom: -42px;
+        width: 58px;
+        height: 32px;
+        transform: translateX(50%) rotate(90deg);
+    }
+
+    .placeholder-panel {
+        padding: 28px;
+    }
+
+    .placeholder-cone--left {
+        left: 28px;
+    }
+
+    .placeholder-cone--right {
+        right: 28px;
+    }
 }
 
 @media (max-width: 720px) {
@@ -857,6 +1060,38 @@ main {
 
     .section {
         padding-top: 56px;
+    }
+
+    .placeholder-page {
+        padding-top: 56px;
+    }
+
+    .placeholder-panel {
+        padding: 22px;
+    }
+
+    .placeholder-illustration {
+        min-height: 168px;
+        margin-bottom: 22px;
+    }
+
+    .placeholder-sign {
+        width: calc(100% - 28px);
+        padding: 16px 18px;
+    }
+
+    .placeholder-sign span:last-child {
+        font-size: clamp(1.4rem, 7vw, 2rem);
+    }
+
+    .placeholder-cone {
+        width: 58px;
+        height: 86px;
+    }
+
+    .placeholder-tool {
+        width: 120px;
+        bottom: 44px;
     }
 }
 
