@@ -4,7 +4,7 @@
     if (!body || !main) return;
 
     const root = body.dataset.root || ".";
-    const ADMIN_BUILD_VERSION = "20260321f";
+    const ADMIN_BUILD_VERSION = "20260321g";
     const pageKey = body.dataset.pageKey || "appLogin";
     const cfg = window.INIM_SITE_CONFIG || {};
     const sbApi = window.supabase || null;
@@ -470,8 +470,8 @@
             return null;
         }
     };
-    const loadPageData = async () => {
-        clearNotice();
+    const loadPageData = async ({ preserveNotice = false } = {}) => {
+        if (!preserveNotice) clearNotice();
         const previousHeroId = state.selectedHeroId;
         const previousStepId = state.selectedStepId;
         if (pageKey === "appPagesHome" || pageKey === "appPublish") {
@@ -608,7 +608,7 @@
         if (table === "top_hero_items") state.selectedHeroId = String(recordId);
         if (table === "journey_steps") state.selectedStepId = String(recordId);
         setNotice(`${table} を更新しました。`, "success");
-        await loadPageData();
+        await loadPageData({ preserveNotice: true });
     };
     const validateHeroForm = (form, rows, recordIdValue) => {
         return validateHeroPayload({

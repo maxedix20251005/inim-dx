@@ -580,6 +580,8 @@ textarea:focus {
     font-size: 0.72rem;
     font-weight: 700;
     vertical-align: middle;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .admin-table__actions button {
