@@ -21,6 +21,10 @@
 - そのため、公開サイト用の `js/site-shell.js` と `css/style.css` は変更しない方針です。
 - 管理画面は、専用の `js/admin-app.js` と `css/admin-app.css` に分離して実装しています。
 - `app/` 配下の HTML は、管理画面専用アセットを参照するための差し替えに限定しています。
+- Workshop の予約と問い合わせに関する呼称は、今後 `bookings / enquiries` に統一します。
+- ただし、DB テーブル名はリスク回避のため当面 `reservations` / `inquiries` のまま据え置きます。
+- 予約サイト要件確定後は、`bookings`, `booking_status_logs`, `enquiries`, `enquiry_status_logs` を新規作成し、そちらを正本 DB とする方針です。
+- 英語表記が必要な場合は、今後 Australian English に統一します。
 
 ### ここまでの変更範囲
 #### 新規追加
@@ -67,8 +71,8 @@
 - `content_assets` の取得
 - `top_hero_items.asset_id` の選択式入力
 - `content_assets` の検索・絞り込み UI
-- `reservations` と `inquiries` の件数取得
-- `reservations` と `inquiries` の直近一覧表示
+- `bookings` と `enquiries` の件数表示
+- `bookings` と `enquiries` の直近一覧表示
 - `top_hero_items` の基本入力バリデーション
 - `top_hero_items.cta_url` のURL形式厳密化
 - `journey_steps` の基本入力バリデーション
@@ -134,38 +138,40 @@
 - 2026-03-21 の実画面確認で、検索欄とバケット絞り込みの表示が確認できました。
 - この差分に合わせて、管理画面 HTML のバージョン文字列を `20260321h` へ更新しました。
 
-#### 6. reservations / inquiries の read-only 拡張
-- ダッシュボードで、件数だけでなく `reservations` と `inquiries` の直近 5 件を確認できるようにしました。
-- `reservations` は `reservation_type`, `reserved_at`, `participant_count`, `status`, `store_id`, `customer_profile_id` を表示します。
-- `inquiries` は `subject`, `category`, `status`, `created_at`, `assigned_to`, `customer_profile_id` を表示します。
+#### 6. bookings / enquiries の read-only 拡張
+- ダッシュボードで、件数だけでなく `bookings` と `enquiries` の直近 5 件を確認できるようにしました。
+- `bookings` は `reservation_type`, `reserved_at`, `participant_count`, `status`, `store_id`, `customer_profile_id` を表示します。
+- `enquiries` は `subject`, `category`, `status`, `created_at`, `assigned_to`, `customer_profile_id` を表示します。
 - まずは安全性優先で read-only 表示に留め、更新機能はまだ入れていません。
 - `app/publish.html` にも同じスナップショットを表示し、公開前チェックと合わせて確認できるようにしました。
 - トップ編集と導線設定の左右パネルは、一覧と編集フォームの情報量に合わせて比率を調整しました。等幅ではなく、一覧を少し広げつつ編集フォームの可読性も維持する設定です。
 - 2026-03-21 の実画面確認で、ダッシュボード一覧と公開管理一覧は正常、`Admin build: 20260321i`、Console エラーなしを確認しました。
-- この差分に合わせて、管理画面 HTML のバージョン文字列を `20260321j` へ更新しました。
+- この差分に合わせて、管理画面 HTML のバージョン文字列を `20260321k` へ更新しました。
+- ただし、現在の DB 接続先はあくまで仮の `reservations` / `inquiries` です。予約サイト要件確定後に、`bookings`, `booking_status_logs`, `enquiries`, `enquiry_status_logs` を正本として再設計する前提です。
 
 #### 7. アセット説明文と左右パネル比率
 - `画像アセットID` の横に、フィルタの使い方を示す説明文を追加しました。
 - 2026-03-21 の最終確認で、アセット説明文は良好、トップ編集の左右比率は良好を確認しました。
 - 一方で、導線設定の左右比率は「概ね良好だが、まだ微調整余地あり」という結果です。
 - 次回は [`app/pages/journey.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/app/pages/journey.html) の左右比率を中心に微調整を行うのが最優先です。
+- 同時に、画面・docs・コード上の呼称は `bookings / enquiries` へ統一しました。
 
 ### 次に優先して進める作業
 1. `PROJECT_STATUS.md` を起点に運用継続する
 2. `AI_CONTEXT_PROMPT.md` を復元用コンテキストとして都度更新運用する
-3. [`app/pages/journey.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/app/pages/journey.html) の左右パネル比率を微調整する
-4. `reservations` / `inquiries` の詳細管理画面を検討する
+3. 画面・docs・コード上の呼称を `bookings / enquiries` に統一する
+4. `bookings / enquiries` の詳細管理画面を検討する
 
 ### 再開時の確認手順
 1. [`app/pages/journey.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/app/pages/journey.html) を開く
-2. サイドバー下部の `Admin build` が `20260321j` であることを確認する
+2. サイドバー下部の `Admin build` が `20260321k` であることを確認する
 3. 左右パネル比率を確認し、一覧の見やすさとフォームの可読性を見比べる
-4. 必要なら `reservations` / `inquiries` の詳細管理画面着手へ進む
+4. 必要なら `bookings / enquiries` の詳細管理画面着手へ進む
 
 ### 確認時の報告フォーマット
 - `導線設定の左右比率:` 良好 / 要改善
 - `補正後の見やすさ:` 改善 / 変化なし / 悪化
-- `Admin build:` 20260321j / その他
+- `Admin build:` 20260321k / その他
 - `補足:` 必要に応じて詳細
 - `Console:` エラーなし / エラーあり
 

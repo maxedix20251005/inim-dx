@@ -58,6 +58,10 @@
   - `css/admin-app.css`
 - `app/` 配下 HTML は、管理画面専用アセットを参照する差し替えに限定する
 - ロールバックしやすいように、変更範囲を局所化する
+- Workshop の予約と問い合わせに関する呼称は、DB を除き `bookings / enquiries` に統一する
+- DB テーブル名はリスク回避のため当面 `reservations` / `inquiries` のまま据え置く
+- 予約サイト要件確定後は、`bookings`, `booking_status_logs`, `enquiries`, `enquiry_status_logs` を新規作成し、そちらを正本 DB とする
+- 英語表記が必要な場合は Australian English に統一する
 
 ### ここまでの主な変更範囲
 #### 新規追加
@@ -109,9 +113,9 @@
 - `journey_steps` 一覧・編集
 - `journey_steps` 基本入力バリデーション
 - 保存後 UI 改善
-- `reservations` 件数取得
-- `inquiries` 件数取得
-- `reservations` / `inquiries` の直近一覧表示
+- `bookings` 件数表示
+- `enquiries` 件数表示
+- `bookings / enquiries` の直近一覧表示
 
 ### DB 設計に基づく重要テーブル
 #### `user_profiles`
@@ -198,9 +202,10 @@
 - 保存後も編集中レコードの選択状態を維持します。
 - 保存直後の再取得でも通知が消えないように修正済みです。
 - `更新済み` バッジは改行しにくい表示へ調整済みです。
-- ダッシュボードと公開管理には、`reservations` / `inquiries` の直近 5 件を read-only で表示するスナップショットを追加済みです。
+- ダッシュボードと公開管理には、`bookings / enquiries` の直近 5 件を read-only で表示するスナップショットを追加済みです。
 - トップ編集と導線設定の左右パネルは、等幅ではなく情報量に合わせた比率へ調整済みです。
-- 管理画面 HTML のバージョン文字列は `20260321j` です。
+- 管理画面 HTML のバージョン文字列は `20260321k` です。
+- 画面・docs・コード上の呼称は `bookings / enquiries` に統一済みです。
 - 2026-03-21 の最終確認では、アセット説明文は良好、トップ編集の左右比率は良好、導線設定の左右比率は微調整余地ありでした。
 - 2026-03-21 の実画面確認で、`journey_steps` の各バリデーションは正常動作し、正常値保存も成功、Console エラーなしを確認済みです。
 
@@ -216,13 +221,13 @@
 6. ダッシュボードで `直近の予約` と `直近の問い合わせ` が表示されるか確認する
 7. `app/publish.html` でも同じ一覧が表示されるか確認する
 8. [`app/pages/journey.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/app/pages/journey.html) で左右パネル比率を確認する
-9. サイドバー下部の `Admin build` が `20260321j` であることを確認する
+9. サイドバー下部の `Admin build` が `20260321k` であることを確認する
 10. 導線設定の左右パネル比率を微調整する
-11. 必要なら `reservations` / `inquiries` の次着手範囲を整理する
+11. 必要なら `bookings / enquiries` の次着手範囲を整理する
 
 ### 次に優先する実装候補
-1. `app/pages/journey.html` の左右パネル比率微調整
-2. `reservations` / `inquiries` の詳細管理画面着手
+1. 画面・docs・コード上の `bookings / enquiries` への呼称統一
+2. `bookings / enquiries` の詳細管理画面着手
 
 ### 変更時の必須チェック
 - 変更が公開側へ波及していないか確認する

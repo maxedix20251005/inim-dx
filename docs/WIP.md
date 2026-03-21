@@ -30,10 +30,11 @@
 - 保存直後の再取得でも通知が消えないようにした
 - `更新済み` バッジを改行しにくくした
 - `content_assets` にキーワード検索とバケット絞り込み UI を追加した
-- ダッシュボードと公開管理に `reservations` / `inquiries` の直近一覧を追加した
+- ダッシュボードと公開管理に `bookings / enquiries` の直近一覧を追加した
 - `画像アセットID` の横に、フィルタの使い方説明を追加した
 - トップ編集と導線設定の左右パネル比率を調整した
-- 管理画面 HTML のバージョン文字列を `20260321j` に更新した
+- 画面・docs・コード上の呼称を `bookings / enquiries` に統一した
+- 管理画面 HTML のバージョン文字列を `20260321k` に更新した
 - サイドバーの `セッション確認` ボタン背景をグレー系、文字色を明色へ変更した
 - `セッション確認` ボタンの視認性改善が反映されていることを確認した
 - サイドバー下部に `Admin build` 表示を追加し、キャッシュ反映状況を画面上で確認できるようにした
@@ -65,39 +66,41 @@
 - パスワード再設定フローは解消した
 - ログイン後のプロフィール取得、ロール表示、`account_status` 表示は正常化した
 - Console エラーも解消済み
-- 現在の主な未解決事項は、`reservations` / `inquiries` の詳細管理画面へどこまで踏み込むかの整理です
+- 現在の主な未解決事項は、`bookings / enquiries` の詳細管理画面へどこまで踏み込むかの整理です
+- 呼称方針としては、DB は `reservations` / `inquiries` のまま据え置き、画面・docs・コード上の表記だけ `bookings / enquiries` に統一します
+- 予約サイト要件確定後は、`bookings`, `booking_status_logs`, `enquiries`, `enquiry_status_logs` を新規作成し、そちらを正本 DB とする方針です
+- 英語表記が必要な場合は Australian English に統一します
 - 2026-03-21 の最終確認では、アセット説明文は良好、トップ編集の左右比率は良好、導線設定の左右比率は微調整余地ありという結果でした
 - 管理画面 HTML の CSS / JS 参照にはバージョン文字列を付け、古い JS キャッシュが残りにくいようにしています
 - 2026-03-21 の確認では、`journey_steps` でフロントバリデーションをすり抜け、Supabase 側の制約エラーまで到達するケースがありました
 - これに対して、フォーム送信前チェックに加え、`saveRecord()` 側でも `journey_steps` の入力検証を必ず通すように修正しました
 - 2026-03-21 の実画面確認で、`journey_steps` の各バリデーションは正常動作し、正常値保存、Console エラーなしまで確認しました
 - `content_assets` の検索欄とバケット絞り込みは、2026-03-21 の実画面で表示確認まで完了しました
-- ダッシュボードと公開管理に追加した `reservations` / `inquiries` 一覧は、2026-03-21 の実画面確認で正常でした
+- ダッシュボードと公開管理に追加した `bookings / enquiries` 一覧は、2026-03-21 の実画面確認で正常でした
 - 次は、`app/pages/journey.html` の左右パネル比率微調整です
 
 ### 明日最初にやること
-1. [`app/pages/journey.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/app/pages/journey.html) を開く
-2. `Admin build: 20260321j` を確認する
-3. 導線設定の左右パネル比率を微調整する
-4. 必要なら `reservations` / `inquiries` の詳細画面着手範囲を整理する
+1. 画面・docs・コード上の `bookings / enquiries` 表記を最終確認する
+2. `Admin build: 20260321k` を確認する
+3. 必要なら `bookings / enquiries` の詳細画面着手範囲を整理する
 
 ### 明日の確認ポイント
 - 導線設定の一覧テーブルが窮屈でないか
 - フォーム側の入力欄が狭くなりすぎていないか
 - トップ編集との見た目差が大きすぎないか
-- サイドバー下部の `Admin build` が `20260321j` になっているか
+- サイドバー下部の `Admin build` が `20260321k` になっているか
 
 ### 明日の報告フォーマット
 - `導線設定の左右比率:` 良好 / 要改善
 - `補正後の見やすさ:` 改善 / 変化なし / 悪化
-- `Admin build:` 20260321j / その他
+- `Admin build:` 20260321k / その他
 - `Console:` エラーなし / エラーあり
 - `補足:` 必要に応じて詳細
 
 ### 次の実装候補
-- `app/pages/journey.html` の左右パネル比率を微調整する
-- `reservations` / `inquiries` 管理画面へ着手する
-- `reservations` / `inquiries` のステータス更新 UI を検討する
+- 画面・docs・コード上の `bookings / enquiries` への呼称統一
+- `bookings / enquiries` 管理画面へ着手する
+- `bookings / enquiries` のステータス更新 UI を検討する
 - 顧客表示名や店舗名の join 表示を検討する
 
 ### 確認済み事項

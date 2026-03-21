@@ -11,6 +11,10 @@
 - そのため、公開サイトで使っている `js/site-shell.js` と `css/style.css` は変更していません。
 - 管理画面専用の描画と認証処理は、新規の `js/admin-app.js` と `css/admin-app.css` に分離しています。
 - 既存の `app/` 配下HTMLは、参照先を管理画面専用アセットに差し替えるだけに留めています。
+- Workshop の予約と問い合わせに関する呼称は、今後 `bookings / enquiries` に統一します。
+- DB テーブル名はリスク回避のため当面 `reservations` / `inquiries` のまま据え置きます。
+- 予約サイト要件確定後は、`bookings`, `booking_status_logs`, `enquiries`, `enquiry_status_logs` を新規作成し、そちらを正本 DB とする方針です。
+- 英語表記は Australian English に統一します。
 
 ### ここまでの変更範囲
 #### 新規追加
@@ -53,8 +57,8 @@
 - `content_assets`
 - `top_hero_items`
 - `journey_steps`
-- `reservations`
-- `inquiries`
+- `bookings` 表示
+- `enquiries` 表示
 
 #### DB設計書へ合わせて確定した編集項目
 - `top_hero_items`
@@ -78,7 +82,7 @@
 - `top_hero_items.asset_id` は `content_assets` の画像アセット候補から選択できる状態に更新済みです。
 - `top_hero_items.asset_id` には、キーワード検索とバケット絞り込み UI を追加しました。
 - `top_hero_items.asset_id` の横には、上段が絞り込み、下段が実選択であることを示す補足文を追加しました。
-- ダッシュボードと公開管理では、`reservations` / `inquiries` の直近 5 件を read-only で確認できるようにしました。
+- ダッシュボードと公開管理では、`bookings / enquiries` の直近 5 件を read-only で確認できるようにしました。
 - パスワード再設定メールの `redirectTo` は、管理画面の `app/password/reset.html` を優先するよう `js/admin-app.js` 側で明示しました。
 - `js/site-config.js` にも `adminResetRedirectUrl` を追加し、設定レベルでも管理画面用 reset URL を明示しました。
 - `app/password/forgot.html` では、現在のページURL、設定値、実際の `redirectTo` を表示し、切り分けしやすくしました。
@@ -98,7 +102,8 @@
 - 保存直後の再取得でも通知が消えないようにしました。
 - `更新済み` バッジは改行しにくい表示へ調整しました。
 - トップ編集と導線設定の左右パネルは、等幅ではなく情報量に合わせた比率へ調整しました。
-- 管理画面 HTML のバージョン文字列は `20260321j` に更新し、最新 JS / CSS を読み込みやすくしました。
+- 画面・docs・コード上の呼称は `bookings / enquiries` に統一しました。
+- 管理画面 HTML のバージョン文字列は `20260321k` に更新し、最新 JS / CSS を読み込みやすくしました。
 - 2026-03-21 の最終確認では、アセット説明文は良好、トップ編集の左右比率は良好、導線設定の左右比率は微調整余地ありという評価でした。
 - サイドバーの `セッション確認` ボタンは、視認性改善のため背景をグレー系、文字色を明色へ変更しました。
 - `セッション確認` ボタンの視認性改善が反映されていることを確認しました。
@@ -107,8 +112,8 @@
 - 一方で、入力値バリデーション強化や、保存後のUI改善はまだ残っています。
 
 ### 既知の未完了事項
-- `reservations` / `inquiries` の詳細画面は未着手
-- `reservations` / `inquiries` の直近一覧 UI 実画面確認
+- `bookings / enquiries` の詳細画面は未着手
+- `bookings / enquiries` の直近一覧 UI 実画面確認
 - `app/pages/journey.html` の左右パネル比率の微調整
 
 ### ロールバック方針
