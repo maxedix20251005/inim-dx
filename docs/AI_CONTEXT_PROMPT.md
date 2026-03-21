@@ -11,6 +11,7 @@
 - 初心者でも理解できる説明を付けてください。
 - 日本語の文字化けがないか、変更後に必ず確認してください。
 - 変更のたびに、少なくとも `docs/PROJECT_STATUS.md` と `docs/AI_CONTEXT_PROMPT.md` を更新してください。
+- 不具合や詰まりが発生した場合は、`docs/ISSUE_LIST.md` に必ず追記し、関連ドキュメントと一緒に更新してください。
 - 管理画面に関する実装変更があれば、`docs/admin-implementation-status.md` と必要に応じて `docs/WIP.md` も更新してください。
 
 ### プロジェクト概要
@@ -35,6 +36,8 @@
   - `docs/PROJECT_STATUS.md`
   - `docs/admin-implementation-status.md`
   - `docs/WIP.md`
+- Issue 管理:
+  - `docs/ISSUE_LIST.md`
 
 ### 技術構成
 - フロント:
@@ -103,6 +106,7 @@
 - 管理画面 HTML のバージョン文字列によるキャッシュ制御
 - `journey_steps` 一覧・編集
 - `journey_steps` 基本入力バリデーション
+- 保存後 UI 改善
 - `reservations` 件数取得
 - `inquiries` 件数取得
 
@@ -185,7 +189,10 @@
 - `journey_steps` では、`step_no`、`step_name`、`link_url`、`helper_text` の基本入力バリデーションを追加済みです。
 - 2026-03-21 の確認で、`journey_steps` のフロント側検証をすり抜けてバックエンド制約エラーが出たため、`saveRecord()` 側でも必ず入力検証を通すように修正済みです。
 - サイドバー下部に `Admin build` を表示し、キャッシュ反映状況を目視確認できるようにしています。
-- 管理画面 HTML のバージョン文字列は `20260321e` です。
+- 保存成功時は、通知にレコード名と保存時刻を表示し、一覧側でも直近更新行を `更新済み` としてハイライトします。
+- 保存後も編集中レコードの選択状態を維持します。
+- 管理画面 HTML のバージョン文字列は `20260321f` です。
+- 2026-03-21 の実画面確認で、`journey_steps` の各バリデーションは正常動作し、正常値保存も成功、Console エラーなしを確認済みです。
 
 ### 直近の再開手順
 1. `docs/PROJECT_STATUS.md` を確認する
@@ -196,16 +203,14 @@
    - `https://maxedix20251005.github.io/inim-dx/app/pages/home.html`
    - `https://maxedix20251005.github.io/inim-dx/app/pages/journey.html`
    - `https://maxedix20251005.github.io/inim-dx/app/users/me.html`
-6. `app/pages/journey.html` を `Ctrl+F5` で再読み込みする
-7. サイドバー下部の `Admin build` が `20260321e` であることを確認する
-8. `journey_steps` の入力バリデーションを確認する
-9. Console エラー有無を確認する
+6. 保存後 UI の見え方を実画面確認する
+7. サイドバー下部の `Admin build` が `20260321f` であることを確認する
+8. `content_assets` の検索・絞り込み UI 要件を整理する
 
 ### 次に優先する実装候補
-1. `journey_steps` の入力バリデーション実画面確認
-2. 保存後の UI 改善
-3. `content_assets` の検索・絞り込み UI 追加
-4. `reservations` / `inquiries` の詳細管理画面着手
+1. 保存後 UI の実画面確認
+2. `content_assets` の検索・絞り込み UI 追加
+3. `reservations` / `inquiries` の詳細管理画面着手
 
 ### 変更時の必須チェック
 - 変更が公開側へ波及していないか確認する
@@ -213,6 +218,7 @@
 - 日本語の文字化けがないか再読込で確認する
 - 変更内容を `docs/PROJECT_STATUS.md` に反映する
 - この `docs/AI_CONTEXT_PROMPT.md` にも反映する
+- 不具合や詰まりがあった場合は `docs/ISSUE_LIST.md` にも反映する
 - 必要に応じて `docs/admin-implementation-status.md` と `docs/WIP.md` を更新する
 
 ### ユーザーへの報告ルール

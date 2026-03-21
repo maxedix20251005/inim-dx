@@ -4,7 +4,7 @@
     if (!body || !main) return;
 
     const root = body.dataset.root || ".";
-    const ADMIN_BUILD_VERSION = "20260321e";
+    const ADMIN_BUILD_VERSION = "20260321f";
     const pageKey = body.dataset.pageKey || "appLogin";
     const cfg = window.INIM_SITE_CONFIG || {};
     const sbApi = window.supabase || null;
@@ -51,7 +51,8 @@
         heroItems: [],
         journeySteps: [],
         selectedHeroId: "",
-        selectedStepId: ""
+        selectedStepId: "",
+        lastSaved: null
     };
 
     const currentPage = pages[pageKey] || pages.appLogin;
@@ -112,6 +113,7 @@
         const d = new Date(v);
         return Number.isNaN(d.getTime()) ? String(v) : d.toLocaleString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
     };
+    const isLastSaved = (table, recordId) => Boolean(state.lastSaved && state.lastSaved.table === table && String(state.lastSaved.recordId) === String(recordId));
     const getIdKey = (r) => ["id", "step_id", "item_id"].find((k) => r && r[k] !== undefined) || "id";
     const getOrder = (r) => {
         const k = ["display_order", "sort_order", "order_index", "position", "step_no", "step_number"].find((x) => r && r[x] !== undefined);
@@ -140,7 +142,7 @@
         state.notice = "";
         state.noticeType = "info";
     };
-    const statusHtml = () => state.notice ? `<div class="admin-status is-${escapeHtml(state.noticeType)}">${escapeHtml(state.notice)}</div>` : "";
+    const statusHtml = () => state.notice ? `<div class="admin-status is-${escapeHtml(state.noticeType)}"><div class="admin-status__message">${escapeHtml(state.notice)}</div>${state.lastSaved && state.noticeType === "success" ? `<div class="admin-status__meta">最終保存: ${escapeHtml(state.lastSaved.label)} / ${escapeHtml(fmtDate(state.lastSaved.savedAt))}</div>` : ""}</div>` : "";
 
     const renderSidebar = () => `
         <aside class="admin-sidebar">
@@ -326,7 +328,7 @@
             <section class="admin-grid admin-grid--split">
                 <article class="admin-table-shell">
                     <div class="admin-toolbar"><div class="admin-toolbar__group"><span class="admin-pill">top_hero_items</span><span class="admin-pill">${escapeHtml(`${state.heroItems.length}件`)}</span></div></div>
-                    <table class="admin-table"><thead><tr><th>見出し</th><th>表示順</th><th>公開</th><th>操作</th></tr></thead><tbody>${state.heroItems.map((x) => `<tr><td>${escapeHtml(x.title || getLabel(x))}</td><td>${escapeHtml(String(x.display_order ?? "-"))}</td><td>${escapeHtml(x.is_active ? "公開" : "非公開")}</td><td><div class="admin-table__actions"><button type="button" data-action="select-hero" data-record-id="${escapeHtml(x[getIdKey(x)])}">編集</button></div></td></tr>`).join("")}</tbody></table>
+                    <table class="admin-table"><thead><tr><th>見出し</th><th>表示順</th><th>公開</th><th>操作</th></tr></thead><tbody>${state.heroItems.map((x) => `<tr class="${isLastSaved("top_hero_items", x[getIdKey(x)]) ? "is-updated" : ""}"><td>${escapeHtml(x.title || getLabel(x))}${isLastSaved("top_hero_items", x[getIdKey(x)]) ? `<span class="admin-table__badge">更新済み</span>` : ""}</td><td>${escapeHtml(String(x.display_order ?? "-"))}</td><td>${escapeHtml(x.is_active ? "公開" : "非公開")}</td><td><div class="admin-table__actions"><button type="button" data-action="select-hero" data-record-id="${escapeHtml(x[getIdKey(x)])}">編集</button></div></td></tr>`).join("")}</tbody></table>
                 </article>
                 <article class="admin-form-shell"><h2>トップ編集</h2><p>ヒーロー、訴求文言、CTA、公開状態を編集します。</p>${renderHeroEditor(selected)}</article>
             </section>
@@ -343,7 +345,7 @@
             <section class="admin-grid admin-grid--split">
                 <article class="admin-table-shell">
                     <div class="admin-toolbar"><div class="admin-toolbar__group"><span class="admin-pill">journey_steps</span><span class="admin-pill">${escapeHtml(`${state.journeySteps.length}件`)}</span></div></div>
-                    <table class="admin-table"><thead><tr><th>順序</th><th>表示名</th><th>リンク先</th><th>表示</th><th>操作</th></tr></thead><tbody>${state.journeySteps.map((x) => `<tr><td>${escapeHtml(String(x.step_no ?? "-"))}</td><td>${escapeHtml(x.step_name || getLabel(x))}</td><td>${escapeHtml(String(x.link_url || "-"))}</td><td>${escapeHtml(x.is_visible ? "表示" : "非表示")}</td><td><div class="admin-table__actions"><button type="button" data-action="select-step" data-record-id="${escapeHtml(x[getIdKey(x)])}">編集</button></div></td></tr>`).join("")}</tbody></table>
+                    <table class="admin-table"><thead><tr><th>順序</th><th>表示名</th><th>リンク先</th><th>表示</th><th>操作</th></tr></thead><tbody>${state.journeySteps.map((x) => `<tr class="${isLastSaved("journey_steps", x[getIdKey(x)]) ? "is-updated" : ""}"><td>${escapeHtml(String(x.step_no ?? "-"))}</td><td>${escapeHtml(x.step_name || getLabel(x))}${isLastSaved("journey_steps", x[getIdKey(x)]) ? `<span class="admin-table__badge">更新済み</span>` : ""}</td><td>${escapeHtml(String(x.link_url || "-"))}</td><td>${escapeHtml(x.is_visible ? "表示" : "非表示")}</td><td><div class="admin-table__actions"><button type="button" data-action="select-step" data-record-id="${escapeHtml(x[getIdKey(x)])}">編集</button></div></td></tr>`).join("")}</tbody></table>
                 </article>
                 <article class="admin-form-shell"><h2>導線設定</h2><p>体験導線の表示順、リンク先、状態を更新します。</p>${renderJourneyEditor(selected)}</article>
             </section>
@@ -470,6 +472,8 @@
     };
     const loadPageData = async () => {
         clearNotice();
+        const previousHeroId = state.selectedHeroId;
+        const previousStepId = state.selectedStepId;
         if (pageKey === "appPagesHome" || pageKey === "appPublish") {
             state.contentAssets = sortRows(await attemptQuery("content_assets", () => supabase
                 .from("content_assets")
@@ -486,13 +490,17 @@
                 .from("top_hero_items")
                 .select("id, title, lead_text, cta_label, cta_url, asset_id, display_order, is_active, updated_by, created_at, updated_at")
                 .is("deleted_at", null)) || []);
-            state.selectedHeroId = state.heroItems[0]?.[getIdKey(state.heroItems[0])] || "";
+            state.selectedHeroId = state.heroItems.some((x) => String(x[getIdKey(x)]) === String(previousHeroId))
+                ? previousHeroId
+                : state.heroItems[0]?.[getIdKey(state.heroItems[0])] || "";
         }
         if (pageKey === "appPagesJourney" || pageKey === "appPublish") {
             state.journeySteps = sortRows(await attemptQuery("journey_steps", () => supabase
                 .from("journey_steps")
                 .select("id, step_no, step_name, link_url, helper_text, is_visible, updated_by, created_at, updated_at")) || []);
-            state.selectedStepId = state.journeySteps[0]?.[getIdKey(state.journeySteps[0])] || "";
+            state.selectedStepId = state.journeySteps.some((x) => String(x[getIdKey(x)]) === String(previousStepId))
+                ? previousStepId
+                : state.journeySteps[0]?.[getIdKey(state.journeySteps[0])] || "";
         }
         render();
     };
@@ -579,6 +587,7 @@
     const saveRecord = async (table, rows, idValue, formData) => {
         const record = rows.find((x) => String(x[getIdKey(x)]) === String(idValue));
         if (!record) return setNotice("対象レコードが見つかりませんでした。", "error");
+        const recordId = record[getIdKey(record)];
         const payload = buildPayload(table, record, formData);
         const validationMessage = table === "top_hero_items"
             ? validateHeroPayload(payload, rows, idValue)
@@ -588,8 +597,16 @@
             const original = record[key];
             if (typeof original === "number") payload[key] = Number(payload[key]);
         });
-        const { error } = await supabase.from(table).update(payload).eq(getIdKey(record), record[getIdKey(record)]);
+        const { error } = await supabase.from(table).update(payload).eq(getIdKey(record), recordId);
         if (error) return setNotice(`保存に失敗しました: ${error.message}`, "error");
+        state.lastSaved = {
+            table,
+            recordId,
+            label: String(payload.title || payload.step_name || getLabel(record)),
+            savedAt: new Date().toISOString()
+        };
+        if (table === "top_hero_items") state.selectedHeroId = String(recordId);
+        if (table === "journey_steps") state.selectedStepId = String(recordId);
         setNotice(`${table} を更新しました。`, "success");
         await loadPageData();
     };

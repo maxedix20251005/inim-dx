@@ -469,6 +469,16 @@ textarea:focus {
     line-height: 1.6;
 }
 
+.admin-status__message {
+    font-weight: 700;
+}
+
+.admin-status__meta {
+    margin-top: 4px;
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
 .admin-status.is-info {
     background: #eef3f8;
     color: #35506d;
@@ -553,6 +563,23 @@ textarea:focus {
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--admin-sub);
+}
+
+.admin-table tr.is-updated {
+    background: #f6efe5;
+}
+
+.admin-table__badge {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 8px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #d87045;
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    vertical-align: middle;
 }
 
 .admin-table__actions button {
