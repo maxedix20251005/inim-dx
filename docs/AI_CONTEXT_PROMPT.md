@@ -183,7 +183,9 @@
 - `cta_url` は `abc` のような不正値を保存できないことを実画面で確認済みです。
 - サイドバーの `セッション確認` ボタンは、背景と文字色を調整し、視認性改善が反映されていることを確認済みです。
 - `journey_steps` では、`step_no`、`step_name`、`link_url`、`helper_text` の基本入力バリデーションを追加済みです。
-- 管理画面 HTML のバージョン文字列は `20260321d` です。
+- 2026-03-21 の確認で、`journey_steps` のフロント側検証をすり抜けてバックエンド制約エラーが出たため、`saveRecord()` 側でも必ず入力検証を通すように修正済みです。
+- サイドバー下部に `Admin build` を表示し、キャッシュ反映状況を目視確認できるようにしています。
+- 管理画面 HTML のバージョン文字列は `20260321e` です。
 
 ### 直近の再開手順
 1. `docs/PROJECT_STATUS.md` を確認する
@@ -195,8 +197,9 @@
    - `https://maxedix20251005.github.io/inim-dx/app/pages/journey.html`
    - `https://maxedix20251005.github.io/inim-dx/app/users/me.html`
 6. `app/pages/journey.html` を `Ctrl+F5` で再読み込みする
-7. `journey_steps` の入力バリデーションを確認する
-8. Console エラー有無を確認する
+7. サイドバー下部の `Admin build` が `20260321e` であることを確認する
+8. `journey_steps` の入力バリデーションを確認する
+9. Console エラー有無を確認する
 
 ### 次に優先する実装候補
 1. `journey_steps` の入力バリデーション実画面確認

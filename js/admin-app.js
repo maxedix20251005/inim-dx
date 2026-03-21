@@ -4,6 +4,7 @@
     if (!body || !main) return;
 
     const root = body.dataset.root || ".";
+    const ADMIN_BUILD_VERSION = "20260321e";
     const pageKey = body.dataset.pageKey || "appLogin";
     const cfg = window.INIM_SITE_CONFIG || {};
     const sbApi = window.supabase || null;
@@ -161,6 +162,7 @@
                 <a class="admin-link-button is-secondary" href="${escapeHtml(toPath("appUsersMe"))}">セッション確認</a>
                 <button class="admin-logout" type="button" data-action="logout">ログアウト</button>
                 <span class="admin-footer-note">公開サイト用の既存JS/CSSとは分離しています。</span>
+                <span class="admin-footer-note">Admin build: ${escapeHtml(ADMIN_BUILD_VERSION)}</span>
             </div>
         </aside>
     `;
@@ -251,7 +253,7 @@
                 <div class="admin-form-grid">
                     <div class="admin-field">
                         <label>${escapeHtml(pretty("step_no"))}</label>
-                        <input name="step_no" inputmode="numeric" required value="${escapeHtml(record.step_no ?? 1)}">
+                        <input name="step_no" type="number" min="1" step="1" inputmode="numeric" required value="${escapeHtml(record.step_no ?? 1)}">
                     </div>
                     <div class="admin-field">
                         <label>${escapeHtml(pretty("step_name"))}</label>
@@ -494,31 +496,12 @@
         }
         render();
     };
-    const saveRecord = async (table, rows, idValue, formData) => {
-        const record = rows.find((x) => String(x[getIdKey(x)]) === String(idValue));
-        if (!record) return setNotice("対象レコードが見つかりませんでした。", "error");
-        const payload = {};
-        const fields = table === "top_hero_items" ? heroFieldKeys : journeyFieldKeys;
-        fields.forEach((k) => {
-            const original = record[k];
-            const next = formData.get(k);
-            if (typeof original === "boolean") payload[k] = next === "true";
-            else if (typeof original === "number") {
-                const parsed = Number(next);
-                payload[k] = Number.isFinite(parsed) ? parsed : original;
-            } else payload[k] = next;
-        });
-        const { error } = await supabase.from(table).update(payload).eq(getIdKey(record), record[getIdKey(record)]);
-        if (error) return setNotice(`保存に失敗しました: ${error.message}`, "error");
-        setNotice(`${table} を更新しました。`, "success");
-        await loadPageData();
-    };
-    const validateHeroForm = (form, rows, recordIdValue) => {
-        const title = form.elements.title.value.trim();
-        const leadText = form.elements.lead_text.value.trim();
-        const ctaLabel = form.elements.cta_label.value.trim();
-        const ctaUrl = form.elements.cta_url.value.trim();
-        const displayOrderRaw = form.elements.display_order.value.trim();
+    const validateHeroPayload = (payload, rows, recordIdValue) => {
+        const title = String(payload.title ?? "").trim();
+        const leadText = String(payload.lead_text ?? "").trim();
+        const ctaLabel = String(payload.cta_label ?? "").trim();
+        const ctaUrl = String(payload.cta_url ?? "").trim();
+        const displayOrder = Number(payload.display_order);
         if (!title) return "見出しは必須です。";
         if (title.length > 60) return "見出しは60文字以内で入力してください。";
         if (!leadText) return "リード文は必須です。";
@@ -535,22 +518,22 @@
         } catch {
             return "遷移先URLの形式が正しくありません。";
         }
-        const displayOrder = Number(displayOrderRaw);
         if (!Number.isInteger(displayOrder) || displayOrder < 1) {
             return "表示順は1以上の整数で入力してください。";
         }
-        const duplicate = rows.find((row) => String(row.id) !== String(recordIdValue) && Number(row.display_order) === displayOrder && !row.deleted_at);
+        const duplicate = rows.find((row) => String(row[getIdKey(row)]) !== String(recordIdValue) && Number(row.display_order) === displayOrder && !row.deleted_at);
         if (duplicate) {
             return "表示順が重複しています。別の番号を指定してください。";
         }
         return "";
     };
-    const validateJourneyForm = (form, rows, recordIdValue) => {
-        const stepNoRaw = form.elements.step_no.value.trim();
-        const stepName = form.elements.step_name.value.trim();
-        const linkUrl = form.elements.link_url.value.trim();
-        const helperText = form.elements.helper_text.value.trim();
+    const validateJourneyPayload = (payload, rows, recordIdValue) => {
+        const stepNoRaw = String(payload.step_no ?? "").trim();
+        const stepName = String(payload.step_name ?? "").trim();
+        const linkUrl = String(payload.link_url ?? "").trim();
+        const helperText = String(payload.helper_text ?? "").trim();
         if (!stepNoRaw) return "導線順序は必須です。";
+        if (!/^\d+$/.test(stepNoRaw)) return "導線順序は1以上の整数で入力してください。";
         const stepNo = Number(stepNoRaw);
         if (!Number.isInteger(stepNo) || stepNo < 1) {
             return "導線順序は1以上の整数で入力してください。";
@@ -568,11 +551,64 @@
             return "遷移先URLの形式が正しくありません。";
         }
         if (helperText.length > 120) return "補足文言は120文字以内で入力してください。";
-        const duplicate = rows.find((row) => String(row.id) !== String(recordIdValue) && Number(row.step_no) === stepNo && !row.deleted_at);
+        const duplicate = rows.find((row) => String(row[getIdKey(row)]) !== String(recordIdValue) && Number(row.step_no) === stepNo && !row.deleted_at);
         if (duplicate) {
             return "導線順序が重複しています。別の番号を指定してください。";
         }
         return "";
+    };
+    const buildPayload = (table, record, formData) => {
+        const payload = {};
+        const fields = table === "top_hero_items" ? heroFieldKeys : journeyFieldKeys;
+        fields.forEach((k) => {
+            const original = record[k];
+            const next = formData.get(k);
+            if (typeof original === "boolean") {
+                payload[k] = next === "true";
+                return;
+            }
+            if (typeof original === "number") {
+                const raw = String(next ?? "").trim();
+                payload[k] = raw;
+                return;
+            }
+            payload[k] = typeof next === "string" ? next.trim() : next;
+        });
+        return payload;
+    };
+    const saveRecord = async (table, rows, idValue, formData) => {
+        const record = rows.find((x) => String(x[getIdKey(x)]) === String(idValue));
+        if (!record) return setNotice("対象レコードが見つかりませんでした。", "error");
+        const payload = buildPayload(table, record, formData);
+        const validationMessage = table === "top_hero_items"
+            ? validateHeroPayload(payload, rows, idValue)
+            : validateJourneyPayload(payload, rows, idValue);
+        if (validationMessage) return setNotice(validationMessage, "warn");
+        Object.keys(payload).forEach((key) => {
+            const original = record[key];
+            if (typeof original === "number") payload[key] = Number(payload[key]);
+        });
+        const { error } = await supabase.from(table).update(payload).eq(getIdKey(record), record[getIdKey(record)]);
+        if (error) return setNotice(`保存に失敗しました: ${error.message}`, "error");
+        setNotice(`${table} を更新しました。`, "success");
+        await loadPageData();
+    };
+    const validateHeroForm = (form, rows, recordIdValue) => {
+        return validateHeroPayload({
+            title: form.elements.title.value,
+            lead_text: form.elements.lead_text.value,
+            cta_label: form.elements.cta_label.value,
+            cta_url: form.elements.cta_url.value,
+            display_order: form.elements.display_order.value
+        }, rows, recordIdValue);
+    };
+    const validateJourneyForm = (form, rows, recordIdValue) => {
+        return validateJourneyPayload({
+            step_no: form.elements.step_no.value,
+            step_name: form.elements.step_name.value,
+            link_url: form.elements.link_url.value,
+            helper_text: form.elements.helper_text.value
+        }, rows, recordIdValue);
     };
     const bindEvents = () => {
         const loginForm = main.querySelector('[data-form="login"]');
