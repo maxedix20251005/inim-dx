@@ -89,6 +89,8 @@
 - このため、メールリンクから `reset.html` へ戻れず、再設定が完了しません。
 - 管理画面側コードでは、`forgot-password` 送信時の `redirectTo` を `reset.html` へ明示する修正を入れました。
 - `js/site-config.js` にも `adminResetRedirectUrl` を追加し、設定ファイル上でも同じ reset URL を参照するようにしました。
+- `app/password/forgot.html` では、現在のページURL、設定値、実際の `redirectTo` を画面表示するようにし、GitHub Pages 反映漏れと Supabase 側設定を切り分けやすくしました。
+- ただし、2026-03-21 の最新確認では、再送メールの `redirect_to` は引き続きトップURLでした。
 - 次回は、再送メールの `redirect_to` 実値と Supabase の Email Template を再確認します。
 
 #### 2. 再設定メールのレート制限に到達した

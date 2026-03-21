@@ -77,6 +77,8 @@
 - `top_hero_items.asset_id` は `content_assets` の画像アセット候補から選択できる状態に更新済みです。
 - パスワード再設定メールの `redirectTo` は、管理画面の `app/password/reset.html` を優先するよう `js/admin-app.js` 側で明示しました。
 - `js/site-config.js` にも `adminResetRedirectUrl` を追加し、設定レベルでも管理画面用 reset URL を明示しました。
+- `app/password/forgot.html` では、現在のページURL、設定値、実際の `redirectTo` を表示し、切り分けしやすくしました。
+- それでも、2026-03-21 時点の最新確認では、受信メール内の `redirect_to` はトップURLのままでした。
 - 一方で、入力値バリデーション強化や、保存後のUI改善はまだ残っています。
 
 ### 既知の未完了事項

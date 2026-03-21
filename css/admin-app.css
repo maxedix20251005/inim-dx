@@ -289,6 +289,16 @@ textarea:focus {
     padding: 22px;
 }
 
+.admin-state--compact {
+    padding: 18px;
+    margin-bottom: 18px;
+}
+
+.admin-state--compact h2 {
+    font-size: 1rem;
+    margin-bottom: 12px;
+}
+
 .admin-login-wrap {
     display: grid;
     place-items: center;

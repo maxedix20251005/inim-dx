@@ -53,6 +53,8 @@
 - Supabase の `URL Configuration` に `reset.html` は追加済みだったが、メールリンク実体はトップURLだった
 - 管理画面側では `forgot-password` 送信時の `redirectTo` を `app/password/reset.html` に固定する修正を反映済み
 - `js/site-config.js` にも `adminResetRedirectUrl` を追加済み
+- `app/password/forgot.html` で実際に使う `redirectTo` を画面表示する修正も反映済み
+- ただし、2026-03-21 の再送結果でも、実メールの `redirect_to` はトップURLのままだった
 - 次回は、以下を切り分ける必要がある
   - `forgot.html` から送る際の `redirectTo`
   - Supabase Email Template 側の設定
