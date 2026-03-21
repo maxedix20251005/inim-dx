@@ -406,6 +406,17 @@ textarea:focus {
     font-weight: 700;
 }
 
+.admin-field-note {
+    font-size: 0.8rem;
+    color: var(--admin-sub);
+}
+
+.admin-asset-filter {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 220px;
+    gap: 10px;
+}
+
 .admin-toolbar,
 .admin-toolbar__group,
 .admin-table__actions {
@@ -636,6 +647,10 @@ textarea:focus {
     .admin-content,
     .admin-login-wrap {
         padding: 18px;
+    }
+
+    .admin-asset-filter {
+        grid-template-columns: 1fr;
     }
 
     .admin-topbar {

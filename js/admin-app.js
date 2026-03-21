@@ -4,7 +4,7 @@
     if (!body || !main) return;
 
     const root = body.dataset.root || ".";
-    const ADMIN_BUILD_VERSION = "20260321g";
+    const ADMIN_BUILD_VERSION = "20260321h";
     const pageKey = body.dataset.pageKey || "appLogin";
     const cfg = window.INIM_SITE_CONFIG || {};
     const sbApi = window.supabase || null;
@@ -48,6 +48,8 @@
         queryWarnings: [],
         metrics: { reservations: "--", heroItems: "--", inquiries: "--" },
         contentAssets: [],
+        assetSearchTerm: "",
+        assetBucketFilter: "",
         heroItems: [],
         journeySteps: [],
         selectedHeroId: "",
@@ -78,6 +80,7 @@
         </div>
     `;
     const normalizeRole = (v) => String(v || "").trim().toLowerCase().replace(/[^a-z0-9_-]/g, "");
+    const normalizeText = (v) => String(v || "").trim().toLowerCase();
     const roleLabel = (r) => ({ admin: "Admin", editor: "Editor", operator: "Operator" }[r] || r || "Unknown");
     const pretty = (k) => ({
         auth_user_id: "AuthユーザーID",
@@ -190,16 +193,47 @@
             </select>
         </div>
     `;
+    const getAssetBuckets = () => Array.from(new Set(state.contentAssets.map((asset) => asset.bucket_name).filter(Boolean))).sort((a, b) => a.localeCompare(b, "ja"));
+    const getFilteredAssets = (selectedAssetId) => {
+        const keyword = normalizeText(state.assetSearchTerm);
+        const bucket = state.assetBucketFilter;
+        const selected = state.contentAssets.find((asset) => String(asset.id) === String(selectedAssetId || ""));
+        const filtered = state.contentAssets.filter((asset) => {
+            if (bucket && asset.bucket_name !== bucket) return false;
+            if (!keyword) return true;
+            const haystack = [
+                asset.id,
+                asset.file_path,
+                asset.alt_text,
+                asset.bucket_name,
+                asset.file_type,
+                asset.mime_type
+            ].map(normalizeText).join(" ");
+            return haystack.includes(keyword);
+        });
+        if (selected && !filtered.some((asset) => String(asset.id) === String(selected.id))) {
+            return [selected, ...filtered];
+        }
+        return filtered;
+    };
     const renderAssetSelect = (selectedAssetId) => `
-        <div class="admin-field">
+        <div class="admin-field is-full">
             <label>${escapeHtml(pretty("asset_id"))}</label>
+            <div class="admin-asset-filter">
+                <input type="search" name="asset_search" placeholder="アセット検索: パス、代替テキスト、ID" value="${escapeHtml(state.assetSearchTerm)}">
+                <select name="asset_bucket_filter">
+                    <option value="">全バケット</option>
+                    ${getAssetBuckets().map((bucket) => `<option value="${escapeHtml(bucket)}" ${bucket === state.assetBucketFilter ? "selected" : ""}>${escapeHtml(bucket)}</option>`).join("")}
+                </select>
+            </div>
             <select name="asset_id">
                 <option value="">未設定</option>
-                ${state.contentAssets.map((asset) => {
+                ${getFilteredAssets(selectedAssetId).map((asset) => {
             const summary = [asset.file_type, asset.file_path, asset.alt_text].filter(Boolean).join(" / ");
             return `<option value="${escapeHtml(asset.id)}" ${String(asset.id) === String(selectedAssetId || "") ? "selected" : ""}>${escapeHtml(summary || asset.id)}</option>`;
         }).join("")}
             </select>
+            <div class="admin-field-note">候補: ${escapeHtml(String(getFilteredAssets(selectedAssetId).length))}件 / 全${escapeHtml(String(state.contentAssets.length))}件</div>
         </div>
     `;
     const renderAssetSummary = (assetId) => {
@@ -674,6 +708,16 @@
             clearNotice();
             render();
         }));
+        const assetSearchInput = main.querySelector('input[name="asset_search"]');
+        if (assetSearchInput) assetSearchInput.addEventListener("input", () => {
+            state.assetSearchTerm = assetSearchInput.value;
+            render();
+        });
+        const assetBucketSelect = main.querySelector('select[name="asset_bucket_filter"]');
+        if (assetBucketSelect) assetBucketSelect.addEventListener("change", () => {
+            state.assetBucketFilter = assetBucketSelect.value;
+            render();
+        });
         const heroSave = main.querySelector('[data-form="hero-save"]');
         if (heroSave) heroSave.addEventListener("submit", async (e) => {
             e.preventDefault();
