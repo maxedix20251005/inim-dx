@@ -102,6 +102,7 @@
 - `top_hero_items.cta_url` のURL形式厳密化
 - 管理画面 HTML のバージョン文字列によるキャッシュ制御
 - `journey_steps` 一覧・編集
+- `journey_steps` 基本入力バリデーション
 - `reservations` 件数取得
 - `inquiries` 件数取得
 
@@ -163,7 +164,7 @@
 - 過去に、再設定メールの `redirect_to` がトップページになっていました。
 - そのため、メールリンクから `app/password/reset.html` に戻れず、リセット導線が壊れていました。
 - `js/admin-app.js` では、`forgot-password` 送信時の `redirectTo` を `app/password/reset.html` 優先にする修正を入れています。
-- ただし、実メールで正しく反映されたかは、再送確認がまだ必要です。
+- 2026-03-21 の確認で、実メールの `redirect_to` も `app/password/reset.html` となり、パスワード再設定は成功しました。
 
 #### レート制限
 - Supabase の再設定メール送信で `email rate limit exceeded` が発生した履歴があります。
@@ -175,28 +176,33 @@
 - 2026-03-21 の最新確認では、`user_profiles` 取得クエリが `400` で失敗したため、プロフィール取得は `select("*")` を優先する実環境追従型に更新されています。
 - 管理画面 HTML の CSS / JS 参照にはバージョン文字列が付いており、GitHub Pages で古いスクリプトが残る前提も確認対象です。
 - さらに、既存ロゴ画像を `rel="icon"` で明示し、`/favicon.ico` の `404` を避ける対応を入れています。
+- 2026-03-21 の最新確認では、ロール表示は `Admin`、`account_status` は `active` で正常化し、Console エラーも解消しました。
+
+#### トップ編集と導線設定の入力バリデーション
+- `top_hero_items` では、`title`、`lead_text`、`cta_label`、`cta_url`、`display_order` の基本入力バリデーションを実装済みです。
+- `cta_url` は `abc` のような不正値を保存できないことを実画面で確認済みです。
+- サイドバーの `セッション確認` ボタンは、背景と文字色を調整し、視認性改善が反映されていることを確認済みです。
+- `journey_steps` では、`step_no`、`step_name`、`link_url`、`helper_text` の基本入力バリデーションを追加済みです。
+- 管理画面 HTML のバージョン文字列は `20260321d` です。
 
 ### 直近の再開手順
 1. `docs/PROJECT_STATUS.md` を確認する
 2. `docs/WIP.md` を確認する
 3. `docs/admin-implementation-status.md` を確認する
-4. `js/admin-app.js` の現在の `forgot-password` 実装を確認する
+4. `js/admin-app.js` の現在の `journey_steps` 保存処理と入力バリデーションを確認する
 5. GitHub Pages 上で以下 URL を直接開けるか確認する
-   - `https://maxedix20251005.github.io/inim-dx/app/login.html`
-   - `https://maxedix20251005.github.io/inim-dx/app/password/forgot.html`
-   - `https://maxedix20251005.github.io/inim-dx/app/password/reset.html`
-6. レート制限解除後、`forgot.html` から再設定メールを1回だけ送る
-7. メールを開く前に `redirect_to=` を確認する
-8. `reset.html` に遷移したらパスワード更新を試す
-9. 再ログインしてロール表示を確認する
-10. `app/users/me.html` で `user_profiles` と `user_role_assignments` の取得結果を確認する
+   - `https://maxedix20251005.github.io/inim-dx/app/pages/home.html`
+   - `https://maxedix20251005.github.io/inim-dx/app/pages/journey.html`
+   - `https://maxedix20251005.github.io/inim-dx/app/users/me.html`
+6. `app/pages/journey.html` を `Ctrl+F5` で再読み込みする
+7. `journey_steps` の入力バリデーションを確認する
+8. Console エラー有無を確認する
 
 ### 次に優先する実装候補
-1. パスワード再設定フローの実動確認完了
-2. ロール取得不整合の切り分け
-3. `top_hero_items` / `journey_steps` の入力バリデーション追加
-4. `content_assets` の検索・絞り込み UI 追加
-5. `reservations` / `inquiries` の詳細管理画面着手
+1. `journey_steps` の入力バリデーション実画面確認
+2. 保存後の UI 改善
+3. `content_assets` の検索・絞り込み UI 追加
+4. `reservations` / `inquiries` の詳細管理画面着手
 
 ### 変更時の必須チェック
 - 変更が公開側へ波及していないか確認する

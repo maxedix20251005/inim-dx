@@ -66,6 +66,7 @@
 - `reservations` と `inquiries` の件数取得
 - `top_hero_items` の基本入力バリデーション
 - `top_hero_items.cta_url` のURL形式厳密化
+- `journey_steps` の基本入力バリデーション
 
 ### DB 設計に合わせて確定済みの主な編集項目
 #### `top_hero_items`
@@ -85,43 +86,46 @@
 - `is_visible`
 
 ### 現在の既知課題
-#### 1. ロール表示が未取得の可能性がある
+#### 1. 認証・ロール表示の切り分けは完了
 - ダッシュボード上で `権限: 未取得`、プロフィールカードで `unknown` と表示されたケースがありました。
-- 認証後の `user_profiles` または `user_role_assignments` 連携の再確認が必要です。
 - `app/users/me.html` で `user_role_assignments` の取得結果も確認できるようにし、ロール未取得時の切り分けをしやすくしました。
-- 2026-03-21 の最新確認では、`user_profiles` 取得で `400` が発生しました。
-- 管理画面側では、`user_profiles` をまず `select("*")` で取得し、存在しない列名指定による `400` を避ける方針へ修正しました。
-- `account_status` が実環境で返ってこない場合、UI 上は `未取得` 表示のままとします。
-- あわせて、管理画面 HTML の `admin-app.css` / `site-config.js` / `admin-app.js` にバージョン付き参照を付与し、GitHub Pages キャッシュで古い JS が残る状況を避けるようにしました。
-- `cta_url` 厳密化後も旧JSキャッシュが残るケースに備え、管理画面 HTML のバージョン文字列を `20260321c` へ更新しました。
-- サイドバーの `セッション確認` ボタンは、背景だけでなく文字色も明色へ変更しました。
-- 2026-03-21 の最新確認では、`user_profiles` とロール表示は正常化し、残る Console エラーは `/favicon.ico` の `404` のみでした。このため、既存ロゴ画像を `rel="icon"` で明示する対応を入れました。
+- 2026-03-21 の最新確認では、`user_profiles` とロール表示は正常化し、`account_status` も `active` で取得できています。
+- Console エラーも解消済みで、残っていた `/favicon.ico` の `404` には `rel="icon"` の明示で対応しました。
+- 管理画面 HTML の `admin-app.css` / `site-config.js` / `admin-app.js` にはバージョン付き参照を付与し、GitHub Pages キャッシュで古い JS が残る状況を避けています。
+- `cta_url` 厳密化と `セッション確認` ボタン視認性改善も、実画面確認まで完了しています。
 
 #### 2. パスワード再設定フロー
 - `forgot-password` 送信時の `redirectTo` を `app/password/reset.html` に明示し、`js/site-config.js` にも `adminResetRedirectUrl` を追加しました。
 - `app/password/forgot.html` 上で、現在のページURL、設定値、実際の `redirectTo` を確認できます。
 - 2026-03-21 の最新確認では、再設定メールの `redirect_to` は `https://maxedix20251005.github.io/inim-dx/app/password/reset.html` となり、パスワード再設定は成功しました。
 
+#### 3. 導線設定の入力バリデーション確認
+- `journey_steps` 向けに、`step_no`、`step_name`、`link_url`、`helper_text` の基本入力バリデーションを追加しました。
+- `step_no` は必須、1以上の整数、重複禁止です。
+- `step_name` は必須、40文字以内です。
+- `link_url` は必須、255文字以内、`/` 始まりまたは `http://` / `https://` 始まりのみ許可です。
+- `helper_text` は120文字以内です。
+- この差分に合わせて、管理画面 HTML のバージョン文字列を `20260321d` へ更新しました。
+
 ### 次に優先して進める作業
 1. `PROJECT_STATUS.md` を起点に運用継続する
 2. `AI_CONTEXT_PROMPT.md` を復元用コンテキストとして都度更新運用する
-3. 再ログイン後にロール表示を確認する
-4. `app/users/me.html` で `user_role_assignments` の取得内容を確認する
-5. `user_profiles` の取得結果と Console の `400` が解消したか確認する
-6. `top_hero_items` の入力バリデーションを確認する
-7. その後に UI 改善へ進む
+3. `journey_steps` の入力バリデーションを確認する
+4. その後に UI 改善へ進む
+5. `content_assets` の検索・絞り込み UI を検討する
 
 ### 再開時の確認手順
-1. GitHub Pages 上の `app/login.html` からログインする
-2. `app/dashboard.html` で権限表示を確認する
-3. `app/users/me.html` を開く
-4. `取得済み user_profiles` と `取得済み user_role_assignments` を確認する
-5. Console エラー有無を確認する
+1. GitHub Pages 上の `app/pages/journey.html` を開く
+2. `Ctrl+F5` で強制再読み込みする
+3. `journey_steps` の入力バリデーションを確認する
+4. Console エラー有無を確認する
 
 ### 確認時の報告フォーマット
-- `再ログイン:` 成功 / 失敗
-- `権限表示:` 正常 / 未取得のまま
-- `user_role_assignments:` 取得あり / 取得なし
+- `導線順序チェック:` 正常 / 異常
+- `表示名チェック:` 正常 / 異常
+- `URL形式チェック:` 正常 / 異常
+- `補足文言チェック:` 正常 / 異常
+- `正常値での保存:` 成功 / 失敗
 - `Console:` エラーなし / エラーあり
 - `補足:` 必要に応じて詳細
 

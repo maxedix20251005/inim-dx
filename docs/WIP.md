@@ -20,8 +20,11 @@
 - `content_assets` を取得し、トップ編集の `asset_id` を選択式に変更した
 - `top_hero_items` の基本入力バリデーションを追加した
 - `cta_url` は `abc` のような裸の相対文字列を通さないよう厳密化した
-- 管理画面 HTML のバージョン文字列を `20260321c` に更新した
+- `top_hero_items` で `abc` の保存がブロックされることを確認した
+- `journey_steps` の基本入力バリデーションを追加した
+- 管理画面 HTML のバージョン文字列を `20260321d` に更新した
 - サイドバーの `セッション確認` ボタン背景をグレー系、文字色を明色へ変更した
+- `セッション確認` ボタンの視認性改善が反映されていることを確認した
 - 実装整理資料として `docs/admin-implementation-status.md` を追加・更新した
 
 ### 今日発生した問題
@@ -47,42 +50,37 @@
 
 ### 現在の推定原因
 - パスワード再設定フローは解消した
-- 現在の主な未解決事項は、ログイン後にロールが `未取得` と表示されるケースがあること
-- 2026-03-21 の最新確認では、`user_profiles` クエリが `400` で失敗していた
-- `user_profiles` は `select("*")` を優先して取得する方針へ修正済み
-- 管理画面 HTML の CSS / JS 参照にはバージョン文字列を付け、古い JS キャッシュが残りにくいようにした
-- 残った Console エラーは `/favicon.ico` の `404` のみで、これに対して `rel="icon"` を明示する修正を反映済み
-- 次回は、以下を切り分ける必要がある
-  - `user_profiles` が想定どおり取得できているか
-  - `user_role_assignments` が取得できているか
-  - `roles.role_code` が紐付いて返っているか
+- ログイン後のプロフィール取得、ロール表示、`account_status` 表示は正常化した
+- Console エラーも解消済み
+- 現在の主な未解決事項は、`journey_steps` 側の入力バリデーション確認と、その後の UI 改善です
+- 管理画面 HTML の CSS / JS 参照にはバージョン文字列を付け、古い JS キャッシュが残りにくいようにしています
 
 ### 明日最初にやること
-1. GitHub Pages 上の `https://maxedix20251005.github.io/inim-dx/app/login.html` からログインする
-2. ダッシュボードで `権限` 表示を確認する
-3. `https://maxedix20251005.github.io/inim-dx/app/users/me.html` を開く
-4. `取得済み user_profiles` と `取得済み user_role_assignments` を確認する
-5. Console の `user_profiles ... 400` が解消したか確認する
-6. その他の Console エラー有無を確認する
+1. GitHub Pages 上の `https://maxedix20251005.github.io/inim-dx/app/pages/journey.html` を開く
+2. `Ctrl+F5` で強制再読み込みする
+3. `journey_steps` の入力バリデーションを確認する
+4. Console エラー有無を確認する
+5. その後、必要なら UI 改善へ進む
 
 ### 明日の確認ポイント
-- `app/login.html` は真っ白にならず、正常描画されるか
-- 既存セッションがある場合の自動遷移は継続して問題ないか
-- ログイン後、`権限: 未取得` のままかどうか
-- `user_role_assignments` が取得できているか
-- `roles.role_code` が取得できているか
+- `journey_steps` で `step_no` の必須・整数・重複チェックが効くか
+- `step_name` の必須・40文字制限が効くか
+- `link_url` で `abc` のような不正値が保存されないか
+- `helper_text` の120文字制限が効くか
+- Console エラーが出ないか
 
 ### 明日の報告フォーマット
-- `再ログイン:` 成功 / 失敗
-- `権限表示:` 正常 / 未取得のまま
-- `user_role_assignments:` 取得あり / 取得なし
+- `導線順序チェック:` 正常 / 異常
+- `表示名チェック:` 正常 / 異常
+- `URL形式チェック:` 正常 / 異常
+- `補足文言チェック:` 正常 / 異常
+- `正常値での保存:` 成功 / 失敗
 - `Console:` エラーなし / エラーあり
 - `補足:` 必要に応じて詳細
 
 ### 次の実装候補
-- ロール取得不整合の切り分け
 - `content_assets` の検索・絞り込み UI を追加する
-- `journey_steps` の入力バリデーションを追加する
+- `journey_steps` の入力バリデーション確認を行う
 - `reservations` / `inquiries` 管理画面へ着手する
 
 ### 確認済み事項

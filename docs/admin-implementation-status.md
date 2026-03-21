@@ -85,15 +85,18 @@
 - 既存ロゴ画像を `rel="icon"` で明示し、`/favicon.ico` の `404` を避ける対応を入れました。
 - `top_hero_items` では、`title`、`lead_text`、`cta_label`、`cta_url`、`display_order` の基本入力バリデーションを追加しました。
 - `cta_url` は、`/` 始まりか `http://` / `https://` 始まりのみを許可するよう厳密化しました。
-- 管理画面 HTML のバージョン文字列は `20260321c` に更新し、最新 JS / CSS を読み込みやすくしました。
+- `top_hero_items` では、`abc` のような不正な `cta_url` が保存されないことを確認しました。
+- `journey_steps` では、`step_no`、`step_name`、`link_url`、`helper_text` の基本入力バリデーションを追加しました。
+- 管理画面 HTML のバージョン文字列は `20260321d` に更新し、最新 JS / CSS を読み込みやすくしました。
 - サイドバーの `セッション確認` ボタンは、視認性改善のため背景をグレー系、文字色を明色へ変更しました。
+- `セッション確認` ボタンの視認性改善が反映されていることを確認しました。
 - 一方で、入力値バリデーション強化や、保存後のUI改善はまだ残っています。
 
 ### 既知の未完了事項
-- `title` / `lead_text` / `cta_url` / `step_name` / `link_url` などの入力バリデーションを追加する
+- `journey_steps` の入力バリデーションを実画面で確認する
 - `content_assets` の検索・絞り込み UI は未実装
 - `reservations` / `inquiries` の詳細画面は未着手
-- ロール未取得時の `user_profiles` / `user_role_assignments` 実データ確認
+- 保存後の UI 改善
 
 ### ロールバック方針
 - 今回の変更は、`app/` 配下のHTML参照先差し替えと、管理画面専用ファイルの追加に限定しています。

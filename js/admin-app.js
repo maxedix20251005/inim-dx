@@ -251,19 +251,19 @@
                 <div class="admin-form-grid">
                     <div class="admin-field">
                         <label>${escapeHtml(pretty("step_no"))}</label>
-                        <input name="step_no" value="${escapeHtml(record.step_no ?? 1)}">
+                        <input name="step_no" inputmode="numeric" required value="${escapeHtml(record.step_no ?? 1)}">
                     </div>
                     <div class="admin-field">
                         <label>${escapeHtml(pretty("step_name"))}</label>
-                        <input name="step_name" value="${escapeHtml(record.step_name || "")}">
+                        <input name="step_name" maxlength="40" required value="${escapeHtml(record.step_name || "")}">
                     </div>
                     <div class="admin-field is-full">
                         <label>${escapeHtml(pretty("link_url"))}</label>
-                        <input name="link_url" value="${escapeHtml(record.link_url || "")}">
+                        <input name="link_url" maxlength="255" required value="${escapeHtml(record.link_url || "")}">
                     </div>
                     <div class="admin-field is-full">
                         <label>${escapeHtml(pretty("helper_text"))}</label>
-                        <textarea name="helper_text">${escapeHtml(record.helper_text || "")}</textarea>
+                        <textarea name="helper_text" maxlength="120">${escapeHtml(record.helper_text || "")}</textarea>
                     </div>
                     ${renderBooleanSelect("is_visible", Boolean(record.is_visible), "表示", "非表示")}
                 </div>
@@ -545,6 +545,35 @@
         }
         return "";
     };
+    const validateJourneyForm = (form, rows, recordIdValue) => {
+        const stepNoRaw = form.elements.step_no.value.trim();
+        const stepName = form.elements.step_name.value.trim();
+        const linkUrl = form.elements.link_url.value.trim();
+        const helperText = form.elements.helper_text.value.trim();
+        if (!stepNoRaw) return "導線順序は必須です。";
+        const stepNo = Number(stepNoRaw);
+        if (!Number.isInteger(stepNo) || stepNo < 1) {
+            return "導線順序は1以上の整数で入力してください。";
+        }
+        if (!stepName) return "表示名は必須です。";
+        if (stepName.length > 40) return "表示名は40文字以内で入力してください。";
+        if (!linkUrl) return "遷移先URLは必須です。";
+        if (linkUrl.length > 255) return "遷移先URLは255文字以内で入力してください。";
+        if (!isAllowedAdminUrl(linkUrl)) {
+            return "遷移先URLは / から始まる相対パス、または http:// / https:// で入力してください。";
+        }
+        try {
+            new URL(linkUrl, window.location.origin);
+        } catch {
+            return "遷移先URLの形式が正しくありません。";
+        }
+        if (helperText.length > 120) return "補足文言は120文字以内で入力してください。";
+        const duplicate = rows.find((row) => String(row.id) !== String(recordIdValue) && Number(row.step_no) === stepNo && !row.deleted_at);
+        if (duplicate) {
+            return "導線順序が重複しています。別の番号を指定してください。";
+        }
+        return "";
+    };
     const bindEvents = () => {
         const loginForm = main.querySelector('[data-form="login"]');
         if (loginForm) loginForm.addEventListener("submit", async (e) => {
@@ -602,6 +631,8 @@
         const stepSave = main.querySelector('[data-form="journey-save"]');
         if (stepSave) stepSave.addEventListener("submit", async (e) => {
             e.preventDefault();
+            const validationMessage = validateJourneyForm(stepSave, state.journeySteps, stepSave.elements.record_id_value.value);
+            if (validationMessage) return setNotice(validationMessage, "warn");
             await saveRecord("journey_steps", state.journeySteps, stepSave.elements.record_id_value.value, new FormData(stepSave));
         });
     };
