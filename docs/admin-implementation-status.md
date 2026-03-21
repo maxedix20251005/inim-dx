@@ -75,9 +75,13 @@
 - 直近の実装は、まず安全に画面を分離することを優先して入れています。
 - DB 設計書 `08-db-design.html` に合わせて、プロフィール取得・ロール取得・トップ編集・導線設定の主要カラムは確定済みです。
 - `top_hero_items.asset_id` は `content_assets` の画像アセット候補から選択できる状態に更新済みです。
+- パスワード再設定メールの `redirectTo` は、管理画面の `app/password/reset.html` を優先するよう `js/admin-app.js` 側で明示しました。
+- `js/site-config.js` にも `adminResetRedirectUrl` を追加し、設定レベルでも管理画面用 reset URL を明示しました。
 - 一方で、入力値バリデーション強化や、保存後のUI改善はまだ残っています。
 
 ### 既知の未完了事項
+- Supabase から届く再設定メールの `redirect_to` 実値確認
+- `Authentication > Email Templates > Reset Password` の確認
 - `title` / `lead_text` / `cta_url` / `step_name` / `link_url` などの入力バリデーションを追加する
 - `content_assets` の検索・絞り込み UI は未実装
 - `reservations` / `inquiries` の詳細画面は未着手

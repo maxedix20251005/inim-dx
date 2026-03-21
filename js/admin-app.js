@@ -56,6 +56,15 @@
     const escapeHtml = (v) => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
     const toPath = (key) => `${root}/${pages[key][0]}`;
     const redirect = (key) => { window.location.href = toPath(key); };
+    const getAdminResetRedirectUrl = () => {
+        if (typeof cfg.adminResetRedirectUrl === "string" && cfg.adminResetRedirectUrl.trim()) {
+            return cfg.adminResetRedirectUrl.trim();
+        }
+        if (window.location.hostname === "maxedix20251005.github.io") {
+            return "https://maxedix20251005.github.io/inim-dx/app/password/reset.html";
+        }
+        return new URL(toPath("appPasswordReset"), window.location.href).href;
+    };
     const normalizeRole = (v) => String(v || "").trim().toLowerCase().replace(/[^a-z0-9_-]/g, "");
     const roleLabel = (r) => ({ admin: "Admin", editor: "Editor", operator: "Operator" }[r] || r || "Unknown");
     const pretty = (k) => ({
@@ -477,7 +486,7 @@
             e.preventDefault();
             const email = forgotForm.elements.email.value.trim();
             if (!email) return setNotice("メールアドレスを入力してください。", "warn");
-            const redirectTo = `${window.location.origin}${window.location.pathname.replace("forgot.html", "reset.html")}`;
+            const redirectTo = getAdminResetRedirectUrl();
             const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
             if (error) return setNotice(`送信に失敗しました: ${error.message}`, "error");
             setNotice("再設定メールを送信しました。受信箱を確認してください。", "success");

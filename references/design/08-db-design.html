@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>データベース設計書 - プロジェクトアーカイブ</title>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="doc-db">
+  <button class="hamburger" aria-label="メニュー">
+    <span></span><span></span><span></span>
+  </button>
+
+  <div class="page-wrapper">
+    <aside class="sidebar" data-nav-level="docs"></aside>
+
+    <main class="main-content">
+      <header class="doc-header">
+        <div class="doc-category">DOCUMENT 08</div>
+        <h1 class="doc-title">データベース設計書</h1>
+        <div class="doc-meta">
+          <span><span class="material-symbols-outlined icon-sm">calendar_today</span> 作成日：2026-XX-XX</span>
+          <span><span class="material-symbols-outlined icon-sm">person</span> 作成者：（氏名を入力）</span>
+          <span><span class="material-symbols-outlined icon-sm">push_pin</span> Ver 1.0</span>
+        </div>
+      </header>
+
+      <div class="doc-body">
+
+        <div class="external-link-box">
+          <div class="external-link-box-title">
+            <span class="material-symbols-outlined">link</span>
+            詳細ドキュメント（Google スプレッドシート）
+          </div>
+          <div class="external-link-box-desc">
+            このページは概要のみを記載しています。詳細なDB設計書は以下のリンクからご確認ください。
+          </div>
+          <div class="external-link-input">
+            <input type="text" placeholder="https://docs.google.com/spreadsheets/d/xxxxx" id="external-link-08">
+            <a href="#" class="link-btn"
+              onclick="window.open(document.getElementById('external-link-08').value || 'https://docs.google.com', '_blank'); return false;">
+              <span class="material-symbols-outlined">open_in_new</span>
+              開く
+            </a>
+          </div>
+        </div>
+
+        <div class="toc">
+          <div class="toc-title">目次</div>
+          <ol class="toc-list">
+            <li><a href="#sec1">ER図</a></li>
+            <li><a href="#sec2">テーブル定義</a></li>
+            <li><a href="#sec3">インデックス設計</a></li>
+            <li><a href="#sec4">初期データ</a></li>
+          </ol>
+        </div>
+
+        <section class="section" id="sec1">
+          <h2 class="section-title"><span class="section-icon">1</span> ER図</h2>
+
+          <div class="fill-block">
+            <div class="fill-label">ER図 <span class="required">必須</span></div>
+            <div class="fill-hint">テーブル間のリレーション図（テキストベースまたは画像で記載）</div>
+            <div class="fill-content">
+              <p>採用構成は `GitHub Pages + JavaScript + Supabase` を前提とするため、認証は Supabase Auth の `auth.users`
+                を利用し、業務データはアプリ側テーブルで管理する。以下は Must 機能を中心に、将来拡張で参照される主要テーブルも含めた ER 図である。</p>
+
+              <div class="spec-summary">
+                <pre class="code">[auth.users] 1 ──── 1 [user_profiles]
+  id (PK)               id (PK)
+  email                 auth_user_id (FK, UNIQUE)
+  encrypted_password    display_name
+  last_sign_in_at       account_status
+                         last_login_at
+                         created_at / updated_at
+
+[roles] 1 ──── * [user_role_assignments] * ──── 1 [user_profiles]
+  id (PK)                id (PK)                    id (PK)
+  role_code              user_profile_id (FK)       auth_user_id (FK)
+  role_name              role_id (FK)               display_name
+  description            assigned_at                account_status
+
+[content_assets] 1 ──── * [top_hero_items]
+  id (PK)                 id (PK)
+  file_path               title
+  file_type               lead_text
+  alt_text                cta_label
+  bucket_name             cta_url
+  uploaded_by (FK)        asset_id (FK)
+  created_at / updated_at display_order
+                          is_active
+                          updated_by (FK)
+
+[user_profiles] 1 ──── * [top_hero_items]
+  id (PK)                 updated_by (FK)
+  display_name            ...
+
+[user_profiles] 1 ──── * [journey_steps]
+  id (PK)                 id (PK)
+  display_name            step_no
+                          step_name
+                          link_url
+                          helper_text
+                          is_visible
+                          updated_by (FK)
+                          created_at / updated_at
+
+[user_profiles] 1 ──── * [reservations] * ──── 1 [stores]
+  id (PK)                 id (PK)                   id (PK)
+  display_name            customer_profile_id (FK) store_name
+                          store_id (FK)            prefecture
+                          reservation_type         address
+                          reserved_at              is_active
+                          participant_count        created_at / updated_at
+                          status
+                          note
+                          created_at / updated_at
+
+[user_profiles] 1 ──── * [inquiries]
+  id (PK)                 id (PK)
+  display_name            customer_profile_id (FK)
+                          category
+                          subject
+                          body
+                          status
+                          assigned_to (FK)
+                          created_at / updated_at
+
+[reservations] 1 ──── * [reservation_status_logs]
+  id (PK)                   id (PK)
+  status                    reservation_id (FK)
+                            previous_status
+                            next_status
+                            changed_by (FK)
+                            change_note
+                            created_at
+
+[inquiries] 1 ──── * [inquiry_status_logs]
+  id (PK)                id (PK)
+  status                 inquiry_id (FK)
+                         previous_status
+                         next_status
+                         changed_by (FK)
+                         change_note
+                         created_at</pre>
+              </div>
+
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>リレーション</th>
+                    <th>種類</th>
+                    <th>意味</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>`auth.users` → `user_profiles`</td>
+                    <td>1対1</td>
+                    <td>Supabase Auth の認証主体に対して、アプリ側プロフィールを1件対応させる。</td>
+                  </tr>
+                  <tr>
+                    <td>`roles` ↔ `user_profiles`</td>
+                    <td>多対多</td>
+                    <td>`user_role_assignments` を介して、将来の複数権限付与に対応する。</td>
+                  </tr>
+                  <tr>
+                    <td>`content_assets` → `top_hero_items`</td>
+                    <td>1対多</td>
+                    <td>1つのアセットを複数のヒーロー/掲載要素から再利用できる。</td>
+                  </tr>
+                  <tr>
+                    <td>`user_profiles` → `top_hero_items` / `journey_steps`</td>
+                    <td>1対多</td>
+                    <td>誰が更新したかを保持し、運用履歴を追跡できる。</td>
+                  </tr>
+                  <tr>
+                    <td>`user_profiles` → `reservations` / `inquiries`</td>
+                    <td>1対多</td>
+                    <td>1人の顧客が複数の予約・問い合わせを持てる。</td>
+                  </tr>
+                  <tr>
+                    <td>`stores` → `reservations`</td>
+                    <td>1対多</td>
+                    <td>1店舗に複数予約が紐づく。店舗管理機能拡張時も整合する。</td>
+                  </tr>
+                  <tr>
+                    <td>`reservations` / `inquiries` → 各ステータス履歴</td>
+                    <td>1対多</td>
+                    <td>対応状況の変更履歴を監査目的で残す。</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <p class="note">補足: `auth.users` は Supabase 管理テーブルであり、通常の業務カラム追加は `user_profiles` 側で行う。`stores` は現時点では
+                Could 機能だが、予約ログの参照整合性を保つため ER 図に含めている。</p>
+            </div>
+          </div>
+
+        </section>
+
+        <section class="section" id="sec2">
+          <h2 class="section-title"><span class="section-icon">2</span> テーブル定義</h2>
+
+          <div class="info-box info">
+            <strong>ER図に基づき主要テーブルの定義を整理する</strong>
+            認証本体は Supabase 管理テーブル `auth.users` を利用し、本節ではアプリ側で管理するテーブルを中心に定義する。全テーブルに `created_at`, `updated_at`
+            を持たせ、論理削除が必要なテーブルには `deleted_at` を追加する。
+          </div>
+
+          <div class="fill-block">
+            <div class="fill-label">テーブル名：auth.users（Supabase管理） <span class="required">必須</span></div>
+            <div class="fill-hint">テーブルの目的：認証基盤としてメールアドレス・暗号化済みパスワード・セッション情報を保持する</div>
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>カラム名</th>
+                  <th>データ型</th>
+                  <th>NULL</th>
+                  <th>デフォルト</th>
+                  <th>制約</th>
+                  <th>説明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>id</td>
+                  <td>UUID</td>
+                  <td>NO</td>
+                  <td>Supabase管理</td>
+                  <td>PK</td>
+                  <td>認証ユーザーID。アプリ側テーブルの参照元</td>
+                </tr>
+                <tr>
+                  <td>email</td>
+                  <td>VARCHAR(255)</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>UNIQUE, NOT NULL</td>
+                  <td>ログインIDとなるメールアドレス</td>
+                </tr>
+                <tr>
+                  <td>encrypted_password</td>
+                  <td>VARCHAR(255)</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>NOT NULL</td>
+                  <td>暗号化済みパスワード</td>
+                </tr>
+                <tr>
+                  <td>last_sign_in_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>—</td>
+                  <td>最終ログイン日時</td>
+                </tr>
+                <tr>
+                  <td>created_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>作成日時</td>
+                </tr>
+                <tr>
+                  <td>updated_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>更新日時</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="fill-block">
+            <div class="fill-label">テーブル名：user_profiles <span class="required">必須</span></div>
+            <div class="fill-hint">テーブルの目的：認証ユーザーに紐づく業務用プロフィール・状態を保持する</div>
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>カラム名</th>
+                  <th>データ型</th>
+                  <th>NULL</th>
+                  <th>デフォルト</th>
+                  <th>制約</th>
+                  <th>説明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>id</td>
+                  <td>UUID</td>
+                  <td>NO</td>
+                  <td>gen_random_uuid()</td>
+                  <td>PK</td>
+                  <td>主キー</td>
+                </tr>
+                <tr>
+                  <td>auth_user_id</td>
+                  <td>UUID</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>FK → auth.users.id, UNIQUE, NOT NULL</td>
+                  <td>Supabase Auth ユーザーとの1対1対応</td>
+                </tr>
+                <tr>
+                  <td>display_name</td>
+                  <td>VARCHAR(120)</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>NOT NULL</td>
+                  <td>表示名</td>
+                </tr>
+                <tr>
+                  <td>account_status</td>
+                  <td>VARCHAR(20)</td>
+                  <td>NO</td>
+                  <td>'active'</td>
+                  <td>CHECK(active, suspended, invited)</td>
+                  <td>利用状態</td>
+                </tr>
+                <tr>
+                  <td>last_login_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>—</td>
+                  <td>最終ログイン日時</td>
+                </tr>
+                <tr>
+                  <td>internal_note</td>
+                  <td>TEXT</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>—</td>
+                  <td>管理者向けメモ</td>
+                </tr>
+                <tr>
+                  <td>deleted_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>—</td>
+                  <td>論理削除日時</td>
+                </tr>
+                <tr>
+                  <td>created_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>作成日時</td>
+                </tr>
+                <tr>
+                  <td>updated_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>更新日時</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="fill-block">
+            <div class="fill-label">テーブル名：roles <span class="required">必須</span></div>
+            <div class="fill-hint">テーブルの目的：権限種別のマスタを保持する</div>
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>カラム名</th>
+                  <th>データ型</th>
+                  <th>NULL</th>
+                  <th>デフォルト</th>
+                  <th>制約</th>
+                  <th>説明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>id</td>
+                  <td>UUID</td>
+                  <td>NO</td>
+                  <td>gen_random_uuid()</td>
+                  <td>PK</td>
+                  <td>主キー</td>
+                </tr>
+                <tr>
+                  <td>role_code</td>
+                  <td>VARCHAR(40)</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>UNIQUE, NOT NULL</td>
+                  <td>例: admin, staff, viewer</td>
+                </tr>
+                <tr>
+                  <td>role_name</td>
+                  <td>VARCHAR(80)</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>NOT NULL</td>
+                  <td>表示名</td>
+                </tr>
+                <tr>
+                  <td>description</td>
+                  <td>TEXT</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>—</td>
+                  <td>権限概要</td>
+                </tr>
+                <tr>
+                  <td>created_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>作成日時</td>
+                </tr>
+                <tr>
+                  <td>updated_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>更新日時</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="fill-block">
+            <div class="fill-label">テーブル名：user_role_assignments <span class="required">必須</span></div>
+            <div class="fill-hint">テーブルの目的：ユーザーとロールの割当を管理する中間テーブル</div>
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>カラム名</th>
+                  <th>データ型</th>
+                  <th>NULL</th>
+                  <th>デフォルト</th>
+                  <th>制約</th>
+                  <th>説明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>id</td>
+                  <td>UUID</td>
+                  <td>NO</td>
+                  <td>gen_random_uuid()</td>
+                  <td>PK</td>
+                  <td>主キー</td>
+                </tr>
+                <tr>
+                  <td>user_profile_id</td>
+                  <td>UUID</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>FK → user_profiles.id, NOT NULL</td>
+                  <td>対象ユーザー</td>
+                </tr>
+                <tr>
+                  <td>role_id</td>
+                  <td>UUID</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>FK → roles.id, NOT NULL</td>
+                  <td>付与ロール</td>
+                </tr>
+                <tr>
+                  <td>assigned_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>割当日時</td>
+                </tr>
+                <tr>
+                  <td>created_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>作成日時</td>
+                </tr>
+                <tr>
+                  <td>updated_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>更新日時</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="fill-block">
+            <div class="fill-label">テーブル名：content_assets <span class="required">必須</span></div>
+            <div class="fill-hint">テーブルの目的：Supabase Storage 上の画像・音源メタデータを管理する</div>
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>カラム名</th>
+                  <th>データ型</th>
+                  <th>NULL</th>
+                  <th>デフォルト</th>
+                  <th>制約</th>
+                  <th>説明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>id</td>
+                  <td>UUID</td>
+                  <td>NO</td>
+                  <td>gen_random_uuid()</td>
+                  <td>PK</td>
+                  <td>主キー</td>
+                </tr>
+                <tr>
+                  <td>bucket_name</td>
+                  <td>VARCHAR(80)</td>
+                  <td>NO</td>
+                  <td>'public-assets'</td>
+                  <td>NOT NULL</td>
+                  <td>Storageバケット名</td>
+                </tr>
+                <tr>
+                  <td>file_path</td>
+                  <td>VARCHAR(255)</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>UNIQUE, NOT NULL</td>
+                  <td>Storage内ファイルパス</td>
+                </tr>
+                <tr>
+                  <td>file_type</td>
+                  <td>VARCHAR(20)</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>NOT NULL</td>
+                  <td>image / audio 等</td>
+                </tr>
+                <tr>
+                  <td>mime_type</td>
+                  <td>VARCHAR(80)</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>—</td>
+                  <td>ファイルMIME型</td>
+                </tr>
+                <tr>
+                  <td>alt_text</td>
+                  <td>VARCHAR(255)</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>—</td>
+                  <td>代替テキスト</td>
+                </tr>
+                <tr>
+                  <td>uploaded_by</td>
+                  <td>UUID</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>FK → user_profiles.id</td>
+                  <td>登録者</td>
+                </tr>
+                <tr>
+                  <td>deleted_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>—</td>
+                  <td>論理削除日時</td>
+                </tr>
+                <tr>
+                  <td>created_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>作成日時</td>
+                </tr>
+                <tr>
+                  <td>updated_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>更新日時</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="fill-block">
+            <div class="fill-label">テーブル名：top_hero_items <span class="required">必須</span></div>
+            <div class="fill-hint">テーブルの目的：トップヒーロー/スライダーの表示内容を管理する</div>
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>カラム名</th>
+                  <th>データ型</th>
+                  <th>NULL</th>
+                  <th>デフォルト</th>
+                  <th>制約</th>
+                  <th>説明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>id</td>
+                  <td>UUID</td>
+                  <td>NO</td>
+                  <td>gen_random_uuid()</td>
+                  <td>PK</td>
+                  <td>主キー</td>
+                </tr>
+                <tr>
+                  <td>title</td>
+                  <td>VARCHAR(60)</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>NOT NULL</td>
+                  <td>見出し</td>
+                </tr>
+                <tr>
+                  <td>lead_text</td>
+                  <td>VARCHAR(160)</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>NOT NULL</td>
+                  <td>リード文</td>
+                </tr>
+                <tr>
+                  <td>cta_label</td>
+                  <td>VARCHAR(20)</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>NOT NULL</td>
+                  <td>CTAボタン文言</td>
+                </tr>
+                <tr>
+                  <td>cta_url</td>
+                  <td>VARCHAR(255)</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>NOT NULL</td>
+                  <td>遷移先URL</td>
+                </tr>
+                <tr>
+                  <td>asset_id</td>
+                  <td>UUID</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>FK → content_assets.id</td>
+                  <td>ヒーロー画像アセット</td>
+                </tr>
+                <tr>
+                  <td>display_order</td>
+                  <td>INTEGER</td>
+                  <td>NO</td>
+                  <td>1</td>
+                  <td>NOT NULL, UNIQUE</td>
+                  <td>表示順</td>
+                </tr>
+                <tr>
+                  <td>is_active</td>
+                  <td>BOOLEAN</td>
+                  <td>NO</td>
+                  <td>true</td>
+                  <td>NOT NULL</td>
+                  <td>公開対象かどうか</td>
+                </tr>
+                <tr>
+                  <td>updated_by</td>
+                  <td>UUID</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>FK → user_profiles.id</td>
+                  <td>更新者</td>
+                </tr>
+                <tr>
+                  <td>deleted_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>—</td>
+                  <td>論理削除日時</td>
+                </tr>
+                <tr>
+                  <td>created_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>作成日時</td>
+                </tr>
+                <tr>
+                  <td>updated_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>更新日時</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="fill-block">
+            <div class="fill-label">テーブル名：journey_steps <span class="required">必須</span></div>
+            <div class="fill-hint">テーブルの目的：公開サイト上の体験導線ステップとCTAを管理する</div>
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>カラム名</th>
+                  <th>データ型</th>
+                  <th>NULL</th>
+                  <th>デフォルト</th>
+                  <th>制約</th>
+                  <th>説明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>id</td>
+                  <td>UUID</td>
+                  <td>NO</td>
+                  <td>gen_random_uuid()</td>
+                  <td>PK</td>
+                  <td>主キー</td>
+                </tr>
+                <tr>
+                  <td>step_no</td>
+                  <td>INTEGER</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>NOT NULL, UNIQUE</td>
+                  <td>導線順序</td>
+                </tr>
+                <tr>
+                  <td>step_name</td>
+                  <td>VARCHAR(30)</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>NOT NULL</td>
+                  <td>表示名</td>
+                </tr>
+                <tr>
+                  <td>link_url</td>
+                  <td>VARCHAR(255)</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>NOT NULL</td>
+                  <td>遷移先URL</td>
+                </tr>
+                <tr>
+                  <td>helper_text</td>
+                  <td>VARCHAR(80)</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>—</td>
+                  <td>補足文言</td>
+                </tr>
+                <tr>
+                  <td>is_visible</td>
+                  <td>BOOLEAN</td>
+                  <td>NO</td>
+                  <td>true</td>
+                  <td>NOT NULL</td>
+                  <td>表示可否</td>
+                </tr>
+                <tr>
+                  <td>updated_by</td>
+                  <td>UUID</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>FK → user_profiles.id</td>
+                  <td>更新者</td>
+                </tr>
+                <tr>
+                  <td>created_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>作成日時</td>
+                </tr>
+                <tr>
+                  <td>updated_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>更新日時</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="fill-block">
+            <div class="fill-label">テーブル名：stores <span class="required">必須</span></div>
+            <div class="fill-hint">テーブルの目的：予約・問い合わせが参照する店舗情報を保持する</div>
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>カラム名</th>
+                  <th>データ型</th>
+                  <th>NULL</th>
+                  <th>デフォルト</th>
+                  <th>制約</th>
+                  <th>説明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>id</td>
+                  <td>UUID</td>
+                  <td>NO</td>
+                  <td>gen_random_uuid()</td>
+                  <td>PK</td>
+                  <td>主キー</td>
+                </tr>
+                <tr>
+                  <td>store_name</td>
+                  <td>VARCHAR(120)</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>NOT NULL</td>
+                  <td>店舗名</td>
+                </tr>
+                <tr>
+                  <td>prefecture</td>
+                  <td>VARCHAR(40)</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>—</td>
+                  <td>都道府県</td>
+                </tr>
+                <tr>
+                  <td>address</td>
+                  <td>VARCHAR(255)</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>—</td>
+                  <td>住所</td>
+                </tr>
+                <tr>
+                  <td>business_hours</td>
+                  <td>VARCHAR(120)</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>—</td>
+                  <td>営業時間</td>
+                </tr>
+                <tr>
+                  <td>is_active</td>
+                  <td>BOOLEAN</td>
+                  <td>NO</td>
+                  <td>true</td>
+                  <td>NOT NULL</td>
+                  <td>利用可否</td>
+                </tr>
+                <tr>
+                  <td>deleted_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>—</td>
+                  <td>論理削除日時</td>
+                </tr>
+                <tr>
+                  <td>created_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>作成日時</td>
+                </tr>
+                <tr>
+                  <td>updated_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>更新日時</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="fill-block">
+            <div class="fill-label">テーブル名：reservations <span class="required">必須</span></div>
+            <div class="fill-hint">テーブルの目的：ワークショップ予約情報を保持する</div>
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>カラム名</th>
+                  <th>データ型</th>
+                  <th>NULL</th>
+                  <th>デフォルト</th>
+                  <th>制約</th>
+                  <th>説明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>id</td>
+                  <td>UUID</td>
+                  <td>NO</td>
+                  <td>gen_random_uuid()</td>
+                  <td>PK</td>
+                  <td>主キー</td>
+                </tr>
+                <tr>
+                  <td>customer_profile_id</td>
+                  <td>UUID</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>FK → user_profiles.id, NOT NULL</td>
+                  <td>予約者</td>
+                </tr>
+                <tr>
+                  <td>store_id</td>
+                  <td>UUID</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>FK → stores.id, NOT NULL</td>
+                  <td>対象店舗</td>
+                </tr>
+                <tr>
+                  <td>reservation_type</td>
+                  <td>VARCHAR(40)</td>
+                  <td>NO</td>
+                  <td>'workshop'</td>
+                  <td>NOT NULL</td>
+                  <td>予約種別</td>
+                </tr>
+                <tr>
+                  <td>reserved_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>NOT NULL</td>
+                  <td>予約日時</td>
+                </tr>
+                <tr>
+                  <td>participant_count</td>
+                  <td>INTEGER</td>
+                  <td>NO</td>
+                  <td>1</td>
+                  <td>NOT NULL, CHECK (participant_count &gt;= 1)</td>
+                  <td>参加人数</td>
+                </tr>
+                <tr>
+                  <td>status</td>
+                  <td>VARCHAR(20)</td>
+                  <td>NO</td>
+                  <td>'pending'</td>
+                  <td>CHECK(pending, confirmed, in_progress, completed, cancelled)</td>
+                  <td>対応状況</td>
+                </tr>
+                <tr>
+                  <td>note</td>
+                  <td>TEXT</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>—</td>
+                  <td>備考</td>
+                </tr>
+                <tr>
+                  <td>deleted_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>—</td>
+                  <td>論理削除日時</td>
+                </tr>
+                <tr>
+                  <td>created_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>作成日時</td>
+                </tr>
+                <tr>
+                  <td>updated_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>更新日時</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="fill-block">
+            <div class="fill-label">テーブル名：inquiries <span class="required">必須</span></div>
+            <div class="fill-hint">テーブルの目的：問い合わせ内容と対応状況を保持する</div>
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>カラム名</th>
+                  <th>データ型</th>
+                  <th>NULL</th>
+                  <th>デフォルト</th>
+                  <th>制約</th>
+                  <th>説明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>id</td>
+                  <td>UUID</td>
+                  <td>NO</td>
+                  <td>gen_random_uuid()</td>
+                  <td>PK</td>
+                  <td>主キー</td>
+                </tr>
+                <tr>
+                  <td>customer_profile_id</td>
+                  <td>UUID</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>FK → user_profiles.id</td>
+                  <td>問い合わせ者。未会員時はNULL許容</td>
+                </tr>
+                <tr>
+                  <td>category</td>
+                  <td>VARCHAR(40)</td>
+                  <td>NO</td>
+                  <td>'general'</td>
+                  <td>NOT NULL</td>
+                  <td>問い合わせ分類</td>
+                </tr>
+                <tr>
+                  <td>subject</td>
+                  <td>VARCHAR(150)</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>NOT NULL</td>
+                  <td>件名</td>
+                </tr>
+                <tr>
+                  <td>body</td>
+                  <td>TEXT</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>NOT NULL</td>
+                  <td>問い合わせ本文</td>
+                </tr>
+                <tr>
+                  <td>status</td>
+                  <td>VARCHAR(20)</td>
+                  <td>NO</td>
+                  <td>'pending'</td>
+                  <td>CHECK(pending, in_progress, completed, cancelled)</td>
+                  <td>対応状況</td>
+                </tr>
+                <tr>
+                  <td>assigned_to</td>
+                  <td>UUID</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>FK → user_profiles.id</td>
+                  <td>担当者</td>
+                </tr>
+                <tr>
+                  <td>deleted_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>—</td>
+                  <td>論理削除日時</td>
+                </tr>
+                <tr>
+                  <td>created_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>作成日時</td>
+                </tr>
+                <tr>
+                  <td>updated_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>更新日時</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="fill-block">
+            <div class="fill-label">テーブル名：reservation_status_logs <span class="required">必須</span></div>
+            <div class="fill-hint">テーブルの目的：予約ステータス変更履歴を監査用に保持する</div>
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>カラム名</th>
+                  <th>データ型</th>
+                  <th>NULL</th>
+                  <th>デフォルト</th>
+                  <th>制約</th>
+                  <th>説明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>id</td>
+                  <td>UUID</td>
+                  <td>NO</td>
+                  <td>gen_random_uuid()</td>
+                  <td>PK</td>
+                  <td>主キー</td>
+                </tr>
+                <tr>
+                  <td>reservation_id</td>
+                  <td>UUID</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>FK → reservations.id, NOT NULL</td>
+                  <td>対象予約</td>
+                </tr>
+                <tr>
+                  <td>previous_status</td>
+                  <td>VARCHAR(20)</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>—</td>
+                  <td>変更前ステータス</td>
+                </tr>
+                <tr>
+                  <td>next_status</td>
+                  <td>VARCHAR(20)</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>NOT NULL</td>
+                  <td>変更後ステータス</td>
+                </tr>
+                <tr>
+                  <td>changed_by</td>
+                  <td>UUID</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>FK → user_profiles.id</td>
+                  <td>変更者</td>
+                </tr>
+                <tr>
+                  <td>change_note</td>
+                  <td>TEXT</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>—</td>
+                  <td>変更理由・対応メモ</td>
+                </tr>
+                <tr>
+                  <td>created_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>記録日時</td>
+                </tr>
+                <tr>
+                  <td>updated_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>更新日時</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="fill-block">
+            <div class="fill-label">テーブル名：inquiry_status_logs <span class="required">必須</span></div>
+            <div class="fill-hint">テーブルの目的：問い合わせステータス変更履歴を監査用に保持する</div>
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>カラム名</th>
+                  <th>データ型</th>
+                  <th>NULL</th>
+                  <th>デフォルト</th>
+                  <th>制約</th>
+                  <th>説明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>id</td>
+                  <td>UUID</td>
+                  <td>NO</td>
+                  <td>gen_random_uuid()</td>
+                  <td>PK</td>
+                  <td>主キー</td>
+                </tr>
+                <tr>
+                  <td>inquiry_id</td>
+                  <td>UUID</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>FK → inquiries.id, NOT NULL</td>
+                  <td>対象問い合わせ</td>
+                </tr>
+                <tr>
+                  <td>previous_status</td>
+                  <td>VARCHAR(20)</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>—</td>
+                  <td>変更前ステータス</td>
+                </tr>
+                <tr>
+                  <td>next_status</td>
+                  <td>VARCHAR(20)</td>
+                  <td>NO</td>
+                  <td>—</td>
+                  <td>NOT NULL</td>
+                  <td>変更後ステータス</td>
+                </tr>
+                <tr>
+                  <td>changed_by</td>
+                  <td>UUID</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>FK → user_profiles.id</td>
+                  <td>変更者</td>
+                </tr>
+                <tr>
+                  <td>change_note</td>
+                  <td>TEXT</td>
+                  <td>YES</td>
+                  <td>NULL</td>
+                  <td>—</td>
+                  <td>変更理由・対応メモ</td>
+                </tr>
+                <tr>
+                  <td>created_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>記録日時</td>
+                </tr>
+                <tr>
+                  <td>updated_at</td>
+                  <td>TIMESTAMPTZ</td>
+                  <td>NO</td>
+                  <td>CURRENT_TIMESTAMP</td>
+                  <td>NOT NULL</td>
+                  <td>更新日時</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section" id="sec3">
+          <h2 class="section-title"><span class="section-icon">3</span> インデックス設計</h2>
+
+          <div class="fill-block">
+            <div class="fill-label">インデックス一覧 <span class="required">必須</span></div>
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>テーブル名</th>
+                  <th>インデックス名</th>
+                  <th>対象カラム</th>
+                  <th>種類</th>
+                  <th>設定理由</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>auth.users</td>
+                  <td>uq_auth_users_email</td>
+                  <td>email</td>
+                  <td>UNIQUE</td>
+                  <td>ログインIDの一意性確保と認証時検索の高速化</td>
+                </tr>
+                <tr>
+                  <td>user_profiles</td>
+                  <td>uq_user_profiles_auth_user_id</td>
+                  <td>auth_user_id</td>
+                  <td>UNIQUE</td>
+                  <td>`auth.users` との1対1対応を保証するため</td>
+                </tr>
+                <tr>
+                  <td>user_profiles</td>
+                  <td>idx_user_profiles_display_name</td>
+                  <td>display_name</td>
+                  <td>INDEX</td>
+                  <td>ユーザー名検索や候補表示に使用するため</td>
+                </tr>
+                <tr>
+                  <td>user_profiles</td>
+                  <td>idx_user_profiles_account_status</td>
+                  <td>account_status</td>
+                  <td>INDEX</td>
+                  <td>利用状態での絞り込みに使用するため</td>
+                </tr>
+                <tr>
+                  <td>roles</td>
+                  <td>uq_roles_role_code</td>
+                  <td>role_code</td>
+                  <td>UNIQUE</td>
+                  <td>ロールコードの重複を防ぎ、権限参照を高速化するため</td>
+                </tr>
+                <tr>
+                  <td>user_role_assignments</td>
+                  <td>idx_user_role_assignments_user_profile_id</td>
+                  <td>user_profile_id</td>
+                  <td>INDEX</td>
+                  <td>ユーザーごとのロール取得に使用するため</td>
+                </tr>
+                <tr>
+                  <td>user_role_assignments</td>
+                  <td>idx_user_role_assignments_role_id</td>
+                  <td>role_id</td>
+                  <td>INDEX</td>
+                  <td>ロール単位でのユーザー参照に使用するため</td>
+                </tr>
+                <tr>
+                  <td>user_role_assignments</td>
+                  <td>uq_user_role_assignments_user_role</td>
+                  <td>user_profile_id, role_id</td>
+                  <td>UNIQUE</td>
+                  <td>同一ユーザーへの同一ロール重複付与を防ぐため</td>
+                </tr>
+                <tr>
+                  <td>content_assets</td>
+                  <td>uq_content_assets_file_path</td>
+                  <td>file_path</td>
+                  <td>UNIQUE</td>
+                  <td>Storageパスの重複を防ぐため</td>
+                </tr>
+                <tr>
+                  <td>content_assets</td>
+                  <td>idx_content_assets_uploaded_by</td>
+                  <td>uploaded_by</td>
+                  <td>INDEX</td>
+                  <td>登録者単位の参照に使用するため</td>
+                </tr>
+                <tr>
+                  <td>content_assets</td>
+                  <td>idx_content_assets_file_type</td>
+                  <td>file_type</td>
+                  <td>INDEX</td>
+                  <td>画像/音源別の絞り込みに使用するため</td>
+                </tr>
+                <tr>
+                  <td>top_hero_items</td>
+                  <td>uq_top_hero_items_display_order_active</td>
+                  <td>display_order</td>
+                  <td>UNIQUE（deleted_at IS NULL）</td>
+                  <td>有効なヒーロー項目間で表示順の重複を防ぎ、論理削除後の再利用を可能にするため</td>
+                </tr>
+                <tr>
+                  <td>top_hero_items</td>
+                  <td>idx_top_hero_items_asset_id</td>
+                  <td>asset_id</td>
+                  <td>INDEX</td>
+                  <td>アセットとの結合に使用するため</td>
+                </tr>
+                <tr>
+                  <td>top_hero_items</td>
+                  <td>idx_top_hero_items_is_active_display_order</td>
+                  <td>is_active, display_order</td>
+                  <td>INDEX</td>
+                  <td>公開対象の取得と表示順ソートに使用するため</td>
+                </tr>
+                <tr>
+                  <td>journey_steps</td>
+                  <td>uq_journey_steps_step_no</td>
+                  <td>step_no</td>
+                  <td>UNIQUE</td>
+                  <td>導線順序の重複を防ぐため</td>
+                </tr>
+                <tr>
+                  <td>journey_steps</td>
+                  <td>idx_journey_steps_is_visible_step_no</td>
+                  <td>is_visible, step_no</td>
+                  <td>INDEX</td>
+                  <td>公開対象の取得と導線順ソートに使用するため</td>
+                </tr>
+                <tr>
+                  <td>stores</td>
+                  <td>idx_stores_is_active</td>
+                  <td>is_active</td>
+                  <td>INDEX</td>
+                  <td>有効店舗の抽出に使用するため</td>
+                </tr>
+                <tr>
+                  <td>stores</td>
+                  <td>idx_stores_store_name</td>
+                  <td>store_name</td>
+                  <td>INDEX</td>
+                  <td>店舗名検索に使用するため</td>
+                </tr>
+                <tr>
+                  <td>reservations</td>
+                  <td>idx_reservations_customer_profile_id</td>
+                  <td>customer_profile_id</td>
+                  <td>INDEX</td>
+                  <td>ユーザー別予約履歴の取得に使用するため</td>
+                </tr>
+                <tr>
+                  <td>reservations</td>
+                  <td>idx_reservations_store_id</td>
+                  <td>store_id</td>
+                  <td>INDEX</td>
+                  <td>店舗別予約一覧の取得に使用するため</td>
+                </tr>
+                <tr>
+                  <td>reservations</td>
+                  <td>idx_reservations_status_reserved_at</td>
+                  <td>status, reserved_at</td>
+                  <td>INDEX</td>
+                  <td>未対応案件の絞り込みと日時順ソートに使用するため</td>
+                </tr>
+                <tr>
+                  <td>reservations</td>
+                  <td>idx_reservations_reserved_at</td>
+                  <td>reserved_at</td>
+                  <td>INDEX</td>
+                  <td>予約日時での並び替えに使用するため</td>
+                </tr>
+                <tr>
+                  <td>inquiries</td>
+                  <td>idx_inquiries_customer_profile_id</td>
+                  <td>customer_profile_id</td>
+                  <td>INDEX</td>
+                  <td>ユーザー別問い合わせ履歴の取得に使用するため</td>
+                </tr>
+                <tr>
+                  <td>inquiries</td>
+                  <td>idx_inquiries_assigned_to</td>
+                  <td>assigned_to</td>
+                  <td>INDEX</td>
+                  <td>担当者別の案件抽出に使用するため</td>
+                </tr>
+                <tr>
+                  <td>inquiries</td>
+                  <td>idx_inquiries_status_created_at</td>
+                  <td>status, created_at</td>
+                  <td>INDEX</td>
+                  <td>未対応案件の絞り込みと新着順表示に使用するため</td>
+                </tr>
+                <tr>
+                  <td>reservation_status_logs</td>
+                  <td>idx_reservation_status_logs_reservation_id</td>
+                  <td>reservation_id</td>
+                  <td>INDEX</td>
+                  <td>予約ごとの履歴取得に使用するため</td>
+                </tr>
+                <tr>
+                  <td>reservation_status_logs</td>
+                  <td>idx_reservation_status_logs_changed_by</td>
+                  <td>changed_by</td>
+                  <td>INDEX</td>
+                  <td>変更者単位の追跡に使用するため</td>
+                </tr>
+                <tr>
+                  <td>reservation_status_logs</td>
+                  <td>idx_reservation_status_logs_created_at</td>
+                  <td>created_at</td>
+                  <td>INDEX</td>
+                  <td>履歴の時系列ソートに使用するため</td>
+                </tr>
+                <tr>
+                  <td>inquiry_status_logs</td>
+                  <td>idx_inquiry_status_logs_inquiry_id</td>
+                  <td>inquiry_id</td>
+                  <td>INDEX</td>
+                  <td>問い合わせごとの履歴取得に使用するため</td>
+                </tr>
+                <tr>
+                  <td>inquiry_status_logs</td>
+                  <td>idx_inquiry_status_logs_changed_by</td>
+                  <td>changed_by</td>
+                  <td>INDEX</td>
+                  <td>変更者単位の追跡に使用するため</td>
+                </tr>
+                <tr>
+                  <td>inquiry_status_logs</td>
+                  <td>idx_inquiry_status_logs_created_at</td>
+                  <td>created_at</td>
+                  <td>INDEX</td>
+                  <td>履歴の時系列ソートに使用するため</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section" id="sec4">
+          <h2 class="section-title"><span class="section-icon">4</span> 初期データ</h2>
+
+          <div class="fill-block">
+            <div class="fill-label">マスタデータ・テストデータ <span class="required">必須</span></div>
+            <div class="fill-hint">実運用上の正本は `sql/` 配下の実行用 SQL とし、本節では投入順・対象データ・確認方法を整理する。`auth.users` は Supabase 管理テーブルのため、ユーザー作成は Dashboard または Admin API を推奨する。</div>
+            <div class="spec-summary">
+              <pre class="code">-- inim-dx / initial data execution order
+-- 実運用では以下の順に sql/ 配下を実行する
+
+-- 1. スキーマ作成
+-- sql/00-1_create_app_schema.sql
+--   - アプリ側テーブル作成
+--   - 主要インデックス作成
+
+-- 2. 初期管理者の登録
+-- sql/00-2_promote_existing_user_to_admin.sql
+--   - 既存 auth.users の1ユーザーを管理者へ昇格
+--   - public.user_profiles 作成 / 更新
+--   - public.roles の admin を作成 / 更新
+--   - public.user_role_assignments を作成 / 更新
+
+-- 3. 任意: サンプル会員の登録
+-- sql/01a_register_sample_members.sql
+--   - 前提: Authentication > Users で member01 / member02 を作成済み
+--   - member01 → editor
+--   - member02 → operator
+
+-- 4. マスタ・サンプルデータ投入
+-- sql/01_seed_core_data.sql
+--   - roles
+--   - stores
+--   - content_assets
+--   - top_hero_items
+--   - journey_steps
+--   - reservations
+--   - inquiries
+--   - reservation_status_logs
+--   - inquiry_status_logs
+
+-- 5. 検証
+-- sql/02_verify_seed_data.sql
+--   - 件数確認
+--   - admin ロール割当確認
+--   - hero / journey 表示データ確認
+--   - reservations / inquiries 一覧確認
+
+-- 6. RLS / 権限制御
+-- sql/03_rls_policies.sql
+--   - 補助関数作成
+--   - RLS 有効化
+--   - 公開データ / 管理データ / 本人データの policy 作成
+
+-- 補足
+-- auth.users は Supabase 管理テーブルのため、
+-- SQL で直接 INSERT する運用は採らず、
+-- Dashboard または Admin API で作成する。
+
+-- 現時点の初期投入結果（確認済み）
+-- user_profiles           = 3
+-- roles                   = 3
+-- user_role_assignments   = 3
+-- stores                  = 3
+-- content_assets          = 5
+-- top_hero_items          = 3
+-- journey_steps           = 5
+-- reservations            = 5
+-- inquiries               = 5
+-- reservation_status_logs = 4
+-- inquiry_status_logs     = 3</pre>
+            </div>
+
+            <table class="doc-table">
+              <thead>
+                <tr>
+                  <th>実行順</th>
+                  <th>ファイル</th>
+                  <th>目的</th>
+                  <th>主な投入 / 設定対象</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>`sql/00-1_create_app_schema.sql`</td>
+                  <td>アプリ側スキーマの作成</td>
+                  <td>`user_profiles` `roles` `user_role_assignments` `content_assets` `top_hero_items` `journey_steps` `stores` `reservations` `inquiries` `reservation_status_logs` `inquiry_status_logs` と主要インデックス</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>`sql/00-2_promote_existing_user_to_admin.sql`</td>
+                  <td>既存 Auth ユーザーを初期管理者へ昇格</td>
+                  <td>`user_profiles` `roles` `user_role_assignments`</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>`sql/01a_register_sample_members.sql`</td>
+                  <td>サンプル会員のアプリ側登録</td>
+                  <td>`member01` `member02` の `user_profiles` / ロール割当</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>`sql/01_seed_core_data.sql`</td>
+                  <td>マスタ・サンプルデータ投入</td>
+                  <td>`roles` `stores` `content_assets` `top_hero_items` `journey_steps` `reservations` `inquiries` `reservation_status_logs` `inquiry_status_logs`</td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>`sql/02_verify_seed_data.sql`</td>
+                  <td>件数と主要データの確認</td>
+                  <td>件数確認、ロール割当確認、公開データ / 業務データ確認</td>
+                </tr>
+                <tr>
+                  <td>6</td>
+                  <td>`sql/03_rls_policies.sql`</td>
+                  <td>RLS / 権限制御の適用</td>
+                  <td>補助関数、RLS 有効化、policy 作成</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p class="note">補足: 本節の旧来の `auth.users` 直接 INSERT 草案は、Supabase 実運用方針と乖離するため廃止した。ユーザー作成は `Authentication &gt; Users` または Admin API を用い、SQL 側ではアプリテーブルの関連付けと初期データ投入を行う。</p>
+            </div>
+          </div>
+
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/main.js"></script>
+</body>
+
+</html>
