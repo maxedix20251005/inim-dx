@@ -65,6 +65,7 @@
 - `top_hero_items.asset_id` の選択式入力
 - `reservations` と `inquiries` の件数取得
 - `top_hero_items` の基本入力バリデーション
+- `top_hero_items.cta_url` のURL形式厳密化
 
 ### DB 設計に合わせて確定済みの主な編集項目
 #### `top_hero_items`

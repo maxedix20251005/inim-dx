@@ -57,6 +57,7 @@
     const escapeHtml = (v) => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
     const toPath = (key) => `${root}/${pages[key][0]}`;
     const redirect = (key) => { window.location.href = toPath(key); };
+    const isAllowedAdminUrl = (value) => /^(https?:\/\/|\/)/.test(value);
     const getAdminResetRedirectUrl = () => {
         if (typeof cfg.adminResetRedirectUrl === "string" && cfg.adminResetRedirectUrl.trim()) {
             return cfg.adminResetRedirectUrl.trim();
@@ -526,6 +527,9 @@
         if (ctaLabel.length > 20) return "CTA文言は20文字以内で入力してください。";
         if (!ctaUrl) return "遷移先URLは必須です。";
         if (ctaUrl.length > 255) return "遷移先URLは255文字以内で入力してください。";
+        if (!isAllowedAdminUrl(ctaUrl)) {
+            return "遷移先URLは / から始まる相対パス、または http:// / https:// で入力してください。";
+        }
         try {
             new URL(ctaUrl, window.location.origin);
         } catch {

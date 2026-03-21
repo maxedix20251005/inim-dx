@@ -19,6 +19,8 @@
   - `journey_steps` の固定フォーム化
 - `content_assets` を取得し、トップ編集の `asset_id` を選択式に変更した
 - `top_hero_items` の基本入力バリデーションを追加した
+- `cta_url` は `abc` のような裸の相対文字列を通さないよう厳密化した
+- サイドバーの `セッション確認` ボタン背景をグレー系へ変更した
 - 実装整理資料として `docs/admin-implementation-status.md` を追加・更新した
 
 ### 今日発生した問題
