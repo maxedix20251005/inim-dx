@@ -41,6 +41,7 @@
         user: null,
         profile: null,
         roles: [],
+        roleAssignments: [],
         notice: "",
         noticeType: "info",
         queryWarnings: [],
@@ -347,7 +348,7 @@
         </div>`;
     };
     const renderPublish = () => `<div class="admin-main">${statusHtml()}<section class="admin-grid admin-grid--double"><article class="admin-panel"><h2>公開前チェック</h2><ul class="admin-inline-list"><li>トップ編集の保存結果を確認</li><li>導線設定のリンク先と表示順を確認</li><li>ログイン中ユーザーのロールを確認</li></ul></article><article class="admin-panel"><h2>現在の状態</h2><ul class="admin-inline-list"><li>トップ項目数: ${escapeHtml(String(state.heroItems.length))}</li><li>導線項目数: ${escapeHtml(String(state.journeySteps.length))}</li><li>最終更新者: ${escapeHtml(state.user?.email || "未取得")}</li></ul></article></section></div>`;
-    const renderUsers = () => `<div class="admin-main">${statusHtml()}<section class="admin-grid admin-grid--double"><article class="admin-state"><h2>セッション</h2><div class="admin-key-value"><strong>ユーザーID</strong><span>${escapeHtml(state.user?.id || "未取得")}</span></div><div class="admin-key-value"><strong>メールアドレス</strong><span>${escapeHtml(state.user?.email || "未取得")}</span></div><div class="admin-key-value"><strong>最終サインイン</strong><span>${escapeHtml(fmtDate(state.user?.last_sign_in_at))}</span></div></article><article class="admin-state"><h2>プロフィール / ロール</h2><div class="admin-key-value"><strong>表示名</strong><span>${escapeHtml(state.profile?.display_name || "未取得")}</span></div><div class="admin-key-value"><strong>利用状態</strong><span>${escapeHtml(state.profile?.account_status || "未取得")}</span></div><div class="admin-key-value"><strong>ロール</strong><span>${escapeHtml(state.roles.map(roleLabel).join(", ") || "未取得")}</span></div></article></section>${state.profile ? `<section class="admin-state"><h2>取得済み user_profiles</h2>${Object.entries(state.profile).map(([k, v]) => `<div class="admin-key-value"><strong>${escapeHtml(pretty(k))}</strong><span>${escapeHtml(typeof v === "object" ? JSON.stringify(v) : String(v ?? ""))}</span></div>`).join("")}</section>` : ""}</div>`;
+    const renderUsers = () => `<div class="admin-main">${statusHtml()}<section class="admin-grid admin-grid--double"><article class="admin-state"><h2>セッション</h2><div class="admin-key-value"><strong>ユーザーID</strong><span>${escapeHtml(state.user?.id || "未取得")}</span></div><div class="admin-key-value"><strong>メールアドレス</strong><span>${escapeHtml(state.user?.email || "未取得")}</span></div><div class="admin-key-value"><strong>最終サインイン</strong><span>${escapeHtml(fmtDate(state.user?.last_sign_in_at))}</span></div></article><article class="admin-state"><h2>プロフィール / ロール</h2><div class="admin-key-value"><strong>表示名</strong><span>${escapeHtml(state.profile?.display_name || "未取得")}</span></div><div class="admin-key-value"><strong>利用状態</strong><span>${escapeHtml(state.profile?.account_status || "未取得")}</span></div><div class="admin-key-value"><strong>ロール</strong><span>${escapeHtml(state.roles.map(roleLabel).join(", ") || "未取得")}</span></div></article></section>${state.profile ? `<section class="admin-state"><h2>取得済み user_profiles</h2>${Object.entries(state.profile).map(([k, v]) => `<div class="admin-key-value"><strong>${escapeHtml(pretty(k))}</strong><span>${escapeHtml(typeof v === "object" ? JSON.stringify(v) : String(v ?? ""))}</span></div>`).join("")}</section>` : ""}${state.roleAssignments.length ? `<section class="admin-state"><h2>取得済み user_role_assignments</h2>${state.roleAssignments.map((row, index) => `<div class="admin-key-value"><strong>行 ${escapeHtml(index + 1)}</strong><span>${escapeHtml(JSON.stringify(row))}</span></div>`).join("")}</section>` : ""}</div>`;
     const renderForgot = () => `<div class="admin-page"><div class="admin-login-wrap"><section class="admin-login-card"><div class="admin-login-card__side"><div class="admin-brand"><span class="admin-brand__eyebrow">inim-dx</span><strong class="admin-brand__title">Password Support</strong></div><p>管理画面ログインに使うメールアドレス宛に、再設定メールを送信します。</p></div><div class="admin-login-card__body"><div><p class="admin-topbar__eyebrow">${escapeHtml(currentPage[2])}</p><h1>${escapeHtml(currentPage[1])}</h1><p>${escapeHtml(currentPage[3])}</p></div>${statusHtml()}${renderDebugRedirectNote()}<form class="admin-form" data-form="forgot-password"><div class="admin-field is-full"><label for="forgot-email">メールアドレス</label><input id="forgot-email" name="email" type="email" autocomplete="email" placeholder="admin@inim-dx.jp" required></div><div class="admin-toolbar"><div class="admin-toolbar__group"><button class="admin-button" type="submit">再設定メールを送信</button><a class="admin-link-button is-secondary" href="${escapeHtml(toPath("appLogin"))}">ログインへ戻る</a></div></div></form></div></section></div></div>`;
     const renderReset = () => `<div class="admin-page"><div class="admin-login-wrap"><section class="admin-login-card"><div class="admin-login-card__side"><div class="admin-brand"><span class="admin-brand__eyebrow">inim-dx</span><strong class="admin-brand__title">Reset Password</strong></div><p>再設定リンクから遷移したあと、新しいパスワードに更新します。</p></div><div class="admin-login-card__body"><div><p class="admin-topbar__eyebrow">${escapeHtml(currentPage[2])}</p><h1>${escapeHtml(currentPage[1])}</h1><p>${escapeHtml(currentPage[3])}</p></div>${statusHtml()}<form class="admin-form" data-form="reset-password"><div class="admin-form-grid"><div class="admin-field is-full"><label for="reset-password">新しいパスワード</label><input id="reset-password" name="password" type="password" autocomplete="new-password" required></div><div class="admin-field is-full"><label for="reset-password-confirm">確認用パスワード</label><input id="reset-password-confirm" name="password_confirm" type="password" autocomplete="new-password" required></div></div><div class="admin-toolbar"><div class="admin-toolbar__group"><button class="admin-button" type="submit">新しいパスワードを保存</button><a class="admin-link-button is-secondary" href="${escapeHtml(toPath("appLogin"))}">ログインへ戻る</a></div></div></form></div></section></div></div>`;
     const renderProtected = () => {
@@ -402,19 +403,61 @@
         const diff = getOrder(a) - getOrder(b);
         return diff !== 0 ? diff : getLabel(a).localeCompare(getLabel(b), "ja");
     });
-    const loadProfile = async (userId) => attemptQuery("user_profiles.auth_user_id", () => supabase
-        .from("user_profiles")
-        .select("id, auth_user_id, display_name, account_status, last_login_at, internal_note, deleted_at, created_at, updated_at")
-        .eq("auth_user_id", userId)
-        .is("deleted_at", null)
-        .maybeSingle());
+    const loadProfile = async (userId) => {
+        const candidates = [
+            {
+                label: "user_profiles.auth_user_id",
+                query: () => supabase
+                    .from("user_profiles")
+                    .select("id, auth_user_id, display_name, account_status, last_login_at, internal_note, deleted_at, created_at, updated_at")
+                    .eq("auth_user_id", userId)
+                    .is("deleted_at", null)
+                    .maybeSingle()
+            },
+            {
+                label: "user_profiles.auth_user_id without deleted_at",
+                query: () => supabase
+                    .from("user_profiles")
+                    .select("id, auth_user_id, display_name, account_status, last_login_at, internal_note, created_at, updated_at")
+                    .eq("auth_user_id", userId)
+                    .maybeSingle()
+            },
+            {
+                label: "user_profiles.auth_user_id minimum",
+                query: () => supabase
+                    .from("user_profiles")
+                    .select("id, auth_user_id, display_name")
+                    .eq("auth_user_id", userId)
+                    .maybeSingle()
+            }
+        ];
+        for (const candidate of candidates) {
+            try {
+                const { data, error } = await candidate.query();
+                if (!error) return data ?? null;
+                state.queryWarnings.push(`${candidate.label}: ${error.message}`);
+            } catch (e) {
+                state.queryWarnings.push(`${candidate.label}: ${e.message}`);
+            }
+        }
+        return null;
+    };
     const loadRoles = async (_userId, profile) => {
         if (!profile?.id) return [];
         const rows = await attemptQuery("user_role_assignments.user_profile_id", () => supabase
             .from("user_role_assignments")
             .select("role_id, roles(role_code, role_name)")
             .eq("user_profile_id", profile.id));
-        return [...new Set((rows || []).map((row) => normalizeRole(row?.roles?.role_code)).filter(Boolean))];
+        state.roleAssignments = rows || [];
+        const directRoles = [...new Set((rows || []).map((row) => normalizeRole(row?.roles?.role_code)).filter(Boolean))];
+        if (directRoles.length) return directRoles;
+        const roleIds = [...new Set((rows || []).map((row) => row?.role_id).filter(Boolean))];
+        if (!roleIds.length) return [];
+        const roleRows = await attemptQuery("roles.id", () => supabase
+            .from("roles")
+            .select("id, role_code, role_name")
+            .in("id", roleIds));
+        return [...new Set((roleRows || []).map((row) => normalizeRole(row?.role_code)).filter(Boolean))];
     };
     const countRows = async (table, filterColumn, filterValue) => {
         try {

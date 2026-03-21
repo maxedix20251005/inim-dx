@@ -32,66 +32,48 @@
 - 該当処理: `js/admin-app.js`
   - `if (pageKey === "appLogin" && state.user) return redirect("appDashboard");`
 
-#### 3. パスワード再設定メールのリンクがトップへ飛ぶ件
-- 確認結果:
-  - 実際のメールリンクは `redirect_to=https://maxedix20251005.github.io/inim-dx/` になっていた
-  - 本来は `https://maxedix20251005.github.io/inim-dx/app/password/reset.html` である必要がある
-- 影響:
-  - `reset.html` に戻れないため、リセット画面へ遷移できない
-
-#### 4. 再設定メールの再送が止められた件
-- 画面上のエラー:
-  - `送信に失敗しました: email rate limit exceeded`
-- 意味:
-  - Supabase 側のメール送信レート制限に達している
-- 対応:
-  - 本日はこれ以上再送しない
-  - 明日、時間を置いてから最新メールで再確認する
+#### 3. パスワード再設定フローの確認
+- 最新確認結果:
+  - 実際のメールリンクは `redirect_to=https://maxedix20251005.github.io/inim-dx/app/password/reset.html` になった
+  - パスワード再設定は成功した
+- ここまでの対応:
+  - `forgot-password` 送信時の `redirectTo` を `app/password/reset.html` に固定
+  - `js/site-config.js` に `adminResetRedirectUrl` を追加
+  - `app/password/forgot.html` に現在のページURL、設定値、実際の `redirectTo` を表示
 
 ### 現在の推定原因
-- パスワード再設定リンクがトップへ飛ぶ主因は、実際にメール生成時に使われている `redirect_to` がトップURLになっていること
-- Supabase の `URL Configuration` に `reset.html` は追加済みだったが、メールリンク実体はトップURLだった
-- 管理画面側では `forgot-password` 送信時の `redirectTo` を `app/password/reset.html` に固定する修正を反映済み
-- `js/site-config.js` にも `adminResetRedirectUrl` を追加済み
-- `app/password/forgot.html` で実際に使う `redirectTo` を画面表示する修正も反映済み
-- ただし、2026-03-21 の再送結果でも、実メールの `redirect_to` はトップURLのままだった
+- パスワード再設定フローは解消した
+- 現在の主な未解決事項は、ログイン後にロールが `未取得` と表示されるケースがあること
+- 2026-03-21 の最新確認では、`user_profiles` クエリが `400` で失敗していた
 - 次回は、以下を切り分ける必要がある
-  - `forgot.html` から送る際の `redirectTo`
-  - Supabase Email Template 側の設定
-  - 古いメールリンクを誤って開いていないか
+  - `user_profiles` が想定どおり取得できているか
+  - `user_role_assignments` が取得できているか
+  - `roles.role_code` が紐付いて返っているか
 
 ### 明日最初にやること
-1. レート制限が解除されているか確認する
-2. GitHub Pages 上の以下URLが直接開けるか確認する
-   - `https://maxedix20251005.github.io/inim-dx/app/login.html`
-   - `https://maxedix20251005.github.io/inim-dx/app/password/forgot.html`
-   - `https://maxedix20251005.github.io/inim-dx/app/password/reset.html`
-3. `forgot.html` から再設定メールを1回だけ送る
-4. 届いた最新メールのリンクを開く前に、`redirect_to=` の値を確認する
-5. `redirect_to` がトップURLのままなら、次の順で切り分ける
-   - `js/admin-app.js` の修正後コードが GitHub Pages に反映されているか確認
-   - Supabase `Authentication > Email Templates > Reset Password` を確認
-   - `{{ .ConfirmationURL }}` が使われているか確認
+1. GitHub Pages 上の `https://maxedix20251005.github.io/inim-dx/app/login.html` からログインする
+2. ダッシュボードで `権限` 表示を確認する
+3. `https://maxedix20251005.github.io/inim-dx/app/users/me.html` を開く
+4. `取得済み user_profiles` と `取得済み user_role_assignments` を確認する
+5. Console の `user_profiles ... 400` が解消したか確認する
+6. その他の Console エラー有無を確認する
 
 ### 明日の確認ポイント
 - `app/login.html` は真っ白にならず、正常描画されるか
 - 既存セッションがある場合の自動遷移は継続して問題ないか
-- `app/password/forgot.html` からの送信で `redirect_to` が `app/password/reset.html` になるか
-- `reset.html` へ遷移できたあと、パスワード更新が完了するか
 - ログイン後、`権限: 未取得` のままかどうか
+- `user_role_assignments` が取得できているか
+- `roles.role_code` が取得できているか
 
 ### 明日の報告フォーマット
-- `再送:` 成功 / rate limit 継続
-- `メールリンクの redirect_to:` 実際の値
-- `遷移先:` reset.html / トップ / その他
-- `パスワード更新:` 成功 / 失敗
 - `再ログイン:` 成功 / 失敗
 - `権限表示:` 正常 / 未取得のまま
+- `user_role_assignments:` 取得あり / 取得なし
 - `Console:` エラーなし / エラーあり
 - `補足:` 必要に応じて詳細
 
 ### 次の実装候補
-- パスワード再設定の `redirectTo` を GitHub Pages の reset URL に固定する
+- ロール取得不整合の切り分け
 - `content_assets` の検索・絞り込み UI を追加する
 - `top_hero_items` / `journey_steps` の入力バリデーションを追加する
 - `reservations` / `inquiries` 管理画面へ着手する

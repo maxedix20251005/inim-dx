@@ -78,15 +78,16 @@
 - パスワード再設定メールの `redirectTo` は、管理画面の `app/password/reset.html` を優先するよう `js/admin-app.js` 側で明示しました。
 - `js/site-config.js` にも `adminResetRedirectUrl` を追加し、設定レベルでも管理画面用 reset URL を明示しました。
 - `app/password/forgot.html` では、現在のページURL、設定値、実際の `redirectTo` を表示し、切り分けしやすくしました。
-- それでも、2026-03-21 時点の最新確認では、受信メール内の `redirect_to` はトップURLのままでした。
+- 2026-03-21 時点の最新確認では、受信メール内の `redirect_to` は `app/password/reset.html` となり、パスワード再設定は成功しました。
+- 次の切り分け用に、`app/users/me.html` で `user_role_assignments` の取得結果も確認できるようにしました。
+- `user_profiles` 取得で `400` が発生するケースに備え、`js/admin-app.js` のプロフィール取得は段階的フォールバックへ変更しました。
 - 一方で、入力値バリデーション強化や、保存後のUI改善はまだ残っています。
 
 ### 既知の未完了事項
-- Supabase から届く再設定メールの `redirect_to` 実値確認
-- `Authentication > Email Templates > Reset Password` の確認
 - `title` / `lead_text` / `cta_url` / `step_name` / `link_url` などの入力バリデーションを追加する
 - `content_assets` の検索・絞り込み UI は未実装
 - `reservations` / `inquiries` の詳細画面は未着手
+- ロール未取得時の `user_profiles` / `user_role_assignments` 実データ確認
 
 ### ロールバック方針
 - 今回の変更は、`app/` 配下のHTML参照先差し替えと、管理画面専用ファイルの追加に限定しています。

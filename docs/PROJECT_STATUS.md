@@ -83,49 +83,37 @@
 - `is_visible`
 
 ### 現在の既知課題
-#### 1. パスワード再設定リンクの遷移先が誤っている
-- 実際の再設定メールでは、`redirect_to=https://maxedix20251005.github.io/inim-dx/` になっていました。
-- 本来必要なのは、`https://maxedix20251005.github.io/inim-dx/app/password/reset.html` です。
-- このため、メールリンクから `reset.html` へ戻れず、再設定が完了しません。
-- 管理画面側コードでは、`forgot-password` 送信時の `redirectTo` を `reset.html` へ明示する修正を入れました。
-- `js/site-config.js` にも `adminResetRedirectUrl` を追加し、設定ファイル上でも同じ reset URL を参照するようにしました。
-- `app/password/forgot.html` では、現在のページURL、設定値、実際の `redirectTo` を画面表示するようにし、GitHub Pages 反映漏れと Supabase 側設定を切り分けやすくしました。
-- ただし、2026-03-21 の最新確認では、再送メールの `redirect_to` は引き続きトップURLでした。
-- 次回は、再送メールの `redirect_to` 実値と Supabase の Email Template を再確認します。
-
-#### 2. 再設定メールのレート制限に到達した
-- 確認済みエラー: `email rate limit exceeded`
-- 現時点では、時間を置いてから再送確認が必要です。
-
-#### 3. ロール表示が未取得の可能性がある
+#### 1. ロール表示が未取得の可能性がある
 - ダッシュボード上で `権限: 未取得`、プロフィールカードで `unknown` と表示されたケースがありました。
 - 認証後の `user_profiles` または `user_role_assignments` 連携の再確認が必要です。
+- `app/users/me.html` で `user_role_assignments` の取得結果も確認できるようにし、ロール未取得時の切り分けをしやすくしました。
+- 2026-03-21 の最新確認では、`user_profiles` 取得で `400` が発生しました。
+- 管理画面側では、`deleted_at` を含む完全取得に失敗した場合でも、`deleted_at` なし、さらに最小カラム取得へ段階的にフォールバックするよう修正しました。
+
+#### 2. パスワード再設定フロー
+- `forgot-password` 送信時の `redirectTo` を `app/password/reset.html` に明示し、`js/site-config.js` にも `adminResetRedirectUrl` を追加しました。
+- `app/password/forgot.html` 上で、現在のページURL、設定値、実際の `redirectTo` を確認できます。
+- 2026-03-21 の最新確認では、再設定メールの `redirect_to` は `https://maxedix20251005.github.io/inim-dx/app/password/reset.html` となり、パスワード再設定は成功しました。
 
 ### 次に優先して進める作業
 1. `PROJECT_STATUS.md` を起点に運用継続する
 2. `AI_CONTEXT_PROMPT.md` を復元用コンテキストとして都度更新運用する
-3. パスワード再設定フローの `redirectTo` を実動確認する
-4. 時間を置いて `forgot.html` から再設定メールを再送し、`redirect_to` を確認する
-5. リセット完了後に再ログインし、ロール表示を確認する
+3. 再ログイン後にロール表示を確認する
+4. `app/users/me.html` で `user_role_assignments` の取得内容を確認する
+5. `user_profiles` の取得結果と Console の `400` が解消したか確認する
 6. その後に入力バリデーションと UI 改善へ進む
 
 ### 再開時の確認手順
-1. GitHub Pages 上で以下を直接開けるか確認する
-   - `https://maxedix20251005.github.io/inim-dx/app/login.html`
-   - `https://maxedix20251005.github.io/inim-dx/app/password/forgot.html`
-   - `https://maxedix20251005.github.io/inim-dx/app/password/reset.html`
-2. `forgot.html` から再設定メールを1回だけ送る
-3. メールを開く前に、リンク内の `redirect_to=` の値を確認する
-4. 遷移先が `reset.html` なら、パスワード更新を実行する
-5. 再ログイン後、権限表示と Console エラー有無を確認する
+1. GitHub Pages 上の `app/login.html` からログインする
+2. `app/dashboard.html` で権限表示を確認する
+3. `app/users/me.html` を開く
+4. `取得済み user_profiles` と `取得済み user_role_assignments` を確認する
+5. Console エラー有無を確認する
 
 ### 確認時の報告フォーマット
-- `再送:` 成功 / rate limit 継続
-- `メールリンクの redirect_to:` 実際の値
-- `遷移先:` reset.html / トップ / その他
-- `パスワード更新:` 成功 / 失敗
 - `再ログイン:` 成功 / 失敗
 - `権限表示:` 正常 / 未取得のまま
+- `user_role_assignments:` 取得あり / 取得なし
 - `Console:` エラーなし / エラーあり
 - `補足:` 必要に応じて詳細
 
