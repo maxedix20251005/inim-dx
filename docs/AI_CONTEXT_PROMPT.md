@@ -98,6 +98,7 @@
 #### データ連携
 - `content_assets` 取得
 - `top_hero_items` 一覧・編集
+- `top_hero_items` 基本入力バリデーション
 - `journey_steps` 一覧・編集
 - `reservations` 件数取得
 - `inquiries` 件数取得

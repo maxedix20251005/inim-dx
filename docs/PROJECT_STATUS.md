@@ -64,6 +64,7 @@
 - `content_assets` の取得
 - `top_hero_items.asset_id` の選択式入力
 - `reservations` と `inquiries` の件数取得
+- `top_hero_items` の基本入力バリデーション
 
 ### DB 設計に合わせて確定済みの主な編集項目
 #### `top_hero_items`
@@ -104,7 +105,8 @@
 3. 再ログイン後にロール表示を確認する
 4. `app/users/me.html` で `user_role_assignments` の取得内容を確認する
 5. `user_profiles` の取得結果と Console の `400` が解消したか確認する
-6. その後に入力バリデーションと UI 改善へ進む
+6. `top_hero_items` の入力バリデーションを確認する
+7. その後に UI 改善へ進む
 
 ### 再開時の確認手順
 1. GitHub Pages 上の `app/login.html` からログインする

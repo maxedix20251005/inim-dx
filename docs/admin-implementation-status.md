@@ -83,6 +83,7 @@
 - `user_profiles` 取得で `400` が発生するケースに備え、`js/admin-app.js` のプロフィール取得は `select("*")` を優先する実環境追従型へ変更しました。
 - 管理画面 HTML の CSS / JS 参照にはバージョン文字列を付け、GitHub Pages のキャッシュ影響を受けにくくしました。
 - 既存ロゴ画像を `rel="icon"` で明示し、`/favicon.ico` の `404` を避ける対応を入れました。
+- `top_hero_items` では、`title`、`lead_text`、`cta_label`、`cta_url`、`display_order` の基本入力バリデーションを追加しました。
 - 一方で、入力値バリデーション強化や、保存後のUI改善はまだ残っています。
 
 ### 既知の未完了事項

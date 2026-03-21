@@ -217,24 +217,24 @@
                 <div class="admin-form-grid">
                     <div class="admin-field">
                         <label>${escapeHtml(pretty("title"))}</label>
-                        <input name="title" value="${escapeHtml(record.title || "")}">
+                        <input name="title" maxlength="60" required value="${escapeHtml(record.title || "")}">
                     </div>
                     <div class="admin-field">
                         <label>${escapeHtml(pretty("cta_label"))}</label>
-                        <input name="cta_label" value="${escapeHtml(record.cta_label || "")}">
+                        <input name="cta_label" maxlength="20" required value="${escapeHtml(record.cta_label || "")}">
                     </div>
                     <div class="admin-field is-full">
                         <label>${escapeHtml(pretty("lead_text"))}</label>
-                        <textarea name="lead_text">${escapeHtml(record.lead_text || "")}</textarea>
+                        <textarea name="lead_text" maxlength="160" required>${escapeHtml(record.lead_text || "")}</textarea>
                     </div>
                     <div class="admin-field is-full">
                         <label>${escapeHtml(pretty("cta_url"))}</label>
-                        <input name="cta_url" value="${escapeHtml(record.cta_url || "")}">
+                        <input name="cta_url" maxlength="255" required value="${escapeHtml(record.cta_url || "")}">
                     </div>
                     ${renderAssetSelect(record.asset_id)}
                     <div class="admin-field">
                         <label>${escapeHtml(pretty("display_order"))}</label>
-                        <input name="display_order" value="${escapeHtml(record.display_order ?? 1)}">
+                        <input name="display_order" inputmode="numeric" required value="${escapeHtml(record.display_order ?? 1)}">
                     </div>
                     ${renderBooleanSelect("is_active", Boolean(record.is_active), "公開", "非公開")}
                 </div>
@@ -512,6 +512,35 @@
         setNotice(`${table} を更新しました。`, "success");
         await loadPageData();
     };
+    const validateHeroForm = (form, rows, recordIdValue) => {
+        const title = form.elements.title.value.trim();
+        const leadText = form.elements.lead_text.value.trim();
+        const ctaLabel = form.elements.cta_label.value.trim();
+        const ctaUrl = form.elements.cta_url.value.trim();
+        const displayOrderRaw = form.elements.display_order.value.trim();
+        if (!title) return "見出しは必須です。";
+        if (title.length > 60) return "見出しは60文字以内で入力してください。";
+        if (!leadText) return "リード文は必須です。";
+        if (leadText.length > 160) return "リード文は160文字以内で入力してください。";
+        if (!ctaLabel) return "CTA文言は必須です。";
+        if (ctaLabel.length > 20) return "CTA文言は20文字以内で入力してください。";
+        if (!ctaUrl) return "遷移先URLは必須です。";
+        if (ctaUrl.length > 255) return "遷移先URLは255文字以内で入力してください。";
+        try {
+            new URL(ctaUrl, window.location.origin);
+        } catch {
+            return "遷移先URLの形式が正しくありません。";
+        }
+        const displayOrder = Number(displayOrderRaw);
+        if (!Number.isInteger(displayOrder) || displayOrder < 1) {
+            return "表示順は1以上の整数で入力してください。";
+        }
+        const duplicate = rows.find((row) => String(row.id) !== String(recordIdValue) && Number(row.display_order) === displayOrder && !row.deleted_at);
+        if (duplicate) {
+            return "表示順が重複しています。別の番号を指定してください。";
+        }
+        return "";
+    };
     const bindEvents = () => {
         const loginForm = main.querySelector('[data-form="login"]');
         if (loginForm) loginForm.addEventListener("submit", async (e) => {
@@ -562,6 +591,8 @@
         const heroSave = main.querySelector('[data-form="hero-save"]');
         if (heroSave) heroSave.addEventListener("submit", async (e) => {
             e.preventDefault();
+            const validationMessage = validateHeroForm(heroSave, state.heroItems, heroSave.elements.record_id_value.value);
+            if (validationMessage) return setNotice(validationMessage, "warn");
             await saveRecord("top_hero_items", state.heroItems, heroSave.elements.record_id_value.value, new FormData(heroSave));
         });
         const stepSave = main.querySelector('[data-form="journey-save"]');

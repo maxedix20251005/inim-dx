@@ -18,6 +18,7 @@
   - `top_hero_items` の固定フォーム化
   - `journey_steps` の固定フォーム化
 - `content_assets` を取得し、トップ編集の `asset_id` を選択式に変更した
+- `top_hero_items` の基本入力バリデーションを追加した
 - 実装整理資料として `docs/admin-implementation-status.md` を追加・更新した
 
 ### 今日発生した問題
@@ -78,7 +79,7 @@
 ### 次の実装候補
 - ロール取得不整合の切り分け
 - `content_assets` の検索・絞り込み UI を追加する
-- `top_hero_items` / `journey_steps` の入力バリデーションを追加する
+- `journey_steps` の入力バリデーションを追加する
 - `reservations` / `inquiries` 管理画面へ着手する
 
 ### 確認済み事項
