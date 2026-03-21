@@ -68,6 +68,7 @@
 - `top_hero_items.asset_id` の選択式入力
 - `content_assets` の検索・絞り込み UI
 - `reservations` と `inquiries` の件数取得
+- `reservations` と `inquiries` の直近一覧表示
 - `top_hero_items` の基本入力バリデーション
 - `top_hero_items.cta_url` のURL形式厳密化
 - `journey_steps` の基本入力バリデーション
@@ -129,24 +130,33 @@
 - キーワードは `id`, `file_path`, `alt_text`, `bucket_name`, `file_type`, `mime_type` を対象に検索します。
 - 選択中アセットがフィルタ条件外でも候補から消えないようにし、保存時の選択ロストを防いでいます。
 - 候補件数を `候補: x件 / 全y件` で表示するようにしました。
+- 2026-03-21 の実画面確認で、検索欄とバケット絞り込みの表示が確認できました。
 - この差分に合わせて、管理画面 HTML のバージョン文字列を `20260321h` へ更新しました。
+
+#### 6. reservations / inquiries の read-only 拡張
+- ダッシュボードで、件数だけでなく `reservations` と `inquiries` の直近 5 件を確認できるようにしました。
+- `reservations` は `reservation_type`, `reserved_at`, `participant_count`, `status`, `store_id`, `customer_profile_id` を表示します。
+- `inquiries` は `subject`, `category`, `status`, `created_at`, `assigned_to`, `customer_profile_id` を表示します。
+- まずは安全性優先で read-only 表示に留め、更新機能はまだ入れていません。
+- `app/publish.html` にも同じスナップショットを表示し、公開前チェックと合わせて確認できるようにしました。
+- この差分に合わせて、管理画面 HTML のバージョン文字列を `20260321i` へ更新しました。
 
 ### 次に優先して進める作業
 1. `PROJECT_STATUS.md` を起点に運用継続する
 2. `AI_CONTEXT_PROMPT.md` を復元用コンテキストとして都度更新運用する
-3. `content_assets` の検索・絞り込み UI を実画面確認する
+3. ダッシュボードと公開管理の `reservations` / `inquiries` 一覧表示を実画面確認する
 4. `reservations` / `inquiries` の詳細管理画面を検討する
 
 ### 再開時の確認手順
-1. トップ編集でアセット検索とバケット絞り込みを確認する
-2. サイドバー下部の `Admin build` が `20260321h` であることを確認する
-3. 必要なら `reservations` / `inquiries` の次着手範囲を整理する
+1. ダッシュボードで `直近の予約` と `直近の問い合わせ` が表示されるか確認する
+2. `app/publish.html` で同じ一覧が表示されるか確認する
+3. サイドバー下部の `Admin build` が `20260321i` であることを確認する
+4. 必要なら `reservations` / `inquiries` の次着手範囲を整理する
 
 ### 確認時の報告フォーマット
-- `アセット検索:` 正常 / 異常
-- `バケット絞り込み:` 正常 / 異常
-- `選択中アセット保持:` 正常 / 異常
-- `Admin build:` 20260321h / その他
+- `ダッシュボード一覧:` 正常 / 異常
+- `公開管理一覧:` 正常 / 異常
+- `Admin build:` 20260321i / その他
 - `補足:` 必要に応じて詳細
 - `Console:` エラーなし / エラーあり
 

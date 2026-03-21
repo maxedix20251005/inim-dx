@@ -4,7 +4,7 @@
     if (!body || !main) return;
 
     const root = body.dataset.root || ".";
-    const ADMIN_BUILD_VERSION = "20260321h";
+    const ADMIN_BUILD_VERSION = "20260321i";
     const pageKey = body.dataset.pageKey || "appLogin";
     const cfg = window.INIM_SITE_CONFIG || {};
     const sbApi = window.supabase || null;
@@ -47,6 +47,8 @@
         noticeType: "info",
         queryWarnings: [],
         metrics: { reservations: "--", heroItems: "--", inquiries: "--" },
+        recentReservations: [],
+        recentInquiries: [],
         contentAssets: [],
         assetSearchTerm: "",
         assetBucketFilter: "",
@@ -115,6 +117,10 @@
         if (!v) return "未取得";
         const d = new Date(v);
         return Number.isNaN(d.getTime()) ? String(v) : d.toLocaleString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
+    };
+    const fmtShortId = (v) => {
+        const text = String(v || "");
+        return text.length > 8 ? `${text.slice(0, 8)}...` : text || "未設定";
     };
     const isLastSaved = (table, recordId) => Boolean(state.lastSaved && state.lastSaved.table === table && String(state.lastSaved.recordId) === String(recordId));
     const getIdKey = (r) => ["id", "step_id", "item_id"].find((k) => r && r[k] !== undefined) || "id";
@@ -349,6 +355,10 @@
                 <article class="admin-panel"><h2>本日の優先タスク</h2><ul class="admin-inline-list"><li>トップヒーローの訴求文言を確認</li><li>導線ステップのリンク先と表示順を点検</li><li>公開前チェックでロール差分を確認</li></ul></article>
                 <article class="admin-panel"><h2>主要導線ショートカット</h2><ul class="admin-inline-list"><li><a href="${escapeHtml(toPath("appPagesHome"))}">トップ編集へ移動</a></li><li><a href="${escapeHtml(toPath("appPagesJourney"))}">導線設定へ移動</a></li><li><a href="${escapeHtml(toPath("appUsersMe"))}">現在のロールを確認</a></li></ul></article>
             </section>
+            <section class="admin-grid admin-grid--double">
+                <article class="admin-panel"><h2>直近の予約</h2>${renderReservationSnapshot()}</article>
+                <article class="admin-panel"><h2>直近の問い合わせ</h2>${renderInquirySnapshot()}</article>
+            </section>
             ${state.queryWarnings.length ? `<section class="admin-state"><h2>取得時の注意</h2><ul class="admin-inline-list">${state.queryWarnings.map((w) => `<li>${escapeHtml(w)}</li>`).join("")}</ul></section>` : ""}
         </div>
     `;
@@ -386,8 +396,16 @@
             <section class="admin-panel"><h2>運用メモ</h2><p>DB 設計書の journey_steps 定義に合わせて step_no / step_name / link_url / helper_text / is_visible を更新します。</p></section>
         </div>`;
     };
-    const renderPublish = () => `<div class="admin-main">${statusHtml()}<section class="admin-grid admin-grid--double"><article class="admin-panel"><h2>公開前チェック</h2><ul class="admin-inline-list"><li>トップ編集の保存結果を確認</li><li>導線設定のリンク先と表示順を確認</li><li>ログイン中ユーザーのロールを確認</li></ul></article><article class="admin-panel"><h2>現在の状態</h2><ul class="admin-inline-list"><li>トップ項目数: ${escapeHtml(String(state.heroItems.length))}</li><li>導線項目数: ${escapeHtml(String(state.journeySteps.length))}</li><li>最終更新者: ${escapeHtml(state.user?.email || "未取得")}</li></ul></article></section></div>`;
+    const renderPublish = () => `<div class="admin-main">${statusHtml()}<section class="admin-grid admin-grid--double"><article class="admin-panel"><h2>公開前チェック</h2><ul class="admin-inline-list"><li>トップ編集の保存結果を確認</li><li>導線設定のリンク先と表示順を確認</li><li>ログイン中ユーザーのロールを確認</li></ul></article><article class="admin-panel"><h2>現在の状態</h2><ul class="admin-inline-list"><li>トップ項目数: ${escapeHtml(String(state.heroItems.length))}</li><li>導線項目数: ${escapeHtml(String(state.journeySteps.length))}</li><li>予約件数: ${escapeHtml(String(state.metrics.reservations))}</li><li>未対応問い合わせ: ${escapeHtml(String(state.metrics.inquiries))}</li><li>最終更新者: ${escapeHtml(state.user?.email || "未取得")}</li></ul></article></section><section class="admin-grid admin-grid--double"><article class="admin-panel"><h2>公開前に見る予約</h2>${renderReservationSnapshot()}</article><article class="admin-panel"><h2>公開前に見る問い合わせ</h2>${renderInquirySnapshot()}</article></section></div>`;
     const renderUsers = () => `<div class="admin-main">${statusHtml()}<section class="admin-grid admin-grid--double"><article class="admin-state"><h2>セッション</h2><div class="admin-key-value"><strong>ユーザーID</strong><span>${escapeHtml(state.user?.id || "未取得")}</span></div><div class="admin-key-value"><strong>メールアドレス</strong><span>${escapeHtml(state.user?.email || "未取得")}</span></div><div class="admin-key-value"><strong>最終サインイン</strong><span>${escapeHtml(fmtDate(state.user?.last_sign_in_at))}</span></div></article><article class="admin-state"><h2>プロフィール / ロール</h2><div class="admin-key-value"><strong>表示名</strong><span>${escapeHtml(state.profile?.display_name || "未取得")}</span></div><div class="admin-key-value"><strong>利用状態</strong><span>${escapeHtml(state.profile?.account_status || "未取得")}</span></div><div class="admin-key-value"><strong>ロール</strong><span>${escapeHtml(state.roles.map(roleLabel).join(", ") || "未取得")}</span></div></article></section>${state.profile ? `<section class="admin-state"><h2>取得済み user_profiles</h2>${Object.entries(state.profile).map(([k, v]) => `<div class="admin-key-value"><strong>${escapeHtml(pretty(k))}</strong><span>${escapeHtml(typeof v === "object" ? JSON.stringify(v) : String(v ?? ""))}</span></div>`).join("")}</section>` : ""}${state.roleAssignments.length ? `<section class="admin-state"><h2>取得済み user_role_assignments</h2>${state.roleAssignments.map((row, index) => `<div class="admin-key-value"><strong>行 ${escapeHtml(index + 1)}</strong><span>${escapeHtml(JSON.stringify(row))}</span></div>`).join("")}</section>` : ""}</div>`;
+    const renderReservationSnapshot = () => {
+        if (!state.recentReservations.length) return `<div class="admin-empty">予約データはまだ取得されていません。</div>`;
+        return `<ul class="admin-record-list">${state.recentReservations.map((row) => `<li><div class="admin-record-list__title"><strong>${escapeHtml(row.reservation_type || "予約")}</strong><span class="admin-record-list__status">${escapeHtml(row.status || "未設定")}</span></div><div class="admin-record-list__meta"><span>予約日時: ${escapeHtml(fmtDate(row.reserved_at))}</span><span>人数: ${escapeHtml(String(row.participant_count ?? "未設定"))}</span></div><div class="admin-record-list__meta"><span>店舗ID: ${escapeHtml(fmtShortId(row.store_id))}</span><span>顧客ID: ${escapeHtml(fmtShortId(row.customer_profile_id))}</span></div></li>`).join("")}</ul>`;
+    };
+    const renderInquirySnapshot = () => {
+        if (!state.recentInquiries.length) return `<div class="admin-empty">問い合わせデータはまだ取得されていません。</div>`;
+        return `<ul class="admin-record-list">${state.recentInquiries.map((row) => `<li><div class="admin-record-list__title"><strong>${escapeHtml(row.subject || row.category || "問い合わせ")}</strong><span class="admin-record-list__status">${escapeHtml(row.status || "未設定")}</span></div><div class="admin-record-list__meta"><span>区分: ${escapeHtml(row.category || "general")}</span><span>受付: ${escapeHtml(fmtDate(row.created_at))}</span></div><div class="admin-record-list__meta"><span>顧客ID: ${escapeHtml(fmtShortId(row.customer_profile_id))}</span><span>担当者ID: ${escapeHtml(fmtShortId(row.assigned_to))}</span></div></li>`).join("")}</ul>`;
+    };
     const renderForgot = () => `<div class="admin-page"><div class="admin-login-wrap"><section class="admin-login-card"><div class="admin-login-card__side"><div class="admin-brand"><span class="admin-brand__eyebrow">inim-dx</span><strong class="admin-brand__title">Password Support</strong></div><p>管理画面ログインに使うメールアドレス宛に、再設定メールを送信します。</p></div><div class="admin-login-card__body"><div><p class="admin-topbar__eyebrow">${escapeHtml(currentPage[2])}</p><h1>${escapeHtml(currentPage[1])}</h1><p>${escapeHtml(currentPage[3])}</p></div>${statusHtml()}${renderDebugRedirectNote()}<form class="admin-form" data-form="forgot-password"><div class="admin-field is-full"><label for="forgot-email">メールアドレス</label><input id="forgot-email" name="email" type="email" autocomplete="email" placeholder="admin@inim-dx.jp" required></div><div class="admin-toolbar"><div class="admin-toolbar__group"><button class="admin-button" type="submit">再設定メールを送信</button><a class="admin-link-button is-secondary" href="${escapeHtml(toPath("appLogin"))}">ログインへ戻る</a></div></div></form></div></section></div></div>`;
     const renderReset = () => `<div class="admin-page"><div class="admin-login-wrap"><section class="admin-login-card"><div class="admin-login-card__side"><div class="admin-brand"><span class="admin-brand__eyebrow">inim-dx</span><strong class="admin-brand__title">Reset Password</strong></div><p>再設定リンクから遷移したあと、新しいパスワードに更新します。</p></div><div class="admin-login-card__body"><div><p class="admin-topbar__eyebrow">${escapeHtml(currentPage[2])}</p><h1>${escapeHtml(currentPage[1])}</h1><p>${escapeHtml(currentPage[3])}</p></div>${statusHtml()}<form class="admin-form" data-form="reset-password"><div class="admin-form-grid"><div class="admin-field is-full"><label for="reset-password">新しいパスワード</label><input id="reset-password" name="password" type="password" autocomplete="new-password" required></div><div class="admin-field is-full"><label for="reset-password-confirm">確認用パスワード</label><input id="reset-password-confirm" name="password_confirm" type="password" autocomplete="new-password" required></div></div><div class="admin-toolbar"><div class="admin-toolbar__group"><button class="admin-button" type="submit">新しいパスワードを保存</button><a class="admin-link-button is-secondary" href="${escapeHtml(toPath("appLogin"))}">ログインへ戻る</a></div></div></form></div></section></div></div>`;
     const renderProtected = () => {
@@ -504,6 +522,14 @@
             return null;
         }
     };
+    const loadRecentRows = async (table, selectColumns, orderColumn, limit = 5) => {
+        const rows = await attemptQuery(`${table} latest`, () => supabase
+            .from(table)
+            .select(selectColumns)
+            .order(orderColumn, { ascending: false })
+            .limit(limit));
+        return rows || [];
+    };
     const loadPageData = async ({ preserveNotice = false } = {}) => {
         if (!preserveNotice) clearNotice();
         const previousHeroId = state.selectedHeroId;
@@ -515,9 +541,15 @@
                 .eq("file_type", "image")
                 .is("deleted_at", null)) || []);
         }
-        if (pageKey === "appDashboard") {
+        if (pageKey === "appDashboard" || pageKey === "appPublish") {
             const [rsv, hero, inq] = await Promise.all([countRows("reservations"), countRows("top_hero_items"), countRows("inquiries")]);
             state.metrics = { reservations: rsv ?? "--", heroItems: hero ?? "--", inquiries: inq ?? "--" };
+            const [reservations, inquiries] = await Promise.all([
+                loadRecentRows("reservations", "id, customer_profile_id, store_id, reservation_type, reserved_at, participant_count, status, created_at", "reserved_at"),
+                loadRecentRows("inquiries", "id, customer_profile_id, category, subject, status, assigned_to, created_at", "created_at")
+            ]);
+            state.recentReservations = reservations;
+            state.recentInquiries = inquiries;
         }
         if (pageKey === "appPagesHome" || pageKey === "appPublish") {
             state.heroItems = sortRows(await attemptQuery("top_hero_items", () => supabase
