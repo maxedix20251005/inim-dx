@@ -47,6 +47,7 @@
 - 2026-03-21 の最新確認では、`user_profiles` クエリが `400` で失敗していた
 - `user_profiles` は `select("*")` を優先して取得する方針へ修正済み
 - 管理画面 HTML の CSS / JS 参照にはバージョン文字列を付け、古い JS キャッシュが残りにくいようにした
+- 残った Console エラーは `/favicon.ico` の `404` のみで、これに対して `rel="icon"` を明示する修正を反映済み
 - 次回は、以下を切り分ける必要がある
   - `user_profiles` が想定どおり取得できているか
   - `user_role_assignments` が取得できているか

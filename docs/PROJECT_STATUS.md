@@ -91,6 +91,7 @@
 - 管理画面側では、`user_profiles` をまず `select("*")` で取得し、存在しない列名指定による `400` を避ける方針へ修正しました。
 - `account_status` が実環境で返ってこない場合、UI 上は `未取得` 表示のままとします。
 - あわせて、管理画面 HTML の `admin-app.css` / `site-config.js` / `admin-app.js` にバージョン付き参照を付与し、GitHub Pages キャッシュで古い JS が残る状況を避けるようにしました。
+- 2026-03-21 の最新確認では、`user_profiles` とロール表示は正常化し、残る Console エラーは `/favicon.ico` の `404` のみでした。このため、既存ロゴ画像を `rel="icon"` で明示する対応を入れました。
 
 #### 2. パスワード再設定フロー
 - `forgot-password` 送信時の `redirectTo` を `app/password/reset.html` に明示し、`js/site-config.js` にも `adminResetRedirectUrl` を追加しました。
