@@ -80,7 +80,7 @@
 - `app/password/forgot.html` では、現在のページURL、設定値、実際の `redirectTo` を表示し、切り分けしやすくしました。
 - 2026-03-21 時点の最新確認では、受信メール内の `redirect_to` は `app/password/reset.html` となり、パスワード再設定は成功しました。
 - 次の切り分け用に、`app/users/me.html` で `user_role_assignments` の取得結果も確認できるようにしました。
-- `user_profiles` 取得で `400` が発生するケースに備え、`js/admin-app.js` のプロフィール取得は段階的フォールバックへ変更しました。
+- `user_profiles` 取得で `400` が発生するケースに備え、`js/admin-app.js` のプロフィール取得は `select("*")` を優先する実環境追従型へ変更しました。
 - 一方で、入力値バリデーション強化や、保存後のUI改善はまだ残っています。
 
 ### 既知の未完了事項

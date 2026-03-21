@@ -406,19 +406,10 @@
     const loadProfile = async (userId) => {
         const candidates = [
             {
-                label: "user_profiles.auth_user_id",
+                label: "user_profiles.auth_user_id all columns",
                 query: () => supabase
                     .from("user_profiles")
-                    .select("id, auth_user_id, display_name, account_status, last_login_at, internal_note, deleted_at, created_at, updated_at")
-                    .eq("auth_user_id", userId)
-                    .is("deleted_at", null)
-                    .maybeSingle()
-            },
-            {
-                label: "user_profiles.auth_user_id without deleted_at",
-                query: () => supabase
-                    .from("user_profiles")
-                    .select("id, auth_user_id, display_name, account_status, last_login_at, internal_note, created_at, updated_at")
+                    .select("*")
                     .eq("auth_user_id", userId)
                     .maybeSingle()
             },

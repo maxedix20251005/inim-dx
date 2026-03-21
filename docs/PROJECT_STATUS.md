@@ -88,7 +88,8 @@
 - 認証後の `user_profiles` または `user_role_assignments` 連携の再確認が必要です。
 - `app/users/me.html` で `user_role_assignments` の取得結果も確認できるようにし、ロール未取得時の切り分けをしやすくしました。
 - 2026-03-21 の最新確認では、`user_profiles` 取得で `400` が発生しました。
-- 管理画面側では、`deleted_at` を含む完全取得に失敗した場合でも、`deleted_at` なし、さらに最小カラム取得へ段階的にフォールバックするよう修正しました。
+- 管理画面側では、`user_profiles` をまず `select("*")` で取得し、存在しない列名指定による `400` を避ける方針へ修正しました。
+- `account_status` が実環境で返ってこない場合、UI 上は `未取得` 表示のままとします。
 
 #### 2. パスワード再設定フロー
 - `forgot-password` 送信時の `redirectTo` を `app/password/reset.html` に明示し、`js/site-config.js` にも `adminResetRedirectUrl` を追加しました。
