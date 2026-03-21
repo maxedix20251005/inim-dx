@@ -345,7 +345,7 @@ textarea:focus {
 }
 
 .admin-grid--split {
-    grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+    grid-template-columns: minmax(380px, 0.95fr) minmax(560px, 1.05fr);
 }
 
 .admin-metric {
@@ -450,6 +450,14 @@ textarea:focus {
 .admin-field label {
     font-size: 0.92rem;
     font-weight: 700;
+}
+
+.admin-field__label-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 12px;
 }
 
 .admin-field-note {

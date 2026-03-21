@@ -101,6 +101,7 @@
 #### データ連携
 - `content_assets` 取得
 - `content_assets` の検索・絞り込み UI
+- `content_assets` フィルタの使い方説明表示
 - `top_hero_items` 一覧・編集
 - `top_hero_items` 基本入力バリデーション
 - `top_hero_items.cta_url` のURL形式厳密化
@@ -188,6 +189,7 @@
 - `top_hero_items` では、`title`、`lead_text`、`cta_label`、`cta_url`、`display_order` の基本入力バリデーションを実装済みです。
 - `cta_url` は `abc` のような不正値を保存できないことを実画面で確認済みです。
 - `top_hero_items.asset_id` には、キーワード検索とバケット絞り込み UI を追加済みで、2026-03-21 の実画面で表示確認まで完了しています。
+- `top_hero_items.asset_id` には、上段で絞り込み、下段で実選択することが分かる説明文も追加済みです。
 - サイドバーの `セッション確認` ボタンは、背景と文字色を調整し、視認性改善が反映されていることを確認済みです。
 - `journey_steps` では、`step_no`、`step_name`、`link_url`、`helper_text` の基本入力バリデーションを追加済みです。
 - 2026-03-21 の確認で、`journey_steps` のフロント側検証をすり抜けてバックエンド制約エラーが出たため、`saveRecord()` 側でも必ず入力検証を通すように修正済みです。
@@ -197,7 +199,8 @@
 - 保存直後の再取得でも通知が消えないように修正済みです。
 - `更新済み` バッジは改行しにくい表示へ調整済みです。
 - ダッシュボードと公開管理には、`reservations` / `inquiries` の直近 5 件を read-only で表示するスナップショットを追加済みです。
-- 管理画面 HTML のバージョン文字列は `20260321i` です。
+- トップ編集と導線設定の左右パネルは、等幅ではなく情報量に合わせた比率へ調整済みです。
+- 管理画面 HTML のバージョン文字列は `20260321j` です。
 - 2026-03-21 の実画面確認で、`journey_steps` の各バリデーションは正常動作し、正常値保存も成功、Console エラーなしを確認済みです。
 
 ### 直近の再開手順
@@ -211,8 +214,9 @@
    - `https://maxedix20251005.github.io/inim-dx/app/users/me.html`
 6. ダッシュボードで `直近の予約` と `直近の問い合わせ` が表示されるか確認する
 7. `app/publish.html` でも同じ一覧が表示されるか確認する
-8. サイドバー下部の `Admin build` が `20260321i` であることを確認する
-9. 必要なら `reservations` / `inquiries` の次着手範囲を整理する
+8. トップ編集で `画像アセットID` の説明文と左右パネル比率を確認する
+9. サイドバー下部の `Admin build` が `20260321j` であることを確認する
+10. 必要なら `reservations` / `inquiries` の次着手範囲を整理する
 
 ### 次に優先する実装候補
 1. `reservations` / `inquiries` の直近一覧 UI 実画面確認

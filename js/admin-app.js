@@ -4,7 +4,7 @@
     if (!body || !main) return;
 
     const root = body.dataset.root || ".";
-    const ADMIN_BUILD_VERSION = "20260321i";
+    const ADMIN_BUILD_VERSION = "20260321j";
     const pageKey = body.dataset.pageKey || "appLogin";
     const cfg = window.INIM_SITE_CONFIG || {};
     const sbApi = window.supabase || null;
@@ -224,7 +224,10 @@
     };
     const renderAssetSelect = (selectedAssetId) => `
         <div class="admin-field is-full">
-            <label>${escapeHtml(pretty("asset_id"))}</label>
+            <div class="admin-field__label-row">
+                <label>${escapeHtml(pretty("asset_id"))}</label>
+                <span class="admin-field-note">上で絞り込み、下で実際のアセットを選択します。</span>
+            </div>
             <div class="admin-asset-filter">
                 <input type="search" name="asset_search" placeholder="アセット検索: パス、代替テキスト、ID" value="${escapeHtml(state.assetSearchTerm)}">
                 <select name="asset_bucket_filter">
