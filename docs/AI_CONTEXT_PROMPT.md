@@ -100,6 +100,7 @@
 - `top_hero_items` 一覧・編集
 - `top_hero_items` 基本入力バリデーション
 - `top_hero_items.cta_url` のURL形式厳密化
+- 管理画面 HTML のバージョン文字列によるキャッシュ制御
 - `journey_steps` 一覧・編集
 - `reservations` 件数取得
 - `inquiries` 件数取得

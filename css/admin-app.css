@@ -454,7 +454,7 @@ textarea:focus {
 .admin-button.is-secondary,
 .admin-link-button.is-secondary {
     background: #5a5248;
-    color: var(--admin-ink);
+    color: #f7f1e8;
     border-color: var(--admin-line-strong);
 }
 
