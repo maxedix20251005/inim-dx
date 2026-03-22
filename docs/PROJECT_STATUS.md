@@ -15,6 +15,8 @@
   - `C:\Users\maxsh\OneDrive\Documents\EDIX\src\portfolio\docs\08-db-design.html`
 - Workshop 予約データ設計の補助資料:
   - `docs/workshop-booking-data-design.md`
+- Workshop 予約 SQL 実行手順:
+  - `docs/workshop-booking-sql-runbook.md`
 - Issue 管理:
   - `docs/ISSUE_LIST.md`
 
@@ -171,13 +173,15 @@
 - 2026-03-22 の改修で、カレンダー記号は枠線付きではなく記号のみの表示へ調整し、選択中の日付をカレンダー直下にも表示するようにしました。
 - 予約ページ下部には、`プラン情報`、`体験の流れ`、`集合場所・体験場所`、`注意事項・その他` の4タブも Draft 実装しています。
 - Workshop 予約のデータ設計案は [`docs/workshop-booking-data-design.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/workshop-booking-data-design.md) に整理しました。推奨テーブルは `workshop_plans`, `workshop_plan_inclusions`, `workshop_plan_flow_steps`, `workshop_sessions` です。
+- 追加テーブル作成 SQL は [`sql/05_create_workshop_booking_tables.sql`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/sql/05_create_workshop_booking_tables.sql) に作成し、検証 SQL は [`sql/06_verify_workshop_booking_tables.sql`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/sql/06_verify_workshop_booking_tables.sql) に作成しました。
+- 実行手順は [`docs/workshop-booking-sql-runbook.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/workshop-booking-sql-runbook.md) に整理しました。
 - したがって、次は `bookings / enquiries` の管理画面詳細化ではなく、この公開側予約画面で必要項目を先に確定するのが適切です。
 
 ### 次に優先して進める作業
 1. `PROJECT_STATUS.md` を起点に運用継続する
 2. `AI_CONTEXT_PROMPT.md` を復元用コンテキストとして都度更新運用する
 3. [`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) `#reserve` 起点の予約導線を整理する
-4. [`docs/workshop-booking-data-design.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/workshop-booking-data-design.md) を叩き台に、予約画面で必要な入力項目と追加テーブルを確定する
+4. [`docs/workshop-booking-data-design.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/workshop-booking-data-design.md) と [`docs/workshop-booking-sql-runbook.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/workshop-booking-sql-runbook.md) を基に、追加テーブルを適用する
 5. その後に `app/` 側の `bookings / enquiries` 管理画面詳細化へ進む
 
 ### 再開時の確認手順

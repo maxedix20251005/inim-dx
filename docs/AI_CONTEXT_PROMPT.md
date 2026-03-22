@@ -34,6 +34,8 @@
   - `C:\Users\maxsh\OneDrive\Documents\EDIX\src\portfolio\docs\08-db-design.html`
 - Workshop 予約データ設計の補助資料:
   - `docs/workshop-booking-data-design.md`
+- Workshop 予約 SQL 実行手順:
+  - `docs/workshop-booking-sql-runbook.md`
 - 進捗管理:
   - `docs/PROJECT_STATUS.md`
   - `docs/admin-implementation-status.md`
@@ -130,6 +132,9 @@
 - 予約ページ Draft は、カレンダー、日別スロット表示、詳細4タブで構成
 - 2026-03-22 の改修で、カレンダー記号は記号のみ表示へ調整し、選択中の日付をカレンダー直下にも表示するようにした
 - 予約データ設計案は `docs/workshop-booking-data-design.md` に整理済み
+- 追加テーブル作成 SQL は `sql/05_create_workshop_booking_tables.sql`
+- 検証 SQL は `sql/06_verify_workshop_booking_tables.sql`
+- 実行手順は `docs/workshop-booking-sql-runbook.md`
 - `デジタル調香を試す` への導線も併設されているため、予約前体験との関係整理が必要
 
 ### DB 設計に基づく重要テーブル
@@ -238,15 +243,16 @@
 5. `予約フォームへ進む` が `./workshop-booking.html` を向いていることを確認する
 6. [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html) の Draft UI を確認する
 7. `docs/workshop-booking-data-design.md` を確認する
-8. 予約画面で必要になる入力項目を整理する
-9. 必要なら `bookings / enquiries` の追加項目を検討する
-10. GitHub Pages 上で以下 URL を直接開けるか確認する
+8. `docs/workshop-booking-sql-runbook.md` を確認する
+9. 予約画面で必要になる入力項目を整理する
+10. 必要なら `bookings / enquiries` の追加項目を検討する
+11. GitHub Pages 上で以下 URL を直接開けるか確認する
    - `https://maxedix20251005.github.io/inim-dx/app/pages/home.html`
    - `https://maxedix20251005.github.io/inim-dx/app/pages/journey.html`
    - `https://maxedix20251005.github.io/inim-dx/app/users/me.html`
-11. ダッシュボードで `Recent Bookings` と `Recent Enquiries` が表示されるか確認する
-12. `app/publish.html` でも同じ一覧が表示されるか確認する
-13. サイドバー下部の `Admin build` が `20260322a` であることを確認する
+12. ダッシュボードで `Recent Bookings` と `Recent Enquiries` が表示されるか確認する
+13. `app/publish.html` でも同じ一覧が表示されるか確認する
+14. サイドバー下部の `Admin build` が `20260322a` であることを確認する
 
 ### 次に優先する実装候補
 1. `subpages/workshop-booking.html` Draft と `docs/workshop-booking-data-design.md` を基に予約入力項目を確定する

@@ -76,6 +76,8 @@
 - 予約ページ Draft には、空き状況カレンダー、選択日の時間帯表示、集合時間、料金、`予約へ進む` ボタン、詳細4タブを実装しています
 - 2026-03-22 の改修で、カレンダー記号は記号のみ表示へ調整し、選択中の日付をカレンダー直下にも表示するようにしました
 - Workshop 予約の推奨データ設計は [`docs/workshop-booking-data-design.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/workshop-booking-data-design.md) に整理しました
+- 追加テーブル作成 SQL は [`sql/05_create_workshop_booking_tables.sql`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/sql/05_create_workshop_booking_tables.sql)、検証 SQL は [`sql/06_verify_workshop_booking_tables.sql`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/sql/06_verify_workshop_booking_tables.sql) に追加しました
+- 実行手順は [`docs/workshop-booking-sql-runbook.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/workshop-booking-sql-runbook.md) に整理しました
 - 次は `bookings / enquiries` 管理画面の詳細化ではなく、この Draft を基に public 側の Workshop 予約項目を先に固める方針です
 - 2026-03-21 の最終確認では、アセット説明文は良好、トップ編集の左右比率は良好、導線設定の左右比率は微調整余地ありという結果でした
 - 管理画面 HTML の CSS / JS 参照にはバージョン文字列を付け、古い JS キャッシュが残りにくいようにしています
@@ -89,7 +91,7 @@
 ### 明日最初にやること
 1. [`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) の `#reserve` セクションを起点に、Workshop 予約画面の必要項目を整理する
 2. `予約フォームへ進む` が `./workshop-booking.html` を向いていることを確認する
-3. [`docs/workshop-booking-data-design.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/workshop-booking-data-design.md) を基に、追加テーブルと `bookings` 追加項目を確定する
+3. [`docs/workshop-booking-sql-runbook.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/workshop-booking-sql-runbook.md) に従って、追加テーブルと `bookings` 追加項目を適用する
 
 ### 明日の確認ポイント
 - `#reserve` から遷移すべき予約画面の役割が明確か
@@ -104,6 +106,7 @@
 - `Draft UI:` 良好 / 要改善
 - `必要入力項目:` 整理済み / 未整理
 - `推奨テーブル設計:` 良好 / 要改善
+- `SQL runbook:` 良好 / 要改善
 - `Admin build:` 20260322a / その他
 - `Console:` エラーなし / エラーあり
 - `補足:` 必要に応じて詳細
