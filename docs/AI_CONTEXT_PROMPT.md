@@ -140,10 +140,15 @@
 - 2026-03-22 の追加実装で、STEP 2 の入力 validity check として `contact_name` 必須、`contact_email` 必須 + 形式、`contact_phone` 必須 + 電話番号形式、`party_size` 1〜4名必須選択を実装した
 - 2026-03-22 の追加調整で、STEP 2 の必須ラベルには赤 `*` を付与し、blur 時に各フィールド下へエラー表示を出すようにした。電話番号は固定電話 / 携帯電話・IP 電話を判定して桁数を確認し、入力中に `-` を自動整形するようにした
 - 2026-03-22 の追加調整で、電話番号の局番判定を詳細化し、`03 / 06`、主要な 3 桁市外局番、その他固定電話、`050 / 070 / 080 / 090`、`0120`、`0800`、`0570` を認識して `-` パターンと桁数を出し分けるようにした
+- 2026-03-22 の追加実装で、STEP 1 → STEP 2 → STEP 3 の遷移時に `date_key`, `store`, `storeLabel`, `plan_id`, `session_id` をクエリ引き継ぎするようにした
+- 2026-03-22 の追加実装で、STEP 3 確認画面 `subpages/workshop-booking-confirm.html` の送信ボタンを Supabase `bookings` 保存へ接続した
+- 保存時はログイン中ユーザーの `user_profiles.id` を `customer_profile_id` に使い、店舗名から `stores.id` を解決して insert する
+- ログイン未実施時やプロフィール不整合時は、確認画面内でエラーメッセージを表示し、`account.html#login` へ誘導する
 - `app/` 配下も確認したが、現時点では電話番号入力フィールド自体が存在しないため、同ロジックの適用対象はまだない。今後 `app` 側に電話番号入力を追加する際は、同等の validity と整形を適用する前提とする
 - 2026-03-22 の導線整理で、`workshop.html` の `予約する` と 3 コースの各予約ボタンは、いったんすべて `./workshop-booking.html` へ統一した
 - 同日の追加調整で、`行き先を選ぶ` で選択した店舗を `store` クエリとして `workshop-booking.html` へ引き継ぎ、予約画面側でも選択状態を維持するようにした
 - DB 追加は不要だった。`workshop_sessions.store_id` と既存 `bookings.store_id` がすでに存在するため、SQL `07_` は未作成
+- 2026-03-22 のユーザー確認で、店舗引き継ぎ、予約画面の店舗選択表示、選択店舗の開催日のみ表示はすべて正常、Console エラーなしを確認した
 - Reminder: `workshop_plans` / `workshop_sessions` 確定後に、予約画面で各プランをどう見せるか、各コースボタンから何を初期反映するかを再設計する
 - 予約データ設計案は `docs/workshop-booking-data-design.md` に整理済み
 - 追加テーブル作成 SQL は `sql/05_create_workshop_booking_tables.sql`
@@ -272,8 +277,9 @@
 
 ### 次に優先する実装候補
 1. `subpages/workshop-booking.html` と `subpages/workshop-booking-entry.html` の Draft、`docs/workshop-booking-data-design.md` を基に予約入力項目を確定する
-2. 予約入力項目に基づく `bookings` と追加テーブルの最終設計を確定する
-3. その後に `bookings / enquiries` の詳細管理画面着手
+2. 予約保存成功後の完了画面（thanks）と表示内容を確定する
+3. `workshop_sessions` 実データ連携で `session_id` / `plan_id` の保存を確定する
+4. その後に `bookings / enquiries` の詳細管理画面着手
 
 ### 変更時の必須チェック
 - 変更が公開側へ波及していないか確認する

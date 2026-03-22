@@ -43,6 +43,8 @@
         .confirm-note p, .confirm-note li { color: var(--color-muted); line-height: 1.7; }
         .confirm-success { display: none; margin-top: 18px; padding: 16px 18px; border-radius: 18px; background: rgba(37,103,86,.12); color: #1d5d4c; }
         .confirm-success.is-visible { display: block; }
+        .confirm-success.is-error { background: rgba(197,77,61,.12); color: #8d3023; }
+        .confirm-success a { color: inherit; text-decoration: underline; font-weight: 700; }
         @media (max-width: 980px) {
             .confirm-hero__grid, .confirm-main { grid-template-columns: 1fr; }
         }
@@ -63,7 +65,7 @@
                 <div>
                     <p class="section-kicker">Workshop Booking Confirm</p>
                     <h1 class="confirm-hero__title">送信前に、予約内容と申込情報を確認する</h1>
-                    <p class="confirm-hero__lead">STEP 3 の Draft です。選択した予約枠と入力内容をまとめて見直し、送信直前の確認体験を整えます。次段階で `bookings` 保存処理と完了画面へ接続します。</p>
+                    <p class="confirm-hero__lead">STEP 3 の確認画面です。選択した予約枠と入力内容を見直し、そのまま `bookings` へ保存します。</p>
                 </div>
                 <aside class="confirm-summary">
                     <div class="confirm-summary__row"><span>選択日</span><strong class="confirm-summary__value" id="confirm-summary-date">未選択</strong></div>
@@ -103,7 +105,7 @@
                             <p class="section-kicker">Confirmation</p>
                             <h2>予約内容の確認</h2>
                         </div>
-                        <p>ここで内容を確認してから、次段階で実送信へ接続します。</p>
+                        <p>内容に問題がなければ、この画面から予約データを保存します。</p>
                     </div>
 
                     <section class="confirm-section">
@@ -131,9 +133,9 @@
                     </section>
 
                     <div class="confirm-actions">
-                        <button class="button button--primary" type="button" id="confirm-submit">この内容で送信 Draft を表示する</button>
+                        <button class="button button--primary" type="button" id="confirm-submit">この内容で予約を送信する</button>
                         <a class="button button--secondary" href="./workshop-booking-entry.html" id="confirm-back-link">入力内容を修正する</a>
-                        <span class="confirm-actions__meta">このボタンはまだ Supabase 保存に接続していません。次段階で `bookings` 保存処理と完了画面へ繋ぎます。</span>
+                        <span class="confirm-actions__meta">送信時にログイン状態と入力値を確認し、`bookings` へ保存します。</span>
                     </div>
                     <div class="confirm-success" id="confirm-success"></div>
                 </section>
@@ -146,7 +148,7 @@
                     <ul>
                         <li>送信前に確認したい情報が過不足なく並んでいるか</li>
                         <li>戻る導線で入力内容を保ったまま修正できるか</li>
-                        <li>送信後に完了画面へ進むべきか、その場で結果表示するか</li>
+                        <li>保存後の完了画面導線は次段階で確定する</li>
                     </ul>
                 </aside>
             </div>
@@ -157,8 +159,14 @@
     <script src="../js/site-shell.js"></script>
     <script>
         (() => {
+            const siteConfig = window.INIM_SITE_CONFIG || {};
+            const supabaseApi = window.supabase || null;
+            const supabase = siteConfig.supabaseUrl && siteConfig.supabasePublishableKey && supabaseApi?.createClient
+                ? supabaseApi.createClient(siteConfig.supabaseUrl, siteConfig.supabasePublishableKey)
+                : null;
             const params = new URLSearchParams(window.location.search);
             const selected = {
+                dateKey: params.get("date_key") || "",
                 date: params.get("date") || "未選択",
                 label: params.get("label") || params.get("date") || "未選択",
                 gather: params.get("gather") || "未選択",
@@ -167,6 +175,10 @@
                 method: params.get("method") || "未選択",
                 note: params.get("note") || "",
                 plan: params.get("plan") || "未選択",
+                store: params.get("store") || "",
+                storeLabel: params.get("storeLabel") || "",
+                planId: params.get("plan_id") || "",
+                sessionId: params.get("session_id") || "",
                 contactName: params.get("contact_name") || "未入力",
                 contactEmail: params.get("contact_email") || "未入力",
                 contactPhone: params.get("contact_phone") || "未入力",
@@ -201,14 +213,166 @@
             }
 
             const success = document.getElementById("confirm-success");
-            document.getElementById("confirm-submit")?.addEventListener("click", () => {
-                success.innerHTML = `
-                    <strong>送信 Draft</strong>
-                    <p>${selected.contactName} 様 / ${selected.label} / ${selected.gather} 集合 / ${selected.partySize}名 の予約送信を想定した確認です。</p>
-                    <p>次段階では、このボタンを \`bookings\` 保存と完了画面へ接続します。</p>
-                `;
+            const submitButton = document.getElementById("confirm-submit");
+            const setResultMessage = (html, isError = false) => {
+                success.innerHTML = html;
+                success.classList.toggle("is-error", isError);
                 success.classList.add("is-visible");
                 success.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            };
+            const parsePriceJpy = (priceText) => {
+                const matched = String(priceText || "").replace(/,/g, "").match(/(\d+)/);
+                return matched ? Number(matched[1]) : null;
+            };
+            const toIsoDate = (selectedDateKey, selectedDateLabel) => {
+                if (/^\d{4}-\d{2}-\d{2}$/.test(selectedDateKey)) {
+                    return selectedDateKey;
+                }
+                const matched = String(selectedDateLabel || "").match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
+                if (!matched) {
+                    return "";
+                }
+                const [, year, month, day] = matched;
+                return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+            };
+            const toBookedAtIso = (isoDate, gatherTime) => {
+                if (!isoDate) {
+                    return new Date().toISOString();
+                }
+                const timeMatched = String(gatherTime || "").match(/(\d{1,2}):(\d{2})/);
+                const hh = timeMatched ? String(timeMatched[1]).padStart(2, "0") : "00";
+                const mm = timeMatched ? timeMatched[2] : "00";
+                return `${isoDate}T${hh}:${mm}:00+09:00`;
+            };
+            const resolveStoreLabel = () => {
+                if (selected.storeLabel) return selected.storeLabel;
+                const storeLabels = {
+                    asakusa: "浅草店",
+                    shibamata: "柴又店",
+                    solamachi: "ソラマチ店"
+                };
+                return storeLabels[selected.store] || "";
+            };
+            const resolveStoreId = async () => {
+                const storeLabel = resolveStoreLabel();
+                if (!storeLabel) {
+                    throw new Error("店舗情報が不足しています。予約画面からやり直してください。");
+                }
+                const { data, error } = await supabase
+                    .from("stores")
+                    .select("id, store_name")
+                    .ilike("store_name", `%${storeLabel.replace("店", "")}%`)
+                    .limit(1);
+                if (error) {
+                    throw error;
+                }
+                if (!data || data.length === 0) {
+                    throw new Error(`店舗マスタで「${storeLabel}」が見つかりません。`);
+                }
+                return data[0].id;
+            };
+            const resolveProfileId = async () => {
+                const { data: authData, error: authError } = await supabase.auth.getUser();
+                if (authError) {
+                    throw authError;
+                }
+                const userId = authData?.user?.id;
+                if (!userId) {
+                    throw new Error("予約送信にはログインが必要です。");
+                }
+                const { data: profile, error: profileError } = await supabase
+                    .from("user_profiles")
+                    .select("*")
+                    .eq("auth_user_id", userId)
+                    .maybeSingle();
+                if (profileError) {
+                    throw profileError;
+                }
+                if (!profile?.id) {
+                    throw new Error("ユーザープロフィールが見つかりません。管理者にお問い合わせください。");
+                }
+                if (profile.deleted_at) {
+                    throw new Error("このアカウントは利用停止中です。管理者にお問い合わせください。");
+                }
+                return profile.id;
+            };
+            const normaliseSpecialRequests = (value) => {
+                if (!value || value === "未入力") {
+                    return null;
+                }
+                return value;
+            };
+            const normalisePartySize = (value) => {
+                const partySize = Number(value);
+                if (!Number.isInteger(partySize) || partySize < 1) {
+                    throw new Error("参加人数の値が不正です。入力画面へ戻って修正してください。");
+                }
+                return partySize;
+            };
+            submitButton?.addEventListener("click", async () => {
+                if (!supabase) {
+                    setResultMessage("<strong>送信に失敗しました</strong><p>Supabase 設定を読み込めませんでした。ページを再読み込みしてください。</p>", true);
+                    return;
+                }
+                try {
+                    submitButton.disabled = true;
+                    submitButton.textContent = "送信中...";
+                    const partySize = normalisePartySize(selected.partySize);
+                    const quotedPriceJpy = parsePriceJpy(selected.price);
+                    const methodCode = selected.method.includes("リクエスト") ? "request" : "instant";
+                    const isoDate = toIsoDate(selected.dateKey, selected.label || selected.date);
+                    if (!isoDate) {
+                        throw new Error("日付情報が不足しています。日時選択からやり直してください。");
+                    }
+                    const customerProfileId = await resolveProfileId();
+                    const storeId = await resolveStoreId();
+                    const payload = {
+                        customer_profile_id: customerProfileId,
+                        store_id: storeId,
+                        booking_type: "workshop",
+                        booked_at: toBookedAtIso(isoDate, selected.gather),
+                        participant_count: partySize,
+                        status: methodCode === "request" ? "pending" : "confirmed",
+                        note: selected.note || null,
+                        session_id: selected.sessionId || null,
+                        plan_id: selected.planId || null,
+                        quoted_price_jpy: quotedPriceJpy,
+                        booking_method: methodCode,
+                        contact_name: selected.contactName === "未入力" ? null : selected.contactName,
+                        contact_email: selected.contactEmail === "未入力" ? null : selected.contactEmail,
+                        contact_phone: selected.contactPhone === "未入力" ? null : selected.contactPhone,
+                        party_size: partySize,
+                        special_requests: normaliseSpecialRequests(selected.specialRequests),
+                        internal_note: `public_booking_draft: ${selected.plan} / ${selected.label} / ${selected.gather}`,
+                        confirmed_at: methodCode === "instant" ? new Date().toISOString() : null
+                    };
+                    const { data, error } = await supabase
+                        .from("bookings")
+                        .insert(payload)
+                        .select("id, status")
+                        .single();
+                    if (error) {
+                        throw error;
+                    }
+                    setResultMessage(`
+                        <strong>予約を受け付けました</strong>
+                        <p>予約ID: ${data.id}</p>
+                        <p>${selected.contactName} 様 / ${selected.label} / ${selected.gather} 集合 / ${partySize}名 で保存しました。</p>
+                    `);
+                } catch (error) {
+                    const message = error?.message || "送信に失敗しました。時間をおいて再度お試しください。";
+                    const needsLogin = message.includes("ログインが必要");
+                    setResultMessage(`
+                        <strong>送信に失敗しました</strong>
+                        <p>${message}</p>
+                        ${needsLogin ? '<p><a href="./account.html#login">ログイン画面へ移動する</a></p>' : ""}
+                    `, true);
+                } finally {
+                    if (submitButton) {
+                        submitButton.disabled = false;
+                        submitButton.textContent = "この内容で予約を送信する";
+                    }
+                }
             });
         })();
     </script>

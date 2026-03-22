@@ -296,6 +296,7 @@
             const buildBookingHref = (current, slot) => {
                 const target = new URL("./workshop-booking-entry.html", window.location.href);
                 const payload = {
+                    date_key: selectedKey,
                     date: current.label,
                     label: current.label,
                     gather: slot.g,
