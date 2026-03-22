@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ワークショップ予約 | inim-dx</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="icon" href="../images/logo/logo-inim-dx.jpg">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         .booking-page { display: grid; gap: 40px; padding-bottom: 96px; }
@@ -37,13 +38,16 @@
         .booking-day__status, .booking-legend span { display: inline-flex; align-items: center; gap: 8px; }
         .booking-day__status { margin-top: 12px; font-size: .87rem; color: var(--color-main); }
         .booking-day__price { margin-top: 8px; font-size: .82rem; color: var(--color-muted); }
-        .booking-mark { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border: 1.5px solid currentColor; border-radius: 999px; font-size: .9rem; font-weight: 700; line-height: 1; }
+        .booking-mark { display: inline-flex; align-items: center; justify-content: center; width: 1.2em; height: 1.2em; border: 0; border-radius: 0; font-size: 1.15rem; font-weight: 700; line-height: 1; }
         .booking-mark[data-status="instant"] { color: #2a6cd6; }
-        .booking-mark[data-status="request"] { color: #8e6a20; border-radius: 4px; }
+        .booking-mark[data-status="request"] { color: #8e6a20; }
         .booking-mark[data-status="few"] { color: #d98b13; }
         .booking-mark[data-status="full"] { color: #a34431; }
-        .booking-mark[data-status="closed"] { color: #968f83; border-color: transparent; }
+        .booking-mark[data-status="closed"] { color: #968f83; }
         .booking-legend { display: flex; flex-wrap: wrap; gap: 14px 18px; margin-top: 18px; color: var(--color-muted); font-size: .88rem; }
+        .booking-selection-bar { display: flex; justify-content: space-between; gap: 16px; align-items: center; margin-top: 18px; padding: 14px 16px; border: 1px solid rgba(217,210,198,.95); border-radius: 18px; background: #fffdfa; }
+        .booking-selection-bar strong { font-size: 1rem; }
+        .booking-selection-bar p { color: var(--color-muted); font-size: .9rem; }
         .booking-slots { display: grid; grid-template-columns: 1.2fr .8fr; gap: 24px; }
         .booking-selected { padding: 20px; border: 1px solid rgba(217,210,198,.95); border-radius: 20px; background: #fffdfa; }
         .booking-selected__status { margin-top: 10px; color: var(--color-muted); font-size: .92rem; }
@@ -118,11 +122,18 @@
                     <span><i class="booking-mark" data-status="full">×</i> 空き無し</span>
                     <span><i class="booking-mark" data-status="closed">-</i> 開催無し</span>
                 </div>
+                <div class="booking-selection-bar">
+                    <div>
+                        <strong id="booking-selection-label">選択中: 2026年4月5日(日)</strong>
+                        <p id="booking-selection-meta">下の時間帯一覧に、対象日の集合時間と料金を表示しています。</p>
+                    </div>
+                    <a class="button button--secondary" href="#booking-slots-panel">時間帯を確認する</a>
+                </div>
             </section>
         </section>
 
         <section class="booking-wrap">
-            <section class="booking-panel">
+            <section class="booking-panel" id="booking-slots-panel">
                 <div class="booking-panel__head">
                     <div><p class="section-kicker">Selected Date</p><h2>日時の確認と予約</h2></div>
                     <p>○ / □ / △ の日を選ぶと、下部に集合時間、料金、予約導線を表示します。</p>
@@ -210,14 +221,22 @@
             const selectedTitle = document.getElementById("booking-selected-title");
             const selectedStatus = document.getElementById("booking-selected-status");
             const slotList = document.getElementById("booking-slot-list");
+            const selectionLabel = document.getElementById("booking-selection-label");
+            const selectionMeta = document.getElementById("booking-selection-meta");
+            const slotsPanel = document.getElementById("booking-slots-panel");
             const months = [
                 { label: "2026年3月", cells: [null, null, null, null, null, null, { d: 1, s: "closed" }, { d: 2, s: "closed" }, { d: 3, s: "closed" }, { d: 4, s: "closed" }, { d: 5, s: "closed" }, { d: 6, s: "closed" }, { d: 7, s: "closed" }, { d: 8, s: "closed" }, { d: 9, s: "closed" }, { d: 10, s: "closed" }, { d: 11, s: "closed" }, { d: 12, s: "closed" }, { d: 13, s: "closed" }, { d: 14, s: "closed" }, { d: 15, s: "closed" }, { d: 16, s: "closed" }, { d: 17, s: "closed" }, { d: 18, s: "closed" }, { d: 19, s: "closed" }, { d: 20, s: "closed" }, { d: 21, s: "closed" }, { d: 22, s: "closed" }, { d: 23, s: "closed" }, { d: 24, s: "closed" }, { d: 25, s: "closed" }, { d: 26, s: "closed" }, { d: 27, s: "closed" }, { d: 28, s: "request", p: "5,500円", k: "2026-03-28" }, { d: 29, s: "instant", p: "5,500円", k: "2026-03-29" }, { d: 30, s: "closed" }, { d: 31, s: "closed" }, null, null, null] },
                 { label: "2026年4月", cells: [null, null, null, { d: 1, s: "closed" }, { d: 2, s: "closed" }, { d: 3, s: "closed" }, { d: 4, s: "instant", p: "5,500円", k: "2026-04-04" }, { d: 5, s: "instant", p: "5,500円", k: "2026-04-05" }, { d: 6, s: "closed" }, { d: 7, s: "closed" }, { d: 8, s: "closed" }, { d: 9, s: "closed" }, { d: 10, s: "closed" }, { d: 11, s: "instant", p: "5,500円", k: "2026-04-11" }, { d: 12, s: "instant", p: "5,500円", k: "2026-04-12" }, { d: 13, s: "closed" }, { d: 14, s: "closed" }, { d: 15, s: "closed" }, { d: 16, s: "closed" }, { d: 17, s: "closed" }, { d: 18, s: "full" }, { d: 19, s: "full" }, { d: 20, s: "closed" }, { d: 21, s: "closed" }, { d: 22, s: "closed" }, { d: 23, s: "closed" }, { d: 24, s: "closed" }, { d: 25, s: "few", p: "5,500円", k: "2026-04-25" }, { d: 26, s: "instant", p: "5,500円", k: "2026-04-26" }, { d: 27, s: "closed" }, { d: 28, s: "closed" }, { d: 29, s: "request", p: "5,500円", k: "2026-04-29" }, { d: 30, s: "closed" }, null, null] }
             ];
             const schedule = {
+                "2026-03-28": { label: "2026年3月28日(土)", status: "リクエスト予約可。浅草店開催 / 回答は翌営業日です。", slots: [{ g: "10:20", e: "10:30〜11:30", p: "おひとりさま 5,500円", n: "24時間以内に回答予定" }, { g: "13:20", e: "13:30〜14:30", p: "おひとりさま 5,500円", n: "24時間以内に回答予定" }] },
+                "2026-03-29": { label: "2026年3月29日(日)", status: "即時予約可。浅草店開催 / 料金 5,500円〜", slots: [{ g: "10:50", e: "11:00〜12:00", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "14:50", e: "15:00〜16:00", p: "おひとりさま 5,500円", n: "即時確定" }] },
                 "2026-04-05": { label: "2026年4月5日(日)", status: "即時予約可。浅草店開催 / 料金 5,500円〜", slots: [{ g: "10:50", e: "11:00〜12:00", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "12:50", e: "13:00〜14:00", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "14:50", e: "15:00〜16:00", p: "おひとりさま 5,500円", n: "即時確定" }] },
                 "2026-04-04": { label: "2026年4月4日(土)", status: "即時予約可。浅草店開催 / 料金 5,500円〜", slots: [{ g: "10:20", e: "10:30〜11:30", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "12:20", e: "12:30〜13:30", p: "おひとりさま 5,500円", n: "即時確定" }] },
+                "2026-04-11": { label: "2026年4月11日(土)", status: "即時予約可。柴又店開催 / 料金 5,500円〜", slots: [{ g: "10:20", e: "10:30〜11:30", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "13:20", e: "13:30〜14:30", p: "おひとりさま 5,500円", n: "即時確定" }] },
+                "2026-04-12": { label: "2026年4月12日(日)", status: "即時予約可。ソラマチ店開催 / 料金 5,500円〜", slots: [{ g: "11:20", e: "11:30〜12:30", p: "おひとりさま 5,500円", n: "即時確定" }] },
                 "2026-04-25": { label: "2026年4月25日(土)", status: "残席わずか。浅草店開催 / 料金 5,500円〜", slots: [{ g: "10:50", e: "11:00〜12:00", p: "おひとりさま 5,500円", n: "残席 2" }, { g: "14:50", e: "15:00〜16:00", p: "おひとりさま 5,500円", n: "残席 1" }] },
+                "2026-04-26": { label: "2026年4月26日(日)", status: "即時予約可。浅草店開催 / 料金 5,500円〜", slots: [{ g: "12:20", e: "12:30〜13:30", p: "おひとりさま 5,500円", n: "即時確定" }] },
                 "2026-04-29": { label: "2026年4月29日(水・祝)", status: "リクエスト予約可。スタッフ確認後にご連絡します。", slots: [{ g: "10:20", e: "10:30〜11:30", p: "おひとりさま 5,500円", n: "24時間以内に回答予定" }, { g: "13:20", e: "13:30〜14:30", p: "おひとりさま 5,500円", n: "24時間以内に回答予定" }] }
             };
             const marks = { instant: ["○", "即時予約可"], request: ["□", "リクエスト予約可"], few: ["△", "残席数少ない"], full: ["×", "空き無し"], closed: ["-", "開催無し"] };
@@ -227,11 +246,13 @@
                 const current = schedule[selectedKey];
                 selectedTitle.textContent = current?.label || "予約可能日を選択してください";
                 selectedStatus.textContent = current?.status || "○ / □ / △ の日を選ぶと、時間帯を表示します。";
+                selectionLabel.textContent = current ? `選択中: ${current.label}` : "選択中の日付はありません";
+                selectionMeta.textContent = current ? "下の時間帯一覧に、対象日の集合時間と料金を表示しています。" : "予約可能日を選ぶと、下部に時間帯を表示します。";
                 slotList.innerHTML = (current?.slots || []).map((slot) => `<article class="booking-slot"><div><strong>${current.label}</strong><div class="booking-slot__time"><span>集合 ${slot.g}</span><span>体験 ${slot.e}</span></div><p class="booking-slot__price">${slot.p}</p></div><div class="booking-slot__actions"><span class="booking-slot__note">${slot.n}</span><a class="button button--primary booking-slot__button" href="../index.html#contact">予約へ進む</a></div></article>`).join("");
             };
             const renderCalendar = () => {
                 calendarHost.innerHTML = months.map((month) => `<section class="booking-month"><div class="booking-month__header"><h3>${month.label}</h3><span>土日祝を中心に開催</span></div><table><thead><tr>${days.map((d) => `<th>${d}</th>`).join("")}</tr></thead><tbody>${Array.from({ length: Math.ceil(month.cells.length / 7) }, (_, i) => `<tr>${month.cells.slice(i * 7, i * 7 + 7).map((cell) => { if (!cell) return '<td class="is-outside"></td>'; const [mark, label] = marks[cell.s]; const selectable = ["instant", "request", "few"].includes(cell.s); return `<td><button class="booking-day${selectable ? ' is-selectable' : ''}${cell.k === selectedKey ? ' is-selected' : ''}" type="button" ${cell.k ? `data-date-key="${cell.k}"` : ''} ${!selectable ? 'disabled' : ''}><span class="booking-day__date">${cell.d}</span><span class="booking-day__status"><i class="booking-mark" data-status="${cell.s}">${mark}</i><span>${label}</span></span>${cell.p ? `<div class="booking-day__price">${cell.p}</div>` : ''}</button></td>`; }).join("")}</tr>`).join("")}</tbody></table></section>`).join("");
-                calendarHost.querySelectorAll("[data-date-key]").forEach((button) => button.addEventListener("click", () => { selectedKey = button.dataset.dateKey; renderCalendar(); renderSlots(); }));
+                calendarHost.querySelectorAll("[data-date-key]").forEach((button) => button.addEventListener("click", () => { selectedKey = button.dataset.dateKey; renderCalendar(); renderSlots(); slotsPanel?.scrollIntoView({ behavior: "smooth", block: "start" }); }));
             };
             document.querySelectorAll(".booking-tab").forEach((button) => {
                 button.addEventListener("click", () => {

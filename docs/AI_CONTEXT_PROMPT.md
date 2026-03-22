@@ -32,6 +32,8 @@
   - `references/design/06-design-guide.html`
 - DB 設計の正本:
   - `C:\Users\maxsh\OneDrive\Documents\EDIX\src\portfolio\docs\08-db-design.html`
+- Workshop 予約データ設計の補助資料:
+  - `docs/workshop-booking-data-design.md`
 - 進捗管理:
   - `docs/PROJECT_STATUS.md`
   - `docs/admin-implementation-status.md`
@@ -126,6 +128,8 @@
 - 2026-03-22 時点で、Workshop 専用予約画面 [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html) の Draft を追加済み
 - `workshop.html` の `予約フォームへ進む` は `./workshop-booking.html` を向く
 - 予約ページ Draft は、カレンダー、日別スロット表示、詳細4タブで構成
+- 2026-03-22 の改修で、カレンダー記号は記号のみ表示へ調整し、選択中の日付をカレンダー直下にも表示するようにした
+- 予約データ設計案は `docs/workshop-booking-data-design.md` に整理済み
 - `デジタル調香を試す` への導線も併設されているため、予約前体験との関係整理が必要
 
 ### DB 設計に基づく重要テーブル
@@ -223,6 +227,7 @@
 - 2026-03-21 の実画面確認で、`journey_steps` の各バリデーションは正常動作し、正常値保存も成功、Console エラーなしを確認済みです。
 - 2026-03-22 の現状把握で、`workshop.html#reserve` は存在するが、予約 CTA はまだ `../index.html#contact` に接続されていることを確認済みです。
 - その後、`subpages/workshop-booking.html` の Draft を追加し、空き状況カレンダー、選択日の時間帯表示、`予約へ進む` ボタン、詳細4タブまで実装しました。
+- さらに、Workshop 予約の推奨テーブルとして `workshop_plans`, `workshop_plan_inclusions`, `workshop_plan_flow_steps`, `workshop_sessions` を `docs/workshop-booking-data-design.md` に整理しました。
 - したがって、次はこの Draft を基に公開側予約画面の必要入力項目を固め、その後に `bookings / enquiries` 管理画面の詳細化へ進むべき状態です。
 
 ### 直近の再開手順
@@ -232,19 +237,20 @@
 4. [`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) の `#reserve` セクションを確認する
 5. `予約フォームへ進む` が `./workshop-booking.html` を向いていることを確認する
 6. [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html) の Draft UI を確認する
-7. 予約画面で必要になる入力項目を整理する
-8. 必要なら `bookings / enquiries` の追加項目を検討する
-9. GitHub Pages 上で以下 URL を直接開けるか確認する
+7. `docs/workshop-booking-data-design.md` を確認する
+8. 予約画面で必要になる入力項目を整理する
+9. 必要なら `bookings / enquiries` の追加項目を検討する
+10. GitHub Pages 上で以下 URL を直接開けるか確認する
    - `https://maxedix20251005.github.io/inim-dx/app/pages/home.html`
    - `https://maxedix20251005.github.io/inim-dx/app/pages/journey.html`
    - `https://maxedix20251005.github.io/inim-dx/app/users/me.html`
-10. ダッシュボードで `Recent Bookings` と `Recent Enquiries` が表示されるか確認する
-11. `app/publish.html` でも同じ一覧が表示されるか確認する
-12. サイドバー下部の `Admin build` が `20260322a` であることを確認する
+11. ダッシュボードで `Recent Bookings` と `Recent Enquiries` が表示されるか確認する
+12. `app/publish.html` でも同じ一覧が表示されるか確認する
+13. サイドバー下部の `Admin build` が `20260322a` であることを確認する
 
 ### 次に優先する実装候補
-1. `subpages/workshop-booking.html` Draft を基に予約入力項目を確定する
-2. 予約入力項目に基づく `bookings / enquiries` の必要項目見直し
+1. `subpages/workshop-booking.html` Draft と `docs/workshop-booking-data-design.md` を基に予約入力項目を確定する
+2. 予約入力項目に基づく `bookings` と追加テーブルの最終設計を確定する
 3. その後に `bookings / enquiries` の詳細管理画面着手
 
 ### 変更時の必須チェック

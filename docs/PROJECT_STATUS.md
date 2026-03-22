@@ -13,6 +13,8 @@
   - `references/design/11-admin-mockup-standalone.html`
 - DB 設計の正本:
   - `C:\Users\maxsh\OneDrive\Documents\EDIX\src\portfolio\docs\08-db-design.html`
+- Workshop 予約データ設計の補助資料:
+  - `docs/workshop-booking-data-design.md`
 - Issue 管理:
   - `docs/ISSUE_LIST.md`
 
@@ -166,14 +168,16 @@
 - 2026-03-22 時点では、`予約フォームへ進む` ボタンは [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html) を参照するよう更新しました。
 - 同セクションには `デジタル調香を試す` への導線もあり、予約前体験との関係整理が必要です。
 - 予約ページ Draft では、上部カレンダーで空き状況を `○ / □ / △ / × / -` で表示し、予約可能日を選ぶと下部に時間帯、集合時間、料金、`予約へ進む` ボタンが表示される構成を作成しました。
+- 2026-03-22 の改修で、カレンダー記号は枠線付きではなく記号のみの表示へ調整し、選択中の日付をカレンダー直下にも表示するようにしました。
 - 予約ページ下部には、`プラン情報`、`体験の流れ`、`集合場所・体験場所`、`注意事項・その他` の4タブも Draft 実装しています。
+- Workshop 予約のデータ設計案は [`docs/workshop-booking-data-design.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/workshop-booking-data-design.md) に整理しました。推奨テーブルは `workshop_plans`, `workshop_plan_inclusions`, `workshop_plan_flow_steps`, `workshop_sessions` です。
 - したがって、次は `bookings / enquiries` の管理画面詳細化ではなく、この公開側予約画面で必要項目を先に確定するのが適切です。
 
 ### 次に優先して進める作業
 1. `PROJECT_STATUS.md` を起点に運用継続する
 2. `AI_CONTEXT_PROMPT.md` を復元用コンテキストとして都度更新運用する
 3. [`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) `#reserve` 起点の予約導線を整理する
-4. [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html) Draft を基に、予約画面で必要な入力項目を洗い出し、`bookings / enquiries` の追加項目有無を判断する
+4. [`docs/workshop-booking-data-design.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/workshop-booking-data-design.md) を叩き台に、予約画面で必要な入力項目と追加テーブルを確定する
 5. その後に `app/` 側の `bookings / enquiries` 管理画面詳細化へ進む
 
 ### 再開時の確認手順
