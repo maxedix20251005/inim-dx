@@ -774,7 +774,7 @@
                 <p class="workshop-hero__lead">
                     季節の香材やブランドの代表ノートを試しながら、自分の感覚で香りを組み立てる店頭ワークショップです。完成した香りは、その場の体験だけで終わらず、日常に持ち帰れる一本として仕上げます。</p>
                 <div class="experience-banner__actions">
-                    <a class="button button--primary" href="#reserve">予約する</a>
+                    <a class="button button--primary" href="./workshop-booking.html" data-booking-link="true">予約する</a>
                     <a class="button button--secondary" href="#program">プランを見る</a>
                     <a class="button button--secondary" href="./smart-scent-design.html">先にデジタル調香を試す</a>
                 </div>
@@ -801,7 +801,7 @@
                     <a href="#flow">流れを見る</a>
                     <a href="#program">プランを選ぶ</a>
                     <a href="#faq">不安を解消する</a>
-                    <a href="#reserve">予約する</a>
+                    <a href="./workshop-booking.html" data-booking-link="true">予約する</a>
                 </nav>
             </div>
             <div class="experience-banner__visual">
@@ -917,7 +917,7 @@
                             <li>Smart Scent Design との接続にも向く</li>
                         </ul>
                         <div class="workshop-program-card__actions">
-                            <a class="button button--primary" href="../index.html#contact">このプランで予約する</a>
+                            <a class="button button--primary" href="./workshop-booking.html" data-booking-link="true">このプランで予約する</a>
                         </div>
                     </div>
                     <img src="../images/Workshop/Workshop_ (9-1).png" alt="短時間で調香の方向性を探るトライアルプラン">
@@ -942,7 +942,7 @@
                             <li>最も標準的で選びやすい中心プラン</li>
                         </ul>
                         <div class="workshop-program-card__actions">
-                            <a class="button button--primary" href="../index.html#contact">一番人気で予約する</a>
+                            <a class="button button--primary" href="./workshop-booking.html" data-booking-link="true">一番人気で予約する</a>
                         </div>
                     </div>
                 </article>
@@ -963,7 +963,7 @@
                             <li>記念撮影や会話体験との相性が高い</li>
                         </ul>
                         <div class="workshop-program-card__actions">
-                            <a class="button button--primary" href="../index.html#contact">ペア体験を予約する</a>
+                            <a class="button button--primary" href="./workshop-booking.html" data-booking-link="true">ペア体験を予約する</a>
                         </div>
                     </div>
                     <img src="../images/Workshop/Workshop_ (7).png" alt="二人で記念に香りを作るギフトプラン">
@@ -1048,7 +1048,7 @@
                 </p>
             </div>
             <div class="workshop-reserve__actions">
-                <a class="button button--primary" href="./workshop-booking.html">予約フォームへ進む</a>
+                <a class="button button--primary" href="./workshop-booking.html" data-booking-link="true">予約フォームへ進む</a>
                 <!-- <a class="button button--secondary" href="#program">もう一度プランを見る</a> -->
                 <a class="button button--secondary" href="./smart-scent-design.html">デジタル調香を試す</a>
             </div>
@@ -1062,8 +1062,20 @@
             const mapFrame = document.getElementById("workshop-store-map");
             const mapChips = Array.from(document.querySelectorAll(".workshop-map-chip"));
             const storeCards = Array.from(document.querySelectorAll(".workshop-store-card"));
+            const bookingLinks = Array.from(document.querySelectorAll('[data-booking-link="true"]'));
             if (!mapFrame || mapChips.length === 0) return;
 
+            const syncBookingLinks = (chip) => {
+                const store = chip.dataset.mapTarget;
+                const label = chip.dataset.mapLabel;
+                if (!store || !label) return;
+                bookingLinks.forEach((link) => {
+                    const target = new URL(link.getAttribute("href"), window.location.href);
+                    target.searchParams.set("store", store);
+                    target.searchParams.set("storeLabel", label);
+                    link.href = target.toString();
+                });
+            };
             const setActiveMap = (chip) => {
                 const query = chip.dataset.mapQuery;
                 const label = chip.dataset.mapLabel;
@@ -1080,6 +1092,8 @@
                 storeCards.forEach((card) => {
                     card.classList.toggle("is-active", card.dataset.storeCard === target);
                 });
+
+                syncBookingLinks(chip);
             };
 
             mapChips.forEach((chip) => {
@@ -1087,6 +1101,11 @@
                     setActiveMap(chip);
                 });
             });
+
+            const initialChip = mapChips.find((chip) => chip.classList.contains("is-active")) || mapChips[0];
+            if (initialChip) {
+                syncBookingLinks(initialChip);
+            }
         })();
     </script>
 </body>

@@ -131,10 +131,26 @@
 - `workshop.html` の `予約フォームへ進む` は `./workshop-booking.html` を向く
 - 予約ページ Draft は、カレンダー、日別スロット表示、詳細4タブで構成
 - 2026-03-22 の改修で、カレンダー記号は記号のみ表示へ調整し、選択中の日付をカレンダー直下にも表示するようにした
+- 2026-03-22 の追加入力で、[`subpages/workshop-booking-entry.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking-entry.html) を追加し、`予約へ進む` から日時・料金・予約方式を引き継いで入力 Draft に遷移できる
+- 2026-03-22 の調整で、予約入力 Draft の submit は入力 validity とポリシー同意が揃うまで disabled にし、`参加人数` の縦位置を `電話番号` と揃えた
+- `file://` 直開きでのクエリ付き遷移警告に備え、予約入力画面への遷移 URL は `new URL()` で組み立てる方式へ変更した
+- 2026-03-22 の確認結果を受けて、予約入力 Draft の STEP 表示は `STEP 1 = 完了済み`, `STEP 2 = 処理中で強調`, `STEP 3 = 次段階` の見せ方へ調整した
+- 2026-03-22 の追加実装で、STEP 3 用の確認画面 Draft `subpages/workshop-booking-confirm.html` を追加し、STEP 2 の入力値と選択枠を引き継いで確認できる
+- 2026-03-22 の追加調整で、確認画面から STEP 2 に戻った際も、入力済みの代表者情報と人数を保持して再編集できる
+- 2026-03-22 の追加実装で、STEP 2 の入力 validity check として `contact_name` 必須、`contact_email` 必須 + 形式、`contact_phone` 必須 + 電話番号形式、`party_size` 1〜4名必須選択を実装した
+- 2026-03-22 の追加調整で、STEP 2 の必須ラベルには赤 `*` を付与し、blur 時に各フィールド下へエラー表示を出すようにした。電話番号は固定電話 / 携帯電話・IP 電話を判定して桁数を確認し、入力中に `-` を自動整形するようにした
+- 2026-03-22 の追加調整で、電話番号の局番判定を詳細化し、`03 / 06`、主要な 3 桁市外局番、その他固定電話、`050 / 070 / 080 / 090`、`0120`、`0800`、`0570` を認識して `-` パターンと桁数を出し分けるようにした
+- `app/` 配下も確認したが、現時点では電話番号入力フィールド自体が存在しないため、同ロジックの適用対象はまだない。今後 `app` 側に電話番号入力を追加する際は、同等の validity と整形を適用する前提とする
+- 2026-03-22 の導線整理で、`workshop.html` の `予約する` と 3 コースの各予約ボタンは、いったんすべて `./workshop-booking.html` へ統一した
+- 同日の追加調整で、`行き先を選ぶ` で選択した店舗を `store` クエリとして `workshop-booking.html` へ引き継ぎ、予約画面側でも選択状態を維持するようにした
+- DB 追加は不要だった。`workshop_sessions.store_id` と既存 `bookings.store_id` がすでに存在するため、SQL `07_` は未作成
+- Reminder: `workshop_plans` / `workshop_sessions` 確定後に、予約画面で各プランをどう見せるか、各コースボタンから何を初期反映するかを再設計する
 - 予約データ設計案は `docs/workshop-booking-data-design.md` に整理済み
 - 追加テーブル作成 SQL は `sql/05_create_workshop_booking_tables.sql`
 - 検証 SQL は `sql/06_verify_workshop_booking_tables.sql`
 - 実行手順は `docs/workshop-booking-sql-runbook.md`
+- 2026-03-22 の実確認で、カレンダー記号は良好、SQL ファイル構成は良好、Runbook も良好だった
+- 同日の検証で、追加テーブル、`bookings` 追加列、関連 index の存在確認まで完了している
 - `デジタル調香を試す` への導線も併設されているため、予約前体験との関係整理が必要
 
 ### DB 設計に基づく重要テーブル
@@ -255,7 +271,7 @@
 14. サイドバー下部の `Admin build` が `20260322a` であることを確認する
 
 ### 次に優先する実装候補
-1. `subpages/workshop-booking.html` Draft と `docs/workshop-booking-data-design.md` を基に予約入力項目を確定する
+1. `subpages/workshop-booking.html` と `subpages/workshop-booking-entry.html` の Draft、`docs/workshop-booking-data-design.md` を基に予約入力項目を確定する
 2. 予約入力項目に基づく `bookings` と追加テーブルの最終設計を確定する
 3. その後に `bookings / enquiries` の詳細管理画面着手
 

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ワークショップ予約入力 | inim-dx</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="icon" href="../images/logo/logo-inim-dx.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .entry-page { display: grid; gap: 36px; padding-bottom: 96px; }
+        .entry-wrap { width: min(1120px, calc(100% - 48px)); margin: 0 auto; }
+        .entry-hero { padding: 68px 0 42px; background: linear-gradient(135deg, rgba(247,242,233,.96), rgba(255,255,255,.92)), radial-gradient(circle at top right, rgba(178,69,49,.16), rgba(178,69,49,0)); }
+        .entry-hero__grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 24px; align-items: end; }
+        .entry-hero__title { font-size: clamp(2.3rem, 4.4vw, 3.8rem); line-height: 1.15; letter-spacing: .04em; }
+        .entry-hero__lead { margin-top: 14px; color: var(--color-muted); max-width: 44rem; }
+        .entry-steps, .entry-panel, .entry-summary, .entry-note { border: 1px solid rgba(207,201,188,.9); border-radius: 24px; background: rgba(255,255,255,.9); box-shadow: 0 18px 42px rgba(61,45,30,.08); }
+        .entry-steps { padding: 18px 22px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+        .entry-step { padding: 14px 16px; border-radius: 18px; background: #f8f2e9; color: var(--color-muted); border: 1px solid transparent; }
+        .entry-step strong { display: block; color: var(--color-main); font-size: 1rem; }
+        .entry-step.is-done { background: #f4efe6; color: #8e8678; }
+        .entry-step.is-done .section-kicker,
+        .entry-step.is-done strong,
+        .entry-step.is-done p { color: #8e8678; }
+        .entry-step.is-current { background: linear-gradient(135deg, rgba(178,69,49,.16), rgba(255,255,255,.96)); border: 1px solid rgba(178,69,49,.34); color: var(--color-accent); box-shadow: 0 16px 30px rgba(178,69,49,.12); }
+        .entry-step.is-current strong { color: #23180f; }
+        .entry-step.is-current p { color: var(--color-accent); }
+        .entry-main { display: grid; grid-template-columns: 1.15fr .85fr; gap: 24px; }
+        .entry-panel { padding: 26px; }
+        .entry-panel__head { display: flex; justify-content: space-between; gap: 18px; align-items: baseline; margin-bottom: 18px; }
+        .entry-panel__head p { color: var(--color-muted); }
+        .entry-summary { padding: 22px 24px; display: grid; gap: 12px; }
+        .entry-summary__grid { display: grid; gap: 10px; }
+        .entry-summary__row { display: flex; justify-content: space-between; gap: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(221,214,201,.8); }
+        .entry-summary__row:last-child { padding-bottom: 0; border-bottom: 0; }
+        .entry-summary__value { text-align: right; font-weight: 700; }
+        .entry-form { display: grid; gap: 18px; }
+        .entry-form__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+        .entry-form label { display: grid; gap: 8px; align-content: start; font-weight: 700; }
+        .entry-label { display: inline-flex; align-items: center; gap: 6px; }
+        .entry-label__required { color: #c54d3d; font-weight: 700; }
+        .entry-form .field-note { color: var(--color-muted); font-size: .84rem; font-weight: 400; line-height: 1.6; }
+        .entry-form input, .entry-form select, .entry-form textarea { width: 100%; min-height: 54px; padding: 12px 16px; border: 1px solid rgba(205,196,182,.95); border-radius: 16px; background: #fffdfa; font: inherit; }
+        .entry-form input.is-invalid, .entry-form select.is-invalid, .entry-form textarea.is-invalid { border-color: rgba(197,77,61,.9); box-shadow: 0 0 0 3px rgba(197,77,61,.12); }
+        .entry-form textarea { min-height: 140px; resize: vertical; }
+        .entry-field-error { display: none; color: #c54d3d; font-size: .84rem; font-weight: 400; line-height: 1.5; }
+        .entry-field-error.is-visible { display: block; }
+        .entry-form__full { grid-column: 1 / -1; }
+        .entry-check { display: flex; gap: 10px; align-items: flex-start; color: var(--color-muted); font-weight: 400; }
+        .entry-check input { width: 18px; min-height: 18px; margin-top: 3px; padding: 0; }
+        .entry-actions { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+        .entry-actions__meta { color: var(--color-muted); font-size: .9rem; }
+        .entry-actions .button[disabled] { opacity: .45; cursor: not-allowed; pointer-events: none; }
+        .entry-note { padding: 18px 20px; display: grid; gap: 10px; }
+        .entry-note p, .entry-note li { color: var(--color-muted); line-height: 1.7; }
+        .entry-success { display: none; margin-top: 18px; padding: 16px 18px; border-radius: 18px; background: rgba(37,103,86,.12); color: #1d5d4c; }
+        .entry-success.is-visible { display: block; }
+        @media (max-width: 980px) {
+            .entry-hero__grid, .entry-main { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 720px) {
+            .entry-wrap { width: min(100% - 28px, 100%); }
+            .entry-steps, .entry-form__grid { grid-template-columns: 1fr; }
+            .entry-panel { padding: 20px; }
+            .entry-summary__row { flex-direction: column; }
+            .entry-summary__value { text-align: left; }
+        }
+    </style>
+</head>
+
+<body data-root=".." data-page-key="workshopBookingEntry">
+    <main id="page-main" class="entry-page">
+        <section class="entry-hero">
+            <div class="entry-wrap entry-hero__grid">
+                <div>
+                    <p class="section-kicker">Workshop Booking Entry</p>
+                    <h1 class="entry-hero__title">選んだ枠を確認しながら、申込情報を入力する</h1>
+                    <p class="entry-hero__lead">Draft 版の予約入力画面です。選択した日時と予約方式を上段で確認しながら、代表者情報と人数を入力できます。次段階では確認画面へ渡し、その後に `bookings` 保存処理へ接続します。</p>
+                </div>
+                <aside class="entry-summary">
+                    <div class="entry-summary__grid">
+                        <div class="entry-summary__row"><span>選択日</span><strong class="entry-summary__value" id="entry-summary-date">未選択</strong></div>
+                        <div class="entry-summary__row"><span>集合時間</span><strong class="entry-summary__value" id="entry-summary-gather">未選択</strong></div>
+                        <div class="entry-summary__row"><span>体験時間</span><strong class="entry-summary__value" id="entry-summary-experience">未選択</strong></div>
+                        <div class="entry-summary__row"><span>料金</span><strong class="entry-summary__value" id="entry-summary-price">未選択</strong></div>
+                        <div class="entry-summary__row"><span>予約方式</span><strong class="entry-summary__value" id="entry-summary-method">未選択</strong></div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="entry-wrap">
+            <div class="entry-steps">
+                <div class="entry-step is-done">
+                    <span class="section-kicker">STEP 1</span>
+                    <strong>日付と時間帯を選ぶ</strong>
+                    <p>空き状況カレンダーで予約枠を選択します。</p>
+                </div>
+                <div class="entry-step is-current">
+                    <span class="section-kicker">STEP 2</span>
+                    <strong>申込情報を入力する</strong>
+                    <p>代表者情報、人数、要望を入力します。</p>
+                </div>
+                <div class="entry-step">
+                    <span class="section-kicker">STEP 3</span>
+                    <strong>確認して送信する</strong>
+                    <p>確認画面で内容を見直してから送信します。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="entry-wrap">
+            <div class="entry-main">
+                <section class="entry-panel">
+                    <div class="entry-panel__head">
+                        <div>
+                            <p class="section-kicker">Booking Form</p>
+                            <h2>予約入力 Draft</h2>
+                        </div>
+                        <p>ここで確定した項目を、次に確認画面へ渡します。</p>
+                    </div>
+                    <form class="entry-form" id="booking-entry-form">
+                        <div class="entry-form__grid">
+                            <label>
+                                <span class="entry-label">代表者名<span class="entry-label__required" aria-hidden="true">*</span></span>
+                                <input type="text" name="contact_name" maxlength="120" required placeholder="例: 山田 花子">
+                                <span class="entry-field-error" data-error-for="contact_name"></span>
+                            </label>
+                            <label>
+                                <span class="entry-label">メールアドレス<span class="entry-label__required" aria-hidden="true">*</span></span>
+                                <input type="email" name="contact_email" maxlength="255" required inputmode="email" placeholder="example@email.com">
+                                <span class="entry-field-error" data-error-for="contact_email"></span>
+                            </label>
+                            <label>
+                                <span class="entry-label">電話番号<span class="entry-label__required" aria-hidden="true">*</span></span>
+                                <input type="tel" name="contact_phone" maxlength="40" required inputmode="tel" placeholder="090-1234-5678">
+                                <span class="field-note">ハイフンあり、または数字のみで入力してください。</span>
+                                <span class="entry-field-error" data-error-for="contact_phone"></span>
+                            </label>
+                            <label>
+                                <span class="entry-label">参加人数<span class="entry-label__required" aria-hidden="true">*</span></span>
+                                <select name="party_size" required>
+                                    <option value="">選択してください</option>
+                                    <option value="1">1名</option>
+                                    <option value="2">2名</option>
+                                    <option value="3">3名</option>
+                                    <option value="4">4名</option>
+                                </select>
+                                <span class="entry-field-error" data-error-for="party_size"></span>
+                            </label>
+                            <label class="entry-form__full">
+                                ご要望・配慮事項
+                                <textarea name="special_requests" placeholder="香りの好み、アレルギー配慮、同伴者情報などがあればご記入ください。"></textarea>
+                            </label>
+                            <label class="entry-form__full">
+                                <span>内部確認用メモ Draft</span>
+                                <input type="text" name="draft_note" value="この項目は公開画面では送信せず、最終実装時に内部メモと分離予定です。" readonly>
+                                <span class="field-note">現時点では、公開入力項目と管理用項目の境界を確認するために表示しています。</span>
+                            </label>
+                        </div>
+                        <label class="entry-check">
+                            <input type="checkbox" name="agreement" required>
+                            <span>注意事項とキャンセルポリシーを確認し、内容に同意します。</span>
+                        </label>
+                        <div class="entry-actions">
+                            <button class="button button--primary" type="submit" id="entry-submit" disabled>確認 Draft を表示する</button>
+                            <a class="button button--secondary" href="./workshop-booking.html">日時選択へ戻る</a>
+                            <span class="entry-actions__meta">このボタンは確認画面へ進みます。送信処理は次段階で Supabase 保存へ繋ぎます。</span>
+                        </div>
+                    </form>
+                </section>
+
+                <aside class="entry-note">
+                    <div>
+                        <p class="section-kicker">Draft Scope</p>
+                        <h2>この画面で確定したいこと</h2>
+                    </div>
+                    <ul>
+                        <li>公開側で取る入力項目を `bookings` 追加列と矛盾なく揃える</li>
+                        <li>即時予約とリクエスト予約で見せ方を分けるかを判断する</li>
+                        <li>確認画面で見直したい情報が過不足なく揃っているかを決める</li>
+                    </ul>
+                    <div>
+                        <p class="section-kicker">Selected Slot</p>
+                        <p id="entry-slot-note">日時未選択のため、`workshop-booking.html` からの遷移が必要です。</p>
+                    </div>
+                </aside>
+            </div>
+        </section>
+    </main>
+    <script src="../js/site-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/site-shell.js"></script>
+    <script>
+        (() => {
+            const params = new URLSearchParams(window.location.search);
+            const selected = {
+                date: params.get("date") || "未選択",
+                gather: params.get("gather") || "未選択",
+                experience: params.get("experience") || "未選択",
+                price: params.get("price") || "未選択",
+                method: params.get("method") || "未選択",
+                note: params.get("note") || "",
+                label: params.get("label") || "日時未選択",
+                plan: params.get("plan") || "浅草で香水づくり / 香りを選んで自分でブレンドするワークショップ",
+                contactName: params.get("contact_name") || "",
+                contactEmail: params.get("contact_email") || "",
+                contactPhone: params.get("contact_phone") || "",
+                partySize: params.get("party_size") || "",
+                specialRequests: params.get("special_requests") || ""
+            };
+
+            document.getElementById("entry-summary-date").textContent = selected.date;
+            document.getElementById("entry-summary-gather").textContent = selected.gather;
+            document.getElementById("entry-summary-experience").textContent = selected.experience;
+            document.getElementById("entry-summary-price").textContent = selected.price;
+            document.getElementById("entry-summary-method").textContent = selected.method;
+            document.getElementById("entry-slot-note").textContent = `${selected.plan} / ${selected.label} / ${selected.gather} 集合 / ${selected.experience}${selected.note ? ` / ${selected.note}` : ""}`;
+
+            const form = document.getElementById("booking-entry-form");
+            const submitButton = document.getElementById("entry-submit");
+            const touched = new Set();
+            const getErrorNode = (name) => document.querySelector(`[data-error-for="${name}"]`);
+            const setFieldError = (field, message) => {
+                if (!field) return;
+                const errorNode = getErrorNode(field.name);
+                const shouldShow = touched.has(field.name) && Boolean(message);
+                field.classList.toggle("is-invalid", shouldShow);
+                if (errorNode) {
+                    errorNode.textContent = message || "";
+                    errorNode.classList.toggle("is-visible", shouldShow);
+                }
+            };
+            const phonePrefixGroups = {
+                mobile: ["050", "070", "080", "090"],
+                twoDigitArea: ["03", "06"],
+                threeDigitArea: ["011", "015", "017", "018", "019", "022", "023", "024", "025", "026", "027", "028", "029", "042", "043", "044", "045", "046", "047", "048", "049", "052", "053", "054", "055", "058", "059", "072", "073", "075", "076", "077", "078", "079", "082", "083", "084", "086", "087", "088", "089", "092", "093", "095", "096", "097", "098", "099"],
+                tollFreeTen: ["0120"],
+                tollFreeEleven: ["0800"],
+                naviDial: ["0570"]
+            };
+            const detectPhonePattern = (digits) => {
+                if (phonePrefixGroups.mobile.some((prefix) => digits.startsWith(prefix))) {
+                    return { type: "mobile", validLengths: [11], formatter: (value) => `${value.slice(0, 3)}-${value.slice(3, 7)}-${value.slice(7)}` };
+                }
+                if (phonePrefixGroups.tollFreeTen.some((prefix) => digits.startsWith(prefix))) {
+                    return { type: "tollFreeTen", validLengths: [10], formatter: (value) => `${value.slice(0, 4)}-${value.slice(4, 7)}-${value.slice(7)}` };
+                }
+                if (phonePrefixGroups.tollFreeEleven.some((prefix) => digits.startsWith(prefix))) {
+                    return { type: "tollFreeEleven", validLengths: [11], formatter: (value) => `${value.slice(0, 4)}-${value.slice(4, 7)}-${value.slice(7)}` };
+                }
+                if (phonePrefixGroups.naviDial.some((prefix) => digits.startsWith(prefix))) {
+                    return { type: "naviDial", validLengths: [10], formatter: (value) => `${value.slice(0, 4)}-${value.slice(4, 7)}-${value.slice(7)}` };
+                }
+                if (phonePrefixGroups.twoDigitArea.some((prefix) => digits.startsWith(prefix))) {
+                    return { type: "landline2", validLengths: [10], formatter: (value) => `${value.slice(0, 2)}-${value.slice(2, 6)}-${value.slice(6)}` };
+                }
+                if (phonePrefixGroups.threeDigitArea.some((prefix) => digits.startsWith(prefix))) {
+                    return { type: "landline3", validLengths: [10], formatter: (value) => `${value.slice(0, 3)}-${value.slice(3, 6)}-${value.slice(6)}` };
+                }
+                return { type: "landline4", validLengths: [10], formatter: (value) => `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6)}` };
+            };
+            const formatPhoneNumber = (digits) => {
+                if (!digits) return "";
+                const pattern = detectPhonePattern(digits);
+                const targetLength = pattern.validLengths[0];
+                if (digits.length < targetLength) {
+                    if (pattern.type === "mobile") {
+                        if (digits.length <= 3) return digits;
+                        if (digits.length <= 7) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+                        return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
+                    }
+                    if (pattern.type === "landline2") {
+                        if (digits.length <= 2) return digits;
+                        if (digits.length <= 6) return `${digits.slice(0, 2)}-${digits.slice(2)}`;
+                        return `${digits.slice(0, 2)}-${digits.slice(2, 6)}-${digits.slice(6)}`;
+                    }
+                    if (pattern.type === "landline3") {
+                        if (digits.length <= 3) return digits;
+                        if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+                        return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
+                    }
+                    if (pattern.type === "landline4") {
+                        if (digits.length <= 4) return digits;
+                        if (digits.length <= 6) return `${digits.slice(0, 4)}-${digits.slice(4)}`;
+                        return `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6)}`;
+                    }
+                    if (digits.length <= 4) return digits;
+                    if (digits.length <= 7) return `${digits.slice(0, 4)}-${digits.slice(4)}`;
+                    return `${digits.slice(0, 4)}-${digits.slice(4, 7)}-${digits.slice(7)}`;
+                }
+                return pattern.formatter(digits.slice(0, targetLength));
+            };
+            if (form) {
+                const contactNameInput = form.elements.namedItem("contact_name");
+                const contactEmailInput = form.elements.namedItem("contact_email");
+                const contactPhoneInput = form.elements.namedItem("contact_phone");
+                const partySizeSelect = form.elements.namedItem("party_size");
+                const specialRequestsInput = form.elements.namedItem("special_requests");
+                if (contactNameInput) contactNameInput.value = selected.contactName;
+                if (contactEmailInput) contactEmailInput.value = selected.contactEmail;
+                if (contactPhoneInput) contactPhoneInput.value = selected.contactPhone;
+                if (partySizeSelect) partySizeSelect.value = selected.partySize;
+                if (specialRequestsInput) specialRequestsInput.value = selected.specialRequests;
+            }
+            const validateName = () => {
+                if (!form) return;
+                const nameInput = form.elements.namedItem("contact_name");
+                if (!(nameInput instanceof HTMLInputElement)) return;
+                let message = "";
+                if (!nameInput.value.trim()) {
+                    message = "代表者名を入力してください。";
+                    nameInput.setCustomValidity(message);
+                } else {
+                    nameInput.setCustomValidity("");
+                }
+                setFieldError(nameInput, message);
+            };
+            const validateEmail = () => {
+                if (!form) return;
+                const emailInput = form.elements.namedItem("contact_email");
+                if (!(emailInput instanceof HTMLInputElement)) return;
+                let message = "";
+                if (!emailInput.value.trim()) {
+                    message = "メールアドレスを入力してください。";
+                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim())) {
+                    message = "メールアドレスの形式で入力してください。";
+                }
+                emailInput.setCustomValidity(message);
+                setFieldError(emailInput, message);
+            };
+            const validatePhone = () => {
+                if (!form) return;
+                const phoneInput = form.elements.namedItem("contact_phone");
+                if (!(phoneInput instanceof HTMLInputElement)) return;
+                const raw = phoneInput.value.trim();
+                const digits = raw.replace(/-/g, "");
+                let message = "";
+                if (!raw) {
+                    message = "電話番号を入力してください。";
+                } else if (!/^[0-9-]+$/.test(raw)) {
+                    message = "電話番号は数字とハイフンのみで入力してください。";
+                } else {
+                    const pattern = detectPhonePattern(digits);
+                    if (!pattern.validLengths.includes(digits.length)) {
+                        if (pattern.type === "mobile") {
+                            message = "携帯電話・IP 電話番号は 11桁で入力してください。";
+                        } else if (pattern.type === "tollFreeTen") {
+                            message = "0120 番号は 10桁で入力してください。";
+                        } else if (pattern.type === "tollFreeEleven") {
+                            message = "0800 番号は 11桁で入力してください。";
+                        } else if (pattern.type === "naviDial") {
+                            message = "0570 番号は 10桁で入力してください。";
+                        } else {
+                            message = "固定電話番号は市外局番を含む 10桁で入力してください。";
+                        }
+                    }
+                }
+                phoneInput.setCustomValidity(message);
+                setFieldError(phoneInput, message);
+            };
+            const validatePartySize = () => {
+                if (!form) return;
+                const partySizeInput = form.elements.namedItem("party_size");
+                if (!(partySizeInput instanceof HTMLSelectElement)) return;
+                let message = "";
+                if (!partySizeInput.value) {
+                    message = "参加人数を選択してください。";
+                } else if (!["1", "2", "3", "4"].includes(partySizeInput.value)) {
+                    message = "参加人数は 1名から4名で選択してください。";
+                }
+                partySizeInput.setCustomValidity(message);
+                setFieldError(partySizeInput, message);
+            };
+            const validateFormFields = () => {
+                validateName();
+                validateEmail();
+                validatePhone();
+                validatePartySize();
+            };
+            const updateSubmitState = () => {
+                if (!form || !submitButton) return;
+                validateFormFields();
+                submitButton.disabled = !form.checkValidity();
+            };
+            const phoneInput = form?.elements.namedItem("contact_phone");
+            if (phoneInput instanceof HTMLInputElement) {
+                phoneInput.addEventListener("input", () => {
+                    const digits = phoneInput.value.replace(/\D/g, "").slice(0, 11);
+                    phoneInput.value = formatPhoneNumber(digits);
+                    updateSubmitState();
+                });
+            }
+            ["contact_name", "contact_email", "contact_phone", "party_size"].forEach((fieldName) => {
+                const field = form?.elements.namedItem(fieldName);
+                if (field instanceof HTMLElement) {
+                    field.addEventListener("blur", () => {
+                        touched.add(fieldName);
+                        updateSubmitState();
+                    });
+                }
+            });
+            form?.addEventListener("input", updateSubmitState);
+            form?.addEventListener("change", updateSubmitState);
+            form?.addEventListener("submit", (event) => {
+                event.preventDefault();
+                ["contact_name", "contact_email", "contact_phone", "party_size"].forEach((fieldName) => touched.add(fieldName));
+                validateFormFields();
+                if (!form.checkValidity()) {
+                    updateSubmitState();
+                    form.reportValidity();
+                    return;
+                }
+                const data = new FormData(form);
+                const target = new URL("./workshop-booking-confirm.html", window.location.href);
+                const payload = {
+                    date: selected.date,
+                    label: selected.label,
+                    gather: selected.gather,
+                    experience: selected.experience,
+                    price: selected.price,
+                    method: selected.method,
+                    note: selected.note,
+                    plan: selected.plan,
+                    contact_name: String(data.get("contact_name") || ""),
+                    contact_email: String(data.get("contact_email") || ""),
+                    contact_phone: String(data.get("contact_phone") || ""),
+                    party_size: String(data.get("party_size") || ""),
+                    special_requests: String(data.get("special_requests") || "")
+                };
+                Object.entries(payload).forEach(([key, value]) => target.searchParams.set(key, value));
+                window.location.href = target.toString();
+            });
+            updateSubmitState();
+        })();
+    </script>
+</body>
+
+</html>

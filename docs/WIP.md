@@ -75,9 +75,25 @@
 - この対応で、公開側の最小差分として `js/site-shell.js` と `subpages/workshop.html` を更新しています
 - 予約ページ Draft には、空き状況カレンダー、選択日の時間帯表示、集合時間、料金、`予約へ進む` ボタン、詳細4タブを実装しています
 - 2026-03-22 の改修で、カレンダー記号は記号のみ表示へ調整し、選択中の日付をカレンダー直下にも表示するようにしました
+- 2026-03-22 の追加入力で、[`subpages/workshop-booking-entry.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking-entry.html) を追加し、`予約へ進む` から日時・料金・予約方式を引き継いで入力 Draft へ進めるようにしました
+- 2026-03-22 の調整で、`確認 Draft を表示する` は入力 validity とポリシー同意が揃うまで disabled に変更し、`参加人数` の縦位置も揃えました
+- `file://` 直開きでのクエリ付き遷移警告に備え、予約入力画面への遷移 URL は `new URL()` で組み立てる方式へ変更しました
+- 2026-03-22 の確認結果を受けて、予約入力 Draft の STEP 表示は `STEP 1 = 完了済み`, `STEP 2 = 処理中で強調`, `STEP 3 = 次段階` の見せ方へ調整しました
+- 2026-03-22 の追加実装で、[`subpages/workshop-booking-confirm.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking-confirm.html) を追加し、STEP 2 の入力内容と選択枠を確認画面へ引き継げるようにしました
+- 2026-03-22 の追加調整で、確認画面から STEP 2 に戻った際も、入力済みの代表者情報と人数を保持して再編集できるようにしました
+- 2026-03-22 の追加実装で、STEP 2 の入力 validity check として `contact_name` 必須、`contact_email` 必須 + 形式、`contact_phone` 必須 + 電話番号形式、`party_size` 1〜4名必須選択を実装しました
+- 2026-03-22 の追加調整で、STEP 2 の必須ラベルには赤 `*` を付与し、blur 時に各フィールド下へエラー表示を出すようにしました。電話番号は固定電話 / 携帯電話・IP 電話を判定して桁数を確認し、入力中に `-` を自動整形するようにしました
+- 2026-03-22 の追加調整で、電話番号の局番判定を詳細化し、`03 / 06`、主要な 3 桁市外局番、その他固定電話、`050 / 070 / 080 / 090`、`0120`、`0800`、`0570` を認識して `-` パターンと桁数を出し分けるようにしました
+- `app/` 配下も確認しましたが、現時点では電話番号入力フィールド自体が存在しないため、同ロジックの適用対象はまだありません。今後 `app` 側に電話番号入力を追加する際は、同等の validity と整形を適用する前提です
+- 2026-03-22 の導線整理で、`workshop.html` の `予約する` と 3 コースの各予約ボタンは、いったんすべて `./workshop-booking.html` へ統一しました
+- 同日の追加調整で、`行き先を選ぶ` で選択した店舗を `store` クエリとして `workshop-booking.html` へ引き継ぎ、予約画面側でも選択状態を維持するようにしました
+- DB 追加は不要でした。`workshop_sessions.store_id` と既存 `bookings.store_id` がすでに存在するため、SQL `07_` は未作成です
+- Reminder: `workshop_plans` / `workshop_sessions` 確定後に、予約画面で各プランをどう見せるか、各コースボタンから何を初期反映するかを再設計する
 - Workshop 予約の推奨データ設計は [`docs/workshop-booking-data-design.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/workshop-booking-data-design.md) に整理しました
 - 追加テーブル作成 SQL は [`sql/05_create_workshop_booking_tables.sql`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/sql/05_create_workshop_booking_tables.sql)、検証 SQL は [`sql/06_verify_workshop_booking_tables.sql`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/sql/06_verify_workshop_booking_tables.sql) に追加しました
 - 実行手順は [`docs/workshop-booking-sql-runbook.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/workshop-booking-sql-runbook.md) に整理しました
+- 2026-03-22 の実確認で、カレンダー記号は良好、SQL ファイル構成は良好、Runbook も良好でした
+- 同日の検証で、追加テーブル、`bookings` 追加列、関連 index の存在確認まで完了しました
 - 次は `bookings / enquiries` 管理画面の詳細化ではなく、この Draft を基に public 側の Workshop 予約項目を先に固める方針です
 - 2026-03-21 の最終確認では、アセット説明文は良好、トップ編集の左右比率は良好、導線設定の左右比率は微調整余地ありという結果でした
 - 管理画面 HTML の CSS / JS 参照にはバージョン文字列を付け、古い JS キャッシュが残りにくいようにしています
@@ -91,11 +107,12 @@
 ### 明日最初にやること
 1. [`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) の `#reserve` セクションを起点に、Workshop 予約画面の必要項目を整理する
 2. `予約フォームへ進む` が `./workshop-booking.html` を向いていることを確認する
-3. [`docs/workshop-booking-sql-runbook.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/workshop-booking-sql-runbook.md) に従って、追加テーブルと `bookings` 追加項目を適用する
+3. [`subpages/workshop-booking-entry.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking-entry.html) を見ながら、予約入力項目と public 側フローを固める
 
 ### 明日の確認ポイント
 - `#reserve` から遷移すべき予約画面の役割が明確か
 - `subpages/workshop-booking.html` Draft の UI 構成が要件整理のたたき台として十分か
+- `subpages/workshop-booking-entry.html` の入力項目と確認導線が過不足ないか
 - 必須入力項目と任意入力項目を切り分けられるか
 - `workshop_plans` / `workshop_sessions` を追加する前提で不足がないか
 - サイドバー下部の `Admin build` が `20260322a` になっているか

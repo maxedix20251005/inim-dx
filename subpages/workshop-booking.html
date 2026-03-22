@@ -22,6 +22,12 @@
         .booking-panel { padding: 26px; }
         .booking-panel__head { display: flex; justify-content: space-between; gap: 20px; align-items: baseline; margin-bottom: 18px; }
         .booking-panel__head p { color: var(--color-muted); }
+        .booking-store-bar { display: grid; gap: 12px; margin-bottom: 18px; }
+        .booking-store-bar__head { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+        .booking-store-bar__meta { color: var(--color-muted); font-size: .9rem; }
+        .booking-store-picker { display: flex; flex-wrap: wrap; gap: 12px; }
+        .booking-store-chip { min-height: 48px; padding: 0 18px; border: 1px solid rgba(207,201,188,.95); border-radius: 999px; background: #fffdfa; font: inherit; color: var(--color-main); cursor: pointer; }
+        .booking-store-chip.is-active { border-color: rgba(178,69,49,.4); background: rgba(178,69,49,.1); color: var(--color-accent); box-shadow: 0 10px 24px rgba(178,69,49,.1); }
         .booking-calendar-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
         .booking-month { overflow: hidden; border: 1px solid rgba(217,210,198,.95); border-radius: 20px; background: #fffdfa; }
         .booking-month__header { display: flex; justify-content: space-between; align-items: center; padding: 16px 18px 10px; border-bottom: 1px solid rgba(221,214,201,.8); }
@@ -113,6 +119,16 @@
                 <div class="booking-panel__head">
                     <div><p class="section-kicker">Availability</p><h2>空き状況</h2></div>
                     <p>体験希望日を選ぶと、下部に時間帯と料金を表示します。</p>
+                </div>
+                <div class="booking-store-bar">
+                    <div class="booking-store-bar__head">
+                        <div>
+                            <p class="section-kicker">Store</p>
+                            <h3>選択店舗</h3>
+                        </div>
+                        <p class="booking-store-bar__meta" id="booking-store-meta">選択した店舗の開催日だけを表示します。</p>
+                    </div>
+                    <div class="booking-store-picker" id="booking-store-picker"></div>
                 </div>
                 <div class="booking-calendar-grid" id="booking-calendar"></div>
                 <div class="booking-legend">
@@ -224,34 +240,86 @@
             const selectionLabel = document.getElementById("booking-selection-label");
             const selectionMeta = document.getElementById("booking-selection-meta");
             const slotsPanel = document.getElementById("booking-slots-panel");
+            const storePicker = document.getElementById("booking-store-picker");
+            const storeMeta = document.getElementById("booking-store-meta");
+            const params = new URLSearchParams(window.location.search);
+            const stores = {
+                asakusa: { label: "浅草店", caption: "Fri - Sun" },
+                shibamata: { label: "柴又店", caption: "Sat - Mon" },
+                solamachi: { label: "ソラマチ店", caption: "Daily" }
+            };
             const months = [
-                { label: "2026年3月", cells: [null, null, null, null, null, null, { d: 1, s: "closed" }, { d: 2, s: "closed" }, { d: 3, s: "closed" }, { d: 4, s: "closed" }, { d: 5, s: "closed" }, { d: 6, s: "closed" }, { d: 7, s: "closed" }, { d: 8, s: "closed" }, { d: 9, s: "closed" }, { d: 10, s: "closed" }, { d: 11, s: "closed" }, { d: 12, s: "closed" }, { d: 13, s: "closed" }, { d: 14, s: "closed" }, { d: 15, s: "closed" }, { d: 16, s: "closed" }, { d: 17, s: "closed" }, { d: 18, s: "closed" }, { d: 19, s: "closed" }, { d: 20, s: "closed" }, { d: 21, s: "closed" }, { d: 22, s: "closed" }, { d: 23, s: "closed" }, { d: 24, s: "closed" }, { d: 25, s: "closed" }, { d: 26, s: "closed" }, { d: 27, s: "closed" }, { d: 28, s: "request", p: "5,500円", k: "2026-03-28" }, { d: 29, s: "instant", p: "5,500円", k: "2026-03-29" }, { d: 30, s: "closed" }, { d: 31, s: "closed" }, null, null, null] },
-                { label: "2026年4月", cells: [null, null, null, { d: 1, s: "closed" }, { d: 2, s: "closed" }, { d: 3, s: "closed" }, { d: 4, s: "instant", p: "5,500円", k: "2026-04-04" }, { d: 5, s: "instant", p: "5,500円", k: "2026-04-05" }, { d: 6, s: "closed" }, { d: 7, s: "closed" }, { d: 8, s: "closed" }, { d: 9, s: "closed" }, { d: 10, s: "closed" }, { d: 11, s: "instant", p: "5,500円", k: "2026-04-11" }, { d: 12, s: "instant", p: "5,500円", k: "2026-04-12" }, { d: 13, s: "closed" }, { d: 14, s: "closed" }, { d: 15, s: "closed" }, { d: 16, s: "closed" }, { d: 17, s: "closed" }, { d: 18, s: "full" }, { d: 19, s: "full" }, { d: 20, s: "closed" }, { d: 21, s: "closed" }, { d: 22, s: "closed" }, { d: 23, s: "closed" }, { d: 24, s: "closed" }, { d: 25, s: "few", p: "5,500円", k: "2026-04-25" }, { d: 26, s: "instant", p: "5,500円", k: "2026-04-26" }, { d: 27, s: "closed" }, { d: 28, s: "closed" }, { d: 29, s: "request", p: "5,500円", k: "2026-04-29" }, { d: 30, s: "closed" }, null, null] }
+                { label: "2026年3月", cells: [null, null, null, null, null, null, { d: 1, s: "closed" }, { d: 2, s: "closed" }, { d: 3, s: "closed" }, { d: 4, s: "closed" }, { d: 5, s: "closed" }, { d: 6, s: "closed" }, { d: 7, s: "closed" }, { d: 8, s: "closed" }, { d: 9, s: "closed" }, { d: 10, s: "closed" }, { d: 11, s: "closed" }, { d: 12, s: "closed" }, { d: 13, s: "closed" }, { d: 14, s: "closed" }, { d: 15, s: "closed" }, { d: 16, s: "closed" }, { d: 17, s: "closed" }, { d: 18, s: "closed" }, { d: 19, s: "closed" }, { d: 20, s: "closed" }, { d: 21, s: "closed" }, { d: 22, s: "closed" }, { d: 23, s: "closed" }, { d: 24, s: "closed" }, { d: 25, s: "closed" }, { d: 26, s: "closed" }, { d: 27, s: "closed" }, { d: 28, s: "request", p: "5,500円", k: "2026-03-28", store: "asakusa" }, { d: 29, s: "instant", p: "5,500円", k: "2026-03-29", store: "asakusa" }, { d: 30, s: "closed" }, { d: 31, s: "closed" }, null, null, null] },
+                { label: "2026年4月", cells: [null, null, null, { d: 1, s: "closed" }, { d: 2, s: "closed" }, { d: 3, s: "closed" }, { d: 4, s: "instant", p: "5,500円", k: "2026-04-04", store: "asakusa" }, { d: 5, s: "instant", p: "5,500円", k: "2026-04-05", store: "asakusa" }, { d: 6, s: "closed" }, { d: 7, s: "closed" }, { d: 8, s: "closed" }, { d: 9, s: "closed" }, { d: 10, s: "closed" }, { d: 11, s: "instant", p: "5,500円", k: "2026-04-11", store: "shibamata" }, { d: 12, s: "instant", p: "5,500円", k: "2026-04-12", store: "solamachi" }, { d: 13, s: "closed" }, { d: 14, s: "closed" }, { d: 15, s: "closed" }, { d: 16, s: "closed" }, { d: 17, s: "closed" }, { d: 18, s: "full", store: "shibamata" }, { d: 19, s: "full", store: "solamachi" }, { d: 20, s: "closed" }, { d: 21, s: "closed" }, { d: 22, s: "closed" }, { d: 23, s: "closed" }, { d: 24, s: "closed" }, { d: 25, s: "few", p: "5,500円", k: "2026-04-25", store: "asakusa" }, { d: 26, s: "instant", p: "5,500円", k: "2026-04-26", store: "asakusa" }, { d: 27, s: "closed" }, { d: 28, s: "closed" }, { d: 29, s: "request", p: "5,500円", k: "2026-04-29", store: "solamachi" }, { d: 30, s: "closed" }, null, null] }
             ];
             const schedule = {
-                "2026-03-28": { label: "2026年3月28日(土)", status: "リクエスト予約可。浅草店開催 / 回答は翌営業日です。", slots: [{ g: "10:20", e: "10:30〜11:30", p: "おひとりさま 5,500円", n: "24時間以内に回答予定" }, { g: "13:20", e: "13:30〜14:30", p: "おひとりさま 5,500円", n: "24時間以内に回答予定" }] },
-                "2026-03-29": { label: "2026年3月29日(日)", status: "即時予約可。浅草店開催 / 料金 5,500円〜", slots: [{ g: "10:50", e: "11:00〜12:00", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "14:50", e: "15:00〜16:00", p: "おひとりさま 5,500円", n: "即時確定" }] },
-                "2026-04-05": { label: "2026年4月5日(日)", status: "即時予約可。浅草店開催 / 料金 5,500円〜", slots: [{ g: "10:50", e: "11:00〜12:00", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "12:50", e: "13:00〜14:00", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "14:50", e: "15:00〜16:00", p: "おひとりさま 5,500円", n: "即時確定" }] },
-                "2026-04-04": { label: "2026年4月4日(土)", status: "即時予約可。浅草店開催 / 料金 5,500円〜", slots: [{ g: "10:20", e: "10:30〜11:30", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "12:20", e: "12:30〜13:30", p: "おひとりさま 5,500円", n: "即時確定" }] },
-                "2026-04-11": { label: "2026年4月11日(土)", status: "即時予約可。柴又店開催 / 料金 5,500円〜", slots: [{ g: "10:20", e: "10:30〜11:30", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "13:20", e: "13:30〜14:30", p: "おひとりさま 5,500円", n: "即時確定" }] },
-                "2026-04-12": { label: "2026年4月12日(日)", status: "即時予約可。ソラマチ店開催 / 料金 5,500円〜", slots: [{ g: "11:20", e: "11:30〜12:30", p: "おひとりさま 5,500円", n: "即時確定" }] },
-                "2026-04-25": { label: "2026年4月25日(土)", status: "残席わずか。浅草店開催 / 料金 5,500円〜", slots: [{ g: "10:50", e: "11:00〜12:00", p: "おひとりさま 5,500円", n: "残席 2" }, { g: "14:50", e: "15:00〜16:00", p: "おひとりさま 5,500円", n: "残席 1" }] },
-                "2026-04-26": { label: "2026年4月26日(日)", status: "即時予約可。浅草店開催 / 料金 5,500円〜", slots: [{ g: "12:20", e: "12:30〜13:30", p: "おひとりさま 5,500円", n: "即時確定" }] },
-                "2026-04-29": { label: "2026年4月29日(水・祝)", status: "リクエスト予約可。スタッフ確認後にご連絡します。", slots: [{ g: "10:20", e: "10:30〜11:30", p: "おひとりさま 5,500円", n: "24時間以内に回答予定" }, { g: "13:20", e: "13:30〜14:30", p: "おひとりさま 5,500円", n: "24時間以内に回答予定" }] }
+                "2026-03-28": { label: "2026年3月28日(土)", store: "asakusa", storeLabel: "浅草店", status: "リクエスト予約可。浅草店開催 / 回答は翌営業日です。", slots: [{ g: "10:20", e: "10:30〜11:30", p: "おひとりさま 5,500円", n: "24時間以内に回答予定" }, { g: "13:20", e: "13:30〜14:30", p: "おひとりさま 5,500円", n: "24時間以内に回答予定" }] },
+                "2026-03-29": { label: "2026年3月29日(日)", store: "asakusa", storeLabel: "浅草店", status: "即時予約可。浅草店開催 / 料金 5,500円〜", slots: [{ g: "10:50", e: "11:00〜12:00", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "14:50", e: "15:00〜16:00", p: "おひとりさま 5,500円", n: "即時確定" }] },
+                "2026-04-05": { label: "2026年4月5日(日)", store: "asakusa", storeLabel: "浅草店", status: "即時予約可。浅草店開催 / 料金 5,500円〜", slots: [{ g: "10:50", e: "11:00〜12:00", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "12:50", e: "13:00〜14:00", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "14:50", e: "15:00〜16:00", p: "おひとりさま 5,500円", n: "即時確定" }] },
+                "2026-04-04": { label: "2026年4月4日(土)", store: "asakusa", storeLabel: "浅草店", status: "即時予約可。浅草店開催 / 料金 5,500円〜", slots: [{ g: "10:20", e: "10:30〜11:30", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "12:20", e: "12:30〜13:30", p: "おひとりさま 5,500円", n: "即時確定" }] },
+                "2026-04-11": { label: "2026年4月11日(土)", store: "shibamata", storeLabel: "柴又店", status: "即時予約可。柴又店開催 / 料金 5,500円〜", slots: [{ g: "10:20", e: "10:30〜11:30", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "13:20", e: "13:30〜14:30", p: "おひとりさま 5,500円", n: "即時確定" }] },
+                "2026-04-12": { label: "2026年4月12日(日)", store: "solamachi", storeLabel: "ソラマチ店", status: "即時予約可。ソラマチ店開催 / 料金 5,500円〜", slots: [{ g: "11:20", e: "11:30〜12:30", p: "おひとりさま 5,500円", n: "即時確定" }] },
+                "2026-04-25": { label: "2026年4月25日(土)", store: "asakusa", storeLabel: "浅草店", status: "残席わずか。浅草店開催 / 料金 5,500円〜", slots: [{ g: "10:50", e: "11:00〜12:00", p: "おひとりさま 5,500円", n: "残席 2" }, { g: "14:50", e: "15:00〜16:00", p: "おひとりさま 5,500円", n: "残席 1" }] },
+                "2026-04-26": { label: "2026年4月26日(日)", store: "asakusa", storeLabel: "浅草店", status: "即時予約可。浅草店開催 / 料金 5,500円〜", slots: [{ g: "12:20", e: "12:30〜13:30", p: "おひとりさま 5,500円", n: "即時確定" }] },
+                "2026-04-29": { label: "2026年4月29日(水・祝)", store: "solamachi", storeLabel: "ソラマチ店", status: "リクエスト予約可。ソラマチ店開催 / スタッフ確認後にご連絡します。", slots: [{ g: "10:20", e: "10:30〜11:30", p: "おひとりさま 5,500円", n: "24時間以内に回答予定" }, { g: "13:20", e: "13:30〜14:30", p: "おひとりさま 5,500円", n: "24時間以内に回答予定" }] }
             };
             const marks = { instant: ["○", "即時予約可"], request: ["□", "リクエスト予約可"], few: ["△", "残席数少ない"], full: ["×", "空き無し"], closed: ["-", "開催無し"] };
             const days = ["月", "火", "水", "木", "金", "土", "日"];
-            let selectedKey = "2026-04-05";
+            let selectedStore = params.get("store");
+            if (!selectedStore || !stores[selectedStore]) {
+                selectedStore = "asakusa";
+            }
+            let selectedKey = Object.entries(schedule).find(([, value]) => value.store === selectedStore)?.[0] || "2026-04-05";
+            const syncStoreQuery = () => {
+                const target = new URL(window.location.href);
+                target.searchParams.set("store", selectedStore);
+                target.searchParams.set("storeLabel", stores[selectedStore].label);
+                window.history.replaceState({}, "", target.toString());
+            };
+            const renderStorePicker = () => {
+                storePicker.innerHTML = Object.entries(stores).map(([key, value]) => `<button class="booking-store-chip${key === selectedStore ? " is-active" : ""}" type="button" data-store-key="${key}">${value.label} / ${value.caption}</button>`).join("");
+                storeMeta.textContent = `${stores[selectedStore].label} の開催日だけを表示しています。`;
+                storePicker.querySelectorAll("[data-store-key]").forEach((button) => {
+                    button.addEventListener("click", () => {
+                        selectedStore = button.dataset.storeKey;
+                        const firstAvailable = Object.entries(schedule).find(([, value]) => value.store === selectedStore)?.[0];
+                        if (firstAvailable) {
+                            selectedKey = firstAvailable;
+                        }
+                        syncStoreQuery();
+                        renderStorePicker();
+                        renderCalendar();
+                        renderSlots();
+                    });
+                });
+            };
+            const buildBookingHref = (current, slot) => {
+                const target = new URL("./workshop-booking-entry.html", window.location.href);
+                const payload = {
+                    date: current.label,
+                    label: current.label,
+                    gather: slot.g,
+                    experience: slot.e,
+                    price: slot.p,
+                    note: slot.n,
+                    method: current.status.includes("リクエスト") ? "リクエスト予約" : current.status.includes("残席") ? "残席わずか" : "即時予約",
+                    plan: "浅草で香水づくり / 香りを選んで自分でブレンドするワークショップ",
+                    store: current.store,
+                    storeLabel: current.storeLabel
+                };
+                Object.entries(payload).forEach(([key, value]) => target.searchParams.set(key, value));
+                return target.toString();
+            };
             const renderSlots = () => {
                 const current = schedule[selectedKey];
                 selectedTitle.textContent = current?.label || "予約可能日を選択してください";
                 selectedStatus.textContent = current?.status || "○ / □ / △ の日を選ぶと、時間帯を表示します。";
-                selectionLabel.textContent = current ? `選択中: ${current.label}` : "選択中の日付はありません";
-                selectionMeta.textContent = current ? "下の時間帯一覧に、対象日の集合時間と料金を表示しています。" : "予約可能日を選ぶと、下部に時間帯を表示します。";
-                slotList.innerHTML = (current?.slots || []).map((slot) => `<article class="booking-slot"><div><strong>${current.label}</strong><div class="booking-slot__time"><span>集合 ${slot.g}</span><span>体験 ${slot.e}</span></div><p class="booking-slot__price">${slot.p}</p></div><div class="booking-slot__actions"><span class="booking-slot__note">${slot.n}</span><a class="button button--primary booking-slot__button" href="../index.html#contact">予約へ進む</a></div></article>`).join("");
+                selectionLabel.textContent = current ? `選択中: ${current.storeLabel} / ${current.label}` : "選択中の日付はありません";
+                selectionMeta.textContent = current ? `${current.storeLabel} の時間帯一覧に、対象日の集合時間と料金を表示しています。` : "予約可能日を選ぶと、下部に時間帯を表示します。";
+                slotList.innerHTML = (current?.slots || []).map((slot) => `<article class="booking-slot"><div><strong>${current.label}</strong><div class="booking-slot__time"><span>集合 ${slot.g}</span><span>体験 ${slot.e}</span></div><p class="booking-slot__price">${slot.p}</p></div><div class="booking-slot__actions"><span class="booking-slot__note">${slot.n}</span><a class="button button--primary booking-slot__button" href="${buildBookingHref(current, slot)}">予約へ進む</a></div></article>`).join("");
             };
             const renderCalendar = () => {
-                calendarHost.innerHTML = months.map((month) => `<section class="booking-month"><div class="booking-month__header"><h3>${month.label}</h3><span>土日祝を中心に開催</span></div><table><thead><tr>${days.map((d) => `<th>${d}</th>`).join("")}</tr></thead><tbody>${Array.from({ length: Math.ceil(month.cells.length / 7) }, (_, i) => `<tr>${month.cells.slice(i * 7, i * 7 + 7).map((cell) => { if (!cell) return '<td class="is-outside"></td>'; const [mark, label] = marks[cell.s]; const selectable = ["instant", "request", "few"].includes(cell.s); return `<td><button class="booking-day${selectable ? ' is-selectable' : ''}${cell.k === selectedKey ? ' is-selected' : ''}" type="button" ${cell.k ? `data-date-key="${cell.k}"` : ''} ${!selectable ? 'disabled' : ''}><span class="booking-day__date">${cell.d}</span><span class="booking-day__status"><i class="booking-mark" data-status="${cell.s}">${mark}</i><span>${label}</span></span>${cell.p ? `<div class="booking-day__price">${cell.p}</div>` : ''}</button></td>`; }).join("")}</tr>`).join("")}</tbody></table></section>`).join("");
+                calendarHost.innerHTML = months.map((month) => `<section class="booking-month"><div class="booking-month__header"><h3>${month.label}</h3><span>${stores[selectedStore].label} の開催日</span></div><table><thead><tr>${days.map((d) => `<th>${d}</th>`).join("")}</tr></thead><tbody>${Array.from({ length: Math.ceil(month.cells.length / 7) }, (_, i) => `<tr>${month.cells.slice(i * 7, i * 7 + 7).map((cell) => { if (!cell) return '<td class="is-outside"></td>'; const filtered = cell.store && cell.store !== selectedStore ? { ...cell, s: "closed", p: null, k: null } : cell; const [mark, label] = marks[filtered.s]; const selectable = ["instant", "request", "few"].includes(filtered.s); return `<td><button class="booking-day${selectable ? ' is-selectable' : ''}${filtered.k === selectedKey ? ' is-selected' : ''}" type="button" ${filtered.k ? `data-date-key="${filtered.k}"` : ''} ${!selectable ? 'disabled' : ''}><span class="booking-day__date">${filtered.d}</span><span class="booking-day__status"><i class="booking-mark" data-status="${filtered.s}">${mark}</i><span>${label}</span></span>${filtered.p ? `<div class="booking-day__price">${filtered.p}</div>` : ''}</button></td>`; }).join("")}</tr>`).join("")}</tbody></table></section>`).join("");
                 calendarHost.querySelectorAll("[data-date-key]").forEach((button) => button.addEventListener("click", () => { selectedKey = button.dataset.dateKey; renderCalendar(); renderSlots(); slotsPanel?.scrollIntoView({ behavior: "smooth", block: "start" }); }));
             };
             document.querySelectorAll(".booking-tab").forEach((button) => {
@@ -261,6 +329,8 @@
                     document.querySelectorAll(".booking-tab-panel").forEach((panel) => panel.classList.toggle("is-active", panel.dataset.panel === target));
                 });
             });
+            renderStorePicker();
+            syncStoreQuery();
             renderCalendar();
             renderSlots();
         })();

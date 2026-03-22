@@ -128,6 +128,25 @@
 - `ユーザー確認結果:` 2026-03-22 時点で、カレンダー記号と選択日表示の改善要望、および Console の `404` を確認した
 - `状態:` 解消済み
 
+### Issue 2026-03-22-13
+- `発生日:` 2026-03-22
+- `発生箇所:` [`subpages/workshop-booking-entry.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking-entry.html), [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html)
+- `症状:` `確認 Draft を表示する` が入力未完了でも押せる。`参加人数` の縦位置が `電話番号` と揃っていない。`file://` 直開き環境で、クエリ付き相対遷移時にブラウザ警告が出るケースがある。
+- `原因:` submit の disabled 制御を未実装だった。2列グリッドの縦揃え指定が不足していた。遷移 URL を文字列連結で作っていたため、`file://` 直開き環境で扱いが不安定だった。
+- `対策:` submit は `form.checkValidity()` とポリシー同意が揃うまで disabled に変更し、グリッドは `align-items: start` と `align-content: start` を追加した。遷移 URL は `new URL()` と `searchParams` で組み立てる方式へ変更した。
+- `再発防止:` 公開側フォーム Draft は、入力活性条件、縦揃え、`file://` 直開き時の遷移も含めて確認する。
+- `ユーザー確認結果:` 2026-03-22 時点で、予約入力 Draft は良好、確認ボタン活性条件は良好、参加人数の縦位置は良好、Console エラーなしを確認した。
+- `状態:` 解消済み
+
+### Issue 2026-03-22-14
+- `発生日:` 2026-03-22
+- `発生箇所:` [`subpages/workshop-booking-entry.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking-entry.html), [`subpages/workshop-booking-confirm.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking-confirm.html)
+- `症状:` 確認画面から `入力内容を修正する` で STEP 2 に戻ると、入力済みの代表者情報と人数が保持されていなかった。
+- `原因:` 確認画面側では入力値をクエリへ保持していたが、STEP 2 側でその値をフォームへ再注入していなかった。
+- `対策:` STEP 2 読み込み時に `contact_name`, `contact_email`, `contact_phone`, `party_size`, `special_requests` をクエリからフォームへ復元する処理を追加した。
+- `再発防止:` 戻る導線を持つ Draft 画面は、遷移先 URL だけでなく、復元側のフォーム初期化まで実装して確認する。
+- `状態:` 解消済み
+
 ### 今後の運用ルール
 - 新しい Issue が発生したら、このファイルに必ず追記する
 - 追記時は、同じ作業内で `docs/PROJECT_STATUS.md` と `docs/AI_CONTEXT_PROMPT.md` も更新する
