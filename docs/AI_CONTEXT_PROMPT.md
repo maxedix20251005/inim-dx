@@ -51,8 +51,8 @@
 
 ### 実装方針
 - 公開サイト用の既存ファイルは原則変更しない
-  - `js/site-shell.js`
   - `css/style.css`
+- ただし 2026-03-22 の Workshop 予約導線 Draft 追加では、公開側の導線追加に必要な最小差分として `js/site-shell.js` と `subpages/workshop.html` を更新済み
 - 管理画面は専用ファイルへ分離して実装する
   - `js/admin-app.js`
   - `css/admin-app.css`
@@ -61,17 +61,20 @@
 - Workshop の予約と問い合わせに関する呼称は、DB を除き `bookings / enquiries` に統一する
 - 2026-03-22 時点で、DB rename migration は実行済みで、現行 DB 名称は `bookings`, `booking_status_logs`, `enquiries`, `enquiry_status_logs`
 - 英語表記が必要な場合は Australian English に統一する
+- 次の主実装は、管理画面の `bookings / enquiries` 詳細化ではなく、公開側 [`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) `#reserve` から始まる Workshop 予約導線の整理です
 
 ### ここまでの主な変更範囲
 #### 新規追加
 - `css/admin-app.css`
 - `js/admin-app.js`
 - `app/pages/journey.html`
+- `subpages/workshop-booking.html`
 - `docs/admin-implementation-status.md`
 - `docs/PROJECT_STATUS.md`
 - `docs/WIP.md`
 
 #### 参照先変更
+- `subpages/workshop.html`
 - `app/login.html`
 - `app/dashboard.html`
 - `app/publish.html`
@@ -80,6 +83,7 @@
 - `app/users/me.html`
 - `app/password/forgot.html`
 - `app/password/reset.html`
+- `js/site-shell.js`
 
 ### 現在実装済みの内容
 #### 認証
@@ -116,6 +120,13 @@
 - `enquiries` 件数表示
 - `bookings / enquiries` の直近一覧表示
 - `booking_type` / `booked_at` への追随
+
+#### 公開側 Workshop 導線
+- [`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) に `#reserve` セクションがある
+- 2026-03-22 時点で、Workshop 専用予約画面 [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html) の Draft を追加済み
+- `workshop.html` の `予約フォームへ進む` は `./workshop-booking.html` を向く
+- 予約ページ Draft は、カレンダー、日別スロット表示、詳細4タブで構成
+- `デジタル調香を試す` への導線も併設されているため、予約前体験との関係整理が必要
 
 ### DB 設計に基づく重要テーブル
 #### `user_profiles`
@@ -164,7 +175,8 @@
 
 ### 重要な現状認識
 #### 公開側との分離
-- 公開サイト用の `js/site-shell.js` と `css/style.css` は未変更です。
+- 公開サイト用の `css/style.css` は未変更です。
+- 公開サイト用の `js/site-shell.js` は、Workshop 予約 Draft 追加に必要な最小差分のみ更新しています。
 - 管理画面の実装は `js/admin-app.js` と `css/admin-app.css` に分離されています。
 
 #### ログイン画面の自動遷移
@@ -209,26 +221,31 @@
 - `js/admin-app.js` の DB 参照は、rename 後の `bookings`, `enquiries`, `booking_type`, `booked_at` に追随済みです。
 - 2026-03-21 の最終確認では、アセット説明文は良好、トップ編集の左右比率は良好、導線設定の左右比率は微調整余地ありでした。
 - 2026-03-21 の実画面確認で、`journey_steps` の各バリデーションは正常動作し、正常値保存も成功、Console エラーなしを確認済みです。
+- 2026-03-22 の現状把握で、`workshop.html#reserve` は存在するが、予約 CTA はまだ `../index.html#contact` に接続されていることを確認済みです。
+- その後、`subpages/workshop-booking.html` の Draft を追加し、空き状況カレンダー、選択日の時間帯表示、`予約へ進む` ボタン、詳細4タブまで実装しました。
+- したがって、次はこの Draft を基に公開側予約画面の必要入力項目を固め、その後に `bookings / enquiries` 管理画面の詳細化へ進むべき状態です。
 
 ### 直近の再開手順
 1. `docs/PROJECT_STATUS.md` を確認する
 2. `docs/WIP.md` を確認する
 3. `docs/admin-implementation-status.md` を確認する
-4. `js/admin-app.js` の現在の `journey_steps` 保存処理と入力バリデーションを確認する
-5. GitHub Pages 上で以下 URL を直接開けるか確認する
+4. [`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) の `#reserve` セクションを確認する
+5. `予約フォームへ進む` が `./workshop-booking.html` を向いていることを確認する
+6. [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html) の Draft UI を確認する
+7. 予約画面で必要になる入力項目を整理する
+8. 必要なら `bookings / enquiries` の追加項目を検討する
+9. GitHub Pages 上で以下 URL を直接開けるか確認する
    - `https://maxedix20251005.github.io/inim-dx/app/pages/home.html`
    - `https://maxedix20251005.github.io/inim-dx/app/pages/journey.html`
    - `https://maxedix20251005.github.io/inim-dx/app/users/me.html`
-6. ダッシュボードで `Recent Bookings` と `Recent Enquiries` が表示されるか確認する
-7. `app/publish.html` でも同じ一覧が表示されるか確認する
-8. [`app/pages/journey.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/app/pages/journey.html) で左右パネル比率を確認する
-9. サイドバー下部の `Admin build` が `20260322a` であることを確認する
-10. 導線設定の左右パネル比率を微調整する
-11. 必要なら `bookings / enquiries` の次着手範囲を整理する
+10. ダッシュボードで `Recent Bookings` と `Recent Enquiries` が表示されるか確認する
+11. `app/publish.html` でも同じ一覧が表示されるか確認する
+12. サイドバー下部の `Admin build` が `20260322a` であることを確認する
 
 ### 次に優先する実装候補
-1. rename 後 DB に追随した `bookings / enquiries` 一覧の確認
-2. `bookings / enquiries` の詳細管理画面着手
+1. `subpages/workshop-booking.html` Draft を基に予約入力項目を確定する
+2. 予約入力項目に基づく `bookings / enquiries` の必要項目見直し
+3. その後に `bookings / enquiries` の詳細管理画面着手
 
 ### 変更時の必須チェック
 - 変更が公開側へ波及していないか確認する

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ワークショップ予約 | inim-dx</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .booking-page { display: grid; gap: 40px; padding-bottom: 96px; }
+        .booking-hero { padding: 68px 0 48px; background: linear-gradient(135deg, rgba(247,242,233,.96), rgba(255,255,255,.92)), radial-gradient(circle at top right, rgba(178,69,49,.16), rgba(178,69,49,0)); }
+        .booking-wrap { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
+        .booking-hero__grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 24px; align-items: end; }
+        .booking-hero__title { font-size: clamp(2.4rem, 4.6vw, 4rem); line-height: 1.15; letter-spacing: .04em; }
+        .booking-hero__lead { margin-top: 16px; color: var(--color-muted); max-width: 42rem; }
+        .booking-summary, .booking-panel, .booking-detail__panel { border: 1px solid rgba(207,201,188,.9); border-radius: 24px; background: rgba(255,255,255,.88); box-shadow: 0 18px 42px rgba(61,45,30,.08); }
+        .booking-summary { padding: 22px 24px; display: grid; gap: 10px; }
+        .booking-summary__row { display: flex; justify-content: space-between; gap: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(221,214,201,.8); }
+        .booking-summary__row:last-child { padding-bottom: 0; border-bottom: 0; }
+        .booking-panel { padding: 26px; }
+        .booking-panel__head { display: flex; justify-content: space-between; gap: 20px; align-items: baseline; margin-bottom: 18px; }
+        .booking-panel__head p { color: var(--color-muted); }
+        .booking-calendar-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+        .booking-month { overflow: hidden; border: 1px solid rgba(217,210,198,.95); border-radius: 20px; background: #fffdfa; }
+        .booking-month__header { display: flex; justify-content: space-between; align-items: center; padding: 16px 18px 10px; border-bottom: 1px solid rgba(221,214,201,.8); }
+        .booking-month table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .booking-month th, .booking-month td { border: 1px solid rgba(228,222,211,.92); }
+        .booking-month th { padding: 10px 0; background: #f8f2e9; font-size: .82rem; color: var(--color-muted); }
+        .booking-month td { height: 98px; padding: 0; vertical-align: top; background: #fffdfa; }
+        .booking-month td.is-outside { background: #f5f0e8; }
+        .booking-day { width: 100%; height: 100%; padding: 10px; border: 0; background: transparent; text-align: left; }
+        .booking-day.is-selectable { cursor: pointer; }
+        .booking-day.is-selectable:hover, .booking-day.is-selectable:focus-visible { background: rgba(178,69,49,.08); }
+        .booking-day.is-selected { background: linear-gradient(135deg, rgba(178,69,49,.18), rgba(178,69,49,.08)); box-shadow: inset 0 0 0 2px rgba(178,69,49,.42); }
+        .booking-day__date { font-weight: 700; }
+        .booking-day__status, .booking-legend span { display: inline-flex; align-items: center; gap: 8px; }
+        .booking-day__status { margin-top: 12px; font-size: .87rem; color: var(--color-main); }
+        .booking-day__price { margin-top: 8px; font-size: .82rem; color: var(--color-muted); }
+        .booking-mark { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border: 1.5px solid currentColor; border-radius: 999px; font-size: .9rem; font-weight: 700; line-height: 1; }
+        .booking-mark[data-status="instant"] { color: #2a6cd6; }
+        .booking-mark[data-status="request"] { color: #8e6a20; border-radius: 4px; }
+        .booking-mark[data-status="few"] { color: #d98b13; }
+        .booking-mark[data-status="full"] { color: #a34431; }
+        .booking-mark[data-status="closed"] { color: #968f83; border-color: transparent; }
+        .booking-legend { display: flex; flex-wrap: wrap; gap: 14px 18px; margin-top: 18px; color: var(--color-muted); font-size: .88rem; }
+        .booking-slots { display: grid; grid-template-columns: 1.2fr .8fr; gap: 24px; }
+        .booking-selected { padding: 20px; border: 1px solid rgba(217,210,198,.95); border-radius: 20px; background: #fffdfa; }
+        .booking-selected__status { margin-top: 10px; color: var(--color-muted); font-size: .92rem; }
+        .booking-slot-list { display: grid; gap: 14px; margin-top: 20px; }
+        .booking-slot { display: grid; grid-template-columns: 1fr auto; gap: 18px; padding: 18px; border: 1px solid rgba(217,210,198,.95); border-radius: 18px; background: #fff; }
+        .booking-slot__time { display: flex; flex-wrap: wrap; gap: 12px 16px; margin-top: 8px; color: var(--color-muted); font-size: .92rem; }
+        .booking-slot__price { margin-top: 8px; font-weight: 700; }
+        .booking-slot__actions { display: grid; gap: 10px; justify-items: end; align-content: center; }
+        .booking-slot__note { color: var(--color-muted); font-size: .84rem; }
+        .booking-slot__button { min-width: 180px; }
+        .booking-aside { display: grid; gap: 14px; }
+        .booking-aside__card { padding: 18px; border: 1px solid rgba(217,210,198,.95); border-radius: 18px; background: #fffdfa; }
+        .booking-aside__card p, .booking-aside__card li { color: var(--color-muted); font-size: .92rem; line-height: 1.7; }
+        .booking-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 18px; }
+        .booking-tab { min-height: 46px; border: 1px solid rgba(217,210,198,.95); border-radius: 14px; background: #fffdfa; font-weight: 700; cursor: pointer; }
+        .booking-tab.is-active { border-color: rgba(178,69,49,.45); background: rgba(178,69,49,.1); color: var(--color-accent); }
+        .booking-detail__panel { padding: 26px; }
+        .booking-tab-panel { display: none; padding: 0; }
+        .booking-tab-panel.is-active { display: block; }
+        .booking-detail__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 18px; }
+        .booking-detail__step { overflow: hidden; border: 1px solid rgba(217,210,198,.95); border-radius: 18px; background: #fff; }
+        .booking-detail__step img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+        .booking-detail__step div { padding: 14px; }
+        .booking-detail__table { width: 100%; margin-top: 18px; border-collapse: collapse; }
+        .booking-detail__table th, .booking-detail__table td { padding: 14px 16px; border: 1px solid rgba(228,222,211,.92); text-align: left; vertical-align: top; }
+        .booking-detail__table th { width: 22%; background: #f8f2e9; font-size: .92rem; }
+        .booking-map { overflow: hidden; margin-top: 18px; border-radius: 18px; }
+        .booking-map iframe { width: 100%; min-height: 360px; border: 0; }
+        @media (max-width: 1100px) {
+            .booking-hero__grid, .booking-calendar-grid, .booking-slots, .booking-detail__grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 720px) {
+            .booking-wrap { width: min(100% - 28px, 100%); }
+            .booking-panel { padding: 20px; }
+            .booking-tabs { grid-template-columns: 1fr 1fr; }
+            .booking-slot { grid-template-columns: 1fr; }
+            .booking-slot__actions { justify-items: stretch; }
+            .booking-slot__button { width: 100%; min-width: 0; }
+        }
+    </style>
+</head>
+
+<body data-root=".." data-page-key="workshopBooking">
+    <main id="page-main" class="booking-page">
+        <section class="booking-hero">
+            <div class="booking-wrap booking-hero__grid">
+                <div>
+                    <p class="section-kicker">Workshop Booking</p>
+                    <h1 class="booking-hero__title">空き状況を見ながら、体験日時を選ぶ</h1>
+                    <p class="booking-hero__lead">Draft 版の予約画面です。上部カレンダーで開催日と空き状況を確認し、予約可能日を選ぶと、下部に集合時間、体験時間、料金、予約導線を表示します。</p>
+                </div>
+                <aside class="booking-summary">
+                    <div class="booking-summary__row"><span>開催期間</span><strong>2026年4月〜5月</strong></div>
+                    <div class="booking-summary__row"><span>対象店舗</span><strong>浅草店 / 柴又店 / ソラマチ店</strong></div>
+                    <div class="booking-summary__row"><span>予約方式</span><strong>即時予約 / リクエスト予約</strong></div>
+                    <div class="booking-summary__row"><span>料金目安</span><strong>おひとりさま 5,500円〜</strong></div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="booking-wrap">
+            <section class="booking-panel">
+                <div class="booking-panel__head">
+                    <div><p class="section-kicker">Availability</p><h2>空き状況</h2></div>
+                    <p>体験希望日を選ぶと、下部に時間帯と料金を表示します。</p>
+                </div>
+                <div class="booking-calendar-grid" id="booking-calendar"></div>
+                <div class="booking-legend">
+                    <span><i class="booking-mark" data-status="instant">○</i> 即時予約可</span>
+                    <span><i class="booking-mark" data-status="request">□</i> リクエスト予約可</span>
+                    <span><i class="booking-mark" data-status="few">△</i> 残席数少ない</span>
+                    <span><i class="booking-mark" data-status="full">×</i> 空き無し</span>
+                    <span><i class="booking-mark" data-status="closed">-</i> 開催無し</span>
+                </div>
+            </section>
+        </section>
+
+        <section class="booking-wrap">
+            <section class="booking-panel">
+                <div class="booking-panel__head">
+                    <div><p class="section-kicker">Selected Date</p><h2>日時の確認と予約</h2></div>
+                    <p>○ / □ / △ の日を選ぶと、下部に集合時間、料金、予約導線を表示します。</p>
+                </div>
+                <div class="booking-slots">
+                    <div class="booking-selected">
+                        <h3 id="booking-selected-title">2026年4月5日(日)</h3>
+                        <p class="booking-selected__status" id="booking-selected-status">即時予約可。浅草店開催 / 料金 5,500円〜</p>
+                        <div class="booking-slot-list" id="booking-slot-list"></div>
+                    </div>
+                    <aside class="booking-aside">
+                        <div class="booking-aside__card">
+                            <h3>選択時の表示ルール</h3>
+                            <p>× と - は選択不可です。○ は即時予約、□ はリクエスト送信、△ は残席わずかの前提で Draft を作っています。</p>
+                        </div>
+                        <div class="booking-aside__card">
+                            <h3>この Draft で詰める項目</h3>
+                            <ul>
+                                <li>人数入力をこの画面に置くか</li>
+                                <li>店舗選択を事前に出すか</li>
+                                <li>即時予約とリクエスト予約で入力項目を分けるか</li>
+                            </ul>
+                        </div>
+                    </aside>
+                </div>
+            </section>
+        </section>
+
+        <section class="booking-wrap">
+            <section class="booking-detail__panel">
+                <div>
+                    <div class="booking-panel__head">
+                        <div><p class="section-kicker">Detail</p><h2>詳細情報</h2></div>
+                        <p>予約直前に確認したい説明をタブでまとめています。</p>
+                    </div>
+                    <div class="booking-tabs" role="tablist" aria-label="詳細情報タブ">
+                        <button class="booking-tab is-active" type="button" data-tab="plan">プラン情報</button>
+                        <button class="booking-tab" type="button" data-tab="flow">体験の流れ</button>
+                        <button class="booking-tab" type="button" data-tab="location">集合場所・体験場所</button>
+                        <button class="booking-tab" type="button" data-tab="notes">注意事項・その他</button>
+                    </div>
+                    <div class="booking-tab-panel is-active" data-panel="plan">
+                        <h3>浅草で香水づくり / 香りを選んで自分でブレンドするワークショップ</h3>
+                        <p>初心者向けの調香体験 Draft です。実装時にはプラン名、所要時間、料金、開催曜日、予約可能人数を `bookings` 設計と合わせて確定します。</p>
+                        <table class="booking-detail__table"><tbody>
+                            <tr><th>開催期間</th><td>2026年4月1日〜2026年5月31日</td></tr>
+                            <tr><th>所要時間</th><td>約60分〜75分</td></tr>
+                            <tr><th>料金</th><td>おひとりさま 5,500円 / ペア 10,000円</td></tr>
+                            <tr><th>含まれるもの</th><td>体験料、香水1本(10ml)、香料メモ</td></tr>
+                            <tr><th>予約人数</th><td>1名〜4名 / 回</td></tr>
+                        </tbody></table>
+                    </div>
+                    <div class="booking-tab-panel" data-panel="flow">
+                        <div class="booking-detail__grid">
+                            <article class="booking-detail__step"><img src="../images/Workshop/Workshop_ (1).png" alt="受付カウンターの様子"><div><h3>1. 集合・受付</h3><p>ご予約時間の10分前を目安にご来店ください。</p></div></article>
+                            <article class="booking-detail__step"><img src="../images/Workshop/Workshop_ (2).png" alt="香料棚の様子"><div><h3>2. 香り選び</h3><p>候補を比較しながら好きな香りを選びます。</p></div></article>
+                            <article class="booking-detail__step"><img src="../images/Workshop/Workshop_ (3).png" alt="調香の様子"><div><h3>3. 体験・仕上げ</h3><p>配合比を整えて一本に仕上げます。</p></div></article>
+                        </div>
+                    </div>
+                    <div class="booking-tab-panel" data-panel="location">
+                        <table class="booking-detail__table"><tbody>
+                            <tr><th>集合場所</th><td>〒111-0032 東京都台東区浅草2丁目1-5 inim-dx 浅草店</td></tr>
+                            <tr><th>アクセス</th><td>つくばエクスプレス浅草駅より徒歩6分 / 東京メトロ銀座線浅草駅より徒歩9分</td></tr>
+                            <tr><th>体験場所</th><td>同店舗 2F Workshop Space</td></tr>
+                        </tbody></table>
+                        <div class="booking-map"><iframe title="浅草店の地図" src="https://www.google.com/maps?q=%E6%B5%85%E8%8D%89%E5%AF%BA&output=embed"></iframe></div>
+                    </div>
+                    <div class="booking-tab-panel" data-panel="notes">
+                        <table class="booking-detail__table"><tbody>
+                            <tr><th>注意事項</th><td>ワークショップ不参加での同伴は基本的にお断りしています。在庫状況により選べる香料が一部変わる場合があります。</td></tr>
+                            <tr><th>キャンセル</th><td>前日18:00までは無料、それ以降は店舗確認のうえ対応予定です。最終仕様時に cancellation policy を確定します。</td></tr>
+                            <tr><th>備考</th><td>ここには予約完了前に必ず読んでほしい内容を整理する想定です。</td></tr>
+                        </tbody></table>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </main>
+    <script src="../js/site-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/site-shell.js"></script>
+    <script>
+        (() => {
+            const calendarHost = document.getElementById("booking-calendar");
+            const selectedTitle = document.getElementById("booking-selected-title");
+            const selectedStatus = document.getElementById("booking-selected-status");
+            const slotList = document.getElementById("booking-slot-list");
+            const months = [
+                { label: "2026年3月", cells: [null, null, null, null, null, null, { d: 1, s: "closed" }, { d: 2, s: "closed" }, { d: 3, s: "closed" }, { d: 4, s: "closed" }, { d: 5, s: "closed" }, { d: 6, s: "closed" }, { d: 7, s: "closed" }, { d: 8, s: "closed" }, { d: 9, s: "closed" }, { d: 10, s: "closed" }, { d: 11, s: "closed" }, { d: 12, s: "closed" }, { d: 13, s: "closed" }, { d: 14, s: "closed" }, { d: 15, s: "closed" }, { d: 16, s: "closed" }, { d: 17, s: "closed" }, { d: 18, s: "closed" }, { d: 19, s: "closed" }, { d: 20, s: "closed" }, { d: 21, s: "closed" }, { d: 22, s: "closed" }, { d: 23, s: "closed" }, { d: 24, s: "closed" }, { d: 25, s: "closed" }, { d: 26, s: "closed" }, { d: 27, s: "closed" }, { d: 28, s: "request", p: "5,500円", k: "2026-03-28" }, { d: 29, s: "instant", p: "5,500円", k: "2026-03-29" }, { d: 30, s: "closed" }, { d: 31, s: "closed" }, null, null, null] },
+                { label: "2026年4月", cells: [null, null, null, { d: 1, s: "closed" }, { d: 2, s: "closed" }, { d: 3, s: "closed" }, { d: 4, s: "instant", p: "5,500円", k: "2026-04-04" }, { d: 5, s: "instant", p: "5,500円", k: "2026-04-05" }, { d: 6, s: "closed" }, { d: 7, s: "closed" }, { d: 8, s: "closed" }, { d: 9, s: "closed" }, { d: 10, s: "closed" }, { d: 11, s: "instant", p: "5,500円", k: "2026-04-11" }, { d: 12, s: "instant", p: "5,500円", k: "2026-04-12" }, { d: 13, s: "closed" }, { d: 14, s: "closed" }, { d: 15, s: "closed" }, { d: 16, s: "closed" }, { d: 17, s: "closed" }, { d: 18, s: "full" }, { d: 19, s: "full" }, { d: 20, s: "closed" }, { d: 21, s: "closed" }, { d: 22, s: "closed" }, { d: 23, s: "closed" }, { d: 24, s: "closed" }, { d: 25, s: "few", p: "5,500円", k: "2026-04-25" }, { d: 26, s: "instant", p: "5,500円", k: "2026-04-26" }, { d: 27, s: "closed" }, { d: 28, s: "closed" }, { d: 29, s: "request", p: "5,500円", k: "2026-04-29" }, { d: 30, s: "closed" }, null, null] }
+            ];
+            const schedule = {
+                "2026-04-05": { label: "2026年4月5日(日)", status: "即時予約可。浅草店開催 / 料金 5,500円〜", slots: [{ g: "10:50", e: "11:00〜12:00", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "12:50", e: "13:00〜14:00", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "14:50", e: "15:00〜16:00", p: "おひとりさま 5,500円", n: "即時確定" }] },
+                "2026-04-04": { label: "2026年4月4日(土)", status: "即時予約可。浅草店開催 / 料金 5,500円〜", slots: [{ g: "10:20", e: "10:30〜11:30", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "12:20", e: "12:30〜13:30", p: "おひとりさま 5,500円", n: "即時確定" }] },
+                "2026-04-25": { label: "2026年4月25日(土)", status: "残席わずか。浅草店開催 / 料金 5,500円〜", slots: [{ g: "10:50", e: "11:00〜12:00", p: "おひとりさま 5,500円", n: "残席 2" }, { g: "14:50", e: "15:00〜16:00", p: "おひとりさま 5,500円", n: "残席 1" }] },
+                "2026-04-29": { label: "2026年4月29日(水・祝)", status: "リクエスト予約可。スタッフ確認後にご連絡します。", slots: [{ g: "10:20", e: "10:30〜11:30", p: "おひとりさま 5,500円", n: "24時間以内に回答予定" }, { g: "13:20", e: "13:30〜14:30", p: "おひとりさま 5,500円", n: "24時間以内に回答予定" }] }
+            };
+            const marks = { instant: ["○", "即時予約可"], request: ["□", "リクエスト予約可"], few: ["△", "残席数少ない"], full: ["×", "空き無し"], closed: ["-", "開催無し"] };
+            const days = ["月", "火", "水", "木", "金", "土", "日"];
+            let selectedKey = "2026-04-05";
+            const renderSlots = () => {
+                const current = schedule[selectedKey];
+                selectedTitle.textContent = current?.label || "予約可能日を選択してください";
+                selectedStatus.textContent = current?.status || "○ / □ / △ の日を選ぶと、時間帯を表示します。";
+                slotList.innerHTML = (current?.slots || []).map((slot) => `<article class="booking-slot"><div><strong>${current.label}</strong><div class="booking-slot__time"><span>集合 ${slot.g}</span><span>体験 ${slot.e}</span></div><p class="booking-slot__price">${slot.p}</p></div><div class="booking-slot__actions"><span class="booking-slot__note">${slot.n}</span><a class="button button--primary booking-slot__button" href="../index.html#contact">予約へ進む</a></div></article>`).join("");
+            };
+            const renderCalendar = () => {
+                calendarHost.innerHTML = months.map((month) => `<section class="booking-month"><div class="booking-month__header"><h3>${month.label}</h3><span>土日祝を中心に開催</span></div><table><thead><tr>${days.map((d) => `<th>${d}</th>`).join("")}</tr></thead><tbody>${Array.from({ length: Math.ceil(month.cells.length / 7) }, (_, i) => `<tr>${month.cells.slice(i * 7, i * 7 + 7).map((cell) => { if (!cell) return '<td class="is-outside"></td>'; const [mark, label] = marks[cell.s]; const selectable = ["instant", "request", "few"].includes(cell.s); return `<td><button class="booking-day${selectable ? ' is-selectable' : ''}${cell.k === selectedKey ? ' is-selected' : ''}" type="button" ${cell.k ? `data-date-key="${cell.k}"` : ''} ${!selectable ? 'disabled' : ''}><span class="booking-day__date">${cell.d}</span><span class="booking-day__status"><i class="booking-mark" data-status="${cell.s}">${mark}</i><span>${label}</span></span>${cell.p ? `<div class="booking-day__price">${cell.p}</div>` : ''}</button></td>`; }).join("")}</tr>`).join("")}</tbody></table></section>`).join("");
+                calendarHost.querySelectorAll("[data-date-key]").forEach((button) => button.addEventListener("click", () => { selectedKey = button.dataset.dateKey; renderCalendar(); renderSlots(); }));
+            };
+            document.querySelectorAll(".booking-tab").forEach((button) => {
+                button.addEventListener("click", () => {
+                    const target = button.dataset.tab;
+                    document.querySelectorAll(".booking-tab").forEach((item) => item.classList.toggle("is-active", item === button));
+                    document.querySelectorAll(".booking-tab-panel").forEach((panel) => panel.classList.toggle("is-active", panel.dataset.panel === target));
+                });
+            });
+            renderCalendar();
+            renderSlots();
+        })();
+    </script>
+</body>
+
+</html>

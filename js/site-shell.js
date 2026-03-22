@@ -35,6 +35,7 @@
         searchProjects: { path: 'subpages/search-projects.html', label: 'プロジェクト・読み物', title: 'Search / Projects', latest: '関連ページは現在作成準備中です。' },
         searchEvents: { path: 'subpages/search-events.html', label: 'イベント情報', title: 'Search / Events', latest: '関連ページは現在作成準備中です。' },
         workshop: { path: 'subpages/workshop.html', label: '香りと遊ぶ', title: 'Workshop', latest: '香りのワークショップ予約ページを公開しました。デジタル体験から店頭予約まで一続きで案内します。' },
+        workshopBooking: { path: 'subpages/workshop-booking.html', label: 'Workshop Booking', title: 'Workshop / Booking', latest: 'ワークショップ予約画面のドラフトを公開しました。空き状況を見ながら日付と時間帯を選べます。' },
         smartScent: { path: 'subpages/smart-scent-design.html', label: 'Smart Scent Design', title: 'Smart Scent Design', latest: '色・粒子・サウンドを使って、自分の香りを視覚的に編集するデジタル調香ページです。' },
         article: { path: 'subpages/article.html', label: '記事', title: 'Article', latest: '記事一覧ページは現在作成準備中です。' },
         sale: { path: 'subpages/sale.html', label: 'Sale', title: 'Sale', latest: 'セールページは現在作成準備中です。' },
@@ -122,6 +123,7 @@
             key: 'workshop',
             items: [
                 { label: '香游について', href: link('workshop') },
+                { label: '予約する', href: link('workshopBooking') },
                 { label: '体験の流れ', href: `${root}/index.html#journey` },
                 { label: '体験を始める', href: link('smartScent') }
             ]
@@ -196,6 +198,7 @@
         searchProjects: 'scentSearch',
         searchEvents: 'scentSearch',
         workshop: 'workshop',
+        workshopBooking: 'workshop',
         smartScent: 'workshop',
         article: 'article',
         sale: 'sale',
@@ -255,7 +258,7 @@
             <a class="${['about', 'brand', 'brandGroundbreakers', 'brandNezs', 'brandAromaCrops', 'brandKosaido', 'brandWatoyo', 'brandCocktailSoap', 'brandEnjoyth', 'brandAwaji', 'brandOldAroma'].includes(pageKey) ? 'is-current' : ''}" href="${link('brand')}">ブランド</a>
             <a class="${['items', 'itemHomeFragrance', 'itemBodyCare', 'itemDiy', 'itemSale', 'itemEcology', 'itemRefillTools', 'itemGiftSet'].includes(pageKey) ? 'is-current' : ''}" href="${link('items')}">アイテム</a>
             <a class="${['scentSearch', 'searchStoreInfo', 'searchProjects', 'searchEvents'].includes(pageKey) ? 'is-current' : ''}" href="${link('scentSearch')}">香りから探す</a>
-            <a class="${['workshop', 'smartScent'].includes(pageKey) ? 'is-current' : ''}" href="${link('workshop')}">香りと遊ぶ</a>
+            <a class="${['workshop', 'workshopBooking', 'smartScent'].includes(pageKey) ? 'is-current' : ''}" href="${link('workshop')}">香りと遊ぶ</a>
             <a class="${pageKey === 'article' ? 'is-current' : ''}" href="${link('article')}">記事</a>
             <a class="${['sale', 'itemSale'].includes(pageKey) ? 'is-current' : ''}" href="${link('sale')}">Sale</a>
             <a class="${pageKey === 'stores' ? 'is-current' : ''}" href="${link('stores')}">実店舗</a>

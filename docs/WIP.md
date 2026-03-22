@@ -67,9 +67,14 @@
 - パスワード再設定フローは解消した
 - ログイン後のプロフィール取得、ロール表示、`account_status` 表示は正常化した
 - Console エラーも解消済み
-- 現在の主な未解決事項は、`bookings / enquiries` の詳細管理画面へどこまで踏み込むかの整理です
+- 現在の主な未解決事項は、Workshop 予約画面で必要な入力項目をどこまで持たせるかの整理です
 - 2026-03-22 時点で、DB rename migration は実行済みで、実DB の現行名称は `bookings`, `booking_status_logs`, `enquiries`, `enquiry_status_logs` です
 - 英語表記が必要な場合は Australian English に統一します
+- 2026-03-22 の現状把握で、[`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) の `#reserve` セクションは存在するが、予約CTAはまだ `../index.html#contact` に接続されていることを確認しました
+- その後、[`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html) の Draft を追加し、`workshop.html` の CTA はそこへ差し替えました
+- この対応で、公開側の最小差分として `js/site-shell.js` と `subpages/workshop.html` を更新しています
+- 予約ページ Draft には、空き状況カレンダー、選択日の時間帯表示、集合時間、料金、`予約へ進む` ボタン、詳細4タブを実装しています
+- 次は `bookings / enquiries` 管理画面の詳細化ではなく、この Draft を基に public 側の Workshop 予約項目を先に固める方針です
 - 2026-03-21 の最終確認では、アセット説明文は良好、トップ編集の左右比率は良好、導線設定の左右比率は微調整余地ありという結果でした
 - 管理画面 HTML の CSS / JS 参照にはバージョン文字列を付け、古い JS キャッシュが残りにくいようにしています
 - 2026-03-21 の確認では、`journey_steps` でフロントバリデーションをすり抜け、Supabase 側の制約エラーまで到達するケースがありました
@@ -77,31 +82,35 @@
 - 2026-03-21 の実画面確認で、`journey_steps` の各バリデーションは正常動作し、正常値保存、Console エラーなしまで確認しました
 - `content_assets` の検索欄とバケット絞り込みは、2026-03-21 の実画面で表示確認まで完了しました
 - ダッシュボードと公開管理に追加した `bookings / enquiries` 一覧は、2026-03-21 の実画面確認で正常でした
-- 次は、`app/pages/journey.html` の左右パネル比率微調整です
+- 導線設定の左右比率微調整は残課題ですが、優先度は Workshop 予約導線設計の後ろです
 
 ### 明日最初にやること
-1. `bookings / enquiries` の read-only 一覧が rename 後 DB で正常に出るか確認する
-2. `Admin build: 20260322a` を確認する
-3. 必要なら `bookings / enquiries` の詳細画面着手範囲を整理する
+1. [`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) の `#reserve` セクションを起点に、Workshop 予約画面の必要項目を整理する
+2. `予約フォームへ進む` が `./workshop-booking.html` を向いていることを確認する
+3. 予約項目整理後に `bookings / enquiries` の追加項目有無を判断する
 
 ### 明日の確認ポイント
-- 導線設定の一覧テーブルが窮屈でないか
-- フォーム側の入力欄が狭くなりすぎていないか
-- トップ編集との見た目差が大きすぎないか
+- `#reserve` から遷移すべき予約画面の役割が明確か
+- `subpages/workshop-booking.html` Draft の UI 構成が要件整理のたたき台として十分か
+- 必須入力項目と任意入力項目を切り分けられるか
+- `bookings / enquiries` に追加すべき列があるか
 - サイドバー下部の `Admin build` が `20260322a` になっているか
 
 ### 明日の報告フォーマット
-- `導線設定の左右比率:` 良好 / 要改善
-- `補正後の見やすさ:` 改善 / 変化なし / 悪化
+- `予約導線の起点:` 確認済み / 未確認
+- `現行CTA:` `./workshop-booking.html` / その他
+- `Draft UI:` 良好 / 要改善
+- `必要入力項目:` 整理済み / 未整理
 - `Admin build:` 20260322a / その他
 - `Console:` エラーなし / エラーあり
 - `補足:` 必要に応じて詳細
 
 ### 次の実装候補
-- `bookings / enquiries` 管理画面へ着手する
-- `bookings / enquiries` のステータス更新 UI を検討する
-- 顧客表示名や店舗名の join 表示を検討する
+- `subpages/workshop-booking.html` Draft を基に予約項目を固める
+- 予約入力項目に基づき `bookings / enquiries` の必要列を整理する
+- その後に `bookings / enquiries` 管理画面へ着手する
 
 ### 確認済み事項
 - `docs/admin-implementation-status.md` は更新済み
+- `css/style.css` は未変更
 - 本ファイル作成後、日本語の文字化けが発生していないことを再読込で確認する

@@ -18,23 +18,27 @@
 
 ### 実装方針
 - 公開サイトの既存実装へ影響を出さないことを最優先に進めています。
-- そのため、公開サイト用の `js/site-shell.js` と `css/style.css` は変更しない方針です。
+- そのため、公開サイト用の `css/style.css` は変更しない方針です。
+- ただし 2026-03-22 の Workshop 予約導線 Draft 追加では、公開側の導線追加に必要な最小差分として `js/site-shell.js` と `subpages/workshop.html` を更新しています。
 - 管理画面は、専用の `js/admin-app.js` と `css/admin-app.css` に分離して実装しています。
 - `app/` 配下の HTML は、管理画面専用アセットを参照するための差し替えに限定しています。
-- Workshop の予約と問い合わせに関する呼称は、今後 `bookings / enquiries` に統一します。
+- Workshop の予約と問い合わせに関する呼称は、`bookings / enquiries` に統一します。
 - 2026-03-22 時点で、Supabase rename migration 実行により DB テーブル名は `bookings`, `booking_status_logs`, `enquiries`, `enquiry_status_logs` に更新済みです。
 - 英語表記が必要な場合は、今後 Australian English に統一します。
+- 次の主実装は、管理画面の詳細化ではなく、公開側 [`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) の `#reserve` から始まる予約導線設計です。
 
 ### ここまでの変更範囲
 #### 新規追加
 - `css/admin-app.css`
 - `js/admin-app.js`
 - `app/pages/journey.html`
+- `subpages/workshop-booking.html`
 - `docs/AI_CONTEXT_PROMPT.md`
 - `docs/admin-implementation-status.md`
 - `docs/WIP.md`
 
 #### 参照先変更
+- `subpages/workshop.html`
 - `app/login.html`
 - `app/dashboard.html`
 - `app/publish.html`
@@ -43,6 +47,7 @@
 - `app/users/me.html`
 - `app/password/forgot.html`
 - `app/password/reset.html`
+- `js/site-shell.js`
 
 ### 現在までに実装済みの内容
 #### 認証・アカウント
@@ -153,25 +158,37 @@
 - `画像アセットID` の横に、フィルタの使い方を示す説明文を追加しました。
 - 2026-03-21 の最終確認で、アセット説明文は良好、トップ編集の左右比率は良好を確認しました。
 - 一方で、導線設定の左右比率は「概ね良好だが、まだ微調整余地あり」という結果です。
-- 次回は [`app/pages/journey.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/app/pages/journey.html) の左右比率を中心に微調整を行うのが最優先です。
+- 導線設定の左右比率微調整は残課題ですが、優先度は Workshop 予約導線設計の後ろに置いています。
 - 同時に、画面・docs・コード上の呼称は `bookings / enquiries` へ統一しました。
+
+#### 8. Workshop 予約導線の現状把握
+- [`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) の `#reserve` セクションは存在します。
+- 2026-03-22 時点では、`予約フォームへ進む` ボタンは [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html) を参照するよう更新しました。
+- 同セクションには `デジタル調香を試す` への導線もあり、予約前体験との関係整理が必要です。
+- 予約ページ Draft では、上部カレンダーで空き状況を `○ / □ / △ / × / -` で表示し、予約可能日を選ぶと下部に時間帯、集合時間、料金、`予約へ進む` ボタンが表示される構成を作成しました。
+- 予約ページ下部には、`プラン情報`、`体験の流れ`、`集合場所・体験場所`、`注意事項・その他` の4タブも Draft 実装しています。
+- したがって、次は `bookings / enquiries` の管理画面詳細化ではなく、この公開側予約画面で必要項目を先に確定するのが適切です。
 
 ### 次に優先して進める作業
 1. `PROJECT_STATUS.md` を起点に運用継続する
 2. `AI_CONTEXT_PROMPT.md` を復元用コンテキストとして都度更新運用する
-3. `bookings / enquiries` の read-only 一覧が rename 後 DB で正常表示されるか確認する
-4. `bookings / enquiries` の詳細管理画面を検討する
+3. [`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) `#reserve` 起点の予約導線を整理する
+4. [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html) Draft を基に、予約画面で必要な入力項目を洗い出し、`bookings / enquiries` の追加項目有無を判断する
+5. その後に `app/` 側の `bookings / enquiries` 管理画面詳細化へ進む
 
 ### 再開時の確認手順
-1. [`app/pages/journey.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/app/pages/journey.html) を開く
-2. サイドバー下部の `Admin build` が `20260322a` であることを確認する
-3. 左右パネル比率を確認し、一覧の見やすさとフォームの可読性を見比べる
-4. 必要なら `bookings / enquiries` の詳細管理画面着手へ進む
+1. [`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) の `#reserve` セクションを確認する
+2. `予約フォームへ進む` が [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html) を向いていることを確認する
+3. 予約画面 Draft のカレンダー、時間帯表示、詳細タブを確認する
+4. 予約画面に必要な入力項目を整理する
+5. その整理結果をもとに `bookings / enquiries` の追加項目有無を判断する
+6. その後に `app/` 側の詳細画面設計へ進む
 
 ### 確認時の報告フォーマット
-- `導線設定の左右比率:` 良好 / 要改善
-- `補正後の見やすさ:` 改善 / 変化なし / 悪化
-- `Admin build:` 20260322a / その他
+- `予約導線の起点:` 確認済み / 未確認
+- `現行CTA:` `./workshop-booking.html` / その他
+- `Draft UI:` 良好 / 要改善
+- `必要入力項目:` 整理済み / 未整理
 - `補足:` 必要に応じて詳細
 - `Console:` エラーなし / エラーあり
 
@@ -182,6 +199,6 @@
 - `docs/ISSUE_LIST.md`
 
 ### 確認済み事項
-- 公開サイト用の `js/site-shell.js` は未変更です。
+- 公開サイト用の `js/site-shell.js` は、Workshop 予約 Draft 追加に必要な最小差分のみ更新済みです。
 - 公開サイト用の `css/style.css` は未変更です。
 - 本ファイル更新後、日本語の文字化け確認を行う前提です。
