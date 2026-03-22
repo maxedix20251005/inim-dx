@@ -12,8 +12,7 @@
 - 管理画面専用の描画と認証処理は、新規の `js/admin-app.js` と `css/admin-app.css` に分離しています。
 - 既存の `app/` 配下HTMLは、参照先を管理画面専用アセットに差し替えるだけに留めています。
 - Workshop の予約と問い合わせに関する呼称は、今後 `bookings / enquiries` に統一します。
-- DB テーブル名はリスク回避のため当面 `reservations` / `inquiries` のまま据え置きます。
-- 予約サイト要件確定後は、`bookings`, `booking_status_logs`, `enquiries`, `enquiry_status_logs` を新規作成し、そちらを正本 DB とする方針です。
+- 2026-03-22 時点で、DB テーブル名は `bookings`, `booking_status_logs`, `enquiries`, `enquiry_status_logs` へ rename migration 済みです。
 - 英語表記は Australian English に統一します。
 
 ### ここまでの変更範囲
@@ -103,7 +102,8 @@
 - `更新済み` バッジは改行しにくい表示へ調整しました。
 - トップ編集と導線設定の左右パネルは、等幅ではなく情報量に合わせた比率へ調整しました。
 - 画面・docs・コード上の呼称は `bookings / enquiries` に統一しました。
-- 管理画面 HTML のバージョン文字列は `20260321k` に更新し、最新 JS / CSS を読み込みやすくしました。
+- Supabase rename migration 後、`js/admin-app.js` の参照テーブル名とカラム名を `bookings`, `enquiries`, `booking_type`, `booked_at` へ追随させました。
+- 管理画面 HTML のバージョン文字列は `20260322a` に更新し、最新 JS / CSS を読み込みやすくしました。
 - 2026-03-21 の最終確認では、アセット説明文は良好、トップ編集の左右比率は良好、導線設定の左右比率は微調整余地ありという評価でした。
 - サイドバーの `セッション確認` ボタンは、視認性改善のため背景をグレー系、文字色を明色へ変更しました。
 - `セッション確認` ボタンの視認性改善が反映されていることを確認しました。

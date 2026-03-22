@@ -4,7 +4,7 @@
     if (!body || !main) return;
 
     const root = body.dataset.root || ".";
-    const ADMIN_BUILD_VERSION = "20260321k";
+    const ADMIN_BUILD_VERSION = "20260322a";
     const pageKey = body.dataset.pageKey || "appLogin";
     const cfg = window.INIM_SITE_CONFIG || {};
     const sbApi = window.supabase || null;
@@ -399,11 +399,11 @@
             <section class="admin-panel"><h2>運用メモ</h2><p>DB 設計書の journey_steps 定義に合わせて step_no / step_name / link_url / helper_text / is_visible を更新します。</p></section>
         </div>`;
     };
-    const renderPublish = () => `<div class="admin-main">${statusHtml()}<section class="admin-grid admin-grid--double"><article class="admin-panel"><h2>公開前チェック</h2><ul class="admin-inline-list"><li>トップ編集の保存結果を確認</li><li>導線設定のリンク先と表示順を確認</li><li>ログイン中ユーザーのロールを確認</li></ul></article><article class="admin-panel"><h2>現在の状態</h2><ul class="admin-inline-list"><li>トップ項目数: ${escapeHtml(String(state.heroItems.length))}</li><li>導線項目数: ${escapeHtml(String(state.journeySteps.length))}</li><li>Bookings件数: ${escapeHtml(String(state.metrics.bookings))}</li><li>Open Enquiries: ${escapeHtml(String(state.metrics.enquiries))}</li><li>最終更新者: ${escapeHtml(state.user?.email || "未取得")}</li></ul></article></section><section class="admin-grid admin-grid--double"><article class="admin-panel"><h2>Pre-publish Bookings</h2>${renderBookingSnapshot()}</article><article class="admin-panel"><h2>Pre-publish Enquiries</h2>${renderEnquirySnapshot()}</article></section></div>`;
+    const renderPublish = () => `<div class="admin-main">${statusHtml()}<section class="admin-grid admin-grid--double"><article class="admin-panel"><h2>公開前チェック</h2><ul class="admin-inline-list"><li>トップ編集の保存結果を確認</li><li>導線設定のリンク先と表示順を確認</li><li>ログイン中ユーザーのロールを確認</li></ul></article><article class="admin-panel"><h2>現在の状態</h2><ul class="admin-inline-list"><li>トップ項目数: ${escapeHtml(String(state.heroItems.length))}</li><li>導線項目数: ${escapeHtml(String(state.journeySteps.length))}</li><li>Bookings: ${escapeHtml(String(state.metrics.bookings))}</li><li>Open Enquiries: ${escapeHtml(String(state.metrics.enquiries))}</li><li>最終更新者: ${escapeHtml(state.user?.email || "未取得")}</li></ul></article></section><section class="admin-grid admin-grid--double"><article class="admin-panel"><h2>Pre-publish Bookings</h2>${renderBookingSnapshot()}</article><article class="admin-panel"><h2>Pre-publish Enquiries</h2>${renderEnquirySnapshot()}</article></section></div>`;
     const renderUsers = () => `<div class="admin-main">${statusHtml()}<section class="admin-grid admin-grid--double"><article class="admin-state"><h2>セッション</h2><div class="admin-key-value"><strong>ユーザーID</strong><span>${escapeHtml(state.user?.id || "未取得")}</span></div><div class="admin-key-value"><strong>メールアドレス</strong><span>${escapeHtml(state.user?.email || "未取得")}</span></div><div class="admin-key-value"><strong>最終サインイン</strong><span>${escapeHtml(fmtDate(state.user?.last_sign_in_at))}</span></div></article><article class="admin-state"><h2>プロフィール / ロール</h2><div class="admin-key-value"><strong>表示名</strong><span>${escapeHtml(state.profile?.display_name || "未取得")}</span></div><div class="admin-key-value"><strong>利用状態</strong><span>${escapeHtml(state.profile?.account_status || "未取得")}</span></div><div class="admin-key-value"><strong>ロール</strong><span>${escapeHtml(state.roles.map(roleLabel).join(", ") || "未取得")}</span></div></article></section>${state.profile ? `<section class="admin-state"><h2>取得済み user_profiles</h2>${Object.entries(state.profile).map(([k, v]) => `<div class="admin-key-value"><strong>${escapeHtml(pretty(k))}</strong><span>${escapeHtml(typeof v === "object" ? JSON.stringify(v) : String(v ?? ""))}</span></div>`).join("")}</section>` : ""}${state.roleAssignments.length ? `<section class="admin-state"><h2>取得済み user_role_assignments</h2>${state.roleAssignments.map((row, index) => `<div class="admin-key-value"><strong>行 ${escapeHtml(index + 1)}</strong><span>${escapeHtml(JSON.stringify(row))}</span></div>`).join("")}</section>` : ""}</div>`;
     const renderBookingSnapshot = () => {
         if (!state.recentBookings.length) return `<div class="admin-empty">Bookings データはまだ取得されていません。</div>`;
-        return `<ul class="admin-record-list">${state.recentBookings.map((row) => `<li><div class="admin-record-list__title"><strong>${escapeHtml(row.reservation_type || "booking")}</strong><span class="admin-record-list__status">${escapeHtml(row.status || "未設定")}</span></div><div class="admin-record-list__meta"><span>Booking日時: ${escapeHtml(fmtDate(row.reserved_at))}</span><span>人数: ${escapeHtml(String(row.participant_count ?? "未設定"))}</span></div><div class="admin-record-list__meta"><span>店舗ID: ${escapeHtml(fmtShortId(row.store_id))}</span><span>顧客ID: ${escapeHtml(fmtShortId(row.customer_profile_id))}</span></div></li>`).join("")}</ul>`;
+        return `<ul class="admin-record-list">${state.recentBookings.map((row) => `<li><div class="admin-record-list__title"><strong>${escapeHtml(row.booking_type || "booking")}</strong><span class="admin-record-list__status">${escapeHtml(row.status || "未設定")}</span></div><div class="admin-record-list__meta"><span>Booked at: ${escapeHtml(fmtDate(row.booked_at))}</span><span>人数: ${escapeHtml(String(row.participant_count ?? "未設定"))}</span></div><div class="admin-record-list__meta"><span>店舗ID: ${escapeHtml(fmtShortId(row.store_id))}</span><span>顧客ID: ${escapeHtml(fmtShortId(row.customer_profile_id))}</span></div></li>`).join("")}</ul>`;
     };
     const renderEnquirySnapshot = () => {
         if (!state.recentEnquiries.length) return `<div class="admin-empty">Enquiries データはまだ取得されていません。</div>`;
@@ -545,11 +545,11 @@
                 .is("deleted_at", null)) || []);
         }
         if (pageKey === "appDashboard" || pageKey === "appPublish") {
-            const [rsv, hero, inq] = await Promise.all([countRows("reservations"), countRows("top_hero_items"), countRows("inquiries")]);
+            const [rsv, hero, inq] = await Promise.all([countRows("bookings"), countRows("top_hero_items"), countRows("enquiries")]);
             state.metrics = { bookings: rsv ?? "--", heroItems: hero ?? "--", enquiries: inq ?? "--" };
             const [bookings, enquiries] = await Promise.all([
-                loadRecentRows("reservations", "id, customer_profile_id, store_id, reservation_type, reserved_at, participant_count, status, created_at", "reserved_at"),
-                loadRecentRows("inquiries", "id, customer_profile_id, category, subject, status, assigned_to, created_at", "created_at")
+                loadRecentRows("bookings", "id, customer_profile_id, store_id, booking_type, booked_at, participant_count, status, created_at", "booked_at"),
+                loadRecentRows("enquiries", "id, customer_profile_id, category, subject, status, assigned_to, created_at", "created_at")
             ]);
             state.recentBookings = bookings;
             state.recentEnquiries = enquiries;

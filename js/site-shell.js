@@ -55,7 +55,7 @@
         appPasswordReset: { path: 'app/password/reset.html', label: 'Reset Password', title: 'App / Password Reset', latest: '管理アプリ画面は現在作成準備中です。' },
         appDashboard: { path: 'app/dashboard.html', label: 'Dashboard', title: 'App / Dashboard', latest: '管理アプリ画面は現在作成準備中です。' },
         appPagesHome: { path: 'app/pages/home.html', label: 'Home Admin', title: 'App / Home Management', latest: '管理アプリ画面は現在作成準備中です。' },
-        appPagesWorkshop: { path: 'app/pages/workshop.html', label: 'Workshop Admin', title: 'App / Workshop Management', latest: '管理アプリ画面は現在作成準備中です。' },
+        appPagesWorkshop: { path: 'app/pages/workshop.html', label: 'Workshop Bookings', title: 'App / Workshop Bookings', latest: '管理アプリ画面は現在作成準備中です。' },
         appPublish: { path: 'app/publish.html', label: 'Publish', title: 'App / Publish', latest: '管理アプリ画面は現在作成準備中です。' },
         appUsersMe: { path: 'app/users/me.html', label: 'Account Settings', title: 'App / Account Settings', latest: '管理アプリ画面は現在作成準備中です。' }
     };
