@@ -164,9 +164,17 @@
             const BOOKING_BUILD = "20260322b";
             const siteConfig = window.INIM_SITE_CONFIG || {};
             const supabaseApi = window.supabase || null;
-            const supabase = siteConfig.supabaseUrl && siteConfig.supabasePublishableKey && supabaseApi?.createClient
-                ? supabaseApi.createClient(siteConfig.supabaseUrl, siteConfig.supabasePublishableKey)
-                : null;
+            const supabase = (() => {
+                if (window.__INIM_SUPABASE_CLIENT) {
+                    return window.__INIM_SUPABASE_CLIENT;
+                }
+                if (siteConfig.supabaseUrl && siteConfig.supabasePublishableKey && supabaseApi?.createClient) {
+                    const client = supabaseApi.createClient(siteConfig.supabaseUrl, siteConfig.supabasePublishableKey);
+                    window.__INIM_SUPABASE_CLIENT = client;
+                    return client;
+                }
+                return null;
+            })();
             const params = new URLSearchParams(window.location.search);
             const selected = {
                 build: params.get("build") || BOOKING_BUILD,

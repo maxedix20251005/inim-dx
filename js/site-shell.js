@@ -78,9 +78,17 @@
     const authRedirectUrl = siteConfig.authRedirectUrl || '';
     const hasSupabaseConfig = Boolean(supabaseConfig.url && supabaseConfig.publishableKey);
     const supabaseApi = window.supabase || null;
-    const supabase = hasSupabaseConfig && supabaseApi?.createClient
-        ? supabaseApi.createClient(supabaseConfig.url, supabaseConfig.publishableKey)
-        : null;
+    const supabase = (() => {
+        if (!hasSupabaseConfig || !supabaseApi?.createClient) {
+            return null;
+        }
+        if (window.__INIM_SUPABASE_CLIENT) {
+            return window.__INIM_SUPABASE_CLIENT;
+        }
+        const client = supabaseApi.createClient(supabaseConfig.url, supabaseConfig.publishableKey);
+        window.__INIM_SUPABASE_CLIENT = client;
+        return client;
+    })();
     const modalPageKeys = new Set(["login", "register", "account"]);
     const modalTitles = {
         login: "ログイン",

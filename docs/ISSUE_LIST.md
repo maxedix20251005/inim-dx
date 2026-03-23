@@ -157,6 +157,16 @@
 - `ユーザー確認結果:` 2026-03-23 時点で、失敗メッセージと `Console` エラーなしを確認済み。
 - `状態:` 対策実装済み（再確認待ち）
 
+### Issue 2026-03-23-16
+- `発生日:` 2026-03-23
+- `発生箇所:` [`js/site-shell.js`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/js/site-shell.js), [`subpages/workshop-booking-confirm.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking-confirm.html)
+- `症状:` 予約送信成功後に Console で `Multiple GoTrueClient instances detected in the same browser context` 警告が表示された。
+- `原因:` `site-shell.js` と確認画面側の inline script がそれぞれ `supabase.createClient()` を実行し、同一ページで複数クライアントが生成されていた。
+- `対策:` `window.__INIM_SUPABASE_CLIENT` を単一インスタンス格納先として導入し、両方のコードから同一クライアントを再利用するよう修正した。
+- `再発防止:` Supabase クライアント生成は常に singleton 経由で行い、ページ内で直接 `createClient()` を重複実行しない。
+- `ユーザー確認結果:` 2026-03-23 時点で、予約送信は成功、`Booking build: 20260322b`、警告ログ発生を確認済み。
+- `状態:` 対策実装済み（再確認待ち）
+
 ### 今後の運用ルール
 - 新しい Issue が発生したら、このファイルに必ず追記する
 - 追記時は、同じ作業内で `docs/PROJECT_STATUS.md` と `docs/AI_CONTEXT_PROMPT.md` も更新する
