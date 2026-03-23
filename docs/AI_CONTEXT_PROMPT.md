@@ -144,6 +144,7 @@
 - 2026-03-22 の追加実装で、STEP 3 確認画面 `subpages/workshop-booking-confirm.html` の送信ボタンを Supabase `bookings` 保存へ接続した
 - 保存時はログイン中ユーザーの `user_profiles.id` を `customer_profile_id` に使い、店舗名から `stores.id` を解決して insert する
 - ログイン未実施時やプロフィール不整合時は、確認画面内でエラーメッセージを表示し、`account.html#login` へ誘導する
+- 2026-03-22 の追加調整で、予約導線のキャッシュ判別用に `build=20260322b` をクエリ引き継ぎし、確認画面に `Booking build` を表示するようにした
 - `app/` 配下も確認したが、現時点では電話番号入力フィールド自体が存在しないため、同ロジックの適用対象はまだない。今後 `app` 側に電話番号入力を追加する際は、同等の validity と整形を適用する前提とする
 - 2026-03-22 の導線整理で、`workshop.html` の `予約する` と 3 コースの各予約ボタンは、いったんすべて `./workshop-booking.html` へ統一した
 - 同日の追加調整で、`行き先を選ぶ` で選択した店舗を `store` クエリとして `workshop-booking.html` へ引き継ぎ、予約画面側でも選択状態を維持するようにした

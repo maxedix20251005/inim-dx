@@ -40,6 +40,7 @@
         .confirm-summary__value { text-align: right; font-weight: 700; }
         .confirm-actions { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-top: 22px; }
         .confirm-actions__meta { color: var(--color-muted); font-size: .9rem; }
+        .confirm-build { margin-top: 14px; color: var(--color-muted); font-size: .85rem; }
         .confirm-note p, .confirm-note li { color: var(--color-muted); line-height: 1.7; }
         .confirm-success { display: none; margin-top: 18px; padding: 16px 18px; border-radius: 18px; background: rgba(37,103,86,.12); color: #1d5d4c; }
         .confirm-success.is-visible { display: block; }
@@ -137,6 +138,7 @@
                         <a class="button button--secondary" href="./workshop-booking-entry.html" id="confirm-back-link">入力内容を修正する</a>
                         <span class="confirm-actions__meta">送信時にログイン状態と入力値を確認し、`bookings` へ保存します。</span>
                     </div>
+                    <p class="confirm-build" id="confirm-build"></p>
                     <div class="confirm-success" id="confirm-success"></div>
                 </section>
 
@@ -159,6 +161,7 @@
     <script src="../js/site-shell.js"></script>
     <script>
         (() => {
+            const BOOKING_BUILD = "20260322b";
             const siteConfig = window.INIM_SITE_CONFIG || {};
             const supabaseApi = window.supabase || null;
             const supabase = siteConfig.supabaseUrl && siteConfig.supabasePublishableKey && supabaseApi?.createClient
@@ -166,6 +169,7 @@
                 : null;
             const params = new URLSearchParams(window.location.search);
             const selected = {
+                build: params.get("build") || BOOKING_BUILD,
                 dateKey: params.get("date_key") || "",
                 date: params.get("date") || "未選択",
                 label: params.get("label") || params.get("date") || "未選択",
@@ -204,6 +208,7 @@
             document.getElementById("confirm-contact-phone").textContent = selected.contactPhone || "未入力";
             document.getElementById("confirm-party-size").textContent = selected.partySize !== "未入力" ? `${selected.partySize}名` : selected.partySize;
             document.getElementById("confirm-special-requests").textContent = selected.specialRequests || "未入力";
+            document.getElementById("confirm-build").textContent = `Booking build: ${selected.build || BOOKING_BUILD}`;
 
             const backLink = document.getElementById("confirm-back-link");
             if (backLink) {

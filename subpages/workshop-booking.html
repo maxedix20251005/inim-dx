@@ -233,6 +233,7 @@
     <script src="../js/site-shell.js"></script>
     <script>
         (() => {
+            const BOOKING_BUILD = "20260322b";
             const calendarHost = document.getElementById("booking-calendar");
             const selectedTitle = document.getElementById("booking-selected-title");
             const selectedStatus = document.getElementById("booking-selected-status");
@@ -296,6 +297,7 @@
             const buildBookingHref = (current, slot) => {
                 const target = new URL("./workshop-booking-entry.html", window.location.href);
                 const payload = {
+                    build: BOOKING_BUILD,
                     date_key: selectedKey,
                     date: current.label,
                     label: current.label,

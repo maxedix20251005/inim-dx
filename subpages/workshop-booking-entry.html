@@ -194,8 +194,10 @@
     <script src="../js/site-shell.js"></script>
     <script>
         (() => {
+            const BOOKING_BUILD = "20260322b";
             const params = new URLSearchParams(window.location.search);
             const selected = {
+                build: params.get("build") || BOOKING_BUILD,
                 dateKey: params.get("date_key") || "",
                 date: params.get("date") || "未選択",
                 gather: params.get("gather") || "未選択",
@@ -420,6 +422,7 @@
                 const data = new FormData(form);
                 const target = new URL("./workshop-booking-confirm.html", window.location.href);
                 const payload = {
+                    build: selected.build || BOOKING_BUILD,
                     date_key: selected.dateKey,
                     date: selected.date,
                     label: selected.label,
