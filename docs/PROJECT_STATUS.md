@@ -188,6 +188,7 @@
 - 保存 payload は `booking_type`, `booked_at`, `participant_count`, `status`, `note` に加え、拡張列 `session_id`, `plan_id`, `quoted_price_jpy`, `booking_method`, `contact_name`, `contact_email`, `contact_phone`, `party_size`, `special_requests`, `internal_note`, `confirmed_at` を設定します（値がない項目は `null`）。
 - ログイン未実施やプロフィール不整合時は、確認画面でエラーメッセージを表示し、`account.html#login` への導線を表示します。
 - 2026-03-22 の追加調整で、予約導線のキャッシュ判別用に `build=20260322b` をクエリ引き継ぎし、確認画面に `Booking build` 表示を追加しました。
+- 2026-03-23 の追加調整で、`store_id` 解決は `stores` 一覧に対する表記ゆれ吸収マッチ（日本語/英語ヒント、正規化比較）へ変更し、`浅草店が見つからない` エラーの再発を防ぐようにしました。
 - `app/` 配下も確認しましたが、2026-03-22 時点では電話番号入力フィールド自体が存在しないため、同ロジックの適用対象はまだありません。今後 `app` 側に電話番号入力を追加する際は、同等の validity と整形を適用する前提とします。
 - 2026-03-22 の導線整理で、[`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) の `予約する` と 3 コースの各予約ボタンは、いったんすべて [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html) へ統一しました。
 - 同日の追加調整で、`workshop.html` の `行き先を選ぶ` で選択した店舗 (`浅草店 / 柴又店 / ソラマチ店`) を `store` クエリとして [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html) へ引き継ぎ、予約画面側でも選択状態を維持するようにしました。

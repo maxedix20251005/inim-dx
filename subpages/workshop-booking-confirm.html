@@ -263,18 +263,60 @@
                 if (!storeLabel) {
                     throw new Error("店舗情報が不足しています。予約画面からやり直してください。");
                 }
+                const storeHintsByKey = {
+                    asakusa: ["浅草", "浅草店", "asakusa"],
+                    shibamata: ["柴又", "柴又店", "shibamata"],
+                    solamachi: ["ソラマチ", "ソラマチ店", "solamachi", "skytree"]
+                };
+                const normalise = (value) => String(value || "")
+                    .toLowerCase()
+                    .replace(/\s+/g, "")
+                    .replace(/[・\-_/]/g, "")
+                    .replace(/店/g, "");
+                const hints = [
+                    storeLabel,
+                    selected.storeLabel,
+                    selected.store,
+                    ...(storeHintsByKey[selected.store] || [])
+                ]
+                    .filter(Boolean)
+                    .map((hint) => normalise(hint));
+
                 const { data, error } = await supabase
                     .from("stores")
-                    .select("id, store_name")
-                    .ilike("store_name", `%${storeLabel.replace("店", "")}%`)
-                    .limit(1);
+                    .select("*")
+                    .limit(200);
                 if (error) {
                     throw error;
                 }
                 if (!data || data.length === 0) {
-                    throw new Error(`店舗マスタで「${storeLabel}」が見つかりません。`);
+                    throw new Error("店舗マスタにレコードがありません。");
                 }
-                return data[0].id;
+
+                const activeStores = data.filter((store) => {
+                    const notDeleted = !Object.hasOwn(store, "deleted_at") || !store.deleted_at;
+                    const isActive = !Object.hasOwn(store, "is_active") || store.is_active !== false;
+                    return notDeleted && isActive;
+                });
+                const candidateStores = activeStores.length > 0 ? activeStores : data;
+
+                for (const hint of hints) {
+                    if (!hint) continue;
+                    const matchedStore = candidateStores.find((store) => {
+                        const name = normalise(store.store_name);
+                        return name.includes(hint) || hint.includes(name);
+                    });
+                    if (matchedStore?.id) {
+                        return matchedStore.id;
+                    }
+                }
+
+                if (candidateStores.length === 1 && candidateStores[0].id) {
+                    return candidateStores[0].id;
+                }
+
+                const names = candidateStores.map((store) => store.store_name).filter(Boolean).join(" / ");
+                throw new Error(`店舗マスタで「${storeLabel}」が見つかりません。候補: ${names || "なし"}`);
             };
             const resolveProfileId = async () => {
                 const { data: authData, error: authError } = await supabase.auth.getUser();

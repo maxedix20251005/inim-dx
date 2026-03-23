@@ -147,6 +147,16 @@
 - `再発防止:` 戻る導線を持つ Draft 画面は、遷移先 URL だけでなく、復元側のフォーム初期化まで実装して確認する。
 - `状態:` 解消済み
 
+### Issue 2026-03-23-15
+- `発生日:` 2026-03-23
+- `発生箇所:` [`subpages/workshop-booking-confirm.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking-confirm.html)
+- `症状:` `Booking build: 20260322b` で予約送信すると、`店舗マスタで「浅草店」が見つかりません。` で保存失敗した。
+- `原因:` `store_id` 解決を `ilike("%浅草%")` の単純一致にしていたため、実DBの `stores.store_name` 表記ゆれ（英語名、接頭辞付き、表記差）を吸収できなかった。
+- `対策:` `stores` を一覧取得して、`store/storeLabel` と店舗キー別ヒント（`asakusa/shibamata/solamachi`）で正規化マッチする方式へ変更した。`deleted_at/is_active` がある場合は有効店舗を優先し、候補1件時はフォールバック採用する。
+- `再発防止:` 参照マスタのキー解決は単純文字列一致を避け、表記ゆれ吸収ルールと候補表示付きエラーを実装する。
+- `ユーザー確認結果:` 2026-03-23 時点で、失敗メッセージと `Console` エラーなしを確認済み。
+- `状態:` 対策実装済み（再確認待ち）
+
 ### 今後の運用ルール
 - 新しい Issue が発生したら、このファイルに必ず追記する
 - 追記時は、同じ作業内で `docs/PROJECT_STATUS.md` と `docs/AI_CONTEXT_PROMPT.md` も更新する
