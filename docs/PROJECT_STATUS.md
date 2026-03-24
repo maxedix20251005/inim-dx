@@ -1,26 +1,26 @@
-## PROJECT STATUS: inim-dx
+﻿# PROJECT STATUS / inim-dx
 
-### このドキュメントの目的
+## 1. このドキュメントの目的 / Purpose
 - このファイルは、`inim-dx` プロジェクトの現在地を第三者でも短時間で把握できるように整理する常設ステータス資料です。
 - 管理画面に追加・更新を行った場合は、本ファイルを必ず同じ作業内で更新します。
 - 不具合や詰まりの履歴は `docs/ISSUE_LIST.md` を必ず参照し、本ファイル更新時も必要に応じて同時更新します。
 - 更新後は、日本語の文字化けがないかを必ず確認します。
 
-### 現在の主対象
+## 2. 現在の主対象 / Current Focus
 - 現在の実装対象は、`inim-dx` の管理画面です。
 - 画面仕様の正本:
-  - `prompts/cross-project-handover-admin-implementation.md`
+  - `docs/CROSS_PROJECT_HANDOVER_ADMIN_IMPLEMENTATION.md`
   - `references/design/11-admin-mockup-standalone.html`
 - DB 設計の正本:
   - `C:\Users\maxsh\OneDrive\Documents\EDIX\src\portfolio\docs\08-db-design.html`
 - Workshop 予約データ設計の補助資料:
-  - `docs/workshop-booking-data-design.md`
+  - `docs/WORKSHOP_BOOKING_DATA_DESIGN.md`
 - Workshop 予約 SQL 実行手順:
-  - `docs/workshop-booking-sql-runbook.md`
+  - `docs/WORKSHOP_BOOKING_SQL_RUNBOOK.md`
 - Issue 管理:
   - `docs/ISSUE_LIST.md`
 
-### 実装方針
+## 3. 実装方針 / Implementation Policy
 - 公開サイトの既存実装へ影響を出さないことを最優先に進めています。
 - そのため、公開サイト用の `css/style.css` は変更しない方針です。
 - ただし 2026-03-22 の Workshop 予約導線 Draft 追加では、公開側の導線追加に必要な最小差分として `js/site-shell.js` と `subpages/workshop.html` を更新しています。
@@ -31,14 +31,14 @@
 - 英語表記が必要な場合は、今後 Australian English に統一します。
 - 次の主実装は、管理画面の詳細化ではなく、公開側 [`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) の `#reserve` から始まる予約導線設計です。
 
-### ここまでの変更範囲
+## 4. ここまでの変更範囲 / Change Scope
 #### 新規追加
 - `css/admin-app.css`
 - `js/admin-app.js`
 - `app/pages/journey.html`
 - `subpages/workshop-booking.html`
 - `docs/AI_CONTEXT_PROMPT.md`
-- `docs/admin-implementation-status.md`
+- `docs/ADMIN_IMPLEMENTATION_STATUS.md`
 - `docs/WIP.md`
 
 #### 参照先変更
@@ -53,7 +53,7 @@
 - `app/password/reset.html`
 - `js/site-shell.js`
 
-### 現在までに実装済みの内容
+## 5. 現在までに実装済みの内容 / Implemented Scope
 #### 認証・アカウント
 - Supabase セッション確認
 - 管理画面ログイン
@@ -87,7 +87,7 @@
 - `journey_steps` の基本入力バリデーション
 - 保存後 UI の改善
 
-### DB 設計に合わせて確定済みの主な編集項目
+## 6. DB 設計に合わせて確定済みの主な編集項目 / Confirmed DB-aligned Fields
 #### `top_hero_items`
 - `title`
 - `lead_text`
@@ -104,7 +104,7 @@
 - `helper_text`
 - `is_visible`
 
-### 現在の既知課題
+## 7. 現在の既知課題 / Known Issues
 #### 1. 認証・ロール表示の切り分けは完了
 - ダッシュボード上で `権限: 未取得`、プロフィールカードで `unknown` と表示されたケースがありました。
 - `app/users/me.html` で `user_role_assignments` の取得結果も確認できるようにし、ロール未取得時の切り分けをしやすくしました。
@@ -198,14 +198,14 @@
 - DB 追加は不要でした。`workshop_sessions.store_id` と既存 `bookings.store_id` がすでに存在するため、今回は SQL `07_` の新規追加は行っていません。
 - 2026-03-22 のユーザー確認で、店舗引き継ぎ、予約画面の店舗選択表示、選択店舗の開催日のみ表示はすべて正常、Console エラーなしを確認しました。
 - Reminder: `workshop_plans` / `workshop_sessions` を正本化した後で、予約画面に各プランをどう表示し、どのコースから来たかをどう初期反映するかを再設計すること。
-- Workshop 予約のデータ設計案は [`docs/workshop-booking-data-design.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/workshop-booking-data-design.md) に整理しました。推奨テーブルは `workshop_plans`, `workshop_plan_inclusions`, `workshop_plan_flow_steps`, `workshop_sessions` です。
+- Workshop 予約のデータ設計案は [`docs/WORKSHOP_BOOKING_DATA_DESIGN.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/WORKSHOP_BOOKING_DATA_DESIGN.md) に整理しました。推奨テーブルは `workshop_plans`, `workshop_plan_inclusions`, `workshop_plan_flow_steps`, `workshop_sessions` です。
 - 追加テーブル作成 SQL は [`sql/05_create_workshop_booking_tables.sql`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/sql/05_create_workshop_booking_tables.sql) に作成し、検証 SQL は [`sql/06_verify_workshop_booking_tables.sql`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/sql/06_verify_workshop_booking_tables.sql) に作成しました。
-- 実行手順は [`docs/workshop-booking-sql-runbook.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/workshop-booking-sql-runbook.md) に整理しました。
+- 実行手順は [`docs/WORKSHOP_BOOKING_SQL_RUNBOOK.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/WORKSHOP_BOOKING_SQL_RUNBOOK.md) に整理しました。
 - 2026-03-22 の実確認で、カレンダー記号は良好、SQL ファイル構成は良好、Runbook も良好でした。
 - 同日の検証で、`workshop_plans`, `workshop_plan_inclusions`, `workshop_plan_flow_steps`, `workshop_sessions` の存在確認と、`bookings` 追加列、および関連 index 群の作成確認まで完了しています。
 - したがって、次は `bookings / enquiries` の管理画面詳細化ではなく、この公開側予約画面で必要項目を先に確定するのが適切です。
 
-### 次に優先して進める作業
+## 8. 次に優先して進める作業 / Next Priorities
 1. `PROJECT_STATUS.md` を起点に運用継続する
 2. `AI_CONTEXT_PROMPT.md` を復元用コンテキストとして都度更新運用する
 3. [`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) `#reserve` 起点の予約導線を整理する
@@ -213,7 +213,7 @@
 5. `bookings` 保存成功後の完了画面（thanks）導線と、`session_id` / `plan_id` を実データで確定する
 6. その後に `app/` 側の `bookings / enquiries` 管理画面詳細化へ進む
 
-### 再開時の確認手順
+## 9. 再開時の確認手順 / Restart Checklist
 1. [`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) の `#reserve` セクションを確認する
 2. `予約フォームへ進む` が [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html) を向いていることを確認する
 3. 予約画面 Draft のカレンダー、時間帯表示、詳細タブを確認する
@@ -221,7 +221,7 @@
 5. その整理結果をもとに `bookings / enquiries` の追加項目有無を判断する
 6. その後に `app/` 側の詳細画面設計へ進む
 
-### 確認時の報告フォーマット
+## 10. 確認時の報告フォーマット / Reporting Format
 - `予約導線の起点:` 確認済み / 未確認
 - `現行CTA:` `./workshop-booking.html` / その他
 - `Draft UI:` 良好 / 要改善
@@ -229,13 +229,56 @@
 - `補足:` 必要に応じて詳細
 - `Console:` エラーなし / エラーあり
 
-### 参照ドキュメント
-- `docs/admin-implementation-status.md`
+## 11. 参照ドキュメント / References
+- `docs/ADMIN_IMPLEMENTATION_STATUS.md`
 - `docs/WIP.md`
 - `docs/AI_CONTEXT_PROMPT.md`
 - `docs/ISSUE_LIST.md`
 
-### 確認済み事項
+## 12. 確認済み事項 / Verified Items
 - 公開サイト用の `js/site-shell.js` は、Workshop 予約 Draft 追加に必要な最小差分のみ更新済みです。
 - 公開サイト用の `css/style.css` は未変更です。
 - 本ファイル更新後、日本語の文字化け確認を行う前提です。
+
+### ドキュメント更新（2026-03-24）
+- docs/DESIGN_GUIDELINE.md を追加しました。
+- docs/TECH_SPEC.md を追加しました。
+
+### ドキュメント更新（2026-03-24 追記）
+- docs/DOCUMENTATION_GOVERNANCE_GUIDELINE.md を追加しました。
+
+### ドキュメント更新（2026-03-24 追加）
+- docs/AI_BUILD_PROMPT.md を新規作成し、文書運用ガイドラインに合わせて統一しました。
+- docs/WIP.md をテンプレート統一フォーマットへ更新しました。
+
+### ドキュメント更新（2026-03-24 追加2）
+- docs/NEXT_CHAT_HANDOFF.md を統一テンプレートへ更新しました。
+
+### ドキュメント更新（2026-03-24 追加3）
+- docs/ACCOUNT_AUTH_SYSTEM_NOTES.md を docs/NEXT_CHAT_HANDOFF.md と同じ見出し粒度（番号付き章）へ整形しました（内容変更なし）。
+
+
+
+## 13. ドキュメント更新（2026-03-24 追加4） / Documentation Update
+- 指定順で次の文書を整形しました: docs/CROSS_PROJECT_HANDOVER_ADMIN_IMPLEMENTATION.md, docs/AI_CONTEXT_PROMPT.md, docs/ADMIN_IMPLEMENTATION_STATUS.md, docs/PROJECT_STATUS.md, docs/ISSUE_LIST.md, docs/SUPABASE_CUSTOMER_ACCOUNT.md。
+- prompts/*.md を docs/ 配下へ移動しました。
+- 参照パス prompts/... を docs/... へ一括更新しました。
+- docs/DOCUMENT_CATALOG.md（ドキュメント目録）を新規追加しました。
+
+
+## 14. 今後の機能追加候補 / Feature Backlog
+- 今後の機能追加アイデアは docs/FEATURE_BACKLOG.md を正本として管理します。
+- 本ファイルでは、実装優先度が確定した項目のみを 次に優先して進める作業 へ昇格します。
+- 現在の主な候補: 
+  - コンテンツ更新新機能の充実
+  - トップページからワークショップページへの導線強化（着手中）
+  - デジタル調香AIレコメンド機能
+  - デジタル調香データのDB保存・再利用機能
+  - ワークショップ参加/製品購入の相互特典施策
+
+
+### ドキュメント更新（2026-03-24 追加5）
+- docs/FEATURE_BACKLOG.md を新規追加し、今後の機能追加アイデア管理の正本を分離しました。
+- docs/PROJECT_STATUS.md に 機能追加候補 セクションを追加しました。
+- docs/TECH_SPEC.md に Planned Enhancements を追加しました。
+- docs/DOCUMENT_CATALOG.md に FEATURE_BACKLOG.md を追加しました。

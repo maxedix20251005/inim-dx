@@ -1,12 +1,12 @@
-## Supabase Customer Account Plan
+﻿# SUPABASE CUSTOMER ACCOUNT PLAN / Supabase 顧客アカウント計画
 
-### Stack
+## 1. Stack / 技術構成
 - Frontend: current static site on GitHub Pages
 - Auth: Supabase Auth
 - Database: Supabase Postgres
 - Scope for this phase: customer login, register, profile edit, password reset, account deletion flow
 
-### Data model
+## 2. Data model / データモデル
 - `auth.users`
   - managed by Supabase Auth
   - primary source for authentication state and email ownership
@@ -16,7 +16,7 @@
 - `public.customer_preferences`
   - optional extension table for store preference and marketing consent
 
-### Recommended columns
+## 3. Recommended columns / 推奨カラム
 #### `public.profiles`
 - `id uuid primary key`
 - `full_name text not null`
@@ -37,13 +37,13 @@
 - `created_at timestamptz not null default now()`
 - `updated_at timestamptz not null default now()`
 
-### RLS direction
+## 4. RLS direction / RLS方針
 - authenticated users can read only their own profile
 - authenticated users can update only their own profile
 - inserts are allowed only for the signed-in user id
 - deleted accounts should be soft-deleted first with `deleted_at`
 
-### UI mapping
+## 5. UI mapping / UI対応
 - Login modal
   - `signInWithPassword`
 - Register modal
@@ -61,9 +61,10 @@
   - first set `deleted_at`
   - then optional admin-side cleanup later
 
-### Implementation order
+## 6. Implementation order / 実装順序
 1. Add Supabase client bootstrap and env handling
 2. Replace modal mock values with live session/profile data
 3. Wire login/register/reset flows
 4. Wire profile update flow
 5. Add soft-delete action and logout
+

@@ -1,4 +1,4 @@
-# Workshop Booking SQL Runbook
+﻿# Workshop Booking SQL Runbook
 
 ## 目的
 
@@ -11,7 +11,7 @@
 
 補助設計:
 
-- [`docs/workshop-booking-data-design.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/workshop-booking-data-design.md)
+- [`docs/WORKSHOP_BOOKING_DATA_DESIGN.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/WORKSHOP_BOOKING_DATA_DESIGN.md)
 
 ## この SQL で行うこと
 
@@ -111,3 +111,4 @@
 2. `workshop_plans` と `workshop_sessions` の seed を設計する
 3. `subpages/workshop-booking.html` を実データ参照へ置き換える
 4. その後に予約入力フォーム本体へ進む
+

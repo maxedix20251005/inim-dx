@@ -2,7 +2,7 @@
 
 最終更新: 2026-03-13
 
-## この文書の目的
+## 1. この文書の目的
 
 この文書は、`inim-dx` サイトの会員登録、ログイン、パスワード再設定、マイアカウント導線、および Supabase 連携の現状を、第三者がそのまま引き継げるレベルで整理したものです。
 
@@ -14,7 +14,7 @@
 - 類似の静的サイト + Supabase Auth 構成を設計する際の prompt / reference
 - 実装済み範囲、未実装範囲、運用上の注意点の明文化
 
-## 前提
+## 2. 前提
 
 - リポジトリルート: `c:\Users\maxsh\OneDrive\Documents\EDIX\src\inim-dx`
 - サイトは静的 HTML ベース
@@ -23,7 +23,7 @@
 - 会員詳細は `public.profiles` と `public.customer_preferences` を前提にしている
 - 管理者が Supabase ダッシュボードへログインするためのアカウントと、inim-dx サイト会員は完全に別物
 
-## 参照すべき設計資料
+## 3. 参照すべき設計資料
 
 アカウント管理まわりを今後変更する際は、必ず次を確認すること。
 
@@ -35,7 +35,7 @@
 
 特にフォームのエラー表示、導線の見せ方、ボタンの優先度は `06-design-guide.html` の UI コンポーネント方針に合わせる。
 
-## 関連ファイル
+## 4. 関連ファイル
 
 ### 実装本体
 
@@ -45,16 +45,16 @@
 
 ### Supabase 設計
 
-- `docs/supabase-customer-account.md`
+- `docs/SUPABASE_CUSTOMER_ACCOUNT.md`
 - `supabase/customer-account-schema.sql`
 
 ### 補助ドキュメント
 
 - `references/settings/checkclist-supabase.md`
-- `prompts/next-chat-handoff.md`
-- `prompts/account-auth-system-notes.md` ← この文書
+- `docs/NEXT_CHAT_HANDOFF.md`
+- `docs/ACCOUNT_AUTH_SYSTEM_NOTES.md` ← この文書
 
-## 現在の Supabase 接続設定
+## 5. 現在の Supabase 接続設定
 
 設定ファイル:
 
@@ -76,7 +76,7 @@ window.INIM_SITE_CONFIG = {
 - `service_role key` は絶対にフロントへ置かない
 - 安全性はキー秘匿より RLS / policy に依存する
 
-## GitHub Pages / Supabase Auth URL 設定
+## 6. GitHub Pages / Supabase Auth URL 設定
 
 公開 URL:
 
@@ -96,7 +96,7 @@ Supabase 側設定:
 - GitHub Pages の反映前に送ったメールは古い `redirect_to` を持つ可能性がある
 - GitHub Pages は通常 1〜3 分、遅いと 5〜10 分程度かかることがある
 
-## Supabase DB スキーマ前提
+## 7. Supabase DB スキーマ前提
 
 `supabase/customer-account-schema.sql` により次が定義されている。
 
@@ -140,9 +140,9 @@ Supabase 側設定:
 - ログインした本人だけが自分のデータを読める
 - 本人だけが自分のデータを insert / update できる
 
-## 現在までに実装済みの機能
+## 8. 現在までに実装済みの機能
 
-## 1. 共通モーダル基盤
+### 1. 共通モーダル基盤
 
 `js/site-shell.js` と `css/style.css` にて以下を実装済み。
 
@@ -155,7 +155,7 @@ Supabase 側設定:
 - `#login` などのハッシュとモーダル表示の連動
 - `subpages/login.html`, `subpages/register.html`, `subpages/account.html` の共通モーダル表示
 
-## 2. UI 調整
+### 2. UI 調整
 
 設計資料に合わせて次を調整済み。
 
@@ -168,7 +168,7 @@ Supabase 側設定:
 - `Back / Cancel` は Top Page と統一感のある neutral / ghost 系へ調整
 - 用語を `プロフィール` ではなく `プロファイル` に統一
 
-## 3. フィールド単位バリデーション
+### 3. フィールド単位バリデーション
 
 対象:
 
@@ -188,7 +188,7 @@ Supabase 側設定:
 - 最初のエラー項目への自動フォーカス
 - 文言は日本語へ統一
 
-## 4. Supabase Auth 連携
+### 4. Supabase Auth 連携
 
 ### login
 
@@ -223,7 +223,7 @@ Supabase 側設定:
 - recovery link (`type=recovery`) 到達時の着地を実装済み
 - recovery flow 中は `current_password` を要求せず `updateUser({ password })` を使う
 
-## 5. セッション反映
+### 5. セッション反映
 
 使用 API:
 
@@ -243,7 +243,7 @@ Supabase 側設定:
   - `ログアウト`
 - `deleted_at` / `status = inactive` ユーザーはセッション維持せず login へ戻す
 
-## 6. 認証後の account 着地制御
+### 6. 認証後の account 着地制御
 
 `subpages/account.html` 到達時の挙動:
 
@@ -252,7 +252,7 @@ Supabase 側設定:
 - `profile` / `preferences` / `password` / `delete` の深い画面にも対応する土台あり
 - recovery link (`type=recovery`) からの着地時は `password` モーダルを優先する
 
-## 7. profiles 読取 / 保存
+### 7. profiles 読取 / 保存
 
 現時点で `profiles` の読取と `プロファイル編集` からの保存を実装済み。
 
@@ -277,7 +277,7 @@ where id = currentUser.id
   - `auth.user.email`
   - mock 値
 
-## 8. profiles 自動作成
+### 8. profiles 自動作成
 
 DB トリガー方式で進める前提。
 
@@ -304,7 +304,7 @@ SQL 適用後に必要なこと:
 - Supabase `SQL Editor` で `supabase/customer-account-schema.sql` を実行する
 - 既存ユーザー用に必要であれば backfill SQL を別途実行する
 
-## 9. customer_preferences 読取 / 保存
+### 9. customer_preferences 読取 / 保存
 
 現時点で `customer_preferences` の読取と保存を実装済み。
 
@@ -321,7 +321,7 @@ SQL 適用後に必要なこと:
 - `好みの設定` モードから `upsert` で保存
 - 行が無い場合は従来の fallback 表示を維持
 
-## 10. パスワード変更
+### 10. パスワード変更
 
 現時点で `password` モードの実処理を実装済み。
 
@@ -332,7 +332,7 @@ SQL 適用後に必要なこと:
 - field-level validation あり
 - 成功 / 失敗メッセージをモーダル内表示
 
-## まだ未実装の機能
+## 9. まだ未実装の機能
 
 以下は未実装、または stub のまま。
 
@@ -341,9 +341,9 @@ SQL 適用後に必要なこと:
 - `preferences` モードの validation を厳密化するかどうかの判断
 - `deleted_at` 済みユーザーへの案内文や再入会方針の最終整理
 
-## 強く推奨する次の実装順
+## 10. 強く推奨する次の実装順
 
-## 1. Auth email 更新の整合
+### 1. Auth email 更新の整合
 
 `profile` 画面では `profiles.email` を更新済みだが、`auth.users.email` との完全同期はまだ未対応。
 
@@ -353,7 +353,7 @@ SQL 適用後に必要なこと:
 - 変更時に確認メールを要求するか
 - `profiles.email` を Auth 側に追従専用にするか
 
-## 2. 再送 confirmation email
+### 2. 再送 confirmation email
 
 同じ email に対する再送は `signUp()` ではなく以下を使うべき。
 
@@ -364,12 +364,12 @@ SQL 適用後に必要なこと:
 - 既存ユーザー相手に `signUp()` を再実行しても、confirmation 再送としては不適切
 - Supabase は存在隠蔽や rate limit の都合で期待通りの見え方をしないことがある
 
-## 3. UI 仕上げ
+### 3. UI 仕上げ
 
 - `preferences` モードに field-level validation を入れるか判断する
 - `deleted_at` 済みユーザーをどう案内するか整理する
 
-## 追加実装済みの機能
+## 11. 追加実装済みの機能
 
 ### 11. 退会フロー
 
@@ -403,9 +403,9 @@ SQL 適用後に必要なこと:
 - `profiles.deleted_at` または `status = 'inactive'` を検知した場合は、そのセッションを `signOut()` する
 - login モーダルにエラーメッセージを出し、問い合わせ導線を促す
 
-## 運用上の注意点
+## 12. 運用上の注意点
 
-## 1. Supabase のメール送信 rate limit
+### 1. Supabase のメール送信 rate limit
 
 短時間に何度も会員登録 / 再設定メールを送ると、次のようなエラーが出る。
 
@@ -419,7 +419,7 @@ SQL 適用後に必要なこと:
 - 送信テストを連打しない
 - 同一メールでの連続再試行を避ける
 
-## 2. 既存 email での再登録
+### 2. 既存 email での再登録
 
 確認メールが初回しか届かないように見える場合がある。
 
@@ -428,7 +428,7 @@ SQL 適用後に必要なこと:
 - 同一 email に対し `signUp()` を再度呼んでいる
 - これは confirmation 再送の正式な方法ではない
 
-## 3. GitHub Pages の反映待ち
+### 3. GitHub Pages の反映待ち
 
 デプロイ直後は古い JS が配信されるように見えることがある。
 
@@ -439,16 +439,16 @@ SQL 適用後に必要なこと:
 - 公開中の `js/site-config.js` の内容確認
 - メールリンク内の `redirect_to` の確認
 
-## 4. security
+### 4. security
 
 - `publishable key` は公開可
 - `service_role key` は絶対に置かない
 - RLS と policy が本体
 - `profiles` / `customer_preferences` は本番公開前に RLS 実適用を再確認すること
 
-## テスト時の確認項目
+## 13. テスト時の確認項目
 
-## 新規会員登録
+### 新規会員登録
 
 - 入力 validation が field 単位で出る
 - 送信後のメッセージが正しい
@@ -456,35 +456,35 @@ SQL 適用後に必要なこと:
 - 確認メールが届く
 - リンククリック後に `subpages/account.html` へ戻る
 
-## ログイン
+### ログイン
 
 - 正しい email / password でログインできる
 - account モーダルへ遷移する
 - Header / Sidebar / Footer がログイン済み表示に切り替わる
 
-## パスワード再設定
+### パスワード再設定
 
 - メール送信が通る
 - 送信先 redirect が期待値どおり
 
-## profiles 読取 / 保存
+### profiles 読取 / 保存
 
 - `profiles` に行があると account / profile 表示が実データになる
 - `profile` 保存で DB 更新と UI 反映が行われる
 - 行がなくても UI が壊れない
 
-## パスワード変更
+### パスワード変更
 
 - `current_password` で再認証される
 - `next_password` へ更新できる
 - エラー時にモーダル内へ表示される
 
-## customer_preferences 読取 / 保存
+### customer_preferences 読取 / 保存
 
 - `好みの設定` モードから保存できる
 - `account` summary に反映される
 
-## 変更時のルール
+## 14. 変更時のルール
 
 今後、会員登録・ログイン・プロフィール管理・Supabase 設定に変更が入った場合は、必ずこの文書も同時に更新すること。
 
@@ -498,7 +498,7 @@ SQL 適用後に必要なこと:
 - 既知の運用上の注意
 - 推奨する次の実装順
 
-## 補足
+## 15. 補足
 
 このシステムは現時点で「静的サイト + 共通 shell + Supabase Auth」という構成であり、ビルドツールやサーバーサイドアプリを前提にしていない。
 
@@ -512,4 +512,6 @@ SQL 適用後に必要なこと:
 - redirect URL はコードと Supabase 設定の両方で明示する
 - `profiles` 自動作成は DB トリガーを優先検討する
 - field-level validation を先に整え、保存処理はその後に行う
+
+
 

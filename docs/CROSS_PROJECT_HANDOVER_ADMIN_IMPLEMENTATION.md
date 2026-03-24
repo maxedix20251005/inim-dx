@@ -1,11 +1,11 @@
-# 別GitHub向け引継ぎ文（inim-dx 管理画面実装）
+﻿# CROSS-PROJECT HANDOVER (ADMIN IMPLEMENTATION) / 別GitHub向け引継ぎ文（inim-dx 管理画面実装）
 
-## 目的
+## 1. 目的 / Purpose
 
 この引継ぎ文は、**別GitHub / 別VS Codeプロジェクトで inim-dx の管理画面実装を開始するための単独資料**です。  
 新しいリポジトリ側では、この文書と関連成果物を参照しながら、Supabase 接続済みの管理画面フロントエンド実装へ移行してください。
 
-## プロジェクトの前提
+## 2. プロジェクトの前提 / Project Assumptions
 
 - 公開構成: `GitHub Pages + HTML/CSS/JavaScript + Supabase`
 - バックエンド方針:
@@ -15,7 +15,7 @@
   - 予約数増加を主軸とした Web サイト運用
   - 管理画面からトップ表示、導線、問い合わせ、予約、素材を管理する
 
-## ここまでに完了していること
+## 3. ここまでに完了していること / Completed Items
 
 ### 1. 仕様整理
 
@@ -78,7 +78,7 @@
   - `inquiries_insert_anon_or_own`
   - `user_profiles_select_own_or_admin`
 
-## ユーザー / 権限の考え方
+## 4. ユーザー / 権限の考え方 / User and Role Model
 
 - `auth.users`
   - ログイン可能ユーザーの母集団
@@ -94,7 +94,7 @@
 - 問い合わせだけの外部ユーザーは、現行設計では匿名受付を許容
 - したがって、外部ユーザーが必ず `auth.users` に存在するわけではない
 
-## 次に実装すべきこと
+## 5. 次に実装すべきこと / Next Implementation Scope
 
 ### 優先順
 
@@ -120,7 +120,7 @@
 - 公開サイト側の反映対象として価値が高い
 - RLS の影響も比較的読みやすい
 
-## 新しいリポジトリで最初に読むべき資料
+## 6. 新しいリポジトリで最初に読むべき資料 / First Docs to Read
 
 ### 必須
 
@@ -133,7 +133,7 @@
 - 管理画面モックの自己完結版 HTML
   - [11-admin-mockup-standalone.html](c:\Users\maxsh\OneDrive\Documents\EDIX\src\portfolio\references\11-admin-mockup-standalone.html)
 
-## モック共有の推奨方法
+## 7. モック共有の推奨方法 / Mock Sharing Recommendation
 
 `11-admin-mockup.html` は `css/style.css` 依存があるため、**そのまま単体で別プロジェクトへ持っていくと表示崩れの可能性があります**。  
 そのため、別GitHubへ渡す資料としては、**CSS を内包した自己完結版 HTML を正本として参照する** のが最も安全です。
@@ -157,7 +157,7 @@
 - 自己完結 HTML なら、1ファイルで見た目を維持したまま共有できる
 - 別GitHub側で必要なら、そのままデザイン参照資料として開ける
 
-## 新しいリポジトリでの実装方針
+## 8. 新しいリポジトリでの実装方針 / Implementation Policy
 
 ### 技術方針
 
@@ -179,7 +179,7 @@
 5. `pages/journey-steps.js`
    - `journey_steps` 一覧取得 / 保存
 
-## 新しいリポジトリで最初に Codex へ渡す依頼文
+## 9. 新しいリポジトリで最初に Codex へ渡す依頼文 / First Codex Prompt
 
 以下をそのまま使えます。
 
@@ -203,9 +203,10 @@ inim-dx の管理画面実装を開始してください。
 の順で実装してください。
 ```
 
-## 補足
+## 10. 補足 / Notes
 
 - DB 再構築が必要な場合は、現在の正本は `sql/` 配下です
 - `docs/08-db-design.html` は First Draft 扱いで、現行 SQL とは整合済み
 - 仕様の源泉は `07-specification.html`
 - UI の源泉は `11-admin-mockup-standalone.html`
+

@@ -1,12 +1,12 @@
-## inim-dx 管理画面 実装整理メモ
+﻿# ADMIN IMPLEMENTATION STATUS / inim-dx 管理画面 実装整理メモ
 
-### この資料の目的
+## 1. この資料の目的 / Purpose
 - この資料は、`inim-dx` の管理画面実装について、第三者が現状を短時間で把握できるように整理した作業メモです。
-- 画面仕様の正本は `prompts/cross-project-handover-admin-implementation.md` と `references/design/11-admin-mockup-standalone.html`、DB 設計の正本は `C:\Users\maxsh\OneDrive\Documents\EDIX\src\portfolio\docs\08-db-design.html` です。
+- 画面仕様の正本は `docs/CROSS_PROJECT_HANDOVER_ADMIN_IMPLEMENTATION.md` と `references/design/11-admin-mockup-standalone.html`、DB 設計の正本は `C:\Users\maxsh\OneDrive\Documents\EDIX\src\portfolio\docs\08-db-design.html` です。
 - 不具合と再発防止履歴の正本は `docs/ISSUE_LIST.md` です。
 - 今後、管理画面に追加・更新を行った場合は、この資料も必ず更新します。
 
-### 今回の実装方針
+## 2. 今回の実装方針 / Implementation Policy
 - 公開サイト側の既存ページに影響を出さないことを最優先にしました。
 - そのため、公開サイトで使っている `js/site-shell.js` と `css/style.css` は変更していません。
 - 管理画面専用の描画と認証処理は、新規の `js/admin-app.js` と `css/admin-app.css` に分離しています。
@@ -15,7 +15,7 @@
 - 2026-03-22 時点で、DB テーブル名は `bookings`, `booking_status_logs`, `enquiries`, `enquiry_status_logs` へ rename migration 済みです。
 - 英語表記は Australian English に統一します。
 
-### ここまでの変更範囲
+## 3. ここまでの変更範囲 / Change Scope
 #### 新規追加
 - `css/admin-app.css`
 - `js/admin-app.js`
@@ -31,7 +31,7 @@
 - `app/password/forgot.html`
 - `app/password/reset.html`
 
-### 現在実装されている内容
+## 4. 現在実装されている内容 / Implemented Scope
 #### 認証・セッション
 - Supabase セッション確認
 - 管理画面ログイン
@@ -75,7 +75,7 @@
   - `helper_text`
   - `is_visible`
 
-### 現時点の注意点
+## 5. 現時点の注意点 / Notes
 - 直近の実装は、まず安全に画面を分離することを優先して入れています。
 - DB 設計書 `08-db-design.html` に合わせて、プロフィール取得・ロール取得・トップ編集・導線設定の主要カラムは確定済みです。
 - `top_hero_items.asset_id` は `content_assets` の画像アセット候補から選択できる状態に更新済みです。
@@ -111,12 +111,12 @@
 - 2026-03-21 の実画面確認で、`journey_steps` の入力バリデーションは正常動作し、正常値保存も成功、Console エラーなしを確認しました。
 - 一方で、入力値バリデーション強化や、保存後のUI改善はまだ残っています。
 
-### 既知の未完了事項
+## 6. 既知の未完了事項 / Open Items
 - `bookings / enquiries` の詳細画面は未着手
 - `bookings / enquiries` の直近一覧 UI 実画面確認
 - `app/pages/journey.html` の左右パネル比率の微調整
 
-### ロールバック方針
+## 7. ロールバック方針 / Rollback
 - 今回の変更は、`app/` 配下のHTML参照先差し替えと、管理画面専用ファイルの追加に限定しています。
 - ロールバックする場合は、以下を戻せば元の状態に戻せます。
   - `app/` 配下HTMLの `admin-app.css` / `admin-app.js` 参照を元に戻す
@@ -124,13 +124,16 @@
   - `css/admin-app.css` を削除する
   - `js/admin-app.js` を削除する
 
-### 確認結果
+## 8. 確認結果 / Verification
 - 公開サイト用の `js/site-shell.js` は未変更
 - 公開サイト用の `css/style.css` は未変更
 - 更新後、日本語の文字化けが起きていないことをファイル再読込で確認済み
 
-### 今後の運用ルール
+## 9. 今後の運用ルール / Operational Rules
 - 管理画面に追加・更新を行った場合は、この資料を同じ作業内で必ず更新する
 - 不具合や詰まりが発生した場合は、`docs/ISSUE_LIST.md` を同じ作業内で必ず更新する
 - 更新後は、日本語の文字化けがないかを必ず確認する
 - DB や画面仕様の正本が更新された場合は、この資料の参照元も合わせて更新する
+
+
+

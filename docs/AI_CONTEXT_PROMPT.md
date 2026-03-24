@@ -1,8 +1,8 @@
-## AI CONTEXT PROMPT: inim-dx 完全復元用
+﻿# AI CONTEXT PROMPT / inim-dx 完全復元用
 
 このファイルは、作業途中からでも `inim-dx` の現状を正確に復元し、同じ前提で開発を再開するための AI 向けコンテキストです。新しい AI に渡す場合は、このファイルをそのまま読ませたうえで、必要に応じて `PROJECT_STATUS.md` と `WIP.md` を続けて参照させてください。
 
-### あなたの役割
+## 1. あなたの役割 / Role
 - あなたは `inim-dx` のフルスタックエンジニアです。
 - 既存の公開サイトへ影響を出さないことを最優先に、管理画面の実装を継続してください。
 - 不明点は実装前に確認してください。
@@ -12,9 +12,9 @@
 - 日本語の文字化けがないか、変更後に必ず確認してください。
 - 変更のたびに、少なくとも `docs/PROJECT_STATUS.md` と `docs/AI_CONTEXT_PROMPT.md` を更新してください。
 - 不具合や詰まりが発生した場合は、`docs/ISSUE_LIST.md` に必ず追記し、関連ドキュメントと一緒に更新してください。
-- 管理画面に関する実装変更があれば、`docs/admin-implementation-status.md` と必要に応じて `docs/WIP.md` も更新してください。
+- 管理画面に関する実装変更があれば、`docs/ADMIN_IMPLEMENTATION_STATUS.md` と必要に応じて `docs/WIP.md` も更新してください。
 
-### プロジェクト概要
+## 2. プロジェクト概要 / Project Overview
 - プロジェクト名: `inim-dx`
 - 現在の主対象: 管理画面実装
 - 目的:
@@ -22,10 +22,10 @@
   - 公開サイトの既存 UI / JS / CSS へ影響を出さずに進める
   - まずは「トップ編集」と「導線設定」を優先実装する
 
-### 正本ドキュメント
+## 3. 正本ドキュメント / Canonical Docs
 - プロジェクト全体のコンセプトを理解・確認・振り返りする場合は、常に `docs/01-proposal.html` を参照し、現在の実装や判断内容に矛盾がないか確認してください。
 - 画面仕様の正本:
-  - `prompts/cross-project-handover-admin-implementation.md`
+  - `docs/CROSS_PROJECT_HANDOVER_ADMIN_IMPLEMENTATION.md`
   - `references/design/11-admin-mockup-standalone.html`
 - 補助デザイン:
   - `references/design/05-wireframe.html`
@@ -33,17 +33,17 @@
 - DB 設計の正本:
   - `C:\Users\maxsh\OneDrive\Documents\EDIX\src\portfolio\docs\08-db-design.html`
 - Workshop 予約データ設計の補助資料:
-  - `docs/workshop-booking-data-design.md`
+  - `docs/WORKSHOP_BOOKING_DATA_DESIGN.md`
 - Workshop 予約 SQL 実行手順:
-  - `docs/workshop-booking-sql-runbook.md`
+  - `docs/WORKSHOP_BOOKING_SQL_RUNBOOK.md`
 - 進捗管理:
   - `docs/PROJECT_STATUS.md`
-  - `docs/admin-implementation-status.md`
+  - `docs/ADMIN_IMPLEMENTATION_STATUS.md`
   - `docs/WIP.md`
 - Issue 管理:
   - `docs/ISSUE_LIST.md`
 
-### 技術構成
+## 4. 技術構成 / Tech Stack
 - フロント:
   - 静的 HTML
   - Vanilla JavaScript
@@ -53,7 +53,7 @@
 - ホスティング:
   - GitHub Pages
 
-### 実装方針
+## 5. 実装方針 / Implementation Policy
 - 公開サイト用の既存ファイルは原則変更しない
   - `css/style.css`
 - ただし 2026-03-22 の Workshop 予約導線 Draft 追加では、公開側の導線追加に必要な最小差分として `js/site-shell.js` と `subpages/workshop.html` を更新済み
@@ -67,13 +67,13 @@
 - 英語表記が必要な場合は Australian English に統一する
 - 次の主実装は、管理画面の `bookings / enquiries` 詳細化ではなく、公開側 [`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) `#reserve` から始まる Workshop 予約導線の整理です
 
-### ここまでの主な変更範囲
+## 6. ここまでの主な変更範囲 / Change Scope
 #### 新規追加
 - `css/admin-app.css`
 - `js/admin-app.js`
 - `app/pages/journey.html`
 - `subpages/workshop-booking.html`
-- `docs/admin-implementation-status.md`
+- `docs/ADMIN_IMPLEMENTATION_STATUS.md`
 - `docs/PROJECT_STATUS.md`
 - `docs/WIP.md`
 
@@ -89,7 +89,7 @@
 - `app/password/reset.html`
 - `js/site-shell.js`
 
-### 現在実装済みの内容
+## 7. 現在実装済みの内容 / Implemented Scope
 #### 認証
 - Supabase セッション確認
 - 管理画面ログイン
@@ -155,15 +155,15 @@
 - DB 追加は不要だった。`workshop_sessions.store_id` と既存 `bookings.store_id` がすでに存在するため、SQL `07_` は未作成
 - 2026-03-22 のユーザー確認で、店舗引き継ぎ、予約画面の店舗選択表示、選択店舗の開催日のみ表示はすべて正常、Console エラーなしを確認した
 - Reminder: `workshop_plans` / `workshop_sessions` 確定後に、予約画面で各プランをどう見せるか、各コースボタンから何を初期反映するかを再設計する
-- 予約データ設計案は `docs/workshop-booking-data-design.md` に整理済み
+- 予約データ設計案は `docs/WORKSHOP_BOOKING_DATA_DESIGN.md` に整理済み
 - 追加テーブル作成 SQL は `sql/05_create_workshop_booking_tables.sql`
 - 検証 SQL は `sql/06_verify_workshop_booking_tables.sql`
-- 実行手順は `docs/workshop-booking-sql-runbook.md`
+- 実行手順は `docs/WORKSHOP_BOOKING_SQL_RUNBOOK.md`
 - 2026-03-22 の実確認で、カレンダー記号は良好、SQL ファイル構成は良好、Runbook も良好だった
 - 同日の検証で、追加テーブル、`bookings` 追加列、関連 index の存在確認まで完了している
 - `デジタル調香を試す` への導線も併設されているため、予約前体験との関係整理が必要
 
-### DB 設計に基づく重要テーブル
+## 8. DB 設計に基づく重要テーブル / Key Tables
 #### `user_profiles`
 - 主な利用カラム:
   - `id`
@@ -208,7 +208,7 @@
   - `helper_text`
   - `is_visible`
 
-### 重要な現状認識
+## 9. 重要な現状認識 / Current Findings
 #### 公開側との分離
 - 公開サイト用の `css/style.css` は未変更です。
 - 公開サイト用の `js/site-shell.js` は、Workshop 予約 Draft 追加に必要な最小差分のみ更新しています。
@@ -258,18 +258,18 @@
 - 2026-03-21 の実画面確認で、`journey_steps` の各バリデーションは正常動作し、正常値保存も成功、Console エラーなしを確認済みです。
 - 2026-03-22 の現状把握で、`workshop.html#reserve` は存在するが、予約 CTA はまだ `../index.html#contact` に接続されていることを確認済みです。
 - その後、`subpages/workshop-booking.html` の Draft を追加し、空き状況カレンダー、選択日の時間帯表示、`予約へ進む` ボタン、詳細4タブまで実装しました。
-- さらに、Workshop 予約の推奨テーブルとして `workshop_plans`, `workshop_plan_inclusions`, `workshop_plan_flow_steps`, `workshop_sessions` を `docs/workshop-booking-data-design.md` に整理しました。
+- さらに、Workshop 予約の推奨テーブルとして `workshop_plans`, `workshop_plan_inclusions`, `workshop_plan_flow_steps`, `workshop_sessions` を `docs/WORKSHOP_BOOKING_DATA_DESIGN.md` に整理しました。
 - したがって、次はこの Draft を基に公開側予約画面の必要入力項目を固め、その後に `bookings / enquiries` 管理画面の詳細化へ進むべき状態です。
 
-### 直近の再開手順
+## 10. 直近の再開手順 / Restart Steps
 1. `docs/PROJECT_STATUS.md` を確認する
 2. `docs/WIP.md` を確認する
-3. `docs/admin-implementation-status.md` を確認する
+3. `docs/ADMIN_IMPLEMENTATION_STATUS.md` を確認する
 4. [`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) の `#reserve` セクションを確認する
 5. `予約フォームへ進む` が `./workshop-booking.html` を向いていることを確認する
 6. [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html) の Draft UI を確認する
-7. `docs/workshop-booking-data-design.md` を確認する
-8. `docs/workshop-booking-sql-runbook.md` を確認する
+7. `docs/WORKSHOP_BOOKING_DATA_DESIGN.md` を確認する
+8. `docs/WORKSHOP_BOOKING_SQL_RUNBOOK.md` を確認する
 9. 予約画面で必要になる入力項目を整理する
 10. 必要なら `bookings / enquiries` の追加項目を検討する
 11. GitHub Pages 上で以下 URL を直接開けるか確認する
@@ -280,29 +280,32 @@
 13. `app/publish.html` でも同じ一覧が表示されるか確認する
 14. サイドバー下部の `Admin build` が `20260322a` であることを確認する
 
-### 次に優先する実装候補
-1. `subpages/workshop-booking.html` と `subpages/workshop-booking-entry.html` の Draft、`docs/workshop-booking-data-design.md` を基に予約入力項目を確定する
+## 11. 次に優先する実装候補 / Next Candidates
+1. `subpages/workshop-booking.html` と `subpages/workshop-booking-entry.html` の Draft、`docs/WORKSHOP_BOOKING_DATA_DESIGN.md` を基に予約入力項目を確定する
 2. 予約保存成功後の完了画面（thanks）と表示内容を確定する
 3. `workshop_sessions` 実データ連携で `session_id` / `plan_id` の保存を確定する
 4. その後に `bookings / enquiries` の詳細管理画面着手
 
-### 変更時の必須チェック
+## 12. 変更時の必須チェック / Mandatory Checks
 - 変更が公開側へ波及していないか確認する
 - 変更ファイルが管理画面側に閉じているか確認する
 - 日本語の文字化けがないか再読込で確認する
 - 変更内容を `docs/PROJECT_STATUS.md` に反映する
 - この `docs/AI_CONTEXT_PROMPT.md` にも反映する
 - 不具合や詰まりがあった場合は `docs/ISSUE_LIST.md` にも反映する
-- 必要に応じて `docs/admin-implementation-status.md` と `docs/WIP.md` を更新する
+- 必要に応じて `docs/ADMIN_IMPLEMENTATION_STATUS.md` と `docs/WIP.md` を更新する
 
-### ユーザーへの報告ルール
+## 13. ユーザーへの報告ルール / Reporting Rules
 - まず結論を短く伝える
 - その後、変更点を構造化して示す
 - 差分要約を入れる
 - 初心者でも理解できる言葉で補足する
 - ユーザー確認が必要な場合は、確認手順と報告フォーマットをセットで提示する
 
-### このファイルの更新ルール
+## 14. このファイルの更新ルール / Update Rules
 - このファイルは使い回しの雛形ではなく、現在の実プロジェクト状態を保持する運用ファイルです。
 - 今後、実装・調査・方針変更・既知課題の変化があったら、必ず更新してください。
 - 次回の AI がこのファイルだけ読んでも、途中から高い精度で再開できる状態を維持してください。
+
+
+
