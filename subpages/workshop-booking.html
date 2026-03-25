@@ -82,6 +82,21 @@
         .booking-detail__table th { width: 22%; background: #f8f2e9; font-size: .92rem; }
         .booking-map { overflow: hidden; margin-top: 18px; border-radius: 18px; }
         .booking-map iframe { width: 100%; min-height: 360px; border: 0; }
+        .connection-pill {
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            z-index: 1200;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(44,44,44,.08);
+            color: #2c2c2c;
+            font-size: .85rem;
+            border: 1px solid rgba(44,44,44,.12);
+            box-shadow: 0 6px 16px rgba(0,0,0,.08);
+        }
+        .connection-pill.is-ok { background: #edf7f0; color: #23613a; border-color: #cfe8d5; }
+        .connection-pill.is-bad { background: #fff1ee; color: #9b2f20; border-color: #f1c8bf; }
         @media (max-width: 1100px) {
             .booking-hero__grid, .booking-calendar-grid, .booking-slots, .booking-detail__grid { grid-template-columns: 1fr; }
         }
@@ -97,6 +112,7 @@
 </head>
 
 <body data-root=".." data-page-key="workshopBooking">
+    <div class="connection-pill" id="connection-status" aria-live="polite">Supabase: checking...</div>
     <main id="page-main" class="booking-page">
         <section class="booking-hero">
             <div class="booking-wrap booking-hero__grid">
@@ -246,6 +262,7 @@
                 return null;
             })();
             const calendarHost = document.getElementById("booking-calendar");
+            const connectionPill = document.getElementById("connection-status");
             const selectedTitle = document.getElementById("booking-selected-title");
             const selectedStatus = document.getElementById("booking-selected-status");
             const slotList = document.getElementById("booking-slot-list");
@@ -462,6 +479,8 @@
             const initData = async () => {
                 try {
                     const { plans, stores: storeRows, sessions } = await fetchData();
+                    connectionPill?.classList.add("is-ok");
+                    if (connectionPill) connectionPill.textContent = "Supabase: connected";
                     if (!sessions || sessions.length === 0) throw new Error("no sessions");
                     stores = buildStoreMap(storeRows);
                     const planById = {};
@@ -476,6 +495,8 @@
                     selectedStore = chooseInitialStore();
                     selectedKey = dates.find((d) => sessionMap[d][0].storeKey === selectedStore) || dates[0];
                 } catch (e) {
+                    connectionPill?.classList.add("is-bad");
+                    if (connectionPill) connectionPill.textContent = "Supabase: fallback (no data)";
                     // fallback to draft data (previous hardcoded)
                     stores = { ...fallbackStores };
                     // reuse previous draft months/schedule by rebuilding from fallback minimal data
@@ -522,6 +543,10 @@
                 });
             });
             (async () => {
+                if (!supabase) {
+                    connectionPill?.classList.add("is-bad");
+                    if (connectionPill) connectionPill.textContent = "Supabase: client not initialized";
+                }
                 await initData();
                 selectedStore = selectedStore || chooseInitialStore();
                 if (!selectedKey) {
