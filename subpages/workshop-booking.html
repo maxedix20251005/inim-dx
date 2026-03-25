@@ -36,14 +36,14 @@
         .booking-month th { padding: 10px 0; background: #f8f2e9; font-size: .82rem; color: var(--color-muted); }
         .booking-month td { height: 98px; padding: 0; vertical-align: top; background: #fffdfa; }
         .booking-month td.is-outside { background: #f5f0e8; }
-        .booking-day { width: 100%; height: 100%; padding: 10px; border: 0; background: transparent; text-align: left; }
+        .booking-day { width: 100%; height: 100%; padding: 10px; border: 0; background: transparent; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
         .booking-day.is-selectable { cursor: pointer; }
         .booking-day.is-selectable:hover, .booking-day.is-selectable:focus-visible { background: rgba(178,69,49,.08); }
         .booking-day.is-selected { background: linear-gradient(135deg, rgba(178,69,49,.18), rgba(178,69,49,.08)); box-shadow: inset 0 0 0 2px rgba(178,69,49,.42); }
-        .booking-day__date { font-weight: 700; }
+        .booking-day__date { display: block; font-weight: 700; }
         .booking-day__status, .booking-legend span { display: inline-flex; align-items: center; gap: 8px; }
-        .booking-day__status { margin-top: 12px; font-size: .87rem; color: var(--color-main); }
-        .booking-day__price { margin-top: 8px; font-size: .82rem; color: var(--color-muted); }
+        .booking-day__status { margin-top: 6px; font-size: .87rem; color: var(--color-main); }
+        .booking-day__price { margin-top: 6px; font-size: .82rem; color: var(--color-muted); }
         .booking-mark { display: inline-flex; align-items: center; justify-content: center; width: 1.2em; height: 1.2em; border: 0; border-radius: 0; font-size: 1.15rem; font-weight: 700; font-style: normal; line-height: 1; }
         .booking-mark[data-status="instant"] { color: #2a6cd6; }
         .booking-mark[data-status="request"] { color: #8e6a20; }
@@ -264,7 +264,7 @@
                 "2026-04-26": { label: "2026年4月26日(日)", store: "asakusa", storeLabel: "浅草店", status: "即時予約可。浅草店開催 / 料金 5,500円〜", slots: [{ g: "12:20", e: "12:30〜13:30", p: "おひとりさま 5,500円", n: "即時確定" }] },
                 "2026-04-29": { label: "2026年4月29日(水・祝)", store: "solamachi", storeLabel: "ソラマチ店", status: "リクエスト予約可。ソラマチ店開催 / スタッフ確認後にご連絡します。", slots: [{ g: "10:20", e: "10:30〜11:30", p: "おひとりさま 5,500円", n: "24時間以内に回答予定" }, { g: "13:20", e: "13:30〜14:30", p: "おひとりさま 5,500円", n: "24時間以内に回答予定" }] }
             };
-            const marks = { instant: ["○", "即時予約可"], request: ["□", "リクエスト予約可"], few: ["△", "残席数少ない"], full: ["×", "空き無し"], closed: ["-", "開催無し"] };
+            const marks = { instant: "○", request: "□", few: "△", full: "×", closed: "-" };
             const days = ["月", "火", "水", "木", "金", "土", "日"];
             let selectedStore = params.get("store");
             if (!selectedStore || !stores[selectedStore]) {
@@ -322,7 +322,7 @@
                 slotList.innerHTML = (current?.slots || []).map((slot) => `<article class="booking-slot"><div><strong>${current.label}</strong><div class="booking-slot__time"><span>集合 ${slot.g}</span><span>体験 ${slot.e}</span></div><p class="booking-slot__price">${slot.p}</p></div><div class="booking-slot__actions"><span class="booking-slot__note">${slot.n}</span><a class="button button--primary booking-slot__button" href="${buildBookingHref(current, slot)}">予約へ進む</a></div></article>`).join("");
             };
             const renderCalendar = () => {
-                calendarHost.innerHTML = months.map((month) => `<section class="booking-month"><div class="booking-month__header"><h3>${month.label}</h3><span>${stores[selectedStore].label} の開催日</span></div><table><thead><tr>${days.map((d) => `<th>${d}</th>`).join("")}</tr></thead><tbody>${Array.from({ length: Math.ceil(month.cells.length / 7) }, (_, i) => `<tr>${month.cells.slice(i * 7, i * 7 + 7).map((cell) => { if (!cell) return '<td class="is-outside"></td>'; const filtered = cell.store && cell.store !== selectedStore ? { ...cell, s: "closed", p: null, k: null } : cell; const [mark, label] = marks[filtered.s]; const selectable = ["instant", "request", "few"].includes(filtered.s); return `<td><button class="booking-day${selectable ? ' is-selectable' : ''}${filtered.k === selectedKey ? ' is-selected' : ''}" type="button" ${filtered.k ? `data-date-key="${filtered.k}"` : ''} ${!selectable ? 'disabled' : ''}><span class="booking-day__date">${filtered.d}</span><span class="booking-day__status"><i class="booking-mark" data-status="${filtered.s}">${mark}</i><span>${label}</span></span>${filtered.p ? `<div class="booking-day__price">${filtered.p}</div>` : ''}</button></td>`; }).join("")}</tr>`).join("")}</tbody></table></section>`).join("");
+                calendarHost.innerHTML = months.map((month) => `<section class="booking-month"><div class="booking-month__header"><h3>${month.label}</h3><span>${stores[selectedStore].label} の開催日</span></div><table><thead><tr>${days.map((d) => `<th>${d}</th>`).join("")}</tr></thead><tbody>${Array.from({ length: Math.ceil(month.cells.length / 7) }, (_, i) => `<tr>${month.cells.slice(i * 7, i * 7 + 7).map((cell) => { if (!cell) return '<td class="is-outside"></td>'; const filtered = cell.store && cell.store !== selectedStore ? { ...cell, s: "closed", p: null, k: null } : cell; const mark = marks[filtered.s]; const selectable = ["instant", "request", "few"].includes(filtered.s); return `<td><button class="booking-day${selectable ? ' is-selectable' : ''}${filtered.k === selectedKey ? ' is-selected' : ''}" type="button" ${filtered.k ? `data-date-key="${filtered.k}"` : ''} ${!selectable ? 'disabled' : ''}><span class="booking-day__date">${filtered.d}</span><span class="booking-day__status"><i class="booking-mark" data-status="${filtered.s}">${mark}</i></span>${filtered.p ? `<div class="booking-day__price">${filtered.p}</div>` : ''}</button></td>`; }).join("")}</tr>`).join("")}</tbody></table></section>`).join("");
                 calendarHost.querySelectorAll("[data-date-key]").forEach((button) => button.addEventListener("click", () => { selectedKey = button.dataset.dateKey; renderCalendar(); renderSlots(); slotsPanel?.scrollIntoView({ behavior: "smooth", block: "start" }); }));
             };
             document.querySelectorAll(".booking-tab").forEach((button) => {

@@ -208,8 +208,8 @@
 ## 8. 次に優先して進める作業 / Next Priorities
 1. `PROJECT_STATUS.md` を起点に運用継続する
 2. `AI_CONTEXT_PROMPT.md` を復元用コンテキストとして都度更新運用する
-3. [`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) `#reserve` 起点の予約導線を整理する
-4. [`subpages/workshop-booking-entry.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking-entry.html) を基に、公開側の必須入力項目と確認フローを確定する
+3. （完了）[`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) `#reserve` 起点の予約導線整理（`subpages/ex-workshop.html` の予約CTAも `workshop-booking.html` に統一済み）
+4. （完了）[`subpages/workshop-booking-entry.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking-entry.html) を基に、公開側の必須入力項目と確認フローを確定（確認画面で必須値再検証を追加）
 5. `bookings` 保存成功後の完了画面（thanks）導線と、`session_id` / `plan_id` を実データで確定する
 6. その後に `app/` 側の `bookings / enquiries` 管理画面詳細化へ進む
 
@@ -311,7 +311,7 @@
 
 ## 15. 作業ステータス再確認（2026-03-25） / Task Status Recheck
 1. Workshop予約導線整理（`workshop.html #reserve` 起点）: `Completed`
-2. 予約入力必須項目と確認フロー確定: `In Progress`
+2. 予約入力必須項目と確認フロー確定: `Completed`
 3. 予約完了（Thanks）導線と `session_id` / `plan_id` 実データ確定: `In Progress`
 4. `app/` 側 `bookings / enquiries` 詳細管理: `Not Started`
 5. Top -> Workshop 導線強化: `In Progress`
@@ -320,3 +320,32 @@
 8. 調香データ保存・再利用: `Proposed`
 9. Workshop x Product 相互特典: `Proposed`
 10. Spring Boot/Java API 層追加判断: `On Hold`
+
+
+### ドキュメント更新（2026-03-25 追加5）
+- タスク #1（Workshop予約導線整理）の再確認に基づき、`subpages/ex-workshop.html` の予約CTAを `../index.html#contact` から `./workshop-booking.html` に統一しました。
+- `次に優先して進める作業` の 3 番を「完了」表記へ更新しました。
+
+### ドキュメント更新（2026-03-25 追加6）
+- ユーザー実施の #1 動作確認結果（All OK / Console エラーなし）を `docs/60_TEST/TEST_PLAN.md` に記録しました。
+- `ex-workshop.html` はバックアップ扱いとして、今後は通常変更対象から除外する運用メモを追記しました。
+
+
+### ドキュメント更新（2026-03-25 追加7）
+- タスク #2（予約入力必須項目と確認フロー確定）に対応し、`subpages/workshop-booking-confirm.html` に確認画面側の必須値再検証を追加しました。
+- `subpages/workshop-booking-entry.html` は文字化け復旧のため `HEAD` 正常版へ復元し、文言調整は保留としました。
+- `作業ステータス再確認` の #2 を `Completed` へ更新しました。
+- `次に優先して進める作業` の 4 番を「完了」表記へ更新しました。
+
+### ドキュメント更新（2026-03-25 追加8）
+- `subpages/workshop-booking-entry.html` / `subpages/workshop-booking-confirm.html` の文字化けを復旧しました。
+- `subpages/workshop-booking-confirm.html` には #2 要件（確認画面側の必須値再検証、`internal_note` の `public_booking` 化）を再適用しました。
+- 文字化け事象を `docs/10_PROJECT/ISSUE_LIST.md`（Issue 2026-03-25-17）へ追記しました。
+
+### ドキュメント更新（2026-03-25 追加9）
+- `subpages/workshop-booking-entry.html` と `subpages/workshop-booking-confirm.html` の `<style>` を外部CSS `css/workshop-booking-flow.css` へ移動しました。
+- 文字化け再発防止として `.editorconfig` を追加し、`charset = utf-8` を全体既定に設定しました。
+
+### ドキュメント更新（2026-03-25 追加10）
+- タスク #3 の初期実装として、`subpages/workshop-booking-thanks.html` と `css/workshop-booking-thanks.css` を追加しました。
+- `subpages/workshop-booking-confirm.html` の予約送信成功後、予約ID等をクエリ引き継ぎして Thanks 画面へ自動遷移するよう更新しました。

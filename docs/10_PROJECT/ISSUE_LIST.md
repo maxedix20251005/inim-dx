@@ -167,10 +167,20 @@
 - `ユーザー確認結果:` 2026-03-23 時点で、`Booking build: 20260322b` で予約送信成功、予約ID表示あり、Console エラーなし（警告なし）を確認済み。
 - `状態:` 解消済み
 
+
+### Issue 2026-03-25-17
+- `発生日:` 2026-03-25
+- `発生箇所:` [`subpages/workshop-booking-entry.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking-entry.html), [`subpages/workshop-booking-confirm.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking-confirm.html)
+- `症状:` 日本語テキストが文字化けし、見出し・本文・HTMLタグの一部が崩れて画面表示が破綻した。
+- `原因:` 文字コード非固定の一括置換により、UTF-8テキストが誤ったエンコーディングで再保存された。
+- `対策:` 対象2ファイルを `HEAD` の正常UTF-8版へ復元し、必要差分（確認画面の必須値再検証、`internal_note` ラベル修正）のみ再適用した。
+- `再発防止:` 日本語を含むHTML編集では UTF-8 を明示し、保存前後で文字化けパターン（`繝/譛ｪ/蜈･蜉` 等）とタグ破損（`/h1>` 等）を必ず grep 確認する。
+- `状態:` 解消済み（再確認待ち）
 ## 3. 今後の運用ルール / Operational Rules
 - 新しい Issue が発生したら、このファイルに必ず追記する
 - 追記時は、同じ作業内で `docs/10_PROJECT/PROJECT_STATUS.md` と `docs/80_HANDOFF/AI_CONTEXT_PROMPT.md` も更新する
 - 管理画面に関する Issue の場合は、必要に応じて `docs/10_PROJECT/WIP.md` と `docs/80_HANDOFF/ADMIN_IMPLEMENTATION_STATUS.md` も更新する
+
 
 
 

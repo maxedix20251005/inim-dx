@@ -52,3 +52,16 @@
 - 2026-03-25: テンプレート群を `wip/` から `docs/00_GOVERNANCE/TEMPLATES/` へ移動。`docs/60_TEST` は実テスト文書専用運用に固定。
 - 2026-03-25: `test/test-account-result.md` を `docs/60_TEST/ACCOUNT_TEST_RESULT.md` へ移動し、ガバナンス準拠で再整形。
 - 2026-03-25: 今後作業 1〜10 を再判定。#1（Workshop予約導線整理）を Completed として `PROJECT_STATUS` に反映。
+- 2026-03-25: タスク #1 の実装差分として `subpages/ex-workshop.html` の予約CTAを `workshop-booking.html` に統一。`PROJECT_STATUS` へ完了反映。
+- 2026-03-25: #1 の実動作確認結果（OK）を `docs/60_TEST/TEST_PLAN.md` へ反映。`ex-workshop.html` はバックアップ扱いで通常変更対象外とする。
+
+- 2026-03-25: タスク #2 を実装反映。確認画面側で必須値再検証を追加し、`PROJECT_STATUS` の #2 を Completed 化。
+
+- 2026-03-25: 予約入力/確認ページで発生した文字化けを修正。2ファイルをHEAD復元後、#2の必要差分のみ再適用し、Issueを docs/10_PROJECT/ISSUE_LIST.md に追記。
+
+- 2026-03-25: `subpages/workshop-booking-entry.html` / `subpages/workshop-booking-confirm.html` のインラインCSSを `css/workshop-booking-flow.css` へ外部化。再発防止として `.editorconfig` を追加し、UTF-8をリポジトリ既定に固定。
+
+- 2026-03-25: `subpages/workshop-booking.html` の日セル内ステータス文言（開催無し/予約可など）を削除。日セルは記号のみ表示し、意味説明は下部Legendに集約。
+
+- 2026-03-25: タスク #3 の初期実装として `subpages/workshop-booking-thanks.html` を追加し、確認画面送信成功後の自動遷移を実装。
+

@@ -6,57 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ワークショップ予約確認 | inim-dx</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/workshop-booking-flow.css">
     <link rel="icon" href="../images/logo/logo-inim-dx.jpg">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        .confirm-page { display: grid; gap: 36px; padding-bottom: 96px; }
-        .confirm-wrap { width: min(1120px, calc(100% - 48px)); margin: 0 auto; }
-        .confirm-hero { padding: 68px 0 42px; background: linear-gradient(135deg, rgba(247,242,233,.96), rgba(255,255,255,.92)), radial-gradient(circle at top right, rgba(178,69,49,.16), rgba(178,69,49,0)); }
-        .confirm-hero__grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 24px; align-items: end; }
-        .confirm-hero__title { font-size: clamp(2.3rem, 4.4vw, 3.8rem); line-height: 1.15; letter-spacing: .04em; }
-        .confirm-hero__lead { margin-top: 14px; color: var(--color-muted); max-width: 44rem; }
-        .confirm-steps, .confirm-panel, .confirm-summary, .confirm-note { border: 1px solid rgba(207,201,188,.9); border-radius: 24px; background: rgba(255,255,255,.9); box-shadow: 0 18px 42px rgba(61,45,30,.08); }
-        .confirm-steps { padding: 18px 22px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
-        .confirm-step { padding: 14px 16px; border-radius: 18px; background: #f8f2e9; color: var(--color-muted); border: 1px solid transparent; }
-        .confirm-step strong { display: block; color: var(--color-main); font-size: 1rem; }
-        .confirm-step.is-done { background: #f4efe6; color: #8e8678; }
-        .confirm-step.is-done .section-kicker,
-        .confirm-step.is-done strong,
-        .confirm-step.is-done p { color: #8e8678; }
-        .confirm-step.is-current { background: linear-gradient(135deg, rgba(178,69,49,.16), rgba(255,255,255,.96)); border: 1px solid rgba(178,69,49,.34); color: var(--color-accent); box-shadow: 0 16px 30px rgba(178,69,49,.12); }
-        .confirm-step.is-current strong { color: #23180f; }
-        .confirm-step.is-current p { color: var(--color-accent); }
-        .confirm-main { display: grid; grid-template-columns: 1.05fr .95fr; gap: 24px; }
-        .confirm-panel, .confirm-summary, .confirm-note { padding: 26px; }
-        .confirm-panel__head { display: flex; justify-content: space-between; gap: 18px; align-items: baseline; margin-bottom: 18px; }
-        .confirm-panel__head p { color: var(--color-muted); }
-        .confirm-section + .confirm-section { margin-top: 26px; }
-        .confirm-table { width: 100%; border-collapse: collapse; }
-        .confirm-table th, .confirm-table td { padding: 14px 16px; border: 1px solid rgba(228,222,211,.92); text-align: left; vertical-align: top; }
-        .confirm-table th { width: 28%; background: #f8f2e9; font-size: .92rem; }
-        .confirm-summary { display: grid; gap: 12px; }
-        .confirm-summary__row { display: flex; justify-content: space-between; gap: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(221,214,201,.8); }
-        .confirm-summary__row:last-child { padding-bottom: 0; border-bottom: 0; }
-        .confirm-summary__value { text-align: right; font-weight: 700; }
-        .confirm-actions { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-top: 22px; }
-        .confirm-actions__meta { color: var(--color-muted); font-size: .9rem; }
-        .confirm-build { margin-top: 14px; color: var(--color-muted); font-size: .85rem; }
-        .confirm-note p, .confirm-note li { color: var(--color-muted); line-height: 1.7; }
-        .confirm-success { display: none; margin-top: 18px; padding: 16px 18px; border-radius: 18px; background: rgba(37,103,86,.12); color: #1d5d4c; }
-        .confirm-success.is-visible { display: block; }
-        .confirm-success.is-error { background: rgba(197,77,61,.12); color: #8d3023; }
-        .confirm-success a { color: inherit; text-decoration: underline; font-weight: 700; }
-        @media (max-width: 980px) {
-            .confirm-hero__grid, .confirm-main { grid-template-columns: 1fr; }
-        }
-        @media (max-width: 720px) {
-            .confirm-wrap { width: min(100% - 28px, 100%); }
-            .confirm-steps { grid-template-columns: 1fr; }
-            .confirm-panel, .confirm-summary, .confirm-note { padding: 20px; }
-            .confirm-summary__row { flex-direction: column; }
-            .confirm-summary__value { text-align: left; }
-        }
-    </style>
 </head>
 
 <body data-root=".." data-page-key="workshopBookingConfirm">
@@ -233,6 +185,36 @@
                 success.classList.add("is-visible");
                 success.scrollIntoView({ behavior: "smooth", block: "nearest" });
             };
+            const validateRequiredSelections = () => {
+                const missing = [];
+                const name = String(selected.contactName || "").trim();
+                const email = String(selected.contactEmail || "").trim();
+                const phone = String(selected.contactPhone || "").trim();
+                const partySize = String(selected.partySize || "").trim();
+                if (!name || name === "未入力") missing.push("代表者名");
+                if (!email || email === "未入力") {
+                    missing.push("メールアドレス");
+                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    missing.push("メールアドレス形式");
+                }
+                if (!phone || phone === "未入力") {
+                    missing.push("電話番号");
+                } else {
+                    const digits = phone.replace(/-/g, "");
+                    if (!/^\d+$/.test(digits) || ![10, 11].includes(digits.length)) {
+                        missing.push("電話番号形式");
+                    }
+                }
+                if (!partySize || partySize === "未入力") missing.push("参加人数");
+                const isoDate = toIsoDate(selected.dateKey, selected.label || selected.date);
+                if (!isoDate) missing.push("日時情報");
+                if (missing.length > 0) {
+                    if (submitButton) submitButton.disabled = true;
+                    setResultMessage(`<strong>確認項目に不足があります</strong><p>${missing.join(" / ")} を確認し、入力画面から再設定してください。</p>`, true);
+                    return false;
+                }
+                return true;
+            };
             const parsePriceJpy = (priceText) => {
                 const matched = String(priceText || "").replace(/,/g, "").match(/(\d+)/);
                 return matched ? Number(matched[1]) : null;
@@ -369,6 +351,10 @@
                     setResultMessage("<strong>送信に失敗しました</strong><p>Supabase 設定を読み込めませんでした。ページを再読み込みしてください。</p>", true);
                     return;
                 }
+                const canSubmit = validateRequiredSelections();
+                if (!canSubmit) {
+                    return;
+                }
                 try {
                     submitButton.disabled = true;
                     submitButton.textContent = "送信中...";
@@ -398,7 +384,7 @@
                         contact_phone: selected.contactPhone === "未入力" ? null : selected.contactPhone,
                         party_size: partySize,
                         special_requests: normaliseSpecialRequests(selected.specialRequests),
-                        internal_note: `public_booking_draft: ${selected.plan} / ${selected.label} / ${selected.gather}`,
+                        internal_note: `public_booking: ${selected.plan} / ${selected.label} / ${selected.gather}`,
                         confirmed_at: methodCode === "instant" ? new Date().toISOString() : null
                     };
                     const { data, error } = await supabase
@@ -409,11 +395,25 @@
                     if (error) {
                         throw error;
                     }
+                    const thanksUrl = new URL("./workshop-booking-thanks.html", window.location.href);
+                    const thanksPayload = {
+                        booking_id: data.id,
+                        status: data.status || "",
+                        date: selected.date || "",
+                        label: selected.label || "",
+                        gather: selected.gather || "",
+                        party_size: String(partySize)
+                    };
+                    Object.entries(thanksPayload).forEach(([key, value]) => thanksUrl.searchParams.set(key, value));
                     setResultMessage(`
                         <strong>予約を受け付けました</strong>
                         <p>予約ID: ${data.id}</p>
                         <p>${selected.contactName} 様 / ${selected.label} / ${selected.gather} 集合 / ${partySize}名 で保存しました。</p>
+                        <p>完了画面へ移動します...</p>
                     `);
+                    window.setTimeout(() => {
+                        window.location.href = thanksUrl.toString();
+                    }, 1200);
                 } catch (error) {
                     const message = error?.message || "送信に失敗しました。時間をおいて再度お試しください。";
                     const needsLogin = message.includes("ログインが必要");
