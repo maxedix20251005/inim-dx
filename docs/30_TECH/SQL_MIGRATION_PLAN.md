@@ -174,6 +174,7 @@ Success. No rows returned
 - `js/site-shell.js` の `Workshop Admin` 表記を `Workshop Bookings` に更新
 - 管理画面 HTML のアセット参照バージョンを `20260322a` に更新
 - 既存の `booking_status_logs` / `enquiry_status_logs` は現時点の管理画面で未使用のため、アプリコード変更なし
+- 2026-03-25 以降の Workshop 拡張に向けて、`05_create_workshop_booking_tables.sql` へ通貨カラム（`currency_code`）とセッション人数上限/下限（`min_party_size` / `max_party_size`）を追加済み。`bookings` にも `currency_code` を追加。
 
 
 ## やってはいけないこと

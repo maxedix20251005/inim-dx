@@ -18,12 +18,13 @@
 - 新規テーブル作成
   - `workshop_plans`
   - `workshop_plan_inclusions`
-  - `workshop_plan_flow_steps`
-  - `workshop_sessions`
+- `workshop_plan_flow_steps`
+- `workshop_sessions`
 - 既存 `bookings` への列追加
   - `session_id`
   - `plan_id`
   - `quoted_price_jpy`
+  - `currency_code`
   - `booking_method`
   - `contact_name`
   - `contact_email`
@@ -32,6 +33,10 @@
   - `special_requests`
   - `internal_note`
   - `confirmed_at`
+- 既存/新規テーブルの人数・通貨関連補足
+  - `workshop_plans.currency_code`（初期 `JPY`）
+  - `workshop_sessions.currency_code`（初期 `JPY`）
+  - `workshop_sessions.min_party_size` / `max_party_size`（未設定時はプランを継承想定）
 - インデックス追加
 - 基本 CHECK 制約追加
 

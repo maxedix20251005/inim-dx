@@ -28,9 +28,14 @@
                     <tbody>
                         <tr><th>予約ID</th><td id="thanks-booking-id">-</td></tr>
                         <tr><th>予約ステータス</th><td id="thanks-booking-status">-</td></tr>
+                        <tr><th>プラン</th><td id="thanks-plan">-</td></tr>
+                        <tr><th>店舗</th><td id="thanks-store">-</td></tr>
                         <tr><th>予約日時</th><td id="thanks-booking-date">-</td></tr>
                         <tr><th>集合時間</th><td id="thanks-booking-gather">-</td></tr>
+                        <tr><th>開始時間</th><td id="thanks-booking-start">-</td></tr>
+                        <tr><th>終了時間</th><td id="thanks-booking-end">-</td></tr>
                         <tr><th>参加人数</th><td id="thanks-booking-party">-</td></tr>
+                        <tr><th>料金</th><td id="thanks-booking-price">-</td></tr>
                     </tbody>
                 </table>
 
@@ -52,12 +57,22 @@
             const label = params.get("label") || params.get("date") || "-";
             const gather = params.get("gather") || "-";
             const party = params.get("party_size") || "-";
+            const start = params.get("start_time") || "-";
+            const end = params.get("end_time") || "-";
+            const plan = params.get("plan") || "-";
+            const store = params.get("store_label") || params.get("storeLabel") || params.get("store") || "-";
+            const price = params.get("price") || "-";
 
             byId("thanks-booking-id").textContent = bookingId;
             byId("thanks-booking-status").textContent = status;
+            byId("thanks-plan").textContent = plan;
+            byId("thanks-store").textContent = store;
             byId("thanks-booking-date").textContent = label;
             byId("thanks-booking-gather").textContent = gather;
+            byId("thanks-booking-start").textContent = start;
+            byId("thanks-booking-end").textContent = end;
             byId("thanks-booking-party").textContent = party === "-" ? party : `${party}名`;
+            byId("thanks-booking-price").textContent = price;
         })();
     </script>
 </body>

@@ -143,8 +143,13 @@
                 dateKey: params.get("date_key") || "",
                 date: params.get("date") || "未選択",
                 gather: params.get("gather") || "未選択",
+                startTime: params.get("start_time") || "",
+                endTime: params.get("end_time") || "",
                 experience: params.get("experience") || "未選択",
                 price: params.get("price") || "未選択",
+                priceJpy: params.get("price_jpy") || "",
+                currencyCode: params.get("currency_code") || "JPY",
+                bookingMethod: params.get("booking_method") || params.get("method") || "",
                 method: params.get("method") || "未選択",
                 note: params.get("note") || "",
                 label: params.get("label") || "日時未選択",
@@ -153,6 +158,8 @@
                 storeLabel: params.get("storeLabel") || "",
                 planId: params.get("plan_id") || "",
                 sessionId: params.get("session_id") || "",
+                minPartySize: Number(params.get("min_party_size")) || 1,
+                maxPartySize: Number(params.get("max_party_size")) || 4,
                 contactName: params.get("contact_name") || "",
                 contactEmail: params.get("contact_email") || "",
                 contactPhone: params.get("contact_phone") || "",
@@ -247,6 +254,16 @@
                 const contactPhoneInput = form.elements.namedItem("contact_phone");
                 const partySizeSelect = form.elements.namedItem("party_size");
                 const specialRequestsInput = form.elements.namedItem("special_requests");
+                const populatePartyOptions = (min, max) => {
+                    const safeMin = Math.max(1, min || 1);
+                    const safeMax = Math.max(safeMin, max || 4);
+                    if (!(partySizeSelect instanceof HTMLSelectElement)) return;
+                    partySizeSelect.innerHTML = `<option value="">選択してください</option>` + Array.from({ length: safeMax - safeMin + 1 }, (_, i) => {
+                        const value = safeMin + i;
+                        return `<option value="${value}">${value}名</option>`;
+                    }).join("");
+                };
+                populatePartyOptions(selected.minPartySize, selected.maxPartySize);
                 if (contactNameInput) contactNameInput.value = selected.contactName;
                 if (contactEmailInput) contactEmailInput.value = selected.contactEmail;
                 if (contactPhoneInput) contactPhoneInput.value = selected.contactPhone;
@@ -316,8 +333,13 @@
                 let message = "";
                 if (!partySizeInput.value) {
                     message = "参加人数を選択してください。";
-                } else if (!["1", "2", "3", "4"].includes(partySizeInput.value)) {
-                    message = "参加人数は 1名から4名で選択してください。";
+                } else {
+                    const val = Number(partySizeInput.value);
+                    const min = selected.minPartySize || 1;
+                    const max = selected.maxPartySize || 4;
+                    if (!Number.isInteger(val) || val < min || val > max) {
+                        message = `参加人数は ${min}名〜${max}名で選択してください。`;
+                    }
                 }
                 partySizeInput.setCustomValidity(message);
                 setFieldError(partySizeInput, message);
@@ -369,8 +391,13 @@
                     date: selected.date,
                     label: selected.label,
                     gather: selected.gather,
+                    start_time: selected.startTime,
+                    end_time: selected.endTime,
                     experience: selected.experience,
                     price: selected.price,
+                    price_jpy: selected.priceJpy,
+                    currency_code: selected.currencyCode,
+                    booking_method: selected.bookingMethod || "",
                     method: selected.method,
                     note: selected.note,
                     plan: selected.plan,
@@ -378,6 +405,8 @@
                     storeLabel: selected.storeLabel,
                     plan_id: selected.planId,
                     session_id: selected.sessionId,
+                    min_party_size: String(selected.minPartySize || ""),
+                    max_party_size: String(selected.maxPartySize || ""),
                     contact_name: String(data.get("contact_name") || ""),
                     contact_email: String(data.get("contact_email") || ""),
                     contact_phone: String(data.get("contact_phone") || ""),

@@ -49,6 +49,7 @@
 | `duration_min_minutes` | SMALLINT | Yes | 最短所要時間 |
 | `duration_max_minutes` | SMALLINT | No | 最長所要時間 |
 | `base_price_jpy` | INTEGER | Yes | 基本料金 |
+| `currency_code` | VARCHAR(3) | Yes | 価格通貨（初期 `JPY`） |
 | `pair_price_jpy` | INTEGER | No | ペア料金 |
 | `min_party_size` | SMALLINT | Yes | 最少予約人数 |
 | `max_party_size` | SMALLINT | Yes | 最大予約人数 |
@@ -113,10 +114,13 @@ TEXT 1本に詰め込まない方が、管理画面で追加・並び替えし�
 | `start_time` | TIME | Yes | 開始時間 |
 | `end_time` | TIME | Yes | 終了時間 |
 | `booking_method` | VARCHAR(20) | Yes | `instant` / `request` |
+| `min_party_size` | SMALLINT | No | セッション固有の最小人数（未設定時はプランを継承） |
+| `max_party_size` | SMALLINT | No | セッション固有の最大人数（未設定時はプランを継承） |
 | `capacity_total` | SMALLINT | Yes | 総席数 |
 | `capacity_reserved` | SMALLINT | Yes | 予約済数 |
 | `session_status` | VARCHAR(20) | Yes | `open` / `limited` / `full` / `closed` / `cancelled` |
 | `price_override_jpy` | INTEGER | No | 当日枠だけ価格を変える場合 |
+| `currency_code` | VARCHAR(3) | Yes | 価格通貨（初期 `JPY`） |
 | `public_note` | VARCHAR(255) | No | 「残席1」など |
 | `request_deadline_at` | TIMESTAMPTZ | No | リクエスト予約の締切 |
 | `published_at` | TIMESTAMPTZ | No | 公開開始日時 |
@@ -134,6 +138,7 @@ TEXT 1本に詰め込まない方が、管理画面で追加・並び替えし�
 | `session_id` | UUID | Yes | どの予約枠を申し込んだかを保持するため |
 | `plan_id` | UUID | Yes | 後からプラン変更があっても、申込時点のプランを追えるようにするため |
 | `quoted_price_jpy` | INTEGER | Yes | 申込時点の価格を固定保存するため |
+| `currency_code` | VARCHAR(3) | Yes | 価格通貨（初期 `JPY`） |
 | `booking_method` | VARCHAR(20) | Yes | `instant` / `request` を申込時点で残すため |
 | `contact_name` | VARCHAR(120) | Yes | 参加代表者名 |
 | `contact_email` | VARCHAR(255) | Yes | 確認メール送信用 |
@@ -142,6 +147,11 @@ TEXT 1本に詰め込まない方が、管理画面で追加・並び替えし�
 | `special_requests` | TEXT | No | 香りの希望、同伴、配慮事項など |
 | `internal_note` | TEXT | No | 管理側メモ |
 | `confirmed_at` | TIMESTAMPTZ | No | 即時予約 / 手動確定の時刻 |
+
+## 追加変更（2026-03-25 Step1）
+- 価格の多通貨対応を見据え、`currency_code`（3桁ISO、初期 `JPY`）を `workshop_plans` / `workshop_sessions` / `bookings` に追加。
+- 予約人数の制約をセッション単位で調整できるよう `workshop_sessions.min_party_size` / `max_party_size` を追加（未設定時はプラン値で解釈）。
+- Rollback 方針: 既存データがない Draft 段階のため、元に戻す際は同名カラムを `alter table ... drop column` で削除し、`05_create_workshop_booking_tables.sql` / `06_verify_workshop_booking_tables.sql` を元版へ戻す。運用データ投入後は drop せずに非使用カラムとして運用することを推奨。
 
 ## カレンダー表示ロジック
 

@@ -10,6 +10,7 @@ create table if not exists public.workshop_plans (
     duration_min_minutes smallint not null check (duration_min_minutes > 0),
     duration_max_minutes smallint check (duration_max_minutes is null or duration_max_minutes >= duration_min_minutes),
     base_price_jpy integer not null check (base_price_jpy >= 0),
+    currency_code varchar(3) not null default 'JPY',
     pair_price_jpy integer check (pair_price_jpy is null or pair_price_jpy >= 0),
     min_party_size smallint not null default 1 check (min_party_size >= 1),
     max_party_size smallint not null default 1 check (max_party_size >= min_party_size),
@@ -65,10 +66,13 @@ create table if not exists public.workshop_sessions (
     start_time time not null,
     end_time time not null,
     booking_method varchar(20) not null check (booking_method in ('instant', 'request')),
+    min_party_size smallint check (min_party_size is null or min_party_size >= 1),
+    max_party_size smallint check (max_party_size is null or (max_party_size >= 1 and (min_party_size is null or max_party_size >= min_party_size))),
     capacity_total smallint not null check (capacity_total >= 1),
     capacity_reserved smallint not null default 0 check (capacity_reserved >= 0),
     session_status varchar(20) not null default 'open' check (session_status in ('open', 'limited', 'full', 'closed', 'cancelled')),
     price_override_jpy integer check (price_override_jpy is null or price_override_jpy >= 0),
+    currency_code varchar(3) not null default 'JPY',
     public_note varchar(255),
     request_deadline_at timestamptz,
     published_at timestamptz,
@@ -102,6 +106,7 @@ alter table public.bookings
     add column if not exists session_id uuid references public.workshop_sessions(id) on delete set null,
     add column if not exists plan_id uuid references public.workshop_plans(id) on delete set null,
     add column if not exists quoted_price_jpy integer,
+    add column if not exists currency_code varchar(3) default 'JPY',
     add column if not exists booking_method varchar(20),
     add column if not exists contact_name varchar(120),
     add column if not exists contact_email varchar(255),
@@ -141,6 +146,16 @@ begin
         alter table public.bookings
             add constraint bookings_quoted_price_jpy_check
             check (quoted_price_jpy is null or quoted_price_jpy >= 0);
+    end if;
+
+    if not exists (
+        select 1
+        from pg_constraint
+        where conname = 'bookings_currency_code_check'
+    ) then
+        alter table public.bookings
+            add constraint bookings_currency_code_check
+            check (currency_code is null or length(currency_code) = 3);
     end if;
 end $$;
 

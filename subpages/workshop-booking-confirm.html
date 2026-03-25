@@ -134,8 +134,13 @@
                 date: params.get("date") || "未選択",
                 label: params.get("label") || params.get("date") || "未選択",
                 gather: params.get("gather") || "未選択",
+                startTime: params.get("start_time") || "",
+                endTime: params.get("end_time") || "",
                 experience: params.get("experience") || "未選択",
                 price: params.get("price") || "未選択",
+                priceJpy: params.get("price_jpy") || "",
+                currencyCode: params.get("currency_code") || "JPY",
+                bookingMethod: params.get("booking_method") || params.get("method") || "",
                 method: params.get("method") || "未選択",
                 note: params.get("note") || "",
                 plan: params.get("plan") || "未選択",
@@ -143,6 +148,8 @@
                 storeLabel: params.get("storeLabel") || "",
                 planId: params.get("plan_id") || "",
                 sessionId: params.get("session_id") || "",
+                minPartySize: Number(params.get("min_party_size")) || 1,
+                maxPartySize: Number(params.get("max_party_size")) || 4,
                 contactName: params.get("contact_name") || "未入力",
                 contactEmail: params.get("contact_email") || "未入力",
                 contactPhone: params.get("contact_phone") || "未入力",
@@ -219,6 +226,7 @@
                 const matched = String(priceText || "").replace(/,/g, "").match(/(\d+)/);
                 return matched ? Number(matched[1]) : null;
             };
+            const toCurrencyCode = (value) => (value && value.length === 3 ? value.toUpperCase() : "JPY");
             const toIsoDate = (selectedDateKey, selectedDateLabel) => {
                 if (/^\d{4}-\d{2}-\d{2}$/.test(selectedDateKey)) {
                     return selectedDateKey;
@@ -359,8 +367,9 @@
                     submitButton.disabled = true;
                     submitButton.textContent = "送信中...";
                     const partySize = normalisePartySize(selected.partySize);
-                    const quotedPriceJpy = parsePriceJpy(selected.price);
-                    const methodCode = selected.method.includes("リクエスト") ? "request" : "instant";
+                    const quotedPriceJpy = selected.priceJpy ? Number(selected.priceJpy) : parsePriceJpy(selected.price);
+                    const currencyCode = toCurrencyCode(selected.currencyCode);
+                    const methodCode = (selected.bookingMethod || "").toLowerCase().includes("request") || selected.method.includes("リクエスト") ? "request" : "instant";
                     const isoDate = toIsoDate(selected.dateKey, selected.label || selected.date);
                     if (!isoDate) {
                         throw new Error("日付情報が不足しています。日時選択からやり直してください。");
@@ -378,6 +387,7 @@
                         session_id: selected.sessionId || null,
                         plan_id: selected.planId || null,
                         quoted_price_jpy: quotedPriceJpy,
+                        currency_code: currencyCode,
                         booking_method: methodCode,
                         contact_name: selected.contactName === "未入力" ? null : selected.contactName,
                         contact_email: selected.contactEmail === "未入力" ? null : selected.contactEmail,
@@ -402,7 +412,12 @@
                         date: selected.date || "",
                         label: selected.label || "",
                         gather: selected.gather || "",
-                        party_size: String(partySize)
+                        party_size: String(partySize),
+                        start_time: selected.startTime || "",
+                        end_time: selected.endTime || "",
+                        plan: selected.plan || "",
+                        store_label: resolveStoreLabel() || "",
+                        price: selected.price || ""
                     };
                     Object.entries(thanksPayload).forEach(([key, value]) => thanksUrl.searchParams.set(key, value));
                     setResultMessage(`

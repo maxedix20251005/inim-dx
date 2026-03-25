@@ -234,6 +234,17 @@
     <script>
         (() => {
             const BOOKING_BUILD = "20260322b";
+            const siteConfig = window.INIM_SITE_CONFIG || {};
+            const supabaseApi = window.supabase || null;
+            const supabase = (() => {
+                if (window.__INIM_SUPABASE_CLIENT) return window.__INIM_SUPABASE_CLIENT;
+                if (siteConfig.supabaseUrl && siteConfig.supabasePublishableKey && supabaseApi?.createClient) {
+                    const client = supabaseApi.createClient(siteConfig.supabaseUrl, siteConfig.supabasePublishableKey);
+                    window.__INIM_SUPABASE_CLIENT = client;
+                    return client;
+                }
+                return null;
+            })();
             const calendarHost = document.getElementById("booking-calendar");
             const selectedTitle = document.getElementById("booking-selected-title");
             const selectedStatus = document.getElementById("booking-selected-status");
@@ -244,38 +255,33 @@
             const storePicker = document.getElementById("booking-store-picker");
             const storeMeta = document.getElementById("booking-store-meta");
             const params = new URLSearchParams(window.location.search);
-            const stores = {
+            const currency = "JPY";
+            const price = (value) => ({ display: `¥${value.toLocaleString("ja-JP")}`, jpy: value, currency });
+            const fallbackStores = {
                 asakusa: { label: "浅草店", caption: "Fri - Sun" },
                 shibamata: { label: "柴又店", caption: "Sat - Mon" },
                 solamachi: { label: "ソラマチ店", caption: "Daily" }
             };
-            const months = [
-                { label: "2026年3月", cells: [null, null, null, null, null, null, { d: 1, s: "closed" }, { d: 2, s: "closed" }, { d: 3, s: "closed" }, { d: 4, s: "closed" }, { d: 5, s: "closed" }, { d: 6, s: "closed" }, { d: 7, s: "closed" }, { d: 8, s: "closed" }, { d: 9, s: "closed" }, { d: 10, s: "closed" }, { d: 11, s: "closed" }, { d: 12, s: "closed" }, { d: 13, s: "closed" }, { d: 14, s: "closed" }, { d: 15, s: "closed" }, { d: 16, s: "closed" }, { d: 17, s: "closed" }, { d: 18, s: "closed" }, { d: 19, s: "closed" }, { d: 20, s: "closed" }, { d: 21, s: "closed" }, { d: 22, s: "closed" }, { d: 23, s: "closed" }, { d: 24, s: "closed" }, { d: 25, s: "closed" }, { d: 26, s: "closed" }, { d: 27, s: "closed" }, { d: 28, s: "request", p: "5,500円", k: "2026-03-28", store: "asakusa" }, { d: 29, s: "instant", p: "5,500円", k: "2026-03-29", store: "asakusa" }, { d: 30, s: "closed" }, { d: 31, s: "closed" }, null, null, null] },
-                { label: "2026年4月", cells: [null, null, null, { d: 1, s: "closed" }, { d: 2, s: "closed" }, { d: 3, s: "closed" }, { d: 4, s: "instant", p: "5,500円", k: "2026-04-04", store: "asakusa" }, { d: 5, s: "instant", p: "5,500円", k: "2026-04-05", store: "asakusa" }, { d: 6, s: "closed" }, { d: 7, s: "closed" }, { d: 8, s: "closed" }, { d: 9, s: "closed" }, { d: 10, s: "closed" }, { d: 11, s: "instant", p: "5,500円", k: "2026-04-11", store: "shibamata" }, { d: 12, s: "instant", p: "5,500円", k: "2026-04-12", store: "solamachi" }, { d: 13, s: "closed" }, { d: 14, s: "closed" }, { d: 15, s: "closed" }, { d: 16, s: "closed" }, { d: 17, s: "closed" }, { d: 18, s: "full", store: "shibamata" }, { d: 19, s: "full", store: "solamachi" }, { d: 20, s: "closed" }, { d: 21, s: "closed" }, { d: 22, s: "closed" }, { d: 23, s: "closed" }, { d: 24, s: "closed" }, { d: 25, s: "few", p: "5,500円", k: "2026-04-25", store: "asakusa" }, { d: 26, s: "instant", p: "5,500円", k: "2026-04-26", store: "asakusa" }, { d: 27, s: "closed" }, { d: 28, s: "closed" }, { d: 29, s: "request", p: "5,500円", k: "2026-04-29", store: "solamachi" }, { d: 30, s: "closed" }, null, null] }
-            ];
-            const schedule = {
-                "2026-03-28": { label: "2026年3月28日(土)", store: "asakusa", storeLabel: "浅草店", status: "リクエスト予約可。浅草店開催 / 回答は翌営業日です。", slots: [{ g: "10:20", e: "10:30〜11:30", p: "おひとりさま 5,500円", n: "24時間以内に回答予定" }, { g: "13:20", e: "13:30〜14:30", p: "おひとりさま 5,500円", n: "24時間以内に回答予定" }] },
-                "2026-03-29": { label: "2026年3月29日(日)", store: "asakusa", storeLabel: "浅草店", status: "即時予約可。浅草店開催 / 料金 5,500円〜", slots: [{ g: "10:50", e: "11:00〜12:00", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "14:50", e: "15:00〜16:00", p: "おひとりさま 5,500円", n: "即時確定" }] },
-                "2026-04-05": { label: "2026年4月5日(日)", store: "asakusa", storeLabel: "浅草店", status: "即時予約可。浅草店開催 / 料金 5,500円〜", slots: [{ g: "10:50", e: "11:00〜12:00", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "12:50", e: "13:00〜14:00", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "14:50", e: "15:00〜16:00", p: "おひとりさま 5,500円", n: "即時確定" }] },
-                "2026-04-04": { label: "2026年4月4日(土)", store: "asakusa", storeLabel: "浅草店", status: "即時予約可。浅草店開催 / 料金 5,500円〜", slots: [{ g: "10:20", e: "10:30〜11:30", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "12:20", e: "12:30〜13:30", p: "おひとりさま 5,500円", n: "即時確定" }] },
-                "2026-04-11": { label: "2026年4月11日(土)", store: "shibamata", storeLabel: "柴又店", status: "即時予約可。柴又店開催 / 料金 5,500円〜", slots: [{ g: "10:20", e: "10:30〜11:30", p: "おひとりさま 5,500円", n: "即時確定" }, { g: "13:20", e: "13:30〜14:30", p: "おひとりさま 5,500円", n: "即時確定" }] },
-                "2026-04-12": { label: "2026年4月12日(日)", store: "solamachi", storeLabel: "ソラマチ店", status: "即時予約可。ソラマチ店開催 / 料金 5,500円〜", slots: [{ g: "11:20", e: "11:30〜12:30", p: "おひとりさま 5,500円", n: "即時確定" }] },
-                "2026-04-25": { label: "2026年4月25日(土)", store: "asakusa", storeLabel: "浅草店", status: "残席わずか。浅草店開催 / 料金 5,500円〜", slots: [{ g: "10:50", e: "11:00〜12:00", p: "おひとりさま 5,500円", n: "残席 2" }, { g: "14:50", e: "15:00〜16:00", p: "おひとりさま 5,500円", n: "残席 1" }] },
-                "2026-04-26": { label: "2026年4月26日(日)", store: "asakusa", storeLabel: "浅草店", status: "即時予約可。浅草店開催 / 料金 5,500円〜", slots: [{ g: "12:20", e: "12:30〜13:30", p: "おひとりさま 5,500円", n: "即時確定" }] },
-                "2026-04-29": { label: "2026年4月29日(水・祝)", store: "solamachi", storeLabel: "ソラマチ店", status: "リクエスト予約可。ソラマチ店開催 / スタッフ確認後にご連絡します。", slots: [{ g: "10:20", e: "10:30〜11:30", p: "おひとりさま 5,500円", n: "24時間以内に回答予定" }, { g: "13:20", e: "13:30〜14:30", p: "おひとりさま 5,500円", n: "24時間以内に回答予定" }] }
-            };
+            // fallback months/schedule remain similar to previous draft; rebuilt dynamically from fetched data if available.
+            let stores = { ...fallbackStores };
+            let months = [];
+            let schedule = {};
             const marks = { instant: "○", request: "□", few: "△", full: "×", closed: "-" };
             const days = ["月", "火", "水", "木", "金", "土", "日"];
             let selectedStore = params.get("store");
-            if (!selectedStore || !stores[selectedStore]) {
-                selectedStore = "asakusa";
-            }
-            let selectedKey = Object.entries(schedule).find(([, value]) => value.store === selectedStore)?.[0] || "2026-04-05";
+            let selectedKey = "";
             const syncStoreQuery = () => {
                 const target = new URL(window.location.href);
                 target.searchParams.set("store", selectedStore);
                 target.searchParams.set("storeLabel", stores[selectedStore].label);
                 window.history.replaceState({}, "", target.toString());
+            };
+            const slugifyStore = (name) => String(name || "").toLowerCase().replace(/\s+/g, "").replace(/[・\-_/]/g, "");
+            const chooseInitialStore = () => {
+                const paramStore = params.get("store");
+                if (paramStore && stores[paramStore]) return paramStore;
+                const keys = Object.keys(stores);
+                return keys.length ? keys[0] : "asakusa";
             };
             const renderStorePicker = () => {
                 storePicker.innerHTML = Object.entries(stores).map(([key, value]) => `<button class="booking-store-chip${key === selectedStore ? " is-active" : ""}" type="button" data-store-key="${key}">${value.label} / ${value.caption}</button>`).join("");
@@ -302,13 +308,22 @@
                     date: current.label,
                     label: current.label,
                     gather: slot.g,
-                    experience: slot.e,
-                    price: slot.p,
+                    start_time: slot.start,
+                    end_time: slot.end,
+                    experience: `${slot.start}〜${slot.end}`,
+                    price: slot.price.display,
+                    price_jpy: String(slot.price.jpy),
+                    currency_code: slot.price.currency,
                     note: slot.n,
-                    method: current.status.includes("リクエスト") ? "リクエスト予約" : current.status.includes("残席") ? "残席わずか" : "即時予約",
+                    booking_method: slot.method,
+                    method: slot.method === "request" ? "リクエスト予約" : "即時予約",
                     plan: "浅草で香水づくり / 香りを選んで自分でブレンドするワークショップ",
                     store: current.store,
-                    storeLabel: current.storeLabel
+                    storeLabel: current.storeLabel,
+                    plan_id: slot.planId,
+                    session_id: slot.sessionId,
+                    min_party_size: slot.minP ?? "",
+                    max_party_size: slot.maxP ?? ""
                 };
                 Object.entries(payload).forEach(([key, value]) => target.searchParams.set(key, value));
                 return target.toString();
@@ -319,11 +334,185 @@
                 selectedStatus.textContent = current?.status || "○ / □ / △ の日を選ぶと、時間帯を表示します。";
                 selectionLabel.textContent = current ? `選択中: ${current.storeLabel} / ${current.label}` : "選択中の日付はありません";
                 selectionMeta.textContent = current ? `${current.storeLabel} の時間帯一覧に、対象日の集合時間と料金を表示しています。` : "予約可能日を選ぶと、下部に時間帯を表示します。";
-                slotList.innerHTML = (current?.slots || []).map((slot) => `<article class="booking-slot"><div><strong>${current.label}</strong><div class="booking-slot__time"><span>集合 ${slot.g}</span><span>体験 ${slot.e}</span></div><p class="booking-slot__price">${slot.p}</p></div><div class="booking-slot__actions"><span class="booking-slot__note">${slot.n}</span><a class="button button--primary booking-slot__button" href="${buildBookingHref(current, slot)}">予約へ進む</a></div></article>`).join("");
+                slotList.innerHTML = (current?.slots || []).map((slot) => `<article class="booking-slot"><div><strong>${current.label}</strong><div class="booking-slot__time"><span>集合 ${slot.g}</span><span>体験 ${slot.start}〜${slot.end}</span></div><p class="booking-slot__price">${slot.price.display}</p></div><div class="booking-slot__actions"><span class="booking-slot__note">${slot.n}</span><a class="button button--primary booking-slot__button" href="${buildBookingHref(current, slot)}">予約へ進む</a></div></article>`).join("");
             };
             const renderCalendar = () => {
-                calendarHost.innerHTML = months.map((month) => `<section class="booking-month"><div class="booking-month__header"><h3>${month.label}</h3><span>${stores[selectedStore].label} の開催日</span></div><table><thead><tr>${days.map((d) => `<th>${d}</th>`).join("")}</tr></thead><tbody>${Array.from({ length: Math.ceil(month.cells.length / 7) }, (_, i) => `<tr>${month.cells.slice(i * 7, i * 7 + 7).map((cell) => { if (!cell) return '<td class="is-outside"></td>'; const filtered = cell.store && cell.store !== selectedStore ? { ...cell, s: "closed", p: null, k: null } : cell; const mark = marks[filtered.s]; const selectable = ["instant", "request", "few"].includes(filtered.s); return `<td><button class="booking-day${selectable ? ' is-selectable' : ''}${filtered.k === selectedKey ? ' is-selected' : ''}" type="button" ${filtered.k ? `data-date-key="${filtered.k}"` : ''} ${!selectable ? 'disabled' : ''}><span class="booking-day__date">${filtered.d}</span><span class="booking-day__status"><i class="booking-mark" data-status="${filtered.s}">${mark}</i></span>${filtered.p ? `<div class="booking-day__price">${filtered.p}</div>` : ''}</button></td>`; }).join("")}</tr>`).join("")}</tbody></table></section>`).join("");
+                calendarHost.innerHTML = months.map((month) => `<section class="booking-month"><div class="booking-month__header"><h3>${month.label}</h3><span>${stores[selectedStore].label} の開催日</span></div><table><thead><tr>${days.map((d) => `<th>${d}</th>`).join("")}</tr></thead><tbody>${Array.from({ length: Math.ceil(month.cells.length / 7) }, (_, i) => `<tr>${month.cells.slice(i * 7, i * 7 + 7).map((cell) => { if (!cell) return '<td class="is-outside"></td>'; const filtered = cell.store && cell.store !== selectedStore ? { ...cell, s: "closed", p: null, k: null } : cell; const mark = marks[filtered.s]; const selectable = ["instant", "request", "few"].includes(filtered.s); return `<td><button class="booking-day${selectable ? ' is-selectable' : ''}${filtered.k === selectedKey ? ' is-selected' : ''}" type="button" ${filtered.k ? `data-date-key="${filtered.k}"` : ''} ${!selectable ? 'disabled' : ''}><span class="booking-day__date">${filtered.d}</span><span class="booking-day__status"><i class="booking-mark" data-status="${filtered.s}">${mark}</i></span>${filtered.p ? `<div class="booking-day__price">${filtered.p.display}</div>` : ''}</button></td>`; }).join("")}</tr>`).join("")}</tbody></table></section>`).join("");
                 calendarHost.querySelectorAll("[data-date-key]").forEach((button) => button.addEventListener("click", () => { selectedKey = button.dataset.dateKey; renderCalendar(); renderSlots(); slotsPanel?.scrollIntoView({ behavior: "smooth", block: "start" }); }));
+            };
+            const statusFromSession = (session) => {
+                const capRemaining = (session.capacity_total ?? 0) - (session.capacity_reserved ?? 0);
+                const isOpen = session.session_status === "open";
+                if (!isOpen) {
+                    if (session.session_status === "limited") return "few";
+                    if (session.session_status === "full") return "full";
+                    return "closed";
+                }
+                if (capRemaining <= 0) return "full";
+                if (capRemaining <= 2 || session.session_status === "limited") return "few";
+                if (session.booking_method === "request") return "request";
+                return "instant";
+            };
+            const buildCalendarCells = (sessionMap, startDate, endDate) => {
+                const monthsArr = [];
+                const current = new Date(startDate);
+                current.setDate(1);
+                while (current <= endDate) {
+                    const year = current.getFullYear();
+                    const month = current.getMonth();
+                    const label = `${year}年${month + 1}月`;
+                    const firstWeekday = new Date(year, month, 1).getDay(); // 0=Sun
+                    const daysInMonth = new Date(year, month + 1, 0).getDate();
+                    const cells = [];
+                    // pad before
+                    for (let i = 0; i < ((firstWeekday + 6) % 7); i++) cells.push(null); // start week on Mon
+                    for (let d = 1; d <= daysInMonth; d++) {
+                        const iso = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+                        const daySessions = sessionMap[iso] || [];
+                        if (daySessions.length === 0) {
+                            cells.push({ d, s: "closed", k: iso });
+                            continue;
+                        }
+                        const primary = daySessions[0];
+                        cells.push({
+                            d,
+                            s: primary.status,
+                            p: { display: primary.price.display },
+                            k: iso,
+                            store: primary.storeKey,
+                            planId: primary.planId
+                        });
+                    }
+                    while (cells.length % 7 !== 0) cells.push(null);
+                    monthsArr.push({ label, cells });
+                    current.setMonth(month + 1);
+                }
+                return monthsArr;
+            };
+            const buildSchedule = (sessions, planById, storeById) => {
+                const sessionMap = {};
+                const scheduleMap = {};
+                sessions.forEach((row) => {
+                    const dateKey = row.session_date;
+                    const plan = planById[row.plan_id] || {};
+                    const storeInfo = storeById[row.store_id] || {};
+                    const storeKey = storeInfo.key || storeInfo.slug || storeInfo.id || "store";
+                    const priceValue = row.price_override_jpy ?? plan.base_price_jpy ?? 0;
+                    const cur = row.currency_code || plan.currency_code || "JPY";
+                    const priceObj = { display: `¥${Number(priceValue || 0).toLocaleString("ja-JP")}`, jpy: Number(priceValue || 0), currency: cur };
+                    const sessionPayload = {
+                        sessionId: row.id,
+                        planId: row.plan_id,
+                        g: row.gather_time?.slice(0, 5) || "",
+                        start: row.start_time?.slice(0, 5) || "",
+                        end: row.end_time?.slice(0, 5) || "",
+                        price: priceObj,
+                        n: row.public_note || (row.booking_method === "request" ? "確認後にご連絡" : "即時確定"),
+                        method: row.booking_method || "instant",
+                        minP: row.min_party_size || plan.min_party_size || 1,
+                        maxP: row.max_party_size || plan.max_party_size || 4,
+                        status: statusFromSession(row),
+                        storeKey,
+                        storeLabel: storeInfo.label || storeInfo.name || "",
+                        planName: plan.plan_name || ""
+                    };
+                    sessionMap[dateKey] = sessionMap[dateKey] || [];
+                    sessionMap[dateKey].push(sessionPayload);
+                });
+                Object.entries(sessionMap).forEach(([dateKey, slots]) => {
+                    const exemplar = slots[0];
+                    scheduleMap[dateKey] = {
+                        label: new Date(dateKey).toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric", weekday: "short" }),
+                        store: exemplar.storeKey,
+                        storeLabel: exemplar.storeLabel,
+                        planId: exemplar.planId,
+                        status: exemplar.status === "request" ? "リクエスト予約可" : exemplar.status === "few" ? "残席わずか" : exemplar.status === "full" ? "満席" : "即時予約可",
+                        slots
+                    };
+                });
+                return { sessionMap, scheduleMap };
+            };
+            const fetchData = async () => {
+                if (!supabase) return { sessions: [], plans: [], stores: [] };
+                const { data: planRows } = await supabase.from("workshop_plans").select("id, plan_name, plan_code, base_price_jpy, currency_code, min_party_size, max_party_size").eq("status", "active");
+                const { data: storeRows } = await supabase.from("stores").select("id, store_name, is_active, deleted_at");
+                const today = new Date();
+                const until = new Date();
+                until.setMonth(until.getMonth() + 2);
+                const { data: sessionRows } = await supabase
+                    .from("workshop_sessions")
+                    .select("id, plan_id, store_id, session_date, gather_time, start_time, end_time, booking_method, capacity_total, capacity_reserved, price_override_jpy, currency_code, min_party_size, max_party_size, session_status, public_note, published_at")
+                    .gte("session_date", today.toISOString().slice(0, 10))
+                    .lte("session_date", until.toISOString().slice(0, 10));
+                return {
+                    plans: planRows || [],
+                    stores: storeRows || [],
+                    sessions: sessionRows || []
+                };
+            };
+            const buildStoreMap = (rows) => {
+                if (!rows || rows.length === 0) return { ...fallbackStores };
+                const map = {};
+                rows.forEach((row) => {
+                    const slug = slugifyStore(row.store_name || row.id);
+                    map[slug] = { label: row.store_name || slug, caption: "", id: row.id, key: slug, name: row.store_name || slug };
+                });
+                return map;
+            };
+            const initData = async () => {
+                try {
+                    const { plans, stores: storeRows, sessions } = await fetchData();
+                    if (!sessions || sessions.length === 0) throw new Error("no sessions");
+                    stores = buildStoreMap(storeRows);
+                    const planById = {};
+                    (plans || []).forEach((p) => (planById[p.id] = p));
+                    const { sessionMap, scheduleMap } = buildSchedule(sessions, planById, stores);
+                    const dates = Object.keys(sessionMap).sort();
+                    if (dates.length === 0) throw new Error("no dates");
+                    const startDate = new Date(dates[0]);
+                    const endDate = new Date(dates[dates.length - 1]);
+                    months = buildCalendarCells(sessionMap, startDate, endDate);
+                    schedule = scheduleMap;
+                    selectedStore = chooseInitialStore();
+                    selectedKey = dates.find((d) => sessionMap[d][0].storeKey === selectedStore) || dates[0];
+                } catch (e) {
+                    // fallback to draft data (previous hardcoded)
+                    stores = { ...fallbackStores };
+                    // reuse previous draft months/schedule by rebuilding from fallback minimal data
+                    const fallbackPrice = price(5500);
+                    const fallbackSessions = [
+                        { date: "2026-04-05", store: "asakusa", label: "2026年4月5日(日)", slots: [{ sessionId: "sess-fb-01", planId: "plan-draft-01", g: "10:50", start: "11:00", end: "12:00", price: fallbackPrice, n: "即時確定", method: "instant", minP: 1, maxP: 4 }] }
+                    ];
+                    schedule = fallbackSessions.reduce((acc, cur) => {
+                        acc[cur.date] = {
+                            label: cur.label,
+                            store: cur.store,
+                            storeLabel: stores[cur.store]?.label || cur.store,
+                            planId: cur.planId || "plan-draft-01",
+                            status: "即時予約可",
+                            slots: cur.slots
+                        };
+                        return acc;
+                    }, {});
+                    const startDate = new Date("2026-04-01");
+                    const endDate = new Date("2026-04-30");
+                    months = buildCalendarCells(
+                        {
+                            "2026-04-05": [
+                                {
+                                    status: "instant",
+                                    price: fallbackPrice,
+                                    storeKey: "asakusa",
+                                    planId: "plan-draft-01"
+                                }
+                            ]
+                        },
+                        startDate,
+                        endDate
+                    );
+                    selectedStore = "asakusa";
+                    selectedKey = "2026-04-05";
+                }
             };
             document.querySelectorAll(".booking-tab").forEach((button) => {
                 button.addEventListener("click", () => {
@@ -332,10 +521,17 @@
                     document.querySelectorAll(".booking-tab-panel").forEach((panel) => panel.classList.toggle("is-active", panel.dataset.panel === target));
                 });
             });
-            renderStorePicker();
-            syncStoreQuery();
-            renderCalendar();
-            renderSlots();
+            (async () => {
+                await initData();
+                selectedStore = selectedStore || chooseInitialStore();
+                if (!selectedKey) {
+                    selectedKey = Object.keys(schedule).find((k) => schedule[k].store === selectedStore) || Object.keys(schedule)[0];
+                }
+                renderStorePicker();
+                syncStoreQuery();
+                renderCalendar();
+                renderSlots();
+            })();
         })();
     </script>
 </body>

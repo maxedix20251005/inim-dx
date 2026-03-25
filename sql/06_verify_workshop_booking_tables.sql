@@ -17,6 +17,7 @@ where table_schema = 'public'
     'session_id',
     'plan_id',
     'quoted_price_jpy',
+    'currency_code',
     'booking_method',
     'contact_name',
     'contact_email',
