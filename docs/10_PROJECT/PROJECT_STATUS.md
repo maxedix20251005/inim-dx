@@ -312,7 +312,7 @@
 ## 15. 作業ステータス再確認（2026-03-25） / Task Status Recheck
 1. Workshop予約導線整理（`workshop.html #reserve` 起点）: `Completed`
 2. 予約入力必須項目と確認フロー確定: `Completed`
-3. 予約完了（Thanks）導線と `session_id` / `plan_id` 実データ確定: `In Progress`
+3. 予約完了（Thanks）導線と `session_id` / `plan_id` 実データ確定: `In Progress`（通貨/人数カラム適用とThanks到達を確認。実セッション登録とUUID取得が残タスク）
 4. `app/` 側 `bookings / enquiries` 詳細管理: `Not Started`
 5. Top -> Workshop 導線強化: `In Progress`
 6. コンテンツ更新新機能の充実: `Proposed`
@@ -349,3 +349,7 @@
 ### ドキュメント更新（2026-03-25 追加10）
 - タスク #3 の初期実装として、`subpages/workshop-booking-thanks.html` と `css/workshop-booking-thanks.css` を追加しました。
 - `subpages/workshop-booking-confirm.html` の予約送信成功後、予約ID等をクエリ引き継ぎして Thanks 画面へ自動遷移するよう更新しました。
+
+### ドキュメント更新（2026-03-25 追加11）
+- Supabase 側に `currency_code` とセッション人数上限/下限を追加する SQL を適用（`07_add_currency_code_and_party_limits.sql`）。検証用 `08_verify_workshop_booking_schema.sql` でカラム/インデックスを確認済み。
+- `workshop-booking.html` に Supabase 接続LEDを追加（緑=接続、橙=フォールバック）。接続があってもセッション未登録時はモック表示で暫定稼働。

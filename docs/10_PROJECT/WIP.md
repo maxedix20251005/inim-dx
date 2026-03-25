@@ -47,6 +47,7 @@
 
 
 ## Update Log / 更新ログ
+- 2026-03-25: Supabase 通貨/人数カラム追従（07/08 SQL 適用）、公開予約フローは Thanks まで動作確認。`workshop-booking.html` に接続LEDを追加（緑=接続、橙=フォールバック）。実データ未投入時はモック表示で暫定対応。次は Supabase に複数 `workshop_sessions` を登録してカレンダー多日表示を検証する。
 - 2026-03-25: docs 再編（カテゴリ別フォルダ化）、`references/settings` と `wip` の文書を `docs` 配下へ標準移管、参照リンク更新。
 - 2026-03-25: `docs/60_HANDOFF` -> `docs/80_HANDOFF` に変更。`docs/60_TEST` を新設。Governance/Catalog 反映済み。
 - 2026-03-25: テンプレート群を `wip/` から `docs/00_GOVERNANCE/TEMPLATES/` へ移動。`docs/60_TEST` は実テスト文書専用運用に固定。

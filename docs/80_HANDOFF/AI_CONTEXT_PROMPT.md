@@ -162,6 +162,8 @@
 - 2026-03-22 の実確認で、カレンダー記号は良好、SQL ファイル構成は良好、Runbook も良好だった
 - 同日の検証で、追加テーブル、`bookings` 追加列、関連 index の存在確認まで完了している
 - `デジタル調香を試す` への導線も併設されているため、予約前体験との関係整理が必要
+- 2026-03-25 追加: `07_add_currency_code_and_party_limits.sql` を適用し、`currency_code` と `min/max_party_size` を plans/sessions/bookings に統合。`08_verify_workshop_booking_schema.sql` で検証済み。
+- 2026-03-25 追加: `workshop-booking.html` に Supabase 接続LEDを設置（緑=接続、橙=未接続/エラー）。セッション未登録時はモック表示で暫定対応。
 
 ## 8. DB 設計に基づく重要テーブル / Key Tables
 #### `user_profiles`
