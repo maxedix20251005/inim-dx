@@ -29,13 +29,13 @@
 - EN: Spring Boot/Java API layer remains a future-phase option triggered by complexity growth.
 
 ## 6. Open Issues (Linked) / 未解決課題（リンク）
-- JA: 詳細は `docs/ISSUE_LIST.md` を正本とする。
-- EN: `docs/ISSUE_LIST.md` is the source of truth for active/resolved issues.
+- JA: 詳細は `docs/10_PROJECT/ISSUE_LIST.md` を正本とする。
+- EN: `docs/10_PROJECT/ISSUE_LIST.md` is the source of truth for active/resolved issues.
 
 ## 7. Restart Checklist / 再開チェック
-1. `docs/PROJECT_STATUS.md` を読む
-2. `docs/ISSUE_LIST.md` を読む
-3. `docs/TECH_SPEC.md` と `docs/DESIGN_GUIDELINE.md` を読む
+1. `docs/10_PROJECT/PROJECT_STATUS.md` を読む
+2. `docs/10_PROJECT/ISSUE_LIST.md` を読む
+3. `docs/30_TECH/TECH_SPEC.md` と `docs/20_PRODUCT/DESIGN_GUIDELINE.md` を読む
 4. `subpages/workshop-booking*.html` の現行導線を確認
 5. 実装着手前にタスク受入条件を1段落で定義
 
@@ -44,3 +44,11 @@
 - EN: Always update `PROJECT_STATUS.md` within the same task as code changes.
 - JA: 文字化け（UTF-8）とリンク切れを最終チェックする。
 - EN: Run final UTF-8 and link-validity checks.
+
+
+## Update Log / 更新ログ
+- 2026-03-25: docs 再編（カテゴリ別フォルダ化）、`references/settings` と `wip` の文書を `docs` 配下へ標準移管、参照リンク更新。
+- 2026-03-25: `docs/60_HANDOFF` -> `docs/80_HANDOFF` に変更。`docs/60_TEST` を新設。Governance/Catalog 反映済み。
+- 2026-03-25: テンプレート群を `wip/` から `docs/00_GOVERNANCE/TEMPLATES/` へ移動。`docs/60_TEST` は実テスト文書専用運用に固定。
+- 2026-03-25: `test/test-account-result.md` を `docs/60_TEST/ACCOUNT_TEST_RESULT.md` へ移動し、ガバナンス準拠で再整形。
+- 2026-03-25: 今後作業 1〜10 を再判定。#1（Workshop予約導線整理）を Completed として `PROJECT_STATUS` に反映。

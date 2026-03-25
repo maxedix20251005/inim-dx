@@ -2,8 +2,8 @@
 
 ## 1. この資料の目的 / Purpose
 - この資料は、`inim-dx` の管理画面実装について、第三者が現状を短時間で把握できるように整理した作業メモです。
-- 画面仕様の正本は `docs/CROSS_PROJECT_HANDOVER_ADMIN_IMPLEMENTATION.md` と `references/design/11-admin-mockup-standalone.html`、DB 設計の正本は `C:\Users\maxsh\OneDrive\Documents\EDIX\src\portfolio\docs\08-db-design.html` です。
-- 不具合と再発防止履歴の正本は `docs/ISSUE_LIST.md` です。
+- 画面仕様の正本は `docs/80_HANDOFF/CROSS_PROJECT_HANDOVER_ADMIN_IMPLEMENTATION.md` と `references/design/11-admin-mockup-standalone.html`、DB 設計の正本は `C:\Users\maxsh\OneDrive\Documents\EDIX\src\portfolio\docs\08-db-design.html` です。
+- 不具合と再発防止履歴の正本は `docs/10_PROJECT/ISSUE_LIST.md` です。
 - 今後、管理画面に追加・更新を行った場合は、この資料も必ず更新します。
 
 ## 2. 今回の実装方針 / Implementation Policy
@@ -131,9 +131,11 @@
 
 ## 9. 今後の運用ルール / Operational Rules
 - 管理画面に追加・更新を行った場合は、この資料を同じ作業内で必ず更新する
-- 不具合や詰まりが発生した場合は、`docs/ISSUE_LIST.md` を同じ作業内で必ず更新する
+- 不具合や詰まりが発生した場合は、`docs/10_PROJECT/ISSUE_LIST.md` を同じ作業内で必ず更新する
 - 更新後は、日本語の文字化けがないかを必ず確認する
 - DB や画面仕様の正本が更新された場合は、この資料の参照元も合わせて更新する
+
+
 
 
 

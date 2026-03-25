@@ -3,7 +3,7 @@
 ## 1. このドキュメントの目的 / Purpose
 - このファイルは、`inim-dx` で発生した不具合、実装上の問題、運用上の詰まりを継続管理するための常設 Issue 一覧です。
 - Issue は、発生日、発生箇所、症状、原因、対策、再発防止策が第三者に伝わる粒度で記録します。
-- 今後も、`docs/PROJECT_STATUS.md` と `docs/AI_CONTEXT_PROMPT.md` とあわせて必ず最新化します。
+- 今後も、`docs/10_PROJECT/PROJECT_STATUS.md` と `docs/80_HANDOFF/AI_CONTEXT_PROMPT.md` とあわせて必ず最新化します。
 - 更新後は、日本語の文字化けがないか必ず確認します。
 
 ## 2. 記載ルール / Writing Rules
@@ -169,7 +169,9 @@
 
 ## 3. 今後の運用ルール / Operational Rules
 - 新しい Issue が発生したら、このファイルに必ず追記する
-- 追記時は、同じ作業内で `docs/PROJECT_STATUS.md` と `docs/AI_CONTEXT_PROMPT.md` も更新する
-- 管理画面に関する Issue の場合は、必要に応じて `docs/WIP.md` と `docs/ADMIN_IMPLEMENTATION_STATUS.md` も更新する
+- 追記時は、同じ作業内で `docs/10_PROJECT/PROJECT_STATUS.md` と `docs/80_HANDOFF/AI_CONTEXT_PROMPT.md` も更新する
+- 管理画面に関する Issue の場合は、必要に応じて `docs/10_PROJECT/WIP.md` と `docs/80_HANDOFF/ADMIN_IMPLEMENTATION_STATUS.md` も更新する
+
+
 
 

@@ -19,25 +19,25 @@
 ## 3. Document Set and Ownership / 文書セットと責務
 
 ### 3.1 Mandatory Documents / 必須ドキュメント
-- `docs/PROJECT_STATUS.md`
+- `docs/10_PROJECT/PROJECT_STATUS.md`
   - JA: 現在地、優先タスク、確定方針、変更範囲の要約。
   - EN: Current state, priorities, confirmed policies, and change scope summary.
-- `docs/ISSUE_LIST.md`
+- `docs/10_PROJECT/ISSUE_LIST.md`
   - JA: 不具合・障害・詰まりの履歴台帳。
   - EN: Historical ledger of defects/incidents/blockers.
-- `docs/WIP.md`
+- `docs/10_PROJECT/WIP.md`
   - JA: 直近作業の実務メモ（次アクション、保留事項、再開手順）。
   - EN: Working memo for immediate tasks (next actions, on-hold items, restart steps).
-- `docs/AI_CONTEXT_PROMPT.md`
+- `docs/80_HANDOFF/AI_CONTEXT_PROMPT.md`
   - JA: 別スレッド/別端末での再開用コンテキスト。
   - EN: Context handoff for restart in another thread/device.
-- `docs/DESIGN_GUIDELINE.md`
+- `docs/20_PRODUCT/DESIGN_GUIDELINE.md`
   - JA: UI/UX、配色、タイポ、レイアウト、コンポーネント基準。
   - EN: UI/UX, colour, typography, layout, and component standards.
-- `docs/TECH_SPEC.md`
+- `docs/30_TECH/TECH_SPEC.md`
   - JA: システム構成、機能仕様、非機能要件、データモデル方針。
   - EN: System architecture, functional/non-functional requirements, and data model policy.
-- `docs/AI_BUILD_PROMPT.md`
+- `docs/80_HANDOFF/AI_BUILD_PROMPT.md`
   - JA: AI 実装再開用 One-off + 継続更新用プロンプト資産。
   - EN: One-off + continuously updated AI build prompt asset.
 
@@ -46,6 +46,19 @@
 - EN: Topic-specific documents (e.g., Supabase account plan, SQL runbooks, data design) may be added.
 - JA: 補助資料は必ず「どの正本を補完するか」を明記する。
 - EN: Supporting docs must explicitly state which primary document they supplement.
+
+### 3.3 Folder Taxonomy / フォルダ体系
+- `docs/00_GOVERNANCE`: ガバナンス、目録、運用ルール。
+- `docs/10_PROJECT`: 進捗、課題、日次運用。
+- `docs/20_PRODUCT`: 画面設計、機能企画。
+- `docs/30_TECH`: 技術仕様、実装方針。
+- `docs/40_DATA`: データモデル設計。
+- `docs/50_OPERATIONS`: 運用手順、チェックリスト、Runbook。
+- `docs/60_TEST`: テスト計画、テストケース、検証結果、受入記録。
+- `docs/80_HANDOFF`: AI/人向け引継ぎ・再開文書。
+- `docs/90_WIP`: 草案・検証途中の作業文書。
+- JA: `docs/60_HANDOFF` は 2026-03-25 で廃止し、`docs/80_HANDOFF` へ統合した。
+- EN: `docs/60_HANDOFF` was retired on 2026-03-25 and consolidated into `docs/80_HANDOFF`.
 
 ## 4. Update Timing / 更新タイミング
 
@@ -62,6 +75,8 @@
 - EN: For any implementation change, update at least `PROJECT_STATUS.md` and one related document.
 - JA: 不具合対応時は `ISSUE_LIST.md` の更新を必須とする。
 - EN: For issue fixes, updating `ISSUE_LIST.md` is mandatory.
+- JA: テスト実施またはテスト方針変更時は、`docs/60_TEST/` 配下の関連文書を同タスク内で更新する。
+- EN: When tests are executed or test policy changes, update related docs under `docs/60_TEST/` within the same task.
 
 ## 5. Issue Management Standard / Issue管理標準
 
@@ -130,5 +145,10 @@
 ## 12. Source and Alignment / 参照と整合
 - JA: 本ガイドは本プロジェクトで整備済み資料を横断統合した運用規約である。
 - EN: This guideline is a cross-integrated governance policy derived from the project’s existing documentation assets.
+
+
+
+
+
 
 

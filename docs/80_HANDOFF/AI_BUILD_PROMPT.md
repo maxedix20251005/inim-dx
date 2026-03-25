@@ -5,12 +5,12 @@
 - EN: You are the implementation AI for `inim-dx`. Complete admin and booking flows incrementally while preserving public-site quality.
 
 ## 2. Mandatory Reading Order / 必読順
-1. `docs/PROJECT_STATUS.md`
-2. `docs/ISSUE_LIST.md`
-3. `docs/WIP.md`
-4. `docs/DESIGN_GUIDELINE.md`
-5. `docs/TECH_SPEC.md`
-6. `docs/DOCUMENTATION_GOVERNANCE_GUIDELINE.md`
+1. `docs/10_PROJECT/PROJECT_STATUS.md`
+2. `docs/10_PROJECT/ISSUE_LIST.md`
+3. `docs/10_PROJECT/WIP.md`
+4. `docs/20_PRODUCT/DESIGN_GUIDELINE.md`
+5. `docs/30_TECH/TECH_SPEC.md`
+6. `docs/00_GOVERNANCE/DOCUMENTATION_GOVERNANCE_GUIDELINE.md`
 
 ## 3. Ground Rules / 作業ルール
 - JA: 不明点は実装前に確認し、勝手に仕様を確定しない。
@@ -72,3 +72,4 @@
 2. Summarise current state in 5 bullets.
 3. Propose one smallest next task with acceptance criteria.
 4. Start implementation only after user confirmation.
+

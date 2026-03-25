@@ -5,13 +5,13 @@
 - EN: Execution memo to restart immediately in a new chat/device with identical assumptions and priorities.
 
 ## 2. Mandatory Read Order / 必読順
-1. `docs/PROJECT_STATUS.md`
-2. `docs/ISSUE_LIST.md`
-3. `docs/WIP.md`
-4. `docs/DESIGN_GUIDELINE.md`
-5. `docs/TECH_SPEC.md`
-6. `docs/DOCUMENTATION_GOVERNANCE_GUIDELINE.md`
-7. `docs/AI_BUILD_PROMPT.md`
+1. `docs/10_PROJECT/PROJECT_STATUS.md`
+2. `docs/10_PROJECT/ISSUE_LIST.md`
+3. `docs/10_PROJECT/WIP.md`
+4. `docs/20_PRODUCT/DESIGN_GUIDELINE.md`
+5. `docs/30_TECH/TECH_SPEC.md`
+6. `docs/00_GOVERNANCE/DOCUMENTATION_GOVERNANCE_GUIDELINE.md`
+7. `docs/80_HANDOFF/AI_BUILD_PROMPT.md`
 
 ## 3. Current Project State / 現在のプロジェクト状態
 - JA: 公開導線は `Top -> Workshop -> Booking` を中心に整備済み。
@@ -34,8 +34,8 @@
 - EN: Clarify unknowns before coding; do not lock ambiguous specs unilaterally.
 - JA: 実装差分があるタスクは、同タスク内で文書更新を完了する。
 - EN: Any code change must include documentation updates in the same task.
-- JA: 不具合は `docs/ISSUE_LIST.md` に即記録する。
-- EN: Record issues immediately in `docs/ISSUE_LIST.md`.
+- JA: 不具合は `docs/10_PROJECT/ISSUE_LIST.md` に即記録する。
+- EN: Record issues immediately in `docs/10_PROJECT/ISSUE_LIST.md`.
 - JA: 全ドキュメントは Bilingual（JA/EN）で維持する。
 - EN: Keep all documents bilingual (JA/EN).
 
@@ -72,4 +72,6 @@
 - `Verification:`
 - `Docs Updated:`
 - `Risks/Follow-up:`
+
+
 

@@ -163,10 +163,11 @@
 ## 11. Planned Enhancements / 追加検討機能
 - JA: 次の機能は技術検討対象としてバックログ管理し、要件確定後に本書へ仕様として昇格します。
 - EN: The following features are tracked as technical candidates and will be promoted into formal specs after requirement confirmation.
-- docs/FEATURE_BACKLOG.md を参照:
+- docs/20_PRODUCT/FEATURE_BACKLOG.md を参照:
   - Content update enhancement
   - Top -> Workshop flow reinforcement
   - Digital blend AI recommendation
   - Blend save and reuse
   - Workshop-product reciprocal discount logic
+
 

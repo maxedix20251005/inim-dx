@@ -10,9 +10,9 @@
 - 変更は差分で示してください。
 - 初心者でも理解できる説明を付けてください。
 - 日本語の文字化けがないか、変更後に必ず確認してください。
-- 変更のたびに、少なくとも `docs/PROJECT_STATUS.md` と `docs/AI_CONTEXT_PROMPT.md` を更新してください。
-- 不具合や詰まりが発生した場合は、`docs/ISSUE_LIST.md` に必ず追記し、関連ドキュメントと一緒に更新してください。
-- 管理画面に関する実装変更があれば、`docs/ADMIN_IMPLEMENTATION_STATUS.md` と必要に応じて `docs/WIP.md` も更新してください。
+- 変更のたびに、少なくとも `docs/10_PROJECT/PROJECT_STATUS.md` と `docs/80_HANDOFF/AI_CONTEXT_PROMPT.md` を更新してください。
+- 不具合や詰まりが発生した場合は、`docs/10_PROJECT/ISSUE_LIST.md` に必ず追記し、関連ドキュメントと一緒に更新してください。
+- 管理画面に関する実装変更があれば、`docs/80_HANDOFF/ADMIN_IMPLEMENTATION_STATUS.md` と必要に応じて `docs/10_PROJECT/WIP.md` も更新してください。
 
 ## 2. プロジェクト概要 / Project Overview
 - プロジェクト名: `inim-dx`
@@ -25,7 +25,7 @@
 ## 3. 正本ドキュメント / Canonical Docs
 - プロジェクト全体のコンセプトを理解・確認・振り返りする場合は、常に `docs/01-proposal.html` を参照し、現在の実装や判断内容に矛盾がないか確認してください。
 - 画面仕様の正本:
-  - `docs/CROSS_PROJECT_HANDOVER_ADMIN_IMPLEMENTATION.md`
+  - `docs/80_HANDOFF/CROSS_PROJECT_HANDOVER_ADMIN_IMPLEMENTATION.md`
   - `references/design/11-admin-mockup-standalone.html`
 - 補助デザイン:
   - `references/design/05-wireframe.html`
@@ -33,15 +33,15 @@
 - DB 設計の正本:
   - `C:\Users\maxsh\OneDrive\Documents\EDIX\src\portfolio\docs\08-db-design.html`
 - Workshop 予約データ設計の補助資料:
-  - `docs/WORKSHOP_BOOKING_DATA_DESIGN.md`
+  - `docs/40_DATA/WORKSHOP_BOOKING_DATA_DESIGN.md`
 - Workshop 予約 SQL 実行手順:
-  - `docs/WORKSHOP_BOOKING_SQL_RUNBOOK.md`
+  - `docs/50_OPERATIONS/WORKSHOP_BOOKING_SQL_RUNBOOK.md`
 - 進捗管理:
-  - `docs/PROJECT_STATUS.md`
-  - `docs/ADMIN_IMPLEMENTATION_STATUS.md`
-  - `docs/WIP.md`
+  - `docs/10_PROJECT/PROJECT_STATUS.md`
+  - `docs/80_HANDOFF/ADMIN_IMPLEMENTATION_STATUS.md`
+  - `docs/10_PROJECT/WIP.md`
 - Issue 管理:
-  - `docs/ISSUE_LIST.md`
+  - `docs/10_PROJECT/ISSUE_LIST.md`
 
 ## 4. 技術構成 / Tech Stack
 - フロント:
@@ -73,9 +73,9 @@
 - `js/admin-app.js`
 - `app/pages/journey.html`
 - `subpages/workshop-booking.html`
-- `docs/ADMIN_IMPLEMENTATION_STATUS.md`
-- `docs/PROJECT_STATUS.md`
-- `docs/WIP.md`
+- `docs/80_HANDOFF/ADMIN_IMPLEMENTATION_STATUS.md`
+- `docs/10_PROJECT/PROJECT_STATUS.md`
+- `docs/10_PROJECT/WIP.md`
 
 #### 参照先変更
 - `subpages/workshop.html`
@@ -148,17 +148,17 @@
 - 2026-03-23 の追加調整で、`store_id` 解決は `stores` 一覧に対する表記ゆれ吸収マッチへ変更し、`浅草店が見つからない` エラーの対策を入れた
 - 2026-03-23 の追加調整で、`Multiple GoTrueClient instances` 警告対策として `window.__INIM_SUPABASE_CLIENT` の singleton 化を `js/site-shell.js` と確認画面側に適用した
 - 2026-03-23 のユーザー再確認で、`Booking build: 20260322b`、予約送信成功、予約ID表示あり、Console エラーなしを確認した
-- 別端末再開時の混乱防止として、`docs/WIP.md` に「必須ルール」と「再開ショート手順」を追記した
+- 別端末再開時の混乱防止として、`docs/10_PROJECT/WIP.md` に「必須ルール」と「再開ショート手順」を追記した
 - `app/` 配下も確認したが、現時点では電話番号入力フィールド自体が存在しないため、同ロジックの適用対象はまだない。今後 `app` 側に電話番号入力を追加する際は、同等の validity と整形を適用する前提とする
 - 2026-03-22 の導線整理で、`workshop.html` の `予約する` と 3 コースの各予約ボタンは、いったんすべて `./workshop-booking.html` へ統一した
 - 同日の追加調整で、`行き先を選ぶ` で選択した店舗を `store` クエリとして `workshop-booking.html` へ引き継ぎ、予約画面側でも選択状態を維持するようにした
 - DB 追加は不要だった。`workshop_sessions.store_id` と既存 `bookings.store_id` がすでに存在するため、SQL `07_` は未作成
 - 2026-03-22 のユーザー確認で、店舗引き継ぎ、予約画面の店舗選択表示、選択店舗の開催日のみ表示はすべて正常、Console エラーなしを確認した
 - Reminder: `workshop_plans` / `workshop_sessions` 確定後に、予約画面で各プランをどう見せるか、各コースボタンから何を初期反映するかを再設計する
-- 予約データ設計案は `docs/WORKSHOP_BOOKING_DATA_DESIGN.md` に整理済み
+- 予約データ設計案は `docs/40_DATA/WORKSHOP_BOOKING_DATA_DESIGN.md` に整理済み
 - 追加テーブル作成 SQL は `sql/05_create_workshop_booking_tables.sql`
 - 検証 SQL は `sql/06_verify_workshop_booking_tables.sql`
-- 実行手順は `docs/WORKSHOP_BOOKING_SQL_RUNBOOK.md`
+- 実行手順は `docs/50_OPERATIONS/WORKSHOP_BOOKING_SQL_RUNBOOK.md`
 - 2026-03-22 の実確認で、カレンダー記号は良好、SQL ファイル構成は良好、Runbook も良好だった
 - 同日の検証で、追加テーブル、`bookings` 追加列、関連 index の存在確認まで完了している
 - `デジタル調香を試す` への導線も併設されているため、予約前体験との関係整理が必要
@@ -258,18 +258,18 @@
 - 2026-03-21 の実画面確認で、`journey_steps` の各バリデーションは正常動作し、正常値保存も成功、Console エラーなしを確認済みです。
 - 2026-03-22 の現状把握で、`workshop.html#reserve` は存在するが、予約 CTA はまだ `../index.html#contact` に接続されていることを確認済みです。
 - その後、`subpages/workshop-booking.html` の Draft を追加し、空き状況カレンダー、選択日の時間帯表示、`予約へ進む` ボタン、詳細4タブまで実装しました。
-- さらに、Workshop 予約の推奨テーブルとして `workshop_plans`, `workshop_plan_inclusions`, `workshop_plan_flow_steps`, `workshop_sessions` を `docs/WORKSHOP_BOOKING_DATA_DESIGN.md` に整理しました。
+- さらに、Workshop 予約の推奨テーブルとして `workshop_plans`, `workshop_plan_inclusions`, `workshop_plan_flow_steps`, `workshop_sessions` を `docs/40_DATA/WORKSHOP_BOOKING_DATA_DESIGN.md` に整理しました。
 - したがって、次はこの Draft を基に公開側予約画面の必要入力項目を固め、その後に `bookings / enquiries` 管理画面の詳細化へ進むべき状態です。
 
 ## 10. 直近の再開手順 / Restart Steps
-1. `docs/PROJECT_STATUS.md` を確認する
-2. `docs/WIP.md` を確認する
-3. `docs/ADMIN_IMPLEMENTATION_STATUS.md` を確認する
+1. `docs/10_PROJECT/PROJECT_STATUS.md` を確認する
+2. `docs/10_PROJECT/WIP.md` を確認する
+3. `docs/80_HANDOFF/ADMIN_IMPLEMENTATION_STATUS.md` を確認する
 4. [`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) の `#reserve` セクションを確認する
 5. `予約フォームへ進む` が `./workshop-booking.html` を向いていることを確認する
 6. [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html) の Draft UI を確認する
-7. `docs/WORKSHOP_BOOKING_DATA_DESIGN.md` を確認する
-8. `docs/WORKSHOP_BOOKING_SQL_RUNBOOK.md` を確認する
+7. `docs/40_DATA/WORKSHOP_BOOKING_DATA_DESIGN.md` を確認する
+8. `docs/50_OPERATIONS/WORKSHOP_BOOKING_SQL_RUNBOOK.md` を確認する
 9. 予約画面で必要になる入力項目を整理する
 10. 必要なら `bookings / enquiries` の追加項目を検討する
 11. GitHub Pages 上で以下 URL を直接開けるか確認する
@@ -281,7 +281,7 @@
 14. サイドバー下部の `Admin build` が `20260322a` であることを確認する
 
 ## 11. 次に優先する実装候補 / Next Candidates
-1. `subpages/workshop-booking.html` と `subpages/workshop-booking-entry.html` の Draft、`docs/WORKSHOP_BOOKING_DATA_DESIGN.md` を基に予約入力項目を確定する
+1. `subpages/workshop-booking.html` と `subpages/workshop-booking-entry.html` の Draft、`docs/40_DATA/WORKSHOP_BOOKING_DATA_DESIGN.md` を基に予約入力項目を確定する
 2. 予約保存成功後の完了画面（thanks）と表示内容を確定する
 3. `workshop_sessions` 実データ連携で `session_id` / `plan_id` の保存を確定する
 4. その後に `bookings / enquiries` の詳細管理画面着手
@@ -290,10 +290,10 @@
 - 変更が公開側へ波及していないか確認する
 - 変更ファイルが管理画面側に閉じているか確認する
 - 日本語の文字化けがないか再読込で確認する
-- 変更内容を `docs/PROJECT_STATUS.md` に反映する
-- この `docs/AI_CONTEXT_PROMPT.md` にも反映する
-- 不具合や詰まりがあった場合は `docs/ISSUE_LIST.md` にも反映する
-- 必要に応じて `docs/ADMIN_IMPLEMENTATION_STATUS.md` と `docs/WIP.md` を更新する
+- 変更内容を `docs/10_PROJECT/PROJECT_STATUS.md` に反映する
+- この `docs/80_HANDOFF/AI_CONTEXT_PROMPT.md` にも反映する
+- 不具合や詰まりがあった場合は `docs/10_PROJECT/ISSUE_LIST.md` にも反映する
+- 必要に応じて `docs/80_HANDOFF/ADMIN_IMPLEMENTATION_STATUS.md` と `docs/10_PROJECT/WIP.md` を更新する
 
 ## 13. ユーザーへの報告ルール / Reporting Rules
 - まず結論を短く伝える
@@ -306,6 +306,8 @@
 - このファイルは使い回しの雛形ではなく、現在の実プロジェクト状態を保持する運用ファイルです。
 - 今後、実装・調査・方針変更・既知課題の変化があったら、必ず更新してください。
 - 次回の AI がこのファイルだけ読んでも、途中から高い精度で再開できる状態を維持してください。
+
+
 
 
 

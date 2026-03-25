@@ -3,22 +3,22 @@
 ## 1. このドキュメントの目的 / Purpose
 - このファイルは、`inim-dx` プロジェクトの現在地を第三者でも短時間で把握できるように整理する常設ステータス資料です。
 - 管理画面に追加・更新を行った場合は、本ファイルを必ず同じ作業内で更新します。
-- 不具合や詰まりの履歴は `docs/ISSUE_LIST.md` を必ず参照し、本ファイル更新時も必要に応じて同時更新します。
+- 不具合や詰まりの履歴は `docs/10_PROJECT/ISSUE_LIST.md` を必ず参照し、本ファイル更新時も必要に応じて同時更新します。
 - 更新後は、日本語の文字化けがないかを必ず確認します。
 
 ## 2. 現在の主対象 / Current Focus
 - 現在の実装対象は、`inim-dx` の管理画面です。
 - 画面仕様の正本:
-  - `docs/CROSS_PROJECT_HANDOVER_ADMIN_IMPLEMENTATION.md`
+  - `docs/80_HANDOFF/CROSS_PROJECT_HANDOVER_ADMIN_IMPLEMENTATION.md`
   - `references/design/11-admin-mockup-standalone.html`
 - DB 設計の正本:
   - `C:\Users\maxsh\OneDrive\Documents\EDIX\src\portfolio\docs\08-db-design.html`
 - Workshop 予約データ設計の補助資料:
-  - `docs/WORKSHOP_BOOKING_DATA_DESIGN.md`
+  - `docs/40_DATA/WORKSHOP_BOOKING_DATA_DESIGN.md`
 - Workshop 予約 SQL 実行手順:
-  - `docs/WORKSHOP_BOOKING_SQL_RUNBOOK.md`
+  - `docs/50_OPERATIONS/WORKSHOP_BOOKING_SQL_RUNBOOK.md`
 - Issue 管理:
-  - `docs/ISSUE_LIST.md`
+  - `docs/10_PROJECT/ISSUE_LIST.md`
 
 ## 3. 実装方針 / Implementation Policy
 - 公開サイトの既存実装へ影響を出さないことを最優先に進めています。
@@ -37,9 +37,9 @@
 - `js/admin-app.js`
 - `app/pages/journey.html`
 - `subpages/workshop-booking.html`
-- `docs/AI_CONTEXT_PROMPT.md`
-- `docs/ADMIN_IMPLEMENTATION_STATUS.md`
-- `docs/WIP.md`
+- `docs/80_HANDOFF/AI_CONTEXT_PROMPT.md`
+- `docs/80_HANDOFF/ADMIN_IMPLEMENTATION_STATUS.md`
+- `docs/10_PROJECT/WIP.md`
 
 #### 参照先変更
 - `subpages/workshop.html`
@@ -191,16 +191,16 @@
 - 2026-03-23 の追加調整で、`store_id` 解決は `stores` 一覧に対する表記ゆれ吸収マッチ（日本語/英語ヒント、正規化比較）へ変更し、`浅草店が見つからない` エラーの再発を防ぐようにしました。
 - 2026-03-23 の追加調整で、`Multiple GoTrueClient instances` 警告を解消するため、`window.__INIM_SUPABASE_CLIENT` による singleton 化を `js/site-shell.js` と確認画面側の両方に適用しました。
 - 2026-03-23 のユーザー再確認で、`Booking build: 20260322b`、予約送信成功、予約ID表示あり、Console エラーなしを確認しました。
-- 別端末再開時の混乱防止として、`docs/WIP.md` に「必須ルール」と「再開ショート手順」を追記済みです。
+- 別端末再開時の混乱防止として、`docs/10_PROJECT/WIP.md` に「必須ルール」と「再開ショート手順」を追記済みです。
 - `app/` 配下も確認しましたが、2026-03-22 時点では電話番号入力フィールド自体が存在しないため、同ロジックの適用対象はまだありません。今後 `app` 側に電話番号入力を追加する際は、同等の validity と整形を適用する前提とします。
 - 2026-03-22 の導線整理で、[`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) の `予約する` と 3 コースの各予約ボタンは、いったんすべて [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html) へ統一しました。
 - 同日の追加調整で、`workshop.html` の `行き先を選ぶ` で選択した店舗 (`浅草店 / 柴又店 / ソラマチ店`) を `store` クエリとして [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html) へ引き継ぎ、予約画面側でも選択状態を維持するようにしました。
 - DB 追加は不要でした。`workshop_sessions.store_id` と既存 `bookings.store_id` がすでに存在するため、今回は SQL `07_` の新規追加は行っていません。
 - 2026-03-22 のユーザー確認で、店舗引き継ぎ、予約画面の店舗選択表示、選択店舗の開催日のみ表示はすべて正常、Console エラーなしを確認しました。
 - Reminder: `workshop_plans` / `workshop_sessions` を正本化した後で、予約画面に各プランをどう表示し、どのコースから来たかをどう初期反映するかを再設計すること。
-- Workshop 予約のデータ設計案は [`docs/WORKSHOP_BOOKING_DATA_DESIGN.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/WORKSHOP_BOOKING_DATA_DESIGN.md) に整理しました。推奨テーブルは `workshop_plans`, `workshop_plan_inclusions`, `workshop_plan_flow_steps`, `workshop_sessions` です。
+- Workshop 予約のデータ設計案は [`docs/40_DATA/WORKSHOP_BOOKING_DATA_DESIGN.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/40_DATA/WORKSHOP_BOOKING_DATA_DESIGN.md) に整理しました。推奨テーブルは `workshop_plans`, `workshop_plan_inclusions`, `workshop_plan_flow_steps`, `workshop_sessions` です。
 - 追加テーブル作成 SQL は [`sql/05_create_workshop_booking_tables.sql`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/sql/05_create_workshop_booking_tables.sql) に作成し、検証 SQL は [`sql/06_verify_workshop_booking_tables.sql`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/sql/06_verify_workshop_booking_tables.sql) に作成しました。
-- 実行手順は [`docs/WORKSHOP_BOOKING_SQL_RUNBOOK.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/WORKSHOP_BOOKING_SQL_RUNBOOK.md) に整理しました。
+- 実行手順は [`docs/50_OPERATIONS/WORKSHOP_BOOKING_SQL_RUNBOOK.md`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/docs/50_OPERATIONS/WORKSHOP_BOOKING_SQL_RUNBOOK.md) に整理しました。
 - 2026-03-22 の実確認で、カレンダー記号は良好、SQL ファイル構成は良好、Runbook も良好でした。
 - 同日の検証で、`workshop_plans`, `workshop_plan_inclusions`, `workshop_plan_flow_steps`, `workshop_sessions` の存在確認と、`bookings` 追加列、および関連 index 群の作成確認まで完了しています。
 - したがって、次は `bookings / enquiries` の管理画面詳細化ではなく、この公開側予約画面で必要項目を先に確定するのが適切です。
@@ -230,10 +230,10 @@
 - `Console:` エラーなし / エラーあり
 
 ## 11. 参照ドキュメント / References
-- `docs/ADMIN_IMPLEMENTATION_STATUS.md`
-- `docs/WIP.md`
-- `docs/AI_CONTEXT_PROMPT.md`
-- `docs/ISSUE_LIST.md`
+- `docs/80_HANDOFF/ADMIN_IMPLEMENTATION_STATUS.md`
+- `docs/10_PROJECT/WIP.md`
+- `docs/80_HANDOFF/AI_CONTEXT_PROMPT.md`
+- `docs/10_PROJECT/ISSUE_LIST.md`
 
 ## 12. 確認済み事項 / Verified Items
 - 公開サイト用の `js/site-shell.js` は、Workshop 予約 Draft 追加に必要な最小差分のみ更新済みです。
@@ -241,33 +241,33 @@
 - 本ファイル更新後、日本語の文字化け確認を行う前提です。
 
 ### ドキュメント更新（2026-03-24）
-- docs/DESIGN_GUIDELINE.md を追加しました。
-- docs/TECH_SPEC.md を追加しました。
+- docs/20_PRODUCT/DESIGN_GUIDELINE.md を追加しました。
+- docs/30_TECH/TECH_SPEC.md を追加しました。
 
 ### ドキュメント更新（2026-03-24 追記）
-- docs/DOCUMENTATION_GOVERNANCE_GUIDELINE.md を追加しました。
+- docs/00_GOVERNANCE/DOCUMENTATION_GOVERNANCE_GUIDELINE.md を追加しました。
 
 ### ドキュメント更新（2026-03-24 追加）
-- docs/AI_BUILD_PROMPT.md を新規作成し、文書運用ガイドラインに合わせて統一しました。
-- docs/WIP.md をテンプレート統一フォーマットへ更新しました。
+- docs/80_HANDOFF/AI_BUILD_PROMPT.md を新規作成し、文書運用ガイドラインに合わせて統一しました。
+- docs/10_PROJECT/WIP.md をテンプレート統一フォーマットへ更新しました。
 
 ### ドキュメント更新（2026-03-24 追加2）
-- docs/NEXT_CHAT_HANDOFF.md を統一テンプレートへ更新しました。
+- docs/80_HANDOFF/NEXT_CHAT_HANDOFF.md を統一テンプレートへ更新しました。
 
 ### ドキュメント更新（2026-03-24 追加3）
-- docs/ACCOUNT_AUTH_SYSTEM_NOTES.md を docs/NEXT_CHAT_HANDOFF.md と同じ見出し粒度（番号付き章）へ整形しました（内容変更なし）。
+- docs/80_HANDOFF/ACCOUNT_AUTH_SYSTEM_NOTES.md を docs/80_HANDOFF/NEXT_CHAT_HANDOFF.md と同じ見出し粒度（番号付き章）へ整形しました（内容変更なし）。
 
 
 
 ## 13. ドキュメント更新（2026-03-24 追加4） / Documentation Update
-- 指定順で次の文書を整形しました: docs/CROSS_PROJECT_HANDOVER_ADMIN_IMPLEMENTATION.md, docs/AI_CONTEXT_PROMPT.md, docs/ADMIN_IMPLEMENTATION_STATUS.md, docs/PROJECT_STATUS.md, docs/ISSUE_LIST.md, docs/SUPABASE_CUSTOMER_ACCOUNT.md。
+- 指定順で次の文書を整形しました: docs/80_HANDOFF/CROSS_PROJECT_HANDOVER_ADMIN_IMPLEMENTATION.md, docs/80_HANDOFF/AI_CONTEXT_PROMPT.md, docs/80_HANDOFF/ADMIN_IMPLEMENTATION_STATUS.md, docs/10_PROJECT/PROJECT_STATUS.md, docs/10_PROJECT/ISSUE_LIST.md, docs/30_TECH/SUPABASE_CUSTOMER_ACCOUNT.md。
 - prompts/*.md を docs/ 配下へ移動しました。
 - 参照パス prompts/... を docs/... へ一括更新しました。
-- docs/DOCUMENT_CATALOG.md（ドキュメント目録）を新規追加しました。
+- docs/00_GOVERNANCE/DOCUMENT_CATALOG.md（ドキュメント目録）を新規追加しました。
 
 
 ## 14. 今後の機能追加候補 / Feature Backlog
-- 今後の機能追加アイデアは docs/FEATURE_BACKLOG.md を正本として管理します。
+- 今後の機能追加アイデアは docs/20_PRODUCT/FEATURE_BACKLOG.md を正本として管理します。
 - 本ファイルでは、実装優先度が確定した項目のみを 次に優先して進める作業 へ昇格します。
 - 現在の主な候補: 
   - コンテンツ更新新機能の充実
@@ -278,7 +278,45 @@
 
 
 ### ドキュメント更新（2026-03-24 追加5）
-- docs/FEATURE_BACKLOG.md を新規追加し、今後の機能追加アイデア管理の正本を分離しました。
-- docs/PROJECT_STATUS.md に 機能追加候補 セクションを追加しました。
-- docs/TECH_SPEC.md に Planned Enhancements を追加しました。
-- docs/DOCUMENT_CATALOG.md に FEATURE_BACKLOG.md を追加しました。
+- docs/20_PRODUCT/FEATURE_BACKLOG.md を新規追加し、今後の機能追加アイデア管理の正本を分離しました。
+- docs/10_PROJECT/PROJECT_STATUS.md に 機能追加候補 セクションを追加しました。
+- docs/30_TECH/TECH_SPEC.md に Planned Enhancements を追加しました。
+- docs/00_GOVERNANCE/DOCUMENT_CATALOG.md に FEATURE_BACKLOG.md を追加しました。
+
+
+### ドキュメント更新（2026-03-25 追加）
+- docs をカテゴリ別サブフォルダ（`00_GOVERNANCE`〜`90_WIP`）へ再編しました。
+- `references/settings/checkclist-supabase.md` を `docs/50_OPERATIONS/CHECKLIST_SUPABASE.md` へ移動・名称統一しました。
+- `wip/test-workshop.md`, `wip/testing-ws-1.html` を `docs/90_WIP/` 配下へ移動し、WIP文書として標準化しました。
+- 主要ドキュメント間の参照パスを新ディレクトリ構成へ更新しました。
+- `docs/00_GOVERNANCE/DOCUMENT_CATALOG.md` を新構成に合わせて更新しました。
+
+
+### ドキュメント更新（2026-03-25 追加2）
+- `docs/60_HANDOFF` を `docs/80_HANDOFF` へリネームしました。
+- 参照リンク（Markdown内）を `docs/80_HANDOFF/*` へ一括更新しました。
+- `docs/60_TEST` を新設しました（今後のテスト計画・テストケース管理用）。
+- `docs/00_GOVERNANCE/DOCUMENTATION_GOVERNANCE_GUIDELINE.md` にフォルダ体系更新（60_TEST/80_HANDOFF）とテスト文書更新ルールを反映しました。
+- `docs/00_GOVERNANCE/DOCUMENT_CATALOG.md` の Folder Policy に `60_TEST` を追加しました。
+
+### ドキュメント更新（2026-03-25 追加3）
+- `wip` に配置していたテンプレート群を `docs/00_GOVERNANCE/TEMPLATES/` へ移動しました。
+- `docs/60_TEST` は実テスト成果物（シナリオ/ケース/結果）専用の配置方針を明確化しました。
+- `docs/00_GOVERNANCE/DOCUMENT_CATALOG.md` にテンプレート群の目録を追記しました。
+
+### ドキュメント更新（2026-03-25 追加4）
+- `test/test-account-result.md` を `docs/60_TEST/ACCOUNT_TEST_RESULT.md` へ移動しました。
+- 文字化けを解消し、新ガバナンス準拠（Bilingual/UTF-8/構造化）で再整形しました。
+- `docs/00_GOVERNANCE/DOCUMENT_CATALOG.md` に `ACCOUNT_TEST_RESULT.md` を追記しました。
+
+## 15. 作業ステータス再確認（2026-03-25） / Task Status Recheck
+1. Workshop予約導線整理（`workshop.html #reserve` 起点）: `Completed`
+2. 予約入力必須項目と確認フロー確定: `In Progress`
+3. 予約完了（Thanks）導線と `session_id` / `plan_id` 実データ確定: `In Progress`
+4. `app/` 側 `bookings / enquiries` 詳細管理: `Not Started`
+5. Top -> Workshop 導線強化: `In Progress`
+6. コンテンツ更新新機能の充実: `Proposed`
+7. デジタル調香AIレコメンド: `Proposed`
+8. 調香データ保存・再利用: `Proposed`
+9. Workshop x Product 相互特典: `Proposed`
+10. Spring Boot/Java API 層追加判断: `On Hold`

@@ -45,14 +45,14 @@
 
 ### Supabase 設計
 
-- `docs/SUPABASE_CUSTOMER_ACCOUNT.md`
+- `docs/30_TECH/SUPABASE_CUSTOMER_ACCOUNT.md`
 - `supabase/customer-account-schema.sql`
 
 ### 補助ドキュメント
 
 - `references/settings/checkclist-supabase.md`
-- `docs/NEXT_CHAT_HANDOFF.md`
-- `docs/ACCOUNT_AUTH_SYSTEM_NOTES.md` ← この文書
+- `docs/80_HANDOFF/NEXT_CHAT_HANDOFF.md`
+- `docs/80_HANDOFF/ACCOUNT_AUTH_SYSTEM_NOTES.md` ← この文書
 
 ## 5. 現在の Supabase 接続設定
 
@@ -512,6 +512,8 @@ SQL 適用後に必要なこと:
 - redirect URL はコードと Supabase 設定の両方で明示する
 - `profiles` 自動作成は DB トリガーを優先検討する
 - field-level validation を先に整え、保存処理はその後に行う
+
+
 
 
 
