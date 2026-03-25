@@ -353,22 +353,33 @@
                 return { sessionMap, scheduleMap };
             };
             const fetchData = async () => {
-                if (!supabase) return { sessions: [], plans: [], stores: [] };
-                const { data: planRows } = await supabase.from("workshop_plans").select("id, plan_name, plan_code, base_price_jpy, currency_code, min_party_size, max_party_size").eq("status", "active");
-                const { data: storeRows } = await supabase.from("stores").select("id, store_name, is_active, deleted_at");
-                const today = new Date();
-                const until = new Date();
-                until.setMonth(until.getMonth() + 2);
-                const { data: sessionRows } = await supabase
-                    .from("workshop_sessions")
-                    .select("id, plan_id, store_id, session_date, gather_time, start_time, end_time, booking_method, capacity_total, capacity_reserved, price_override_jpy, currency_code, min_party_size, max_party_size, session_status, public_note, published_at")
-                    .gte("session_date", today.toISOString().slice(0, 10))
-                    .lte("session_date", until.toISOString().slice(0, 10));
-                return {
-                    plans: planRows || [],
-                    stores: storeRows || [],
-                    sessions: sessionRows || []
-                };
+                if (!supabase) return { sessions: [], plans: [], stores: [], error: new Error("Supabase client unavailable") };
+                try {
+                    const { data: planRows, error: planErr } = await supabase
+                        .from("workshop_plans")
+                        .select("id, plan_name, plan_code, base_price_jpy, currency_code, min_party_size, max_party_size")
+                        .eq("status", "active");
+                    const { data: storeRows, error: storeErr } = await supabase
+                        .from("stores")
+                        .select("id, store_name, is_active, deleted_at");
+                    const today = new Date();
+                    const until = new Date();
+                    until.setMonth(until.getMonth() + 2);
+                    const { data: sessionRows, error: sessErr } = await supabase
+                        .from("workshop_sessions")
+                        .select("id, plan_id, store_id, session_date, gather_time, start_time, end_time, booking_method, capacity_total, capacity_reserved, price_override_jpy, currency_code, min_party_size, max_party_size, session_status, public_note, published_at")
+                        .gte("session_date", today.toISOString().slice(0, 10))
+                        .lte("session_date", until.toISOString().slice(0, 10));
+                    const firstError = planErr || storeErr || sessErr || null;
+                    return {
+                        plans: planRows || [],
+                        stores: storeRows || [],
+                        sessions: sessionRows || [],
+                        error: firstError
+                    };
+                } catch (err) {
+                    return { sessions: [], plans: [], stores: [], error: err };
+                }
             };
             const buildStoreMap = (rows) => {
                 if (!rows || rows.length === 0) return { ...fallbackStores };
@@ -379,40 +390,48 @@
                 });
                 return map;
             };
+            const setLed = (state, title) => {
+                if (!connectionLed) return;
+                connectionLed.classList.remove("is-ok", "is-bad");
+                if (state === "ok") connectionLed.classList.add("is-ok");
+                if (state === "bad") connectionLed.classList.add("is-bad");
+                if (title) connectionLed.title = title;
+            };
             const initData = async () => {
                 try {
-                    const { plans, stores: storeRows, sessions } = await fetchData();
-                    connectionLed?.classList.remove("is-bad");
-                    connectionLed?.classList.add("is-ok");
-                    if (!sessions || sessions.length === 0) throw new Error("no sessions");
-                    stores = buildStoreMap(storeRows);
-                    const planById = {};
-                    (plans || []).forEach((p) => (planById[p.id] = p));
-                    const { sessionMap, scheduleMap } = buildSchedule(sessions, planById, stores);
-                    const dates = Object.keys(sessionMap).sort();
-                    if (dates.length === 0) throw new Error("no dates");
-                    const startDate = new Date(dates[0]);
-                    const endDate = new Date(dates[dates.length - 1]);
-                    months = buildCalendarCells(sessionMap, startDate, endDate);
-                    schedule = scheduleMap;
-                    selectedStore = chooseInitialStore();
-                    selectedKey = dates.find((d) => sessionMap[d][0].storeKey === selectedStore) || dates[0];
-                } catch (e) {
-                    connectionLed?.classList.remove("is-ok");
-                    connectionLed?.classList.add("is-bad");
-                    // fallback to draft data (previous hardcoded)
+                    const { plans, stores: storeRows, sessions, error } = await fetchData();
+                    if (error) throw error;
+                    setLed("ok", "Supabase: connected");
+                    const hasSessions = sessions && sessions.length > 0;
+                    if (hasSessions) {
+                        stores = buildStoreMap(storeRows);
+                        const planById = {};
+                        (plans || []).forEach((p) => (planById[p.id] = p));
+                        const { sessionMap, scheduleMap } = buildSchedule(sessions, planById, stores);
+                        const dates = Object.keys(sessionMap).sort();
+                        if (dates.length > 0) {
+                            const startDate = new Date(dates[0]);
+                            const endDate = new Date(dates[dates.length - 1]);
+                            months = buildCalendarCells(sessionMap, startDate, endDate);
+                            schedule = scheduleMap;
+                            selectedStore = chooseInitialStore();
+                            selectedKey = dates.find((d) => sessionMap[d][0].storeKey === selectedStore) || dates[0];
+                            return;
+                        }
+                    }
+                    // connected but no sessions -> keep LED green, show mock for UX
+                    setLed("ok", "Supabase connected (no sessions found, showing mock)");
                     stores = { ...fallbackStores };
-                    // reuse previous draft months/schedule by rebuilding from fallback minimal data
                     const fallbackPrice = price(5500);
                     const fallbackSessions = [
-                        { date: "2026-04-05", store: "asakusa", label: "2026年4月5日(日)", slots: [{ sessionId: "sess-fb-01", planId: "plan-draft-01", g: "10:50", start: "11:00", end: "12:00", price: fallbackPrice, n: "即時確定", method: "instant", minP: 1, maxP: 4 }] }
+                        { date: "2026-04-05", store: "asakusa", label: "2026年4月5日(日)", slots: [{ sessionId: "", planId: "", g: "10:50", start: "11:00", end: "12:00", price: fallbackPrice, n: "即時確定", method: "instant", minP: 1, maxP: 4 }] }
                     ];
                     schedule = fallbackSessions.reduce((acc, cur) => {
                         acc[cur.date] = {
                             label: cur.label,
                             store: cur.store,
                             storeLabel: stores[cur.store]?.label || cur.store,
-                            planId: cur.planId || "plan-draft-01",
+                            planId: cur.planId || "",
                             status: "即時予約可",
                             slots: cur.slots
                         };
@@ -427,7 +446,44 @@
                                     status: "instant",
                                     price: fallbackPrice,
                                     storeKey: "asakusa",
-                                    planId: "plan-draft-01"
+                                    planId: ""
+                                }
+                            ]
+                        },
+                        startDate,
+                        endDate
+                    );
+                    selectedStore = "asakusa";
+                    selectedKey = "2026-04-05";
+                } catch (e) {
+                    setLed("bad", "Supabase: fallback (error)");
+                    console.error("Supabase fetch error", e);
+                    stores = { ...fallbackStores };
+                    const fallbackPrice = price(5500);
+                    const fallbackSessions = [
+                        { date: "2026-04-05", store: "asakusa", label: "2026年4月5日(日)", slots: [{ sessionId: "", planId: "", g: "10:50", start: "11:00", end: "12:00", price: fallbackPrice, n: "即時確定", method: "instant", minP: 1, maxP: 4 }] }
+                    ];
+                    schedule = fallbackSessions.reduce((acc, cur) => {
+                        acc[cur.date] = {
+                            label: cur.label,
+                            store: cur.store,
+                            storeLabel: stores[cur.store]?.label || cur.store,
+                            planId: cur.planId || "",
+                            status: "即時予約可",
+                            slots: cur.slots
+                        };
+                        return acc;
+                    }, {});
+                    const startDate = new Date("2026-04-01");
+                    const endDate = new Date("2026-04-30");
+                    months = buildCalendarCells(
+                        {
+                            "2026-04-05": [
+                                {
+                                    status: "instant",
+                                    price: fallbackPrice,
+                                    storeKey: "asakusa",
+                                    planId: ""
                                 }
                             ]
                         },
