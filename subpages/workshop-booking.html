@@ -320,8 +320,8 @@
                     plan: "浅草で香水づくり / 香りを選んで自分でブレンドするワークショップ",
                     store: current.store,
                     storeLabel: current.storeLabel,
-                    plan_id: slot.planId,
-                    session_id: slot.sessionId,
+                    plan_id: slot.planId && /^[0-9a-fA-F-]{36}$/.test(slot.planId) ? slot.planId : "",
+                    session_id: slot.sessionId && /^[0-9a-fA-F-]{36}$/.test(slot.sessionId) ? slot.sessionId : "",
                     min_party_size: slot.minP ?? "",
                     max_party_size: slot.maxP ?? ""
                 };

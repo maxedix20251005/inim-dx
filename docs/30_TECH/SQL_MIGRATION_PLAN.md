@@ -125,7 +125,7 @@
 - `booking_id`
 - `enquiry_id`
 
-## 実行結果
+# 実行結果
 #00-2b precheck result
 | tablename               | policyname                                |
 | ----------------------- | ----------------------------------------- |
@@ -175,6 +175,8 @@ Success. No rows returned
 - 管理画面 HTML のアセット参照バージョンを `20260322a` に更新
 - 既存の `booking_status_logs` / `enquiry_status_logs` は現時点の管理画面で未使用のため、アプリコード変更なし
 - 2026-03-25 以降の Workshop 拡張に向けて、`05_create_workshop_booking_tables.sql` へ通貨カラム（`currency_code`）とセッション人数上限/下限（`min_party_size` / `max_party_size`）を追加済み。`bookings` にも `currency_code` を追加。
+- 2026-03-25 追加実行: `07_add_currency_code_and_party_limits.sql` を本番 Supabase へ適用し、`workshop_plans / workshop_sessions / bookings` に `currency_code`、およびセッションの `min_party_size` / `max_party_size` を反映。再実行しても安全な idempotent スクリプト。
+- 2026-03-25 検証: `08_verify_workshop_booking_schema.sql` 実行結果で対象インデックス/カラムが存在することを確認（`idx_bookings_*`, `idx_workshop_*` 一式）。
 
 
 ## やってはいけないこと

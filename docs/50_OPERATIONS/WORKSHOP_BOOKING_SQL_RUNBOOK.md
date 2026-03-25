@@ -90,6 +90,17 @@
 - `special_requests`
 - `internal_note`
 - `confirmed_at`
+- `currency_code`
+
+### Step 3-2. 拡張カラム追加 SQL を実行する（通貨/人数）
+
+[`sql/07_add_currency_code_and_party_limits.sql`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/sql/07_add_currency_code_and_party_limits.sql) を実行します。  
+idempotent なので再実行しても安全です。
+
+### Step 3-3. 検証 SQL (総合) を実行する
+
+[`sql/08_verify_workshop_booking_schema.sql`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/sql/08_verify_workshop_booking_schema.sql) を実行します。  
+インデックスとカラム存在がすべて `exists` で確認できればOKです。
 
 ### Step 4. 初期データ投入方針を決める
 

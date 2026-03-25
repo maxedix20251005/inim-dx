@@ -227,6 +227,7 @@
                 return matched ? Number(matched[1]) : null;
             };
             const toCurrencyCode = (value) => (value && value.length === 3 ? value.toUpperCase() : "JPY");
+            const isUuid = (value) => /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(String(value || ""));
             const toIsoDate = (selectedDateKey, selectedDateLabel) => {
                 if (/^\d{4}-\d{2}-\d{2}$/.test(selectedDateKey)) {
                     return selectedDateKey;
@@ -376,6 +377,8 @@
                     }
                     const customerProfileId = await resolveProfileId();
                     const storeId = await resolveStoreId();
+                    const planId = isUuid(selected.planId) ? selected.planId : null;
+                    const sessionId = isUuid(selected.sessionId) ? selected.sessionId : null;
                     const payload = {
                         customer_profile_id: customerProfileId,
                         store_id: storeId,
@@ -384,8 +387,8 @@
                         participant_count: partySize,
                         status: methodCode === "request" ? "pending" : "confirmed",
                         note: selected.note || null,
-                        session_id: selected.sessionId || null,
-                        plan_id: selected.planId || null,
+                        session_id: sessionId,
+                        plan_id: planId,
                         quoted_price_jpy: quotedPriceJpy,
                         currency_code: currencyCode,
                         booking_method: methodCode,

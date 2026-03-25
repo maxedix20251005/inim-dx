@@ -153,6 +153,11 @@ TEXT 1本に詰め込まない方が、管理画面で追加・並び替えし�
 - 予約人数の制約をセッション単位で調整できるよう `workshop_sessions.min_party_size` / `max_party_size` を追加（未設定時はプラン値で解釈）。
 - Rollback 方針: 既存データがない Draft 段階のため、元に戻す際は同名カラムを `alter table ... drop column` で削除し、`05_create_workshop_booking_tables.sql` / `06_verify_workshop_booking_tables.sql` を元版へ戻す。運用データ投入後は drop せずに非使用カラムとして運用することを推奨。
 
+### 実行ログ（2026-03-25）
+- 反映: `05_create_workshop_booking_tables.sql`（再実行安全）
+- 反映: `07_add_currency_code_and_party_limits.sql`（本番 Supabase 適用）
+- 検証: `08_verify_workshop_booking_schema.sql` にて対象カラム/インデックスの存在を確認
+
 ## カレンダー表示ロジック
 
 公開側カレンダーの状態は `workshop_sessions` から次のように算出します。
