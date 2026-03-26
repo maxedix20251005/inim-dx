@@ -54,5 +54,15 @@
 - Checks:
   - 確認画面で予約送信成功後、`subpages/workshop-booking-thanks.html` へ自動遷移すること
   - Thanks画面で `booking_id`, `status`, `label/date`, `gather`, `party_size` が表示されること
-  - Console エラーが発生しないこと
+  - Console エラーが発生しないこと- Date: 2026-03-26
+- Target Task: #3 予約完了（Thanks）導線 / 認証失敗ハンドリング
+- Checks:
+  - 未ログイン状態で送信した場合、`Auth session missing` 生文ではなくログイン誘導メッセージが表示されること
+  - ログイン後に再送信すると Thanks 画面へ遷移すること
+  - Console エラーが発生しないこと- Date: 2026-03-26
+- Target Task: Workshop sessions 実データ表示
+- Checks:
+  - `workshop_sessions` が0件の場合は固定モック（4/5）を表示しないこと
+  - 空状態メッセージが表示されること（date range / RLS / seed data確認）
+  - `workshop_sessions` 登録後は該当日がカレンダーへ反映されること
 

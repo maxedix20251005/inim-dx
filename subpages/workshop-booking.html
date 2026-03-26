@@ -13,10 +13,20 @@
 
 <body data-root=".." data-page-key="workshopBooking">
     <main id="page-main" class="booking-page">
-        <div class="booking-wrap" style="width:min(1180px, calc(100% - 48px)); margin:0 auto;">
+        <div class="booking-wrap">
             <p class="section-kicker booking-kicker">Workshop Booking <span class="supabase-led" id="connection-led" aria-label="Supabase connection status"></span></p>
+            <div class="booking-diagnostics" id="booking-diagnostics" hidden>
+                <p class="booking-diagnostics__title">Data Diagnostics</p>
+                <dl class="booking-diagnostics__grid">
+                    <div><dt>Source</dt><dd id="diag-source">-</dd></div>
+                    <div><dt>Plans</dt><dd id="diag-plans">-</dd></div>
+                    <div><dt>Stores</dt><dd id="diag-stores">-</dd></div>
+                    <div><dt>Sessions</dt><dd id="diag-sessions">-</dd></div>
+                    <div><dt>Range</dt><dd id="diag-range">-</dd></div>
+                    <div><dt>Error</dt><dd id="diag-error">-</dd></div>
+                </dl>
+            </div>
         </div>
-    <main id="page-main" class="booking-page">
         <section class="booking-hero">
             <div class="booking-wrap booking-hero__grid">
                 <div>
@@ -174,9 +184,14 @@
             const slotsPanel = document.getElementById("booking-slots-panel");
             const storePicker = document.getElementById("booking-store-picker");
             const storeMeta = document.getElementById("booking-store-meta");
+            const diagnosticsHost = document.getElementById("booking-diagnostics");
+            const diagSource = document.getElementById("diag-source");
+            const diagPlans = document.getElementById("diag-plans");
+            const diagStores = document.getElementById("diag-stores");
+            const diagSessions = document.getElementById("diag-sessions");
+            const diagRange = document.getElementById("diag-range");
+            const diagError = document.getElementById("diag-error");
             const params = new URLSearchParams(window.location.search);
-            const currency = "JPY";
-            const price = (value) => ({ display: `¥${value.toLocaleString("ja-JP")}`, jpy: value, currency });
             const fallbackStores = {
                 asakusa: { label: "浅草店", caption: "Fri - Sun" },
                 shibamata: { label: "柴又店", caption: "Sat - Mon" },
@@ -186,6 +201,7 @@
             let stores = { ...fallbackStores };
             let months = [];
             let schedule = {};
+            let emptyStateMessage = "";
             const marks = { instant: "○", request: "□", few: "△", full: "×", closed: "-" };
             const days = ["月", "火", "水", "木", "金", "土", "日"];
             let selectedStore = params.get("store");
@@ -251,7 +267,7 @@
             const renderSlots = () => {
                 const current = schedule[selectedKey];
                 selectedTitle.textContent = current?.label || "予約可能日を選択してください";
-                selectedStatus.textContent = current?.status || "○ / □ / △ の日を選ぶと、時間帯を表示します。";
+                selectedStatus.textContent = current?.status || emptyStateMessage || "○ / □ / △ の日を選ぶと、時間帯を表示します。";
                 selectionLabel.textContent = current ? `選択中: ${current.storeLabel} / ${current.label}` : "選択中の日付はありません";
                 selectionMeta.textContent = current ? `${current.storeLabel} の時間帯一覧に、対象日の集合時間と料金を表示しています。` : "予約可能日を選ぶと、下部に時間帯を表示します。";
                 slotList.innerHTML = (current?.slots || []).map((slot) => `<article class="booking-slot"><div><strong>${current.label}</strong><div class="booking-slot__time"><span>集合 ${slot.g}</span><span>体験 ${slot.start}〜${slot.end}</span></div><p class="booking-slot__price">${slot.price.display}</p></div><div class="booking-slot__actions"><span class="booking-slot__note">${slot.n}</span><a class="button button--primary booking-slot__button" href="${buildBookingHref(current, slot)}">予約へ進む</a></div></article>`).join("");
@@ -357,19 +373,15 @@
                 try {
                     const { data: planRows, error: planErr } = await supabase
                         .from("workshop_plans")
-                        .select("id, plan_name, plan_code, base_price_jpy, currency_code, min_party_size, max_party_size")
-                        .eq("status", "active");
+                        .select("id, plan_name, plan_code, base_price_jpy, currency_code, min_party_size, max_party_size, status");
                     const { data: storeRows, error: storeErr } = await supabase
                         .from("stores")
                         .select("id, store_name, is_active, deleted_at");
-                    const today = new Date();
-                    const until = new Date();
-                    until.setMonth(until.getMonth() + 2);
                     const { data: sessionRows, error: sessErr } = await supabase
                         .from("workshop_sessions")
                         .select("id, plan_id, store_id, session_date, gather_time, start_time, end_time, booking_method, capacity_total, capacity_reserved, price_override_jpy, currency_code, min_party_size, max_party_size, session_status, public_note, published_at")
-                        .gte("session_date", today.toISOString().slice(0, 10))
-                        .lte("session_date", until.toISOString().slice(0, 10));
+                        .order("session_date", { ascending: true })
+                        .limit(500);
                     const firstError = planErr || storeErr || sessErr || null;
                     return {
                         plans: planRows || [],
@@ -397,13 +409,44 @@
                 if (state === "bad") connectionLed.classList.add("is-bad");
                 if (title) connectionLed.title = title;
             };
+            const setDiagnostics = ({ source = "-", plans = "-", storesCount = "-", sessions = "-", range = "-", error = "-" }) => {
+                if (!diagnosticsHost) return;
+                diagnosticsHost.hidden = false;
+                if (diagSource) diagSource.textContent = source;
+                if (diagPlans) diagPlans.textContent = String(plans);
+                if (diagStores) diagStores.textContent = String(storesCount);
+                if (diagSessions) diagSessions.textContent = String(sessions);
+                if (diagRange) diagRange.textContent = range;
+                if (diagError) diagError.textContent = error;
+            };
+            const applyEmptySessionsState = (reason) => {
+                stores = { ...fallbackStores };
+                const now = new Date();
+                const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                months = buildCalendarCells({}, startDate, endDate);
+                schedule = {};
+                selectedStore = chooseInitialStore();
+                selectedKey = "";
+                emptyStateMessage = reason;
+            };
             const initData = async () => {
+                const rangeLabel = "all sessions (ordered by session_date, limit 500)";
                 try {
                     const { plans, stores: storeRows, sessions, error } = await fetchData();
                     if (error) throw error;
                     setLed("ok", "Supabase: connected");
                     const hasSessions = sessions && sessions.length > 0;
+                    setDiagnostics({
+                        source: "Supabase",
+                        plans: plans?.length || 0,
+                        storesCount: storeRows?.length || 0,
+                        sessions: sessions?.length || 0,
+                        range: rangeLabel,
+                        error: "-"
+                    });
                     if (hasSessions) {
+                        emptyStateMessage = "";
                         stores = buildStoreMap(storeRows);
                         const planById = {};
                         (plans || []).forEach((p) => (planById[p.id] = p));
@@ -419,79 +462,20 @@
                             return;
                         }
                     }
-                    // connected but no sessions -> keep LED green, show mock for UX
-                    setLed("ok", "Supabase connected (no sessions found, showing mock)");
-                    stores = { ...fallbackStores };
-                    const fallbackPrice = price(5500);
-                    const fallbackSessions = [
-                        { date: "2026-04-05", store: "asakusa", label: "2026年4月5日(日)", slots: [{ sessionId: "", planId: "", g: "10:50", start: "11:00", end: "12:00", price: fallbackPrice, n: "即時確定", method: "instant", minP: 1, maxP: 4 }] }
-                    ];
-                    schedule = fallbackSessions.reduce((acc, cur) => {
-                        acc[cur.date] = {
-                            label: cur.label,
-                            store: cur.store,
-                            storeLabel: stores[cur.store]?.label || cur.store,
-                            planId: cur.planId || "",
-                            status: "即時予約可",
-                            slots: cur.slots
-                        };
-                        return acc;
-                    }, {});
-                    const startDate = new Date("2026-04-01");
-                    const endDate = new Date("2026-04-30");
-                    months = buildCalendarCells(
-                        {
-                            "2026-04-05": [
-                                {
-                                    status: "instant",
-                                    price: fallbackPrice,
-                                    storeKey: "asakusa",
-                                    planId: ""
-                                }
-                            ]
-                        },
-                        startDate,
-                        endDate
-                    );
-                    selectedStore = "asakusa";
-                    selectedKey = "2026-04-05";
+                    setLed("bad", "Supabase connected, but no workshop_sessions returned (check date range/RLS/seed data)");
+                    applyEmptySessionsState("Supabase から予約枠が取得できませんでした。公開セッションデータ（workshop_sessions）とRLS設定をご確認ください。");
                 } catch (e) {
                     setLed("bad", "Supabase: fallback (error)");
                     console.error("Supabase fetch error", e);
-                    stores = { ...fallbackStores };
-                    const fallbackPrice = price(5500);
-                    const fallbackSessions = [
-                        { date: "2026-04-05", store: "asakusa", label: "2026年4月5日(日)", slots: [{ sessionId: "", planId: "", g: "10:50", start: "11:00", end: "12:00", price: fallbackPrice, n: "即時確定", method: "instant", minP: 1, maxP: 4 }] }
-                    ];
-                    schedule = fallbackSessions.reduce((acc, cur) => {
-                        acc[cur.date] = {
-                            label: cur.label,
-                            store: cur.store,
-                            storeLabel: stores[cur.store]?.label || cur.store,
-                            planId: cur.planId || "",
-                            status: "即時予約可",
-                            slots: cur.slots
-                        };
-                        return acc;
-                    }, {});
-                    const startDate = new Date("2026-04-01");
-                    const endDate = new Date("2026-04-30");
-                    months = buildCalendarCells(
-                        {
-                            "2026-04-05": [
-                                {
-                                    status: "instant",
-                                    price: fallbackPrice,
-                                    storeKey: "asakusa",
-                                    planId: ""
-                                }
-                            ]
-                        },
-                        startDate,
-                        endDate
-                    );
-                    selectedStore = "asakusa";
-                    selectedKey = "2026-04-05";
+                    setDiagnostics({
+                        source: "Supabase",
+                        plans: 0,
+                        storesCount: 0,
+                        sessions: 0,
+                        range: rangeLabel,
+                        error: e?.message || String(e)
+                    });
+                    applyEmptySessionsState("Supabase 取得でエラーが発生しました。接続設定とRLS設定をご確認ください。");
                 }
             };
             document.querySelectorAll(".booking-tab").forEach((button) => {

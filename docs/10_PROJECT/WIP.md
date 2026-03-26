@@ -38,6 +38,7 @@
 3. `docs/30_TECH/TECH_SPEC.md` と `docs/20_PRODUCT/DESIGN_GUIDELINE.md` を読む
 4. `subpages/workshop-booking*.html` の現行導線を確認
 5. 実装着手前にタスク受入条件を1段落で定義
+6. 関連ドキュメント更新の常時チェック（PROJECT_STATUS / WIP / ISSUE_LIST / TEST_PLAN）
 
 ## 8. Handoff Notes / 引継ぎメモ
 - JA: 変更時は必ず `PROJECT_STATUS.md` 更新を同タスク内で実施する。
@@ -65,4 +66,8 @@
 - 2026-03-25: `subpages/workshop-booking.html` の日セル内ステータス文言（開催無し/予約可など）を削除。日セルは記号のみ表示し、意味説明は下部Legendに集約。
 
 - 2026-03-25: タスク #3 の初期実装として `subpages/workshop-booking-thanks.html` を追加し、確認画面送信成功後の自動遷移を実装。
+
+- 2026-03-26: 予約確認画面の送信失敗（`Auth session missing!`）に対処。認証確認を `getSession()` へ切替し、未ログイン時メッセージとログイン導線を改善。
+
+- 2026-03-26: 予約カレンダーの「4/5固定モック」フォールバックを廃止。Supabase 0件時は空状態を明示表示し、取得範囲を当月初日〜12か月先へ拡大。
 

@@ -180,8 +180,20 @@
 - 新しい Issue が発生したら、このファイルに必ず追記する
 - 追記時は、同じ作業内で `docs/10_PROJECT/PROJECT_STATUS.md` と `docs/80_HANDOFF/AI_CONTEXT_PROMPT.md` も更新する
 - 管理画面に関する Issue の場合は、必要に応じて `docs/10_PROJECT/WIP.md` と `docs/80_HANDOFF/ADMIN_IMPLEMENTATION_STATUS.md` も更新する
-
-
-
-
+### Issue 2026-03-26-18
+- `発生日:` 2026-03-26
+- `発生箇所:` [`subpages/workshop-booking-confirm.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking-confirm.html)
+- `症状:` 送信時に `Auth session missing!` と表示され、予約送信に失敗した（Console エラーなし / Supabase LED 緑）。
+- `原因:` 予約送信時の認証確認が `getUser()` 依存で、未ログイン時エラーメッセージがそのまま表示され、ログイン不足として扱いきれていなかった。
+- `対策:` 認証確認を `supabase.auth.getSession()` ベースへ変更し、セッション未検出時は「ログインが必要」の明示メッセージとログイン導線を表示するよう修正した。
+- `再発防止:` 予約送信前の認証チェックは `getSession()` を標準とし、`Auth session missing` 系メッセージは必ずログイン導線へ正規化する。
+- `状態:` Fix 適用済み（ユーザー再確認待ち）
+### Issue 2026-03-26-19
+- `発生日:` 2026-03-26
+- `発生箇所:` [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html)
+- `症状:` Supabase 接続LEDが緑でも、カレンダーが常に 2026-04-05 のみ表示され、実データが見えない。
+- `原因:` `workshop_sessions` 取得件数が 0 の場合に、UI がモック（4/5固定）へフォールバックする実装だったため、空データ/権限不足/RLS の切り分けが困難だった。
+- `対策:` 0件時のモックフォールバックを廃止し、空状態メッセージを表示するよう修正。LEDタイトルに「date range / RLS / seed data確認」を明示。あわせてセッション取得範囲を当月初日〜12か月先へ拡大。
+- `再発防止:` 公開予約画面は「接続成功」と「データ取得成功」を分離表示し、空データをモックで隠さない。
+- `状態:` Fix 適用済み（ユーザー再確認待ち）
 

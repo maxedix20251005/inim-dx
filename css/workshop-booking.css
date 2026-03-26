@@ -75,8 +75,14 @@
 .supabase-led { width: 10px; height: 10px; border-radius: 50%; background: #cfd1d3; box-shadow: 0 0 6px rgba(0,0,0,.15); margin-left: auto; }
 .supabase-led.is-ok { background: #39ff7a; box-shadow: 0 0 8px rgba(57,255,122,.65); }
 .supabase-led.is-bad { background: #ffb347; box-shadow: 0 0 8px rgba(255,179,71,.65); }
+.booking-diagnostics { margin-top: 10px; padding: 12px 14px; border: 1px solid rgba(217,210,198,.95); border-radius: 12px; background: #fffdfa; }
+.booking-diagnostics__title { font-size: .82rem; letter-spacing: .08em; color: var(--color-muted); text-transform: uppercase; }
+.booking-diagnostics__grid { margin-top: 8px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 12px; }
+.booking-diagnostics__grid dt { font-size: .75rem; color: var(--color-muted); }
+.booking-diagnostics__grid dd { margin: 2px 0 0; font-size: .86rem; color: var(--color-main); word-break: break-word; }
 @media (max-width: 1100px) {
     .booking-hero__grid, .booking-calendar-grid, .booking-slots, .booking-detail__grid { grid-template-columns: 1fr; }
+    .booking-diagnostics__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 720px) {
     .booking-wrap { width: min(100% - 28px, 100%); }
@@ -85,4 +91,5 @@
     .booking-slot { grid-template-columns: 1fr; }
     .booking-slot__actions { justify-items: stretch; }
     .booking-slot__button { width: 100%; min-width: 0; }
+    .booking-diagnostics__grid { grid-template-columns: 1fr; }
 }

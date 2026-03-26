@@ -318,11 +318,11 @@
                 throw new Error(`店舗マスタで「${storeLabel}」が見つかりません。候補: ${names || "なし"}`);
             };
             const resolveProfileId = async () => {
-                const { data: authData, error: authError } = await supabase.auth.getUser();
-                if (authError) {
-                    throw authError;
+                const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+                if (sessionError) {
+                    throw sessionError;
                 }
-                const userId = authData?.user?.id;
+                const userId = sessionData?.session?.user?.id;
                 if (!userId) {
                     throw new Error("予約送信にはログインが必要です。");
                 }
@@ -434,10 +434,10 @@
                     }, 1200);
                 } catch (error) {
                     const message = error?.message || "送信に失敗しました。時間をおいて再度お試しください。";
-                    const needsLogin = message.includes("ログインが必要");
+                    const needsLogin = /ログインが必要|Auth session missing|session missing|JWT/i.test(message);
                     setResultMessage(`
                         <strong>送信に失敗しました</strong>
-                        <p>${message}</p>
+                        <p>${needsLogin ? "ログイン状態を確認できませんでした。先にログインしてから再度お試しください。" : message}</p>
                         ${needsLogin ? '<p><a href="./account.html#login">ログイン画面へ移動する</a></p>' : ""}
                     `, true);
                 } finally {
