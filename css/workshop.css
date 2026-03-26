@@ -285,6 +285,21 @@
             text-transform: uppercase;
         }
 
+        .plans-status {
+            display: inline-flex;
+            align-items: center;
+            min-height: 34px;
+            margin: 0 0 16px;
+            padding: 0 14px;
+            border-radius: 999px;
+            background: rgba(178, 69, 49, 0.10);
+            color: var(--color-accent);
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
         .workshop-bullet-list {
             display: grid;
             gap: 14px;

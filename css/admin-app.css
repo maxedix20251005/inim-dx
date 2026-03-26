@@ -276,6 +276,21 @@ textarea:focus {
     color: var(--admin-sub);
 }
 
+.admin-topbar__logo {
+    display: inline-flex;
+    border: 1px solid var(--admin-line);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.admin-topbar__logo img {
+    width: 150px;
+    height: 44px;
+    object-fit: cover;
+    display: block;
+}
+
 .admin-main {
     display: grid;
     gap: 22px;

@@ -171,7 +171,7 @@
                 ${visibleNav().map(([key, label, no]) => `<a href="${escapeHtml(toPath(key))}" class="${key === pageKey ? "is-current" : ""}"><span class="admin-nav__number">${escapeHtml(no)}</span><span>${escapeHtml(label)}</span></a>`).join("")}
             </nav>
             <div class="admin-sidebar__footer">
-                <a class="admin-link-button is-secondary" href="${escapeHtml(toPath("appUsersMe"))}">セッション確認</a>
+                <a class="admin-link-button is-secondary" href="${escapeHtml(toPath("appUsersMe"))}">セッション確認</a><a class="admin-link-button is-secondary" href="${escapeHtml(`${root}/index.html`)}">メインサイトへ戻る</a>
                 <button class="admin-logout" type="button" data-action="logout">ログアウト</button>
                 <span class="admin-footer-note">公開サイト用の既存JS/CSSとは分離しています。</span>
                 <span class="admin-footer-note">Admin build: ${escapeHtml(ADMIN_BUILD_VERSION)}</span>
@@ -186,6 +186,7 @@
                 <p>${escapeHtml(currentPage[3])}</p>
             </div>
             <div class="admin-topbar__meta">
+                <a class="admin-topbar__logo" href="${escapeHtml(`${root}/index.html`)}" aria-label="Back to main site"><img src="${escapeHtml(`${root}/images/logo/logo-inim-dx.jpg`)}" alt="inim-dx logo"></a>
                 <span>現在: ${escapeHtml(fmtDate(new Date().toISOString()))}</span>
                 <span>権限: ${escapeHtml(state.roles.map(roleLabel).join(", ") || "未取得")}</span>
             </div>

@@ -388,3 +388,9 @@
 - `subpages/workshop-plans.html` now loads active plans from `workshop_plans`.
 - Optional inclusion bullets are loaded from `workshop_plan_inclusions` when available.
 - Added fallback rendering when Supabase data/config is unavailable.
+
+### 2026-03-26 Update (Admin Link Governance + UI)
+- Added admin-only site links (Global Navigation / Side Navi / Footer) via runtime role gating in `js/site-shell.js`.
+- Removed admin entry button from public workshop reserve panel.
+- Added top-right logo and "Back to main site" link in admin UI (`js/admin-app.js` + `css/admin-app.css`).
+- Added non-admin access verification as backlog due unavailable non-admin login test environment.

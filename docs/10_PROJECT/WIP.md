@@ -79,3 +79,7 @@
 - 2026-03-26: `app/pages/workshop.html` に admin ロールチェックを追加。非adminは一覧表示せず `Access denied` を表示。
 - 2026-03-26: Task #2 完了。公開予約ページの稼働チェック（Diagnostics + LED + data件数）を `CHECKLIST_SUPABASE` / `TEST_PLAN` に追加。
 - 2026-03-26: Task #3 着手/反映。`subpages/workshop-plans.html` を Supabase連携化（`workshop_plans` 読み込み、`workshop_plan_inclusions` 任意表示、データ未取得時はフォールバック表示）。
+- 2026-03-26: 公開側ナビに admin 専用リンクを追加（Global Navigation / Side Navi / Footer）。`site-shell.js` で admin ロール検知時のみ表示。
+- 2026-03-26: `subpages/workshop.html` から管理画面ボタンを削除し、公開導線を一般ユーザー向けに統一。
+- 2026-03-26: 管理画面に右上ロゴと「メインサイトへ戻る」導線を追加。
+- 2026-03-26: 非adminログイン検証は環境未整備のため FEATURE_BACKLOG に保留登録。

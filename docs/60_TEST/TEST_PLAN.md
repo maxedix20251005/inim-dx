@@ -137,3 +137,13 @@
   - Supabase接続時は `workshop_plans` を表示
   - `workshop_plan_inclusions` があれば要点がカードに表示される
   - データ未取得時はフォールバックカードを表示
+
+## 2026-03-26 追加テスト / Added Test (Admin-Only Site Links)
+- 対象: 公開ページヘッダー/サイド/フッター (`js/site-shell.js`)
+- 手順:
+  1. admin ログイン状態で公開ページを開く
+  2. Global Navigation / Side Navi / Footer に adminリンクが表示されることを確認
+  3. 非ログインまたは一般ユーザー状態で同ページを開き、adminリンクが表示されないことを確認
+- 期待結果:
+  - admin のみ管理リンクを視認できる
+  - 一般ユーザーに管理リンクが露出しない

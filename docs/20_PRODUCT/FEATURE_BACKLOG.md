@@ -80,3 +80,8 @@
 - Status: `In Progress`
 - JA: 「プランを見る」の遷移先として専用ページを設け、プラン比較から予約導線へ接続する。
 - EN: Provide a dedicated plan page for “View Plans”, bridging plan comparison to booking entry.
+
+### 2.9 Non-admin Access Verification Backlog / 非adminアクセス検証バックログ
+- Status: `Proposed`
+- JA: 非adminロールでのログイン検証環境が未整備のため、アクセス拒否シナリオを後続テストとしてバックログ管理する。
+- EN: Non-admin login verification is currently blocked by environment constraints; keep deny-access scenario as backlog test item.

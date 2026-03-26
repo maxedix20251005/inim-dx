@@ -67,6 +67,7 @@
     let currentSession = null;
     let currentUser = null;
     let currentProfile = null;
+    let currentRoles = [];
     let currentPreferences = null;
     let authStateReady = false;
     let recoveryFlowActive = initialHashParams.get('type') === 'recovery';
@@ -111,6 +112,7 @@
     const accountHref = (mode) => `${window.location.pathname}#${mode}`;
     const accountModalLink = (mode, label, className = '') => `<a class="${className}" href="${accountHref(mode)}" data-account-modal="${mode}">${label}</a>`;
     const accountLogoutLink = (className = '') => `<a class="${className}" href="${window.location.pathname}#logout" data-account-logout="true">ログアウト</a>`;
+    const isAdminUser = () => currentRoles.includes('admin');
 
     const sidebarGroups = [
         {
@@ -402,10 +404,70 @@
             : `<p class="site-footer__title">Account</p>${accountModalLink('register', '会員登録')}${accountModalLink('login', 'ログイン')}<a href="${link('contact')}">お問い合わせ</a>`;
     };
 
+    const renderAdminLinks = () => {
+        const show = isAdminUser();
+
+        const globalNav = header.querySelector('.category-nav');
+        if (globalNav) {
+            let item = globalNav.querySelector('[data-admin-link="global"]');
+            if (show && !item) {
+                item = document.createElement('a');
+                item.href = link('appDashboard');
+                item.dataset.adminLink = 'global';
+                item.textContent = 'Admin';
+                globalNav.appendChild(item);
+            }
+            if (!show && item) {
+                item.remove();
+            }
+        }
+
+        const standalone = sidebar.querySelector('.sidebar__standalone');
+        if (standalone) {
+            const ensureSideLink = (key, label) => {
+                const selector = `[data-admin-link="${key}"]`;
+                let item = standalone.querySelector(selector);
+                if (show && !item) {
+                    item = document.createElement('a');
+                    item.href = key === 'sidebar-dashboard' ? link('appDashboard') : link('appPagesWorkshop');
+                    item.dataset.adminLink = key;
+                    item.textContent = label;
+                    standalone.appendChild(item);
+                }
+                if (!show && item) {
+                    item.remove();
+                }
+            };
+            ensureSideLink('sidebar-dashboard', '管理ダッシュボード');
+            ensureSideLink('sidebar-bookings', '予約管理');
+        }
+
+        const accountColumn = footer.querySelector('.site-footer__grid > div:last-child');
+        if (accountColumn) {
+            const ensureFooterLink = (key, label) => {
+                const selector = `[data-admin-link="${key}"]`;
+                let item = accountColumn.querySelector(selector);
+                if (show && !item) {
+                    item = document.createElement('a');
+                    item.href = key === 'footer-dashboard' ? link('appDashboard') : link('appPagesWorkshop');
+                    item.dataset.adminLink = key;
+                    item.textContent = label;
+                    accountColumn.appendChild(item);
+                }
+                if (!show && item) {
+                    item.remove();
+                }
+            };
+            ensureFooterLink('footer-dashboard', '管理ダッシュボード');
+            ensureFooterLink('footer-bookings', '予約管理');
+        }
+    };
+
     const syncAuthUi = () => {
         renderHeaderTools();
         renderSidebarAccountLinks();
         renderFooterAccountLinks();
+        renderAdminLinks();
     };
 
     const hasPendingAuthHash = () => ['access_token', 'refresh_token', 'type', 'error', 'error_code', 'error_description']
@@ -510,14 +572,55 @@
         }
     };
 
+    const loadAdminRoles = async () => {
+        if (!supabase || !currentUser) {
+            currentRoles = [];
+            syncAuthUi();
+            return;
+        }
+
+        try {
+            const { data: userProfile, error: profileError } = await supabase
+                .from('user_profiles')
+                .select('id')
+                .eq('auth_user_id', currentUser.id)
+                .maybeSingle();
+            if (profileError || !userProfile?.id) {
+                currentRoles = [];
+                syncAuthUi();
+                return;
+            }
+
+            const { data: roleRows, error: roleError } = await supabase
+                .from('user_role_assignments')
+                .select('roles(role_code)')
+                .eq('user_profile_id', userProfile.id);
+            if (roleError) {
+                currentRoles = [];
+                syncAuthUi();
+                return;
+            }
+
+            currentRoles = (roleRows || [])
+                .map((row) => String(row?.roles?.role_code || '').trim().toLowerCase())
+                .filter(Boolean);
+            syncAuthUi();
+        } catch (_e) {
+            currentRoles = [];
+            syncAuthUi();
+        }
+    };
+
     const applyAuthSession = (session) => {
         currentSession = session;
         currentUser = session?.user || null;
         if (!currentUser) {
             currentProfile = null;
+            currentRoles = [];
             currentPreferences = null;
         } else {
             void loadOwnProfile();
+            void loadAdminRoles();
             void loadOwnPreferences();
         }
         syncAuthUi();
