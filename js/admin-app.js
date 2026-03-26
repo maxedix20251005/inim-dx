@@ -491,6 +491,7 @@
         else if (pageKey === "appPasswordReset") main.innerHTML = renderReset();
         else main.innerHTML = renderProtected();
         bindEvents();
+        window.dispatchEvent(new CustomEvent("admin:render", { detail: { pageKey } }));
     };
     const attemptQuery = async (label, fn) => {
         try {

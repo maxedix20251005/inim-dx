@@ -1,10 +1,13 @@
 (() => {
     if (document.body?.dataset.pageKey !== "appPagesWorkshopPlans") return;
 
-    const host = document.querySelector('[data-admin-page-host="workshop-plans"]');
-    if (!host) return;
+    let mountedHost = null;
+    const mount = () => {
+        const host = document.querySelector('[data-admin-page-host="workshop-plans"]');
+        if (!host || host === mountedHost) return;
+        mountedHost = host;
 
-    host.innerHTML = `
+        host.innerHTML = `
         <section class="wp-grid">
             <article class="wp-panel">
                 <h2>Plans</h2>
@@ -325,5 +328,15 @@
         });
     };
 
-    init();
+        init();
+    };
+
+    window.addEventListener("admin:render", (event) => {
+        if (event?.detail?.pageKey === "appPagesWorkshopPlans") mount();
+    });
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", mount, { once: true });
+    } else {
+        mount();
+    }
 })();

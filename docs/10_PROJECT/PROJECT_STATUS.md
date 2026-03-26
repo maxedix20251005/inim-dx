@@ -469,3 +469,22 @@
 - 管理画面の `app/pages/workshop.html` / `app/pages/workshop-plans.html` / `app/pages/enquiries.html` を `app/pages/home.html` と同じアプリシェル構成（`data-page-key` + `#page-main` + `js/admin-app.js`）へ統一しました。
 - 3画面の実装ロジックは `js/admin-workshop-page.js` / `js/admin-workshop-plans-page.js` / `js/admin-enquiries-page.js` へ分離し、サイドナビ付きレイアウト内で描画する方式に変更しました。
 - `js/admin-app.js` は `appPagesWorkshop` / `appPagesWorkshopPlans` / `appPagesEnquiries` 用の専用ホストを描画するよう更新しました。
+### ドキュメント更新（2026-03-26 追加5）
+- 管理画面 `appPagesWorkshop` / `appPagesWorkshopPlans` / `appPagesEnquiries` で本文が空表示になる不具合を修正しました。
+- 原因は `js/admin-app.js` の再描画でページホストが再生成され、専用ページJSで生成したDOMが消えることでした。
+- `js/admin-app.js` の `render()` 後に `admin:render` イベントを発火し、各ページJSが再描画後に再マウントする方式へ変更しました。
+- 対象JS: `js/admin-app.js`, `js/admin-workshop-page.js`, `js/admin-workshop-plans-page.js`, `js/admin-enquiries-page.js`.
+### ドキュメント更新（2026-03-26 追加6）
+- `app/pages/enquiries.html` の2カラム比率を調整し、一覧カラム幅を狭めて詳細パネル領域を拡張しました（`css/app-enquiries.css`）。
+- `app/pages/workshop-plans.html` のUIスタイルを `app/pages/workshop.html` と同系統へ統一しました（パネル、テーブル、入力、ボタン、余白体系を同様の設計へ変更）。
+- 対象ファイル: `css/app-workshop-plans.css`, `css/app-enquiries.css`.
+### ドキュメント更新（2026-03-26 追加7）
+- Enquiries 画面の一覧領域が依然広いという運用フィードバックを反映し、2カラム比率を再調整しました。
+- `css/app-enquiries.css` の `.eq-grid` を `minmax(520px, 0.82fr) minmax(460px, 1.18fr)` へ変更し、詳細パネル優先の横幅配分にしています。
+### ドキュメント更新（2026-03-26 追加8）
+- Enquiries の一覧/詳細2カラム幅を、Workshop Bookings と同一比率へ統一しました。
+- `css/app-enquiries.css` の `.eq-grid` を `1.4fr .9fr` に変更し、運用画面間の視覚・操作一貫性を優先しました。
+### ドキュメント更新（2026-03-26 追加9）
+- Enquiries 画面で画面幅を超えて右側が欠ける事象を修正しました。
+- `css/app-enquiries.css` に overflow-safe のグリッド指定（`minmax(0, ...)`）と `min-width: 0` を追加し、フィルタ行および2カラム本文の横はみ出しを抑制しました。
+- 詳細パネルの長いID文字列でレイアウトが押し広がらないよう、`.eq-kv span` に `overflow-wrap: anywhere` を追加しました。

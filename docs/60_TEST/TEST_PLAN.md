@@ -340,3 +340,74 @@
   - 3ページとも管理画面共通シェルで表示される
   - サイドナビ導線が統一され、ページ遷移後も操作文脈が維持される
   - 機能退行（表示崩れ、操作不能）が発生しない
+
+## 2026-03-26 追加テスト / Added Test (Admin 04/05/06 Empty Body Regression)
+- 対象:
+  - `app/pages/workshop.html`
+  - `app/pages/workshop-plans.html`
+  - `app/pages/enquiries.html`
+  - `js/admin-app.js` and page modules
+- 手順:
+  1. admin でログイン後、04/05/06 を順に開く
+  2. 初回表示で本文（一覧/フォーム）が描画されることを確認する
+  3. サイドナビで 04 -> 05 -> 06 -> 04 と往復遷移する
+  4. 各遷移後も本文が空にならず、フィルタ/更新操作が可能なことを確認する
+- 期待結果:
+  - シェル再描画後もページ本文が維持される
+  - 04/05/06 のデータ表示が安定して継続する
+
+## 2026-03-26 追加テスト / Added Test (Enquiries Width + Plans UI Consistency)
+- 対象:
+  - `app/pages/enquiries.html`
+  - `app/pages/workshop-plans.html`
+  - `css/app-enquiries.css`
+  - `css/app-workshop-plans.css`
+- 手順:
+  1. `app/pages/enquiries.html` を開き、一覧テーブル領域が従来より狭く、詳細パネルの視認領域が広がっていることを確認する
+  2. `app/pages/workshop-plans.html` を開き、`app/pages/workshop.html` と同様のパネル枠/ボタン色/テーブル選択状態/入力部品スタイルになっていることを確認する
+  3. Plans 画面で行選択、保存、Inclusion 追加/削除の操作時にレイアウト崩れがないことを確認する
+  4. モバイル幅（<=980px）で両画面とも1カラムに折りたたまれ、操作可能なことを確認する
+- 期待結果:
+  - Enquiries は詳細中心の作業レイアウトになる
+  - Workshop Plans は Workshop Bookings と統一感のある運用UIになる
+  - 主要操作でスタイル/配置崩れが発生しない
+
+## 2026-03-26 追加テスト / Added Test (Enquiries Width Re-Tuning #2)
+- 対象:
+  - `app/pages/enquiries.html`
+  - `css/app-enquiries.css`
+- 手順:
+  1. Desktop 幅で `app/pages/enquiries.html` を開く
+  2. 一覧パネルが前回より狭く、詳細パネルが明確に広いことを確認する
+  3. 代表的な長文 Subject 行で一覧が横スクロールまたは省略表示され、詳細側操作領域を圧迫しないことを確認する
+  4. 980px 以下で1カラムへ折りたたまれることを確認する
+- 期待結果:
+  - Enquiries は詳細対応中心のレイアウト比率になる
+  - レスポンシブ動作と操作性を維持する
+
+## 2026-03-26 追加テスト / Added Test (Enquiries Width = Workshop Bookings)
+- 対象:
+  - `app/pages/enquiries.html`
+  - `app/pages/workshop.html`
+  - `css/app-enquiries.css`
+- 手順:
+  1. Desktop 幅で `app/pages/workshop.html` と `app/pages/enquiries.html` を開く
+  2. 一覧パネルと詳細パネルの幅比率が同等（`1.4fr .9fr`）であることを確認する
+  3. Enquiries 一覧で Subject が過度に欠けず、詳細パネルの編集操作も維持されることを確認する
+  4. 980px 以下で両画面とも1カラムに折りたたまれることを確認する
+- 期待結果:
+  - Enquiries と Workshop Bookings の2カラム幅が統一される
+  - 操作性と可読性のバランスが両画面で一致する
+
+## 2026-03-26 追加テスト / Added Test (Enquiries Horizontal Overflow Fix)
+- 対象:
+  - `app/pages/enquiries.html`
+  - `css/app-enquiries.css`
+- 手順:
+  1. Desktop 幅でページを開き、フィルタ行の右端（検索ボタン含む）が画面内に収まることを確認する
+  2. 一覧 + 詳細の2カラム表示で、右カラムが画面外へはみ出さないことを確認する
+  3. 詳細パネルで長いUUIDやメール文字列が表示されても横スクロールで全体レイアウトが崩れないことを確認する
+  4. 980px 以下で1カラム折りたたみへ遷移することを確認する
+- 期待結果:
+  - Enquiries 画面に水平はみ出しが発生しない
+  - 幅比率（Workshop Bookings同等）を維持したまま表示安定性が確保される

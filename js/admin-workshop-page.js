@@ -1,10 +1,13 @@
 (() => {
     if (document.body?.dataset.pageKey !== "appPagesWorkshop") return;
 
-    const host = document.querySelector('[data-admin-page-host="workshop"]');
-    if (!host) return;
+    let mountedHost = null;
+    const mount = () => {
+        const host = document.querySelector('[data-admin-page-host="workshop"]');
+        if (!host || host === mountedHost) return;
+        mountedHost = host;
 
-    host.innerHTML = `
+        host.innerHTML = `
         <section class="wb-panel">
             <div class="wb-quick" id="wb-quick">
                 <button type="button" data-quick="all" class="is-active">All</button>
@@ -358,5 +361,15 @@
         });
     };
 
-    init();
+        init();
+    };
+
+    window.addEventListener("admin:render", (event) => {
+        if (event?.detail?.pageKey === "appPagesWorkshop") mount();
+    });
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", mount, { once: true });
+    } else {
+        mount();
+    }
 })();

@@ -68,8 +68,12 @@
 
 .eq-filters {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr auto;
+  grid-template-columns: minmax(0, 2fr) repeat(5, minmax(0, 1fr)) auto;
   gap: 8px;
+}
+
+.eq-filters > * {
+  min-width: 0;
 }
 
 .eq-filters input,
@@ -90,12 +94,17 @@
   color: #fff;
   border-color: #b24531;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .eq-grid {
   display: grid;
-  grid-template-columns: 1.45fr .95fr;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.9fr);
   gap: 12px;
+}
+
+.eq-grid > * {
+  min-width: 0;
 }
 
 #eq-detail {
@@ -134,6 +143,11 @@
   grid-template-columns: 120px 1fr;
   gap: 8px;
   margin: 5px 0;
+}
+
+.eq-kv span {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .eq-update {

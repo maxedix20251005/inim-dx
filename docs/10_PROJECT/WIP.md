@@ -139,3 +139,22 @@
   - EN: Unified `app/pages/workshop.html` / `app/pages/workshop-plans.html` / `app/pages/enquiries.html` into the same admin shell layout as `home.html` (side navigation + shared top header).
   - JA: 各ページロジックを `js/admin-workshop-page.js` / `js/admin-workshop-plans-page.js` / `js/admin-enquiries-page.js` に分離し、`js/admin-app.js` 側のページホストへ描画する構成へ変更。
   - EN: Split each page logic into `js/admin-workshop-page.js` / `js/admin-workshop-plans-page.js` / `js/admin-enquiries-page.js`, rendering into page hosts provided by `js/admin-app.js`.
+- 2026-03-26: Fixed empty-content regression on admin pages 04/05/06.
+  - JA: `js/admin-app.js` の再描画により `Workshop予約管理` / `Workshopプラン管理` / `問い合わせ管理` の本文DOMが消える問題を修正。
+  - EN: Fixed an admin-shell rerender issue where page-body DOM disappeared on `Workshop Bookings` / `Workshop Plans` / `Enquiries`.
+  - JA: `admin:render` イベント連携を追加し、各ページモジュールを再マウント可能にした。
+  - EN: Added `admin:render` event wiring so each page module remounts after shell rerender.
+- 2026-03-26: UI consistency adjustments applied for admin operations screens.
+  - JA: Enquiries 画面の一覧幅を縮小し、詳細編集側の作業領域を拡張。
+  - EN: Narrowed the Enquiries list pane and expanded the detail-edit working area.
+  - JA: Workshop Plans 画面を Workshop Bookings と同系統デザインへ統一（panel/table/form/button/spacing）。
+  - EN: Aligned Workshop Plans visual system with Workshop Bookings (panel/table/form/button/spacing).
+- 2026-03-26: Enquiries width tuning iteration #2 applied.
+  - JA: 一覧カラムがまだ広いとの指摘に対応し、詳細パネル優先となるよう `.eq-grid` 比率を再調整。
+  - EN: Adjusted `.eq-grid` again to prioritize detail-panel width after feedback that the list pane was still too wide.
+- 2026-03-26: Enquiries width tuning finalised to match Workshop Bookings.
+  - JA: Enquiries の2カラム比率を `1.4fr .9fr` に変更し、Workshop Bookings と同一レイアウト幅へ統一。
+  - EN: Finalized Enquiries two-column ratio to `1.4fr .9fr`, matching the Workshop Bookings layout width.
+- 2026-03-26: Enquiries overflow fix applied after width-ratio alignment.
+  - JA: 幅比率を合わせた後に発生した横はみ出しを、`minmax(0, ...)` + `min-width:0` + `overflow-wrap:anywhere` で修正。
+  - EN: Fixed post-ratio horizontal overflow using `minmax(0, ...)`, `min-width:0`, and `overflow-wrap:anywhere` safeguards.

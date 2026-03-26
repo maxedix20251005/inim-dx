@@ -1,10 +1,13 @@
 (() => {
     if (document.body?.dataset.pageKey !== "appPagesEnquiries") return;
 
-    const host = document.querySelector('[data-admin-page-host="enquiries"]');
-    if (!host) return;
+    let mountedHost = null;
+    const mount = () => {
+        const host = document.querySelector('[data-admin-page-host="enquiries"]');
+        if (!host || host === mountedHost) return;
+        mountedHost = host;
 
-    host.innerHTML = `
+        host.innerHTML = `
         <section class="eq-panel">
             <div class="eq-quick" id="eq-quick">
                 <button type="button" data-quick="all" class="is-active">All</button>
@@ -382,5 +385,15 @@
         });
     };
 
-    init();
+        init();
+    };
+
+    window.addEventListener("admin:render", (event) => {
+        if (event?.detail?.pageKey === "appPagesEnquiries") mount();
+    });
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", mount, { once: true });
+    } else {
+        mount();
+    }
 })();
