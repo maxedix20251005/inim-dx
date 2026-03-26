@@ -101,7 +101,7 @@
 
 
 ### 2.11 Sitemap Page Creation + Footer Link Finalisation / サイトマップページ作成とフッター導線確定
-- Status: `Proposed`
+- Status: `In Progress`
 - JA: フッターの「サイトマップ」リンクに対応する `sitemap.html` を新規作成し、全ページ導線を一覧化する。
 - EN: Create a dedicated `sitemap.html` page for the footer sitemap link and list all site navigation paths.
 - Scope candidates:
@@ -111,3 +111,16 @@
   - EN: Highlight differences between `04-sitemap` and implemented pages
   - JA: フッター「サイトマップ」リンクを `sitemap.html` に切り替え
   - EN: Switch footer “サイトマップ” link target to `sitemap.html`
+
+### 2.12 Breadcrumb Navigation / パンくずナビゲーション整備
+- Status: `Proposed`
+- JA: 現在地と階層を可視化するパンくずを主要ページに追加し、目的ページの探索時間を短縮する。
+- EN: Add breadcrumb navigation to major pages so users can quickly understand hierarchy and find target pages.
+- Scope candidates:
+  - JA: 公開ページ（カテゴリ/商品/ワークショップ/記事）への共通パンくず導入
+  - EN: Shared breadcrumb for public pages (category/item/workshop/article)
+  - JA: 管理画面ページ（Dashboard配下）のパンくず導入
+  - EN: Breadcrumb for admin screens under dashboard hierarchy
+  - JA: `site-shell.js` での共通レンダリング化
+  - EN: Centralised rendering via `site-shell.js`
+

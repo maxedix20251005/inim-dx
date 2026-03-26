@@ -92,4 +92,8 @@
 - 2026-03-26: Implemented `app/pages/workshop-plans.html` + `css/app-workshop-plans.css` and added `Plan Management` link from `app/pages/workshop.html`.
 
 - 2026-03-26: Refined `app/pages/workshop-plans.html` visual design to align with `DESIGN_GUIDELINE` tokens (palette, typography, spacing, button/input standards) via `css/app-workshop-plans.css` refresh.
-- 2026-03-26: Shared footer Guide first link label changed from `Top` to `サイトマップ` in `js/site-shell.js` (target page creation deferred as backlog item 2.11).
+- 2026-03-26: Shared footer Guide first link label changed from `Top` to `サイトマップ` in `js/site-shell.js`.
+- 2026-03-26: Created `subpages/sitemap.html` to visualise full site structure (public + admin links) for IA review and quick navigation.
+- 2026-03-26: Updated shared footer guide link in `js/site-shell.js` to route `サイトマップ` -> `subpages/sitemap.html`.
+- 2026-03-26: Added backlog item `2.12 Breadcrumb Navigation` in `FEATURE_BACKLOG.md` for shared hierarchy cues on public/admin pages.
+

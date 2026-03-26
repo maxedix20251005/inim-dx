@@ -41,6 +41,7 @@
         smartScent: { path: 'subpages/smart-scent-design.html', label: 'Smart Scent Design', title: 'Smart Scent Design', latest: '色・粒子・サウンドを使って、自分の香りを視覚的に編集するデジタル調香ページです。' },
         article: { path: 'subpages/article.html', label: '記事', title: 'Article', latest: '記事一覧ページは現在作成準備中です。' },
         sale: { path: 'subpages/sale.html', label: 'Sale', title: 'Sale', latest: 'セールページは現在作成準備中です。' },
+        sitemap: { path: 'subpages/sitemap.html', label: 'サイトマップ', title: 'Site Map', latest: 'サイト構造の見直しに向け、公開ページと管理ページの導線一覧を公開しました。' },
         stores: { path: 'subpages/stores.html', label: '実店舗', title: 'Stores', latest: '実店舗ページは現在作成準備中です。' },
         account: { path: 'subpages/account.html', label: 'マイアカウント', title: 'My Account', latest: 'アカウント関連ページは現在作成準備中です。' },
         shoppingGuide: { path: 'subpages/shopping-guide.html', label: 'ショッピングガイド', title: 'Shopping Guide', latest: 'ショッピングガイドページは現在作成準備中です。' },
@@ -216,6 +217,7 @@
         smartScent: 'workshop',
         article: 'article',
         sale: 'sale',
+        sitemap: null,
         stores: 'stores',
         account: null,
         shoppingGuide: null,
@@ -291,7 +293,7 @@
             </div>
             <div>
                 <p class="site-footer__title">Guide</p>
-                <a href="${link('home')}">サイトマップ</a>
+                <a href="${link('sitemap')}">サイトマップ</a>
                 <a href="${link('shoppingGuide')}">配送・送料について</a>
                 <a href="${link('shoppingGuide')}">返品について</a>
                 <a href="${link('shoppingGuide')}">お支払い方法について</a>

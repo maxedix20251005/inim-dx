@@ -187,3 +187,15 @@
   - プラン管理が画面から実行できる
   - 保存内容が公開プランページに反映される
 
+
+## 2026-03-26 追加テスト / Added Test (Sitemap Page + Footer Link)
+- 対象:
+  - `subpages/sitemap.html`
+  - `js/site-shell.js` footer Guide links
+- 手順:
+  1. 任意の公開ページのFooterから「サイトマップ」を押下
+  2. `subpages/sitemap.html` が表示されることを確認
+  3. Public/Adminリンクから各代表ページへ遷移できることを確認
+- 期待結果:
+  - Footer「サイトマップ」からサイト構造ページへ遷移できる
+  - サイト構造確認とページ探索が可能
