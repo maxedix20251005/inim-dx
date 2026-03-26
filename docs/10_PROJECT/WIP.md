@@ -118,4 +118,9 @@
   - EN: Removed duplicated lower `Selected Date` display and unified context into the side panel.
   - JA: 重複していた遷移CTAを整理し、`この日程の予約枠を見る` の単一導線へ統一。
   - EN: Consolidated duplicate navigation CTAs into a single route via `この日程の予約枠を見る`.
+- 2026-03-26: Admin flow upgrade (phase 1) applied.
+  - JA: ダッシュボードに `Operations Home` を追加し、当日運用で見るべき booking/enquiry 指標を集約。
+  - EN: Added `Operations Home` to dashboard to centralise booking/enquiry indicators for daily operations.
+  - JA: 予約管理画面に quick tabs、SLA表示、詳細パネル quick actions、メモテンプレートを追加して triage 速度を改善。
+  - EN: Improved triage speed in booking management with quick tabs, SLA labels, detail-panel quick actions, and note templates.
 

@@ -28,6 +28,13 @@
         </header>
 
         <section class="wb-panel">
+            <div class="wb-quick" id="wb-quick">
+                <button type="button" data-quick="all" class="is-active">All</button>
+                <button type="button" data-quick="today">Today</button>
+                <button type="button" data-quick="tomorrow">Tomorrow</button>
+                <button type="button" data-quick="pending">Pending</button>
+                <button type="button" data-quick="stale_pending">Stale &gt;24h</button>
+            </div>
             <form class="wb-filters" id="wb-filters">
                 <input type="search" name="q" placeholder="検索: ID / 名前 / メール / 電話 / メモ">
                 <select name="status">
@@ -60,9 +67,10 @@
                                 <th>ID</th>
                                 <th>Booked At</th>
                                 <th>Status</th>
-                                <th>Type</th>
+                                <th>Contact</th>
                                 <th>Store</th>
                                 <th>Party</th>
+                                <th>SLA</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -91,13 +99,15 @@
             const detailHost = document.getElementById("wb-detail");
             const summary = document.getElementById("wb-summary");
             const filterForm = document.getElementById("wb-filters");
+            const quickHost = document.getElementById("wb-quick");
 
             const state = {
                 rows: [],
                 filtered: [],
                 selectedId: "",
                 profileMap: {},
-                storeMap: {}
+                storeMap: {},
+                quickKey: "all"
             };
 
             const esc = (v) => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
@@ -106,6 +116,29 @@
                 const d = new Date(v);
                 return Number.isNaN(d.getTime()) ? String(v) : d.toLocaleString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
             };
+            const toDateKey = (v) => {
+                if (!v) return "";
+                const d = new Date(v);
+                if (Number.isNaN(d.getTime())) return "";
+                const y = d.getFullYear();
+                const m = String(d.getMonth() + 1).padStart(2, "0");
+                const day = String(d.getDate()).padStart(2, "0");
+                return `${y}-${m}-${day}`;
+            };
+            const getRelativeDateKey = (offset = 0) => {
+                const d = new Date();
+                d.setDate(d.getDate() + offset);
+                return toDateKey(d);
+            };
+            const isPendingLike = (status) => ["pending", "requested", "in_progress"].includes(String(status || "").toLowerCase());
+            const getSlaText = (row) => {
+                const status = String(row.status || "").toLowerCase();
+                if (!isPendingLike(status)) return "-";
+                const bookedAt = new Date(pick(row, ["booked_at", "created_at"]) || "");
+                if (Number.isNaN(bookedAt.getTime())) return "-";
+                const hours = Math.floor((Date.now() - bookedAt.getTime()) / (1000 * 60 * 60));
+                return hours >= 24 ? `Overdue ${hours}h` : `${hours}h`;
+            };
             const pick = (row, keys) => keys.map((k) => row?.[k]).find((x) => x !== undefined && x !== null && String(x).trim() !== "") ?? "";
 
             const renderTable = () => {
@@ -113,7 +146,10 @@
                     const id = row.id || "";
                     const storeName = state.storeMap[row.store_id] || row.store_id || "-";
                     const party = pick(row, ["party_size", "participant_count"]) || "-";
-                    return `<tr data-id="${esc(id)}" class="${state.selectedId === id ? "is-selected" : ""}"><td>${esc(id.slice(0, 8))}</td><td>${esc(fmtDate(pick(row, ["booked_at", "created_at"])))}</td><td>${esc(row.status || "-")}</td><td>${esc(row.booking_type || row.booking_method || "-")}</td><td>${esc(storeName)}</td><td>${esc(String(party))}</td></tr>`;
+                    const contactName = pick(row, ["contact_name"]) || state.profileMap[row.customer_profile_id]?.display_name || "-";
+                    const sla = getSlaText(row);
+                    const slaClass = sla.startsWith("Overdue") ? "is-overdue" : (sla === "-" ? "" : "is-warn");
+                    return `<tr data-id="${esc(id)}" class="${state.selectedId === id ? "is-selected" : ""}"><td>${esc(id.slice(0, 8))}</td><td>${esc(fmtDate(pick(row, ["booked_at", "created_at"])))}</td><td>${esc(row.status || "-")}</td><td>${esc(contactName)}</td><td>${esc(storeName)}</td><td>${esc(String(party))}</td><td><span class="wb-sla ${slaClass}">${esc(sla)}</span></td></tr>`;
                 }).join("");
 
                 tableBody.querySelectorAll("tr[data-id]").forEach((tr) => {
@@ -158,12 +194,38 @@
                         </select>
                         <label>Internal Note</label>
                         <textarea name="internal_note" rows="4" maxlength="1000">${esc(note)}</textarea>
+                        <div class="wb-note-chips">
+                            <button type="button" data-note-template="電話確認済み。折返し連絡待ち。">電話確認済み</button>
+                            <button type="button" data-note-template="メールで日程調整中。">メール調整中</button>
+                            <button type="button" data-note-template="当日案内送付済み。">当日案内済み</button>
+                        </div>
+                        <div class="wb-quick-actions">
+                            <button type="button" data-quick-status="in_progress">Mark In Progress</button>
+                            <button type="button" data-quick-status="confirmed">Mark Confirmed</button>
+                            <button type="button" data-quick-status="cancelled">Mark Cancelled</button>
+                        </div>
                         <button type="submit">Update Booking</button>
                     </form>
                     <p class="wb-note" id="wb-update-message"></p>
                 `;
 
                 const form = document.getElementById("wb-update-form");
+                const noteInput = form?.querySelector('textarea[name="internal_note"]');
+                form?.querySelectorAll("[data-note-template]").forEach((button) => {
+                    button.addEventListener("click", () => {
+                        if (!noteInput) return;
+                        noteInput.value = String(button.getAttribute("data-note-template") || "");
+                        noteInput.focus();
+                    });
+                });
+                form?.querySelectorAll("[data-quick-status]").forEach((button) => {
+                    button.addEventListener("click", () => {
+                        const statusSelect = form.elements.namedItem("status");
+                        if (statusSelect instanceof HTMLSelectElement) {
+                            statusSelect.value = String(button.getAttribute("data-quick-status") || statusSelect.value);
+                        }
+                    });
+                });
                 form?.addEventListener("submit", async (e) => {
                     e.preventDefault();
                     const fd = new FormData(form);
@@ -197,11 +259,14 @@
                 const method = String(fd.get("method") || "").trim();
                 const from = String(fd.get("from") || "").trim();
                 const to = String(fd.get("to") || "").trim();
+                const todayKey = getRelativeDateKey(0);
+                const tomorrowKey = getRelativeDateKey(1);
 
                 state.filtered = state.rows.filter((row) => {
                     const rowStatus = String(row.status || "");
                     const rowMethod = String(row.booking_method || "");
                     const bookedAt = String(pick(row, ["booked_at", "created_at"]) || "").slice(0, 10);
+                    const bookedKey = toDateKey(pick(row, ["booked_at", "created_at"]));
                     const storeName = String(state.storeMap[row.store_id] || "");
                     const profile = state.profileMap[row.customer_profile_id] || {};
                     const searchable = [
@@ -223,10 +288,18 @@
                     if (from && bookedAt && bookedAt < from) return false;
                     if (to && bookedAt && bookedAt > to) return false;
                     if (q && !searchable.includes(q)) return false;
+                    if (state.quickKey === "today" && bookedKey !== todayKey) return false;
+                    if (state.quickKey === "tomorrow" && bookedKey !== tomorrowKey) return false;
+                    if (state.quickKey === "pending" && !isPendingLike(rowStatus)) return false;
+                    if (state.quickKey === "stale_pending") {
+                        const sla = getSlaText(row);
+                        if (!sla.startsWith("Overdue")) return false;
+                    }
                     return true;
                 });
 
-                summary.textContent = `${state.filtered.length} / ${state.rows.length} bookings`;
+                const quickLabelMap = { all: "all", today: "today", tomorrow: "tomorrow", pending: "pending", stale_pending: "stale_pending" };
+                summary.textContent = `${state.filtered.length} / ${state.rows.length} bookings (quick: ${quickLabelMap[state.quickKey] || "all"})`;
             };
 
             const loadMaps = async (rows) => {
@@ -244,6 +317,17 @@
                     const { data } = await supabase.from("user_profiles").select("id, display_name, full_name, email").in("id", profileIds);
                     (data || []).forEach((row) => { state.profileMap[row.id] = row; });
                 }
+            };
+            const syncQuickButtons = () => {
+                quickHost?.querySelectorAll("[data-quick]").forEach((button) => {
+                    button.classList.toggle("is-active", button.getAttribute("data-quick") === state.quickKey);
+                });
+            };
+            const applyQuickFromUrl = () => {
+                const params = new URLSearchParams(window.location.search);
+                const quick = String(params.get("quick") || "all").trim().toLowerCase();
+                const allowed = new Set(["all", "today", "tomorrow", "pending", "stale_pending"]);
+                state.quickKey = allowed.has(quick) ? quick : "all";
             };
 
             const loadData = async () => {
@@ -306,13 +390,24 @@
                     return;
                 }
 
+                applyQuickFromUrl();
                 await loadData();
+                syncQuickButtons();
 
                 filterForm.addEventListener("submit", (e) => {
                     e.preventDefault();
                     applyFilters();
                     renderTable();
                     renderDetail();
+                });
+                quickHost?.querySelectorAll("[data-quick]").forEach((button) => {
+                    button.addEventListener("click", () => {
+                        state.quickKey = String(button.getAttribute("data-quick") || "all");
+                        syncQuickButtons();
+                        applyFilters();
+                        renderTable();
+                        renderDetail();
+                    });
                 });
             };
 

@@ -48,6 +48,7 @@
         noticeType: "info",
         queryWarnings: [],
         metrics: { bookings: "--", heroItems: "--", enquiries: "--" },
+        operations: { todayBookings: "--", tomorrowBookings: "--", pendingBookings: "--", stalePending: "--", unassignedEnquiries: "--", dataHealth: "unknown" },
         recentBookings: [],
         recentEnquiries: [],
         contentAssets: [],
@@ -122,6 +123,17 @@
     const fmtShortId = (v) => {
         const text = String(v || "");
         return text.length > 8 ? `${text.slice(0, 8)}...` : text || "未設定";
+    };
+    const toIsoDate = (date) => {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, "0");
+        const d = String(date.getDate()).padStart(2, "0");
+        return `${y}-${m}-${d}`;
+    };
+    const getRelativeDateIso = (offsetDays = 0) => {
+        const date = new Date();
+        date.setDate(date.getDate() + offsetDays);
+        return toIsoDate(date);
     };
     const isLastSaved = (table, recordId) => Boolean(state.lastSaved && state.lastSaved.table === table && String(state.lastSaved.recordId) === String(recordId));
     const getIdKey = (r) => ["id", "step_id", "item_id"].find((k) => r && r[k] !== undefined) || "id";
@@ -347,6 +359,44 @@
             </div>
         </div>
     `;
+    const renderOperationsBoard = () => `
+        <section class="admin-panel">
+            <div class="admin-ops-head">
+                <div>
+                    <h2>Operations Home</h2>
+                    <p>今日の対応優先度が高い項目を先に処理します。</p>
+                </div>
+                <span class="admin-record-list__status">Data health: ${escapeHtml(String(state.operations.dataHealth))}</span>
+            </div>
+            <div class="admin-grid admin-grid--ops">
+                <article class="admin-ops-card">
+                    <strong>Today's Bookings</strong>
+                    <span>${escapeHtml(String(state.operations.todayBookings))}</span>
+                    <a href="${escapeHtml(`${toPath("appPagesWorkshop")}?quick=today`)}">今日の予約を見る</a>
+                </article>
+                <article class="admin-ops-card">
+                    <strong>Tomorrow</strong>
+                    <span>${escapeHtml(String(state.operations.tomorrowBookings))}</span>
+                    <a href="${escapeHtml(`${toPath("appPagesWorkshop")}?quick=tomorrow`)}">翌日の予約を見る</a>
+                </article>
+                <article class="admin-ops-card">
+                    <strong>Pending Requests</strong>
+                    <span>${escapeHtml(String(state.operations.pendingBookings))}</span>
+                    <a href="${escapeHtml(`${toPath("appPagesWorkshop")}?quick=pending`)}">pending対応へ</a>
+                </article>
+                <article class="admin-ops-card">
+                    <strong>Stale Pending &gt; 24h</strong>
+                    <span>${escapeHtml(String(state.operations.stalePending))}</span>
+                    <a href="${escapeHtml(`${toPath("appPagesWorkshop")}?quick=stale_pending`)}">未処理案件を確認</a>
+                </article>
+                <article class="admin-ops-card">
+                    <strong>Unassigned Enquiries</strong>
+                    <span>${escapeHtml(String(state.operations.unassignedEnquiries))}</span>
+                    <a href="${escapeHtml(toPath("appPublish"))}">問い合わせ状況を確認</a>
+                </article>
+            </div>
+        </section>
+    `;
     const renderDashboard = () => `
         <div class="admin-main">
             ${statusHtml()}
@@ -355,9 +405,10 @@
                 <article class="admin-metric"><strong>トップ項目数</strong><span>${escapeHtml(String(state.metrics.heroItems))}</span></article>
                 <article class="admin-metric"><strong>Open Enquiries</strong><span>${escapeHtml(String(state.metrics.enquiries))}</span></article>
             </section>
+            ${renderOperationsBoard()}
             <section class="admin-grid admin-grid--panels">
-                <article class="admin-panel"><h2>本日の優先タスク</h2><ul class="admin-inline-list"><li>トップヒーローの訴求文言を確認</li><li>導線ステップのリンク先と表示順を点検</li><li>公開前チェックでロール差分を確認</li></ul></article>
-                <article class="admin-panel"><h2>主要導線ショートカット</h2><ul class="admin-inline-list"><li><a href="${escapeHtml(toPath("appPagesHome"))}">トップ編集へ移動</a></li><li><a href="${escapeHtml(toPath("appPagesJourney"))}">導線設定へ移動</a></li><li><a href="${escapeHtml(toPath("appUsersMe"))}">現在のロールを確認</a></li></ul></article>
+                <article class="admin-panel"><h2>本日の優先タスク</h2><ul class="admin-inline-list"><li>Pending/Request を先に確認して確定可否を更新</li><li>24時間以上経過した pending を優先対応</li><li>問い合わせ未割当を確認して担当を明確化</li></ul></article>
+                <article class="admin-panel"><h2>主要導線ショートカット</h2><ul class="admin-inline-list"><li><a href="${escapeHtml(`${toPath("appPagesWorkshop")}?quick=today`)}">Today's Bookings へ移動</a></li><li><a href="${escapeHtml(toPath("appPagesHome"))}">トップ編集へ移動</a></li><li><a href="${escapeHtml(toPath("appPagesJourney"))}">導線設定へ移動</a></li><li><a href="${escapeHtml(toPath("appUsersMe"))}">現在のロールを確認</a></li></ul></article>
             </section>
             <section class="admin-grid admin-grid--double">
                 <article class="admin-panel"><h2>Recent Bookings</h2>${renderBookingSnapshot()}</article>
@@ -526,6 +577,23 @@
             return null;
         }
     };
+    const countRowsWithBuilder = async (table, builder) => {
+        try {
+            let q = supabase.from(table).select("*", { count: "exact", head: true });
+            if (typeof builder === "function") {
+                q = builder(q) || q;
+            }
+            const { count, error } = await q;
+            if (error) {
+                state.queryWarnings.push(`${table} conditional count: ${error.message}`);
+                return null;
+            }
+            return count;
+        } catch (e) {
+            state.queryWarnings.push(`${table} conditional count: ${e.message}`);
+            return null;
+        }
+    };
     const loadRecentRows = async (table, selectColumns, orderColumn, limit = 5) => {
         const rows = await attemptQuery(`${table} latest`, () => supabase
             .from(table)
@@ -546,8 +614,33 @@
                 .is("deleted_at", null)) || []);
         }
         if (pageKey === "appDashboard" || pageKey === "appPublish") {
-            const [rsv, hero, inq] = await Promise.all([countRows("bookings"), countRows("top_hero_items"), countRows("enquiries")]);
+            const todayIso = getRelativeDateIso(0);
+            const tomorrowIso = getRelativeDateIso(1);
+            const staleIso = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+            const [rsv, hero, inq, todayBookings, tomorrowBookings, pendingBookings, stalePending, unassignedEnquiries] = await Promise.all([
+                countRows("bookings"),
+                countRows("top_hero_items"),
+                countRows("enquiries"),
+                countRowsWithBuilder("bookings", (q) => q.gte("booked_at", `${todayIso}T00:00:00+09:00`).lt("booked_at", `${tomorrowIso}T00:00:00+09:00`)),
+                countRowsWithBuilder("bookings", (q) => {
+                    const nextDayIso = getRelativeDateIso(2);
+                    return q.gte("booked_at", `${tomorrowIso}T00:00:00+09:00`).lt("booked_at", `${nextDayIso}T00:00:00+09:00`);
+                }),
+                countRowsWithBuilder("bookings", (q) => q.in("status", ["pending", "requested"])),
+                countRowsWithBuilder("bookings", (q) => q.in("status", ["pending", "requested"]).lt("booked_at", staleIso)),
+                countRowsWithBuilder("enquiries", (q) => q.is("assigned_to", null))
+            ]);
             state.metrics = { bookings: rsv ?? "--", heroItems: hero ?? "--", enquiries: inq ?? "--" };
+            const opValues = [todayBookings, tomorrowBookings, pendingBookings, stalePending, unassignedEnquiries];
+            const hasUnknown = opValues.some((v) => v === null);
+            state.operations = {
+                todayBookings: todayBookings ?? "--",
+                tomorrowBookings: tomorrowBookings ?? "--",
+                pendingBookings: pendingBookings ?? "--",
+                stalePending: stalePending ?? "--",
+                unassignedEnquiries: unassignedEnquiries ?? "--",
+                dataHealth: hasUnknown ? "partial" : "ok"
+            };
             const [bookings, enquiries] = await Promise.all([
                 loadRecentRows("bookings", "id, customer_profile_id, store_id, booking_type, booked_at, participant_count, status, created_at", "booked_at"),
                 loadRecentRows("enquiries", "id, customer_profile_id, category, subject, status, assigned_to, created_at", "created_at")

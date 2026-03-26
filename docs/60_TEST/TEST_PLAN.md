@@ -258,3 +258,32 @@
 - 期待結果:
   - 予約ページの文脈表示とCTAが重複せず、一意に理解できる
   - ユーザーが次アクションを迷わず選択できる
+
+## 2026-03-26 追加テスト / Added Test (Admin Dashboard Operations Home)
+- 対象:
+  - `app/dashboard.html`
+  - `js/admin-app.js`
+  - `css/admin-app.css`
+- 手順:
+  1. admin ログイン後に dashboard を開く
+  2. `Operations Home` カードに `Today's Bookings / Tomorrow / Pending Requests / Stale Pending / Unassigned Enquiries` が表示されることを確認する
+  3. 各カードリンクから `app/pages/workshop.html?quick=...`（または publish）へ遷移できることを確認する
+  4. Data health 表示が `ok` または `partial` で表示されることを確認する
+- 期待結果:
+  - 運用優先度に沿った KPI が dashboard で即時確認できる
+  - 優先キューへの遷移導線が機能する
+
+## 2026-03-26 追加テスト / Added Test (Admin Booking Quick-Flow)
+- 対象:
+  - `app/pages/workshop.html`
+  - `css/app-workshop-bookings.css`
+- 手順:
+  1. `?quick=today`, `?quick=tomorrow`, `?quick=pending`, `?quick=stale_pending` で画面を開き、quick tab 状態と一覧結果が連動することを確認する
+  2. 予約一覧に `Contact` と `SLA` 列が表示されることを確認する
+  3. `pending/requested/in_progress` の古いデータで `Overdue` 表示になることを確認する
+  4. 詳細パネルの `Mark In Progress / Mark Confirmed / Mark Cancelled` を使って status を切替できることを確認する
+  5. メモテンプレートボタン押下で `Internal Note` へ文言が入力され、保存できることを確認する
+- 期待結果:
+  - quick filter による優先キュー確認が可能
+  - SLA可視化により未対応案件を識別できる
+  - 詳細更新操作が短手順で完了できる

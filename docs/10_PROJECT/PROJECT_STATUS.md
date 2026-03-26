@@ -438,4 +438,15 @@
   - EN: Removed duplicated `Selected Date` cues in the lower panel and unified context display into the right-side `Selected Date` panel.
   - JA: `予約枠を確認する` と `この日程の予約枠を見る` の重複CTAを解消し、後者1つへ統一。
   - EN: Removed duplicated CTAs (`予約枠を確認する` and `この日程の予約枠を見る`) and standardised on a single CTA flow.
+- 2026-03-26: Admin UX/flow improvement started (Dashboard + Booking Operations).
+  - JA: `js/admin-app.js` に `Operations Home` を追加し、`Today's Bookings / Tomorrow / Pending Requests / Stale Pending (>24h) / Unassigned Enquiries` の運用指標カードを実装。
+  - EN: Added `Operations Home` in `js/admin-app.js` with operational KPI cards for `Today's Bookings / Tomorrow / Pending Requests / Stale Pending (>24h) / Unassigned Enquiries`.
+  - JA: ダッシュボード指標から `app/pages/workshop.html?quick=...` へ遷移できる運用ショートカットを追加し、優先対応キューへ直接到達可能にした。
+  - EN: Added direct shortcuts from dashboard metrics to priority queues via `app/pages/workshop.html?quick=...`.
+  - JA: `app/pages/workshop.html` に quick-filter tabs（`all/today/tomorrow/pending/stale_pending`）と URL クエリ連動を追加。
+  - EN: Added quick-filter tabs (`all/today/tomorrow/pending/stale_pending`) with URL query sync in `app/pages/workshop.html`.
+  - JA: 予約一覧に `Contact` と `SLA` 列を追加し、`pending/requested/in_progress` の経過時間（Overdue判定）を可視化。
+  - EN: Added `Contact` and `SLA` columns to booking list with elapsed-time/overdue visibility for `pending/requested/in_progress`.
+  - JA: 詳細パネルにステータス即時更新ボタン（In Progress / Confirmed / Cancelled）と内部メモテンプレートチップを追加し、更新操作を短縮。
+  - EN: Added quick status actions (In Progress / Confirmed / Cancelled) and internal-note template chips in detail panel to shorten update flow.
 

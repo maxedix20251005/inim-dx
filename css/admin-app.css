@@ -364,6 +364,47 @@ textarea:focus {
     grid-template-columns: minmax(380px, 0.95fr) minmax(560px, 1.05fr);
 }
 
+.admin-grid--ops {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.admin-ops-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.admin-ops-card {
+    border: 1px solid var(--admin-line);
+    border-radius: 16px;
+    background: linear-gradient(180deg, #fffdf8 0%, #f5eee4 100%);
+    padding: 14px;
+    display: grid;
+    gap: 8px;
+}
+
+.admin-ops-card strong {
+    font-size: 0.84rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--admin-sub);
+}
+
+.admin-ops-card span {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.admin-ops-card a {
+    color: var(--admin-accent-dark);
+    font-size: 0.86rem;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
 .admin-metric {
     padding: 20px;
     border: 1px solid var(--admin-line);
@@ -701,6 +742,7 @@ textarea:focus {
     .admin-layout,
     .admin-grid--metrics,
     .admin-grid--panels,
+    .admin-grid--ops,
     .admin-grid--split,
     .admin-grid--double,
     .admin-form-grid,
