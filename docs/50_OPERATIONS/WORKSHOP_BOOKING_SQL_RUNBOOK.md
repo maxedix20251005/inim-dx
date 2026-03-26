@@ -129,3 +129,16 @@ idempotent なので再実行しても安全です。
 4. その後に予約入力フォーム本体へ進む
 
 
+
+## 2026-03-26 追加: 0 row 恒久対策
+
+公開予約画面の Diagnostics で `Plans=0 / Sessions=0` が出る場合は、次をこの順で実行します。
+
+1. [`sql/09_seed_workshop_booking_master_and_sessions.sql`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/sql/09_seed_workshop_booking_master_and_sessions.sql)
+2. [`sql/10_workshop_public_read_policies.sql`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/sql/10_workshop_public_read_policies.sql)（必要時）
+3. [`sql/11_verify_workshop_public_data.sql`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/sql/11_verify_workshop_public_data.sql)
+
+補足:
+- `09` は idempotent（再実行可）
+- `10` は select policy のみを再作成（insert/update/delete は変更しない）
+- `11` で `active_plans_count > 0` と `published_sessions_count > 0` を確認

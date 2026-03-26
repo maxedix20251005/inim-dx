@@ -197,3 +197,21 @@
 - `再発防止:` 公開予約画面は「接続成功」と「データ取得成功」を分離表示し、空データをモックで隠さない。
 - `状態:` Fix 適用済み（ユーザー再確認待ち）
 
+
+### Issue 2026-03-26-20
+- `発生日:` 2026-03-26
+- `発生箇所:` [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html), Supabase `workshop_plans` / `workshop_sessions`
+- `症状:` Diagnostics で `Plans=0`, `Sessions=0`（`Stores=3`, `Error=-`）となり、予約カレンダーが空状態になる。
+- `原因:` 公開予約ページが参照する seed データ未投入、または read policy 未整備で対象行が見えていない。
+- `対策:` `sql/09_seed_workshop_booking_master_and_sessions.sql` を追加し idempotent seed を標準化。あわせて `sql/10_workshop_public_read_policies.sql` と `sql/11_verify_workshop_public_data.sql` を追加。
+- `再発防止:` 新環境では `05 -> 07 -> 09 -> 11` を初期投入手順に固定し、`Plans/Sessions` が 0 の場合は `10 -> 11` で policy を確認する。
+- `状態:` Fix 実装済み（SQL適用待ち）
+
+### Issue 2026-03-26-21
+- `発生日:` 2026-03-26
+- `発生箇所:` [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html)
+- `症状:` Diagnostics で `Sessions > 0` でも、カレンダー上に予約可能日が表示されなかった。
+- `原因:` `workshop_sessions.store_id` 参照に対し、store lookup が slug key ベースだったため、`store_id` で店舗情報を引けず、全セルが実質 `closed` 扱いになっていた。
+- `対策:` store key 正規化関数を追加し、`store_id` 起点の map（`buildStoreByIdMap`）で `buildSchedule()` を構築するよう修正。
+- `再発防止:` `id` 参照が必要な処理では slug map を直接流用せず、`id->entity` map を明示的に生成する。
+- `状態:` Fix 適用済み（ユーザー再確認待ち）

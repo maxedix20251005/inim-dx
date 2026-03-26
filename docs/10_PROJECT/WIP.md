@@ -71,3 +71,5 @@
 
 - 2026-03-26: 予約カレンダーの「4/5固定モック」フォールバックを廃止。Supabase 0件時は空状態を明示表示し、取得範囲を当月初日〜12か月先へ拡大。
 
+- 2026-03-26: Workshop Booking 0 row 恒久対策として SQL を追加。`sql/09_seed_workshop_booking_master_and_sessions.sql`（seed）, `sql/10_workshop_public_read_policies.sql`（public read policy）, `sql/11_verify_workshop_public_data.sql`（検証）。
+- 2026-03-26: `Sessions>0` でも空き表示されない不具合を修正。`subpages/workshop-booking.html` で store lookup を `store_id` ベースへ切替（`buildStoreByIdMap` 追加、store key 正規化）。

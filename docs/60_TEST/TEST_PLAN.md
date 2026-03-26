@@ -66,3 +66,14 @@
   - 空状態メッセージが表示されること（date range / RLS / seed data確認）
   - `workshop_sessions` 登録後は該当日がカレンダーへ反映されること
 
+
+## 2026-03-26 追加テスト / Added Test
+- 対象: Workshop Booking public data bootstrap (`09/10/11`)
+- 手順:
+  1. Supabase SQL Editor で `sql/09_seed_workshop_booking_master_and_sessions.sql` を実行
+  2. `sql/11_verify_workshop_public_data.sql` で `active_plans_count > 0` と `published_sessions_count > 0` を確認
+  3. 予約画面 Diagnostics が `Plans>0`, `Sessions>0` になることを確認
+  4. 0件のままなら `sql/10_workshop_public_read_policies.sql` 実行後に `sql/11` を再実行
+- 期待結果:
+  - 公開予約カレンダーに複数日が表示される
+  - `Source=Supabase`, `Error=-`, `Plans/Sessions` が 0 でない

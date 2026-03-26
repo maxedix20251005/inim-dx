@@ -213,6 +213,14 @@
                 window.history.replaceState({}, "", target.toString());
             };
             const slugifyStore = (name) => String(name || "").toLowerCase().replace(/\s+/g, "").replace(/[・\-_/]/g, "");
+            const normalizeStoreKey = (value, fallback = "store") => {
+                const raw = String(value || "").toLowerCase();
+                if (raw.includes("asakusa") || raw.includes("浅草")) return "asakusa";
+                if (raw.includes("shibamata") || raw.includes("柴又")) return "shibamata";
+                if (raw.includes("solamachi") || raw.includes("ソラマチ")) return "solamachi";
+                const slug = slugifyStore(value);
+                return slug || fallback;
+            };
             const chooseInitialStore = () => {
                 const paramStore = params.get("store");
                 if (paramStore && stores[paramStore]) return paramStore;
@@ -397,10 +405,29 @@
                 if (!rows || rows.length === 0) return { ...fallbackStores };
                 const map = {};
                 rows.forEach((row) => {
-                    const slug = slugifyStore(row.store_name || row.id);
-                    map[slug] = { label: row.store_name || slug, caption: "", id: row.id, key: slug, name: row.store_name || slug };
+                    const key = normalizeStoreKey(row.store_name || row.id, row.id);
+                    map[key] = {
+                        label: row.store_name || key,
+                        caption: map[key]?.caption || "",
+                        id: row.id,
+                        key,
+                        name: row.store_name || key
+                    };
                 });
                 return map;
+            };
+            const buildStoreByIdMap = (rows) => {
+                const byId = {};
+                (rows || []).forEach((row) => {
+                    byId[row.id] = {
+                        id: row.id,
+                        name: row.store_name || "",
+                        label: row.store_name || "",
+                        key: normalizeStoreKey(row.store_name || row.id, row.id),
+                        slug: slugifyStore(row.store_name || row.id)
+                    };
+                });
+                return byId;
             };
             const setLed = (state, title) => {
                 if (!connectionLed) return;
@@ -448,9 +475,10 @@
                     if (hasSessions) {
                         emptyStateMessage = "";
                         stores = buildStoreMap(storeRows);
+                        const storeById = buildStoreByIdMap(storeRows);
                         const planById = {};
                         (plans || []).forEach((p) => (planById[p.id] = p));
-                        const { sessionMap, scheduleMap } = buildSchedule(sessions, planById, stores);
+                        const { sessionMap, scheduleMap } = buildSchedule(sessions, planById, storeById);
                         const dates = Object.keys(sessionMap).sort();
                         if (dates.length > 0) {
                             const startDate = new Date(dates[0]);

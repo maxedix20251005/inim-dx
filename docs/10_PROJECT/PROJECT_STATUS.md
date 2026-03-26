@@ -353,3 +353,11 @@
 ### ドキュメント更新（2026-03-25 追加11）
 - Supabase 側に `currency_code` とセッション人数上限/下限を追加する SQL を適用（`07_add_currency_code_and_party_limits.sql`）。検証用 `08_verify_workshop_booking_schema.sql` でカラム/インデックスを確認済み。
 - `workshop-booking.html` に Supabase 接続LEDを追加（緑=接続、橙=フォールバック）。接続があってもセッション未登録時はモック表示で暫定稼働。
+
+### 2026-03-26 Update (Workshop 0-row mitigation)
+- Added SQL assets for permanent workshop public data bootstrap and verification:
+  - `sql/09_seed_workshop_booking_master_and_sessions.sql`
+  - `sql/10_workshop_public_read_policies.sql`
+  - `sql/11_verify_workshop_public_data.sql`
+- New standard sequence for new/empty environments: `05 -> 07 -> 09 -> 11`.
+- If diagnostics still shows `Plans=0 / Sessions=0` with stores visible, run `10 -> 11` to validate read policy exposure.
