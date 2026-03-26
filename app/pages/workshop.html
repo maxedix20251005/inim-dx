@@ -6,17 +6,292 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Workshop Bookings | inim-dx</title>
     <link rel="icon" href="../../images/logo/logo-inim-dx.jpg" type="image/jpeg">
-    <link rel="stylesheet" href="../../css/admin-app.css?v=20260322a">
+    <link rel="stylesheet" href="../../css/admin-app.css?v=20260326a">
+    <link rel="stylesheet" href="../../css/app-workshop-bookings.css?v=20260326a">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 
-<body data-root="../.." data-page-key="appPagesWorkshop">
-    <main id="page-main"></main>
-    <script src="../../js/site-config.js?v=20260322a"></script>
+<body>
+    <main class="wb-page">
+        <header class="wb-header">
+            <div>
+                <p class="wb-eyebrow">bookings / operations</p>
+                <h1>Workshop Booking Management</h1>
+                <p>予約一覧の確認、検索、状態更新、メモ更新を実行します。</p>
+            </div>
+            <nav class="wb-links" aria-label="Admin links">
+                <a href="../dashboard.html">Dashboard</a>
+                <a href="../publish.html">Publish</a>
+                <a href="../users/me.html">Account</a>
+            </nav>
+        </header>
+
+        <section class="wb-panel">
+            <form class="wb-filters" id="wb-filters">
+                <input type="search" name="q" placeholder="検索: ID / 名前 / メール / 電話 / メモ">
+                <select name="status">
+                    <option value="">全ステータス</option>
+                    <option value="pending">pending</option>
+                    <option value="requested">requested</option>
+                    <option value="in_progress">in_progress</option>
+                    <option value="confirmed">confirmed</option>
+                    <option value="completed">completed</option>
+                    <option value="cancelled">cancelled</option>
+                </select>
+                <select name="method">
+                    <option value="">全方式</option>
+                    <option value="instant">instant</option>
+                    <option value="request">request</option>
+                </select>
+                <input type="date" name="from">
+                <input type="date" name="to">
+                <button type="submit">検索</button>
+            </form>
+            <p class="wb-note" id="wb-summary">Loading...</p>
+        </section>
+
+        <section class="wb-grid">
+            <article class="wb-panel">
+                <div class="wb-table-wrap">
+                    <table class="wb-table" id="wb-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Booked At</th>
+                                <th>Status</th>
+                                <th>Type</th>
+                                <th>Store</th>
+                                <th>Party</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </article>
+
+            <aside class="wb-panel" id="wb-detail">
+                <h2>Booking Detail</h2>
+                <p class="wb-note">行を選択してください。</p>
+            </aside>
+        </section>
+    </main>
+
+    <script src="../../js/site-config.js?v=20260326a"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../../js/admin-app.js?v=20260322a"></script>
+    <script>
+        (() => {
+            const cfg = window.INIM_SITE_CONFIG || {};
+            const sbApi = window.supabase;
+            const supabase = cfg.supabaseUrl && cfg.supabasePublishableKey && sbApi?.createClient
+                ? sbApi.createClient(cfg.supabaseUrl, cfg.supabasePublishableKey)
+                : null;
+
+            const tableBody = document.querySelector("#wb-table tbody");
+            const detailHost = document.getElementById("wb-detail");
+            const summary = document.getElementById("wb-summary");
+            const filterForm = document.getElementById("wb-filters");
+
+            const state = {
+                rows: [],
+                filtered: [],
+                selectedId: "",
+                profileMap: {},
+                storeMap: {}
+            };
+
+            const esc = (v) => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
+            const fmtDate = (v) => {
+                if (!v) return "-";
+                const d = new Date(v);
+                return Number.isNaN(d.getTime()) ? String(v) : d.toLocaleString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
+            };
+            const pick = (row, keys) => keys.map((k) => row?.[k]).find((x) => x !== undefined && x !== null && String(x).trim() !== "") ?? "";
+
+            const renderTable = () => {
+                tableBody.innerHTML = state.filtered.map((row) => {
+                    const id = row.id || "";
+                    const storeName = state.storeMap[row.store_id] || row.store_id || "-";
+                    const party = pick(row, ["party_size", "participant_count"]) || "-";
+                    return `<tr data-id="${esc(id)}" class="${state.selectedId === id ? "is-selected" : ""}"><td>${esc(id.slice(0, 8))}</td><td>${esc(fmtDate(pick(row, ["booked_at", "created_at"])))}</td><td>${esc(row.status || "-")}</td><td>${esc(row.booking_type || row.booking_method || "-")}</td><td>${esc(storeName)}</td><td>${esc(String(party))}</td></tr>`;
+                }).join("");
+
+                tableBody.querySelectorAll("tr[data-id]").forEach((tr) => {
+                    tr.addEventListener("click", () => {
+                        state.selectedId = tr.dataset.id || "";
+                        renderTable();
+                        renderDetail();
+                    });
+                });
+            };
+
+            const renderDetail = () => {
+                const row = state.rows.find((x) => String(x.id) === String(state.selectedId));
+                if (!row) {
+                    detailHost.innerHTML = `<h2>Booking Detail</h2><p class="wb-note">行を選択してください。</p>`;
+                    return;
+                }
+                const profile = state.profileMap[row.customer_profile_id] || {};
+                const contactName = pick(row, ["contact_name", "customer_name", "name"]) || profile.display_name || profile.full_name || "-";
+                const contactEmail = pick(row, ["contact_email", "email"]) || profile.email || "-";
+                const contactPhone = pick(row, ["contact_phone", "phone"]) || "-";
+                const bookedAt = fmtDate(pick(row, ["booked_at", "created_at"]));
+                const party = pick(row, ["party_size", "participant_count"]) || "-";
+                const note = pick(row, ["internal_note", "note", "special_requests"]);
+                const storeName = state.storeMap[row.store_id] || row.store_id || "-";
+
+                detailHost.innerHTML = `
+                    <h2>Booking Detail</h2>
+                    <div class="wb-kv"><strong>ID</strong><span>${esc(row.id || "-")}</span></div>
+                    <div class="wb-kv"><strong>Status</strong><span>${esc(row.status || "-")}</span></div>
+                    <div class="wb-kv"><strong>Booked At</strong><span>${esc(bookedAt)}</span></div>
+                    <div class="wb-kv"><strong>Store</strong><span>${esc(storeName)}</span></div>
+                    <div class="wb-kv"><strong>Party Size</strong><span>${esc(String(party))}</span></div>
+                    <div class="wb-kv"><strong>Name</strong><span>${esc(contactName)}</span></div>
+                    <div class="wb-kv"><strong>Email</strong><span>${esc(contactEmail)}</span></div>
+                    <div class="wb-kv"><strong>Phone</strong><span>${esc(contactPhone)}</span></div>
+                    <form id="wb-update-form" class="wb-update">
+                        <input type="hidden" name="id" value="${esc(row.id || "")}">
+                        <label>Status</label>
+                        <select name="status">
+                            ${["pending", "requested", "in_progress", "confirmed", "completed", "cancelled"].map((s) => `<option value="${esc(s)}" ${String(row.status || "") === s ? "selected" : ""}>${esc(s)}</option>`).join("")}
+                        </select>
+                        <label>Internal Note</label>
+                        <textarea name="internal_note" rows="4" maxlength="1000">${esc(note)}</textarea>
+                        <button type="submit">Update Booking</button>
+                    </form>
+                    <p class="wb-note" id="wb-update-message"></p>
+                `;
+
+                const form = document.getElementById("wb-update-form");
+                form?.addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const fd = new FormData(form);
+                    const bookingId = String(fd.get("id") || "");
+                    const nextStatus = String(fd.get("status") || "").trim();
+                    const internalNote = String(fd.get("internal_note") || "").trim();
+                    const msg = document.getElementById("wb-update-message");
+                    msg.textContent = "Updating...";
+
+                    const payload = { status: nextStatus, internal_note: internalNote || null };
+                    if (nextStatus === "confirmed") payload.confirmed_at = new Date().toISOString();
+
+                    const { error } = await supabase.from("bookings").update(payload).eq("id", bookingId);
+                    if (error) {
+                        msg.textContent = `Update failed: ${error.message}`;
+                        return;
+                    }
+                    msg.textContent = "Updated.";
+                    await loadData();
+                    state.selectedId = bookingId;
+                    applyFilters();
+                    renderTable();
+                    renderDetail();
+                });
+            };
+
+            const applyFilters = () => {
+                const fd = new FormData(filterForm);
+                const q = String(fd.get("q") || "").trim().toLowerCase();
+                const status = String(fd.get("status") || "").trim();
+                const method = String(fd.get("method") || "").trim();
+                const from = String(fd.get("from") || "").trim();
+                const to = String(fd.get("to") || "").trim();
+
+                state.filtered = state.rows.filter((row) => {
+                    const rowStatus = String(row.status || "");
+                    const rowMethod = String(row.booking_method || "");
+                    const bookedAt = String(pick(row, ["booked_at", "created_at"]) || "").slice(0, 10);
+                    const storeName = String(state.storeMap[row.store_id] || "");
+                    const profile = state.profileMap[row.customer_profile_id] || {};
+                    const searchable = [
+                        row.id,
+                        row.note,
+                        row.internal_note,
+                        row.special_requests,
+                        row.contact_name,
+                        row.contact_email,
+                        row.contact_phone,
+                        storeName,
+                        profile.display_name,
+                        profile.full_name,
+                        profile.email
+                    ].map((v) => String(v || "").toLowerCase()).join(" ");
+
+                    if (status && rowStatus !== status) return false;
+                    if (method && rowMethod !== method) return false;
+                    if (from && bookedAt && bookedAt < from) return false;
+                    if (to && bookedAt && bookedAt > to) return false;
+                    if (q && !searchable.includes(q)) return false;
+                    return true;
+                });
+
+                summary.textContent = `${state.filtered.length} / ${state.rows.length} bookings`;
+            };
+
+            const loadMaps = async (rows) => {
+                const storeIds = [...new Set(rows.map((r) => r.store_id).filter(Boolean))];
+                const profileIds = [...new Set(rows.map((r) => r.customer_profile_id).filter(Boolean))];
+
+                state.storeMap = {};
+                state.profileMap = {};
+
+                if (storeIds.length) {
+                    const { data } = await supabase.from("stores").select("id, store_name").in("id", storeIds);
+                    (data || []).forEach((row) => { state.storeMap[row.id] = row.store_name || row.id; });
+                }
+                if (profileIds.length) {
+                    const { data } = await supabase.from("user_profiles").select("id, display_name, full_name, email").in("id", profileIds);
+                    (data || []).forEach((row) => { state.profileMap[row.id] = row; });
+                }
+            };
+
+            const loadData = async () => {
+                summary.textContent = "Loading...";
+                const { data, error } = await supabase
+                    .from("bookings")
+                    .select("*")
+                    .order("booked_at", { ascending: false })
+                    .limit(400);
+
+                if (error) {
+                    summary.textContent = `Load failed: ${error.message}`;
+                    state.rows = [];
+                    state.filtered = [];
+                    renderTable();
+                    renderDetail();
+                    return;
+                }
+
+                state.rows = data || [];
+                await loadMaps(state.rows);
+                applyFilters();
+                renderTable();
+                renderDetail();
+            };
+
+            const init = async () => {
+                if (!supabase) {
+                    summary.textContent = "Supabase config missing in js/site-config.js";
+                    return;
+                }
+                const { data: sessionData } = await supabase.auth.getSession();
+                if (!sessionData?.session?.user) {
+                    window.location.href = "../login.html";
+                    return;
+                }
+                await loadData();
+
+                filterForm.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    applyFilters();
+                    renderTable();
+                    renderDetail();
+                });
+            };
+
+            init();
+        })();
+    </script>
 </body>
 
 </html>
-
-

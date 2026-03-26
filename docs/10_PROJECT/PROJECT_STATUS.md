@@ -361,3 +361,9 @@
   - `sql/11_verify_workshop_public_data.sql`
 - New standard sequence for new/empty environments: `05 -> 07 -> 09 -> 11`.
 - If diagnostics still shows `Plans=0 / Sessions=0` with stores visible, run `10 -> 11` to validate read policy exposure.
+
+### 2026-03-26 Update (Booking Management Screen)
+- Added full booking management page at `app/pages/workshop.html`.
+- Implemented: booking list, keyword search, status filter, method filter, date-range filter, row detail view.
+- Implemented update actions: `status` and `internal_note` update to `bookings` table (with `confirmed_at` auto-set when status becomes `confirmed`).
+- Added dedicated stylesheet: `css/app-workshop-bookings.css`.

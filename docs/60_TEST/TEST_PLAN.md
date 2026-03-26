@@ -77,3 +77,15 @@
 - 期待結果:
   - 公開予約カレンダーに複数日が表示される
   - `Source=Supabase`, `Error=-`, `Plans/Sessions` が 0 でない
+
+## 2026-03-26 追加テスト / Added Test (Booking Management Screen)
+- 対象: `app/pages/workshop.html`
+- 手順:
+  1. 管理者ログイン後、`app/pages/workshop.html` を開く
+  2. 一覧表示で bookings が表示されることを確認
+  3. キーワード/ステータス/方式/日付で絞り込みできることを確認
+  4. 任意行を選択し `status` と `internal_note` を更新
+  5. 再読込後も更新値が維持されることを確認
+- 期待結果:
+  - Supabase 直接参照なしで予約運用確認が可能
+  - 更新失敗時は画面上にエラーメッセージが表示される
