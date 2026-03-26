@@ -134,3 +134,8 @@
   - JA: `Unassigned Enquiries` の dashboard 導線を専用画面へ切替し、Publish 経由の暫定運用を終了。
   - EN: Switched dashboard `Unassigned Enquiries` routing to the dedicated screen and ended the temporary Publish-based flow.
 
+- 2026-03-26: Admin page layout consistency update completed.
+  - JA: `app/pages/workshop.html` / `app/pages/workshop-plans.html` / `app/pages/enquiries.html` を `home.html` と同じ管理画面シェル（サイドナビ + 共通ヘッダー）へ統一。
+  - EN: Unified `app/pages/workshop.html` / `app/pages/workshop-plans.html` / `app/pages/enquiries.html` into the same admin shell layout as `home.html` (side navigation + shared top header).
+  - JA: 各ページロジックを `js/admin-workshop-page.js` / `js/admin-workshop-plans-page.js` / `js/admin-enquiries-page.js` に分離し、`js/admin-app.js` 側のページホストへ描画する構成へ変更。
+  - EN: Split each page logic into `js/admin-workshop-page.js` / `js/admin-workshop-plans-page.js` / `js/admin-enquiries-page.js`, rendering into page hosts provided by `js/admin-app.js`.

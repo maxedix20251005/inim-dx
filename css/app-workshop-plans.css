@@ -10,9 +10,7 @@
   --wp-focus: 0 0 0 3px rgba(44, 44, 44, 0.14);
 }
 
-.wp-page {
-  width: min(1200px, calc(100% - 80px));
-  margin: 32px auto 72px;
+[data-admin-page-host="workshop-plans"] {
   display: grid;
   gap: 20px;
   color: var(--wp-text);
@@ -282,12 +280,6 @@
 }
 
 @media (max-width: 1023px) {
-  .wp-page {
-    width: min(960px, calc(100% - 48px));
-    margin-top: 24px;
-    margin-bottom: 56px;
-  }
-
   .wp-grid,
   .wp-form-grid {
     grid-template-columns: 1fr;
@@ -304,13 +296,6 @@
 }
 
 @media (max-width: 767px) {
-  .wp-page {
-    width: calc(100% - 32px);
-    margin-top: 20px;
-    margin-bottom: 48px;
-    gap: 16px;
-  }
-
   .wp-header,
   .wp-panel {
     padding: 16px;

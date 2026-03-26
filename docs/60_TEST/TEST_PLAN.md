@@ -324,3 +324,19 @@
   - 問い合わせ運用が専用画面で完結する
   - Unassigned 監視導線が dashboard から直接機能する
   - 予約管理/プラン管理画面からの相互導線が機能する
+
+## 2026-03-26 追加テスト / Added Test (Admin Shell Layout Consistency)
+- 対象:
+  - `app/pages/workshop.html`
+  - `app/pages/workshop-plans.html`
+  - `app/pages/enquiries.html`
+  - `js/admin-app.js`
+- 手順:
+  1. admin でログインし、上記3ページをそれぞれ開く
+  2. `app/pages/home.html` と同じサイドナビと共通ヘッダーが表示されることを確認する
+  3. サイドナビから `Workshop予約管理` / `Workshopプラン管理` / `問い合わせ管理` を相互遷移し、レイアウトが維持されることを確認する
+  4. 各ページの一覧・詳細・更新操作が従来どおり動作することを確認する
+- 期待結果:
+  - 3ページとも管理画面共通シェルで表示される
+  - サイドナビ導線が統一され、ページ遷移後も操作文脈が維持される
+  - 機能退行（表示崩れ、操作不能）が発生しない

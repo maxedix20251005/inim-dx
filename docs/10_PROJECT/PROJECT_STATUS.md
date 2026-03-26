@@ -464,3 +464,8 @@
   - JA: `app/pages/workshop.html` と `app/pages/workshop-plans.html` のヘッダーリンクに `Enquiries` を追加し、運用導線を相互接続。
   - EN: Added `Enquiries` header links in `app/pages/workshop.html` and `app/pages/workshop-plans.html` to improve cross-screen operations flow.
 
+
+### ドキュメント更新（2026-03-26 追加4）
+- 管理画面の `app/pages/workshop.html` / `app/pages/workshop-plans.html` / `app/pages/enquiries.html` を `app/pages/home.html` と同じアプリシェル構成（`data-page-key` + `#page-main` + `js/admin-app.js`）へ統一しました。
+- 3画面の実装ロジックは `js/admin-workshop-page.js` / `js/admin-workshop-plans-page.js` / `js/admin-enquiries-page.js` へ分離し、サイドナビ付きレイアウト内で描画する方式に変更しました。
+- `js/admin-app.js` は `appPagesWorkshop` / `appPagesWorkshopPlans` / `appPagesEnquiries` 用の専用ホストを描画するよう更新しました。

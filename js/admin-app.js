@@ -477,6 +477,9 @@
         } else if (pageKey === "appDashboard") content = renderDashboard();
         else if (pageKey === "appPagesHome") content = renderHome();
         else if (pageKey === "appPagesJourney") content = renderJourney();
+        else if (pageKey === "appPagesWorkshop") content = `<div class="admin-main" data-admin-page-host="workshop"></div>`;
+        else if (pageKey === "appPagesWorkshopPlans") content = `<div class="admin-main" data-admin-page-host="workshop-plans"></div>`;
+        else if (pageKey === "appPagesEnquiries") content = `<div class="admin-main" data-admin-page-host="enquiries"></div>`;
         else if (pageKey === "appPublish") content = renderPublish();
         else if (pageKey === "appUsersMe") content = renderUsers();
         else content = `<div class="admin-main"><section class="admin-state"><h2>確保済み画面</h2><p>このURLは将来の管理画面拡張用に残しています。現時点ではトップ編集と導線設定を優先実装しています。</p></section></div>`;
