@@ -74,3 +74,4 @@
 - 2026-03-26: Workshop Booking 0 row 恒久対策として SQL を追加。`sql/09_seed_workshop_booking_master_and_sessions.sql`（seed）, `sql/10_workshop_public_read_policies.sql`（public read policy）, `sql/11_verify_workshop_public_data.sql`（検証）。
 - 2026-03-26: `Sessions>0` でも空き表示されない不具合を修正。`subpages/workshop-booking.html` で store lookup を `store_id` ベースへ切替（`buildStoreByIdMap` 追加、store key 正規化）。
 - 2026-03-26: `app/pages/workshop.html` にフル予約管理画面を実装（一覧、検索/絞り込み、詳細、status/internal_note 更新）。スタンドアロン構成で `bookings` を直接参照し、`stores` / `user_profiles` を補助参照。
+- 2026-03-26: `subpages/workshop.html` のインラインCSSを `css/workshop.css` へ外部化。`プランを見る` 導線を `subpages/workshop-plans.html` に変更。予約CTA帯へ Dashboard リンクを追加。トップページスライダーは初期化タイミングを `DOMContentLoaded` 併用へ修正。

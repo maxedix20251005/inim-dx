@@ -89,3 +89,18 @@
 - 期待結果:
   - Supabase 直接参照なしで予約運用確認が可能
   - 更新失敗時は画面上にエラーメッセージが表示される
+
+## 2026-03-26 追加テスト / Added Test (Workshop + Slider)
+- 対象:
+  - `subpages/workshop.html` (CSS externalisation / links)
+  - `subpages/workshop-plans.html` (new page)
+  - `index.html` (hero slider)
+- 手順:
+  1. `subpages/workshop.html` を開き、レイアウト崩れがないことを確認
+  2. 「プランを見る」で `subpages/workshop-plans.html` へ遷移することを確認
+  3. `subpages/workshop.html` の「ダッシュボード」で `app/dashboard.html` へ遷移することを確認
+  4. `index.html` でヒーロー画像が3秒ごとに切り替わることを確認
+- 期待結果:
+  - workshop ページにインラインCSSが存在しない
+  - プラン導線/ダッシュボード導線が有効
+  - トップスライダーが自動再生される

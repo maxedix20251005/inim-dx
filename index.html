@@ -196,18 +196,27 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/site-shell.js"></script>
     <script>
-        document.addEventListener('site-shell:ready', () => {
-            const slides = document.querySelectorAll('.hero-slider__slide');
-            if (!slides.length) {
-                return;
+        (() => {
+            let started = false;
+            const startSlider = () => {
+                if (started) return;
+                const slides = document.querySelectorAll('.hero-slider__slide');
+                if (!slides.length) return;
+                started = true;
+                let activeIndex = 0;
+                window.setInterval(() => {
+                    slides[activeIndex].classList.remove('is-active');
+                    activeIndex = (activeIndex + 1) % slides.length;
+                    slides[activeIndex].classList.add('is-active');
+                }, 3000);
+            };
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', startSlider, { once: true });
+            } else {
+                startSlider();
             }
-            let activeIndex = 0;
-            window.setInterval(() => {
-                slides[activeIndex].classList.remove('is-active');
-                activeIndex = (activeIndex + 1) % slides.length;
-                slides[activeIndex].classList.add('is-active');
-            }, 3000);
-        });
+            document.addEventListener('site-shell:ready', startSlider, { once: true });
+        })();
     </script>
 </body>
 

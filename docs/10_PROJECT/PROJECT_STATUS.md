@@ -367,3 +367,9 @@
 - Implemented: booking list, keyword search, status filter, method filter, date-range filter, row detail view.
 - Implemented update actions: `status` and `internal_note` update to `bookings` table (with `confirmed_at` auto-set when status becomes `confirmed`).
 - Added dedicated stylesheet: `css/app-workshop-bookings.css`.
+
+### 2026-03-26 Update (Workshop Page + Slider)
+- Externalised inline CSS in `subpages/workshop.html` to `css/workshop.css`.
+- Added dedicated plan page `subpages/workshop-plans.html` and rewired "プランを見る" links.
+- Added dashboard link from workshop reserve actions to `app/dashboard.html`.
+- Fixed top-page slider init timing in `index.html` by combining `DOMContentLoaded` and `site-shell:ready` startup.

@@ -62,3 +62,21 @@
 - EN: Track idea state transitions (Proposed/In Progress/Accepted/Deferred/Rejected) in this document.
 - JA: 実装確定した項目は `PROJECT_STATUS.md` の優先作業へ昇格し、仕様確定は `TECH_SPEC.md` へ反映する。
 - EN: Once approved for implementation, promote items to `PROJECT_STATUS.md` priorities and reflect final specs in `TECH_SPEC.md`.
+
+### 2.6 Admin Access Restriction + Booking LED Governance / 管理者アクセス制御と予約LED運用
+- Status: `Proposed`
+- JA: 予約管理画面は `role_code = admin` ユーザーのみに表示制限し、公開予約画面の Supabase 接続LED を運用監視項目として明文化する。
+- EN: Restrict booking-management screen visibility to users with `role_code = admin`, and formalise booking-page Supabase LED as an operational monitoring item.
+- Scope candidates:
+  - JA: admin判定の強制、非admin時のアクセス拒否、LED状態の監視手順
+  - EN: enforced admin-role check, deny access for non-admin users, LED state monitoring runbook
+
+### 2.7 Dashboard Link Exposure / ダッシュボード導線の明示
+- Status: `Proposed`
+- JA: 公開/関連ページから管理ダッシュボードへの導線を明示し、運用者が迷わず管理画面へ遷移できるようにする。
+- EN: Expose clear navigation links to admin dashboard from relevant pages for operator usability.
+
+### 2.8 Workshop Plan Page Formalisation / ワークショッププラン専用ページ整備
+- Status: `In Progress`
+- JA: 「プランを見る」の遷移先として専用ページを設け、プラン比較から予約導線へ接続する。
+- EN: Provide a dedicated plan page for “View Plans”, bridging plan comparison to booking entry.
