@@ -452,6 +452,15 @@
 - 2026-03-26: Admin IA follow-up adjustment (navigation + enquiry link intent).
   - JA: ダッシュボードのサイドナビへ `Workshop予約管理`（`app/pages/workshop.html`）と `Workshopプラン管理`（`app/pages/workshop-plans.html`）を追加。
   - EN: Added `Workshop予約管理` (`app/pages/workshop.html`) and `Workshopプラン管理` (`app/pages/workshop-plans.html`) to dashboard side navigation.
-  - JA: `Unassigned Enquiries` の遷移先は現状 `Publish` が暫定運用であるため、リンク文言に「暫定: Publish」を明示。
-  - EN: Since `Unassigned Enquiries` currently uses `Publish` as a temporary destination, the link label now explicitly states `暫定: Publish`.
+  - JA: （当時）`Unassigned Enquiries` は専用画面未実装のため `Publish` を暫定導線として運用。
+  - EN: (At that time) `Unassigned Enquiries` temporarily routed to `Publish` before a dedicated screen was implemented.
+- 2026-03-26: Dedicated enquiries admin screen implemented.
+  - JA: `app/pages/enquiries.html` と `css/app-enquiries.css` を新規追加し、問い合わせ一覧・詳細・更新（status / assigned_to / internal note）を管理画面で完結できるようにした。
+  - EN: Added `app/pages/enquiries.html` and `css/app-enquiries.css` to provide a dedicated admin workflow for enquiry list/detail/update (`status / assigned_to / internal note`).
+  - JA: quick tabs（`all/unassigned/open/stale_open`）と URL クエリ連動（`?quick=...`）を実装し、優先キューへ直接遷移可能にした。
+  - EN: Implemented quick tabs (`all/unassigned/open/stale_open`) with URL query sync (`?quick=...`) for direct priority-queue access.
+  - JA: `Unassigned Enquiries` カードの遷移先を `app/pages/enquiries.html?quick=unassigned` へ変更し、Publish 暫定導線を解消。
+  - EN: Rewired `Unassigned Enquiries` card to `app/pages/enquiries.html?quick=unassigned`, removing the temporary Publish dependency.
+  - JA: `app/pages/workshop.html` と `app/pages/workshop-plans.html` のヘッダーリンクに `Enquiries` を追加し、運用導線を相互接続。
+  - EN: Added `Enquiries` header links in `app/pages/workshop.html` and `app/pages/workshop-plans.html` to improve cross-screen operations flow.
 

@@ -19,18 +19,20 @@
         appPagesJourney: ["app/pages/journey.html", "導線設定", "journey_steps / cta", "体験導線の表示順、リンク先、状態を管理します。"],
         appPagesWorkshop: ["app/pages/workshop.html", "Workshop Bookings", "operations / bookings", "予約一覧、検索、状態更新、内部メモ更新を実行します。"],
         appPagesWorkshopPlans: ["app/pages/workshop-plans.html", "Workshop Plans", "catalog / plans", "ワークショッププランと含有要素を管理します。"],
+        appPagesEnquiries: ["app/pages/enquiries.html", "Enquiries", "operations / enquiries", "問い合わせの受付状況、担当、内部メモを管理します。"],
         appPublish: ["app/publish.html", "公開管理", "publish / checklist", "公開前のチェックと更新状況の確認を行います。"],
         appUsersMe: ["app/users/me.html", "アカウント設定", "session / profile", "現在の管理者セッションとロールを確認します。"],
         appPasswordForgot: ["app/password/forgot.html", "パスワード再設定", "forgot password", "再設定メールを送信します。"],
         appPasswordReset: ["app/password/reset.html", "新しいパスワード設定", "reset password", "再設定リンクから新しいパスワードを設定します。"]
     };
-    const protectedPages = new Set(["appDashboard", "appPagesHome", "appPagesJourney", "appPagesWorkshop", "appPagesWorkshopPlans", "appPublish", "appUsersMe"]);
+    const protectedPages = new Set(["appDashboard", "appPagesHome", "appPagesJourney", "appPagesWorkshop", "appPagesWorkshopPlans", "appPagesEnquiries", "appPublish", "appUsersMe"]);
     const accessRules = {
         appDashboard: ["admin"],
         appPagesHome: ["admin", "editor"],
         appPagesJourney: ["admin", "editor"],
         appPagesWorkshop: ["admin"],
         appPagesWorkshopPlans: ["admin"],
+        appPagesEnquiries: ["admin", "operator"],
         appPublish: ["admin", "editor", "operator"]
     };
     const navItems = [
@@ -39,8 +41,9 @@
         ["appPagesJourney", "導線設定", "03"],
         ["appPagesWorkshop", "Workshop予約管理", "04"],
         ["appPagesWorkshopPlans", "Workshopプラン管理", "05"],
-        ["appPublish", "公開管理", "06"],
-        ["appUsersMe", "アカウント設定", "07"]
+        ["appPagesEnquiries", "問い合わせ管理", "06"],
+        ["appPublish", "公開管理", "07"],
+        ["appUsersMe", "アカウント設定", "08"]
     ];
     const state = {
         session: null,
@@ -396,7 +399,7 @@
                 <article class="admin-ops-card">
                     <strong>Unassigned Enquiries</strong>
                     <span>${escapeHtml(String(state.operations.unassignedEnquiries))}</span>
-                    <a href="${escapeHtml(toPath("appPublish"))}">問い合わせ状況を確認（暫定: Publish）</a>
+                    <a href="${escapeHtml(`${toPath("appPagesEnquiries")}?quick=unassigned`)}">未割当問い合わせを確認</a>
                 </article>
             </div>
         </section>
@@ -412,7 +415,7 @@
             ${renderOperationsBoard()}
             <section class="admin-grid admin-grid--panels">
                 <article class="admin-panel"><h2>本日の優先タスク</h2><ul class="admin-inline-list"><li>Pending/Request を先に確認して確定可否を更新</li><li>24時間以上経過した pending を優先対応</li><li>問い合わせ未割当を確認して担当を明確化</li></ul></article>
-                <article class="admin-panel"><h2>主要導線ショートカット</h2><ul class="admin-inline-list"><li><a href="${escapeHtml(`${toPath("appPagesWorkshop")}?quick=today`)}">Today's Bookings へ移動</a></li><li><a href="${escapeHtml(toPath("appPagesHome"))}">トップ編集へ移動</a></li><li><a href="${escapeHtml(toPath("appPagesJourney"))}">導線設定へ移動</a></li><li><a href="${escapeHtml(toPath("appUsersMe"))}">現在のロールを確認</a></li></ul></article>
+                <article class="admin-panel"><h2>主要導線ショートカット</h2><ul class="admin-inline-list"><li><a href="${escapeHtml(`${toPath("appPagesWorkshop")}?quick=today`)}">Today's Bookings へ移動</a></li><li><a href="${escapeHtml(`${toPath("appPagesEnquiries")}?quick=unassigned`)}">Unassigned Enquiries へ移動</a></li><li><a href="${escapeHtml(toPath("appPagesHome"))}">トップ編集へ移動</a></li><li><a href="${escapeHtml(toPath("appPagesJourney"))}">導線設定へ移動</a></li><li><a href="${escapeHtml(toPath("appUsersMe"))}">現在のロールを確認</a></li></ul></article>
             </section>
             <section class="admin-grid admin-grid--double">
                 <article class="admin-panel"><h2>Recent Bookings</h2>${renderBookingSnapshot()}</article>

@@ -126,6 +126,11 @@
 - 2026-03-26: Admin navigation IA updated after user review.
   - JA: サイドナビに `Workshop予約管理` / `Workshopプラン管理` を追加し、Dashboard から直接アクセス可能にした。
   - EN: Added `Workshop予約管理` / `Workshopプラン管理` to side navigation for direct access from dashboard.
-  - JA: `Unassigned Enquiries` は専用画面未実装のため、暫定遷移先が Publish であることをリンク文言で明示。
-  - EN: Since a dedicated enquiries screen is not yet implemented, the temporary Publish destination is now explicitly indicated in link text.
+  - JA: （当時）`Unassigned Enquiries` は専用画面未実装のため、暫定遷移先として Publish を運用。
+  - EN: (At that time) `Unassigned Enquiries` used Publish as a temporary destination before dedicated screen delivery.
+- 2026-03-26: Enquiries management screen delivered.
+  - JA: `app/pages/enquiries.html` を追加し、問い合わせの一覧・優先キュー（unassigned/open/stale）・詳細更新を実装。
+  - EN: Added `app/pages/enquiries.html` with enquiry listing, priority queues (unassigned/open/stale), and detail updates.
+  - JA: `Unassigned Enquiries` の dashboard 導線を専用画面へ切替し、Publish 経由の暫定運用を終了。
+  - EN: Switched dashboard `Unassigned Enquiries` routing to the dedicated screen and ended the temporary Publish-based flow.
 

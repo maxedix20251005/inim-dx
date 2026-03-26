@@ -299,13 +299,28 @@
 - 期待結果:
   - Dashboard から booking / plan 管理画面へ直接遷移できる
 
-## 2026-03-26 追加テスト / Added Test (Unassigned Enquiries Link Intent)
+## 2026-03-26 追加テスト / Added Test (Unassigned Enquiries Link Routing)
 - 対象:
   - `app/dashboard.html`
   - `js/admin-app.js`
 - 手順:
   1. dashboard の `Operations Home` で `Unassigned Enquiries` カードを確認する
-  2. リンク文言に `暫定: Publish` が含まれることを確認する
-  3. リンク押下で `app/publish.html` へ遷移することを確認する
+  2. リンク押下で `app/pages/enquiries.html?quick=unassigned` へ遷移することを確認する
 - 期待結果:
-  - 現在の暫定運用（Publish遷移）が利用者に誤解なく伝わる
+  - dashboard から未割当問い合わせキューへ直接遷移できる
+
+## 2026-03-26 追加テスト / Added Test (Dedicated Enquiries Management Screen)
+- 対象:
+  - `app/pages/enquiries.html`
+  - `css/app-enquiries.css`
+  - `js/admin-app.js`（dashboard link）
+- 手順:
+  1. Dashboard の `Unassigned Enquiries` カードから `app/pages/enquiries.html?quick=unassigned` へ遷移する
+  2. enquiries 一覧が表示され、quick tab が `Unassigned` で有効化されることを確認する
+  3. `Open` / `Stale >24h` / `All` タブ切替で一覧件数が更新されることを確認する
+  4. 任意行選択後、`status`、`assigned_to`、`internal note`（または note）を更新できることを確認する
+  5. Workshop Bookings / Workshop Plans 画面ヘッダーの `Enquiries` リンクから同画面へ遷移できることを確認する
+- 期待結果:
+  - 問い合わせ運用が専用画面で完結する
+  - Unassigned 監視導線が dashboard から直接機能する
+  - 予約管理/プラン管理画面からの相互導線が機能する
