@@ -40,9 +40,9 @@
 
             const defaultImage = "../images/Workshop/Workshop_ (6).png";
             const fallbackImages = [
-                "../images/Workshop/Workshop_ (6).png",
-                "../images/Workshop/Workshop_ (4).png",
-                "../images/Workshop/Workshop_ (3).png"
+                "../images/Workshop/Workshop_ (9-1).png",
+                "../images/Workshop/Workshop_ (2-1).png",
+                "../images/Workshop/Workshop_ (7).png"
             ];
 
             const toYen = (v) => `¥${Number(v || 0).toLocaleString("ja-JP")}`;
@@ -77,7 +77,7 @@
                     base_price_jpy: 5500,
                     min_party_size: 1,
                     max_party_size: 2,
-                    plan_image_url: "../images/Workshop/Workshop_ (6).png"
+                    plan_image_url: "../images/Workshop/Workshop_ (9-1).png"
                 },
                 {
                     id: "fallback-signature",
@@ -89,7 +89,7 @@
                     base_price_jpy: 6600,
                     min_party_size: 1,
                     max_party_size: 4,
-                    plan_image_url: "../images/Workshop/Workshop_ (4).png"
+                    plan_image_url: "../images/Workshop/Workshop_ (2-1).png"
                 }
             ];
 
@@ -112,21 +112,53 @@
                     const points = (inclusionsByPlan[plan.id] || []).slice(0, 3);
                     const imageUrl = resolveImage(plan.plan_image_url, index);
                     const imageAlt = `${plan.plan_name || "Workshop Plan"} image`;
+                    const durationText = `所要時間: 約${escapeHtml(String(mins))}分${maxs && maxs !== mins ? `から${escapeHtml(String(maxs))}分` : ""}`;
+                    const priceText = `料金: ${escapeHtml(toYen(plan.base_price_jpy))}`;
+                    const partyText = `人数: ${escapeHtml(String(plan.min_party_size || 1))}〜${escapeHtml(String(plan.max_party_size || 1))}名`;
+                    const summaryText = escapeHtml(plan.plan_summary || plan.plan_description || "説明準備中です。");
+                    const eyebrowText = escapeHtml(plan.plan_code || "PLAN");
+                    const titleText = escapeHtml(plan.plan_name || "Workshop Plan");
+                    const actionHref = buildBookingHref(plan);
+                    const actionLabel = "このプランで予約する";
+
+                    if (index % 3 === 1) {
+                        return `
+                            <article class="workshop-program-card">
+                                <div class="workshop-program-card__intro">
+                                    <span class="workshop-program-card__eyebrow">${eyebrowText}</span>
+                                    <h3 class="workshop-program-card__title">${titleText}</h3>
+                                    <p>${summaryText}</p>
+                                </div>
+                                <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(imageAlt)}" loading="lazy">
+                                <div class="workshop-program-card__details">
+                                    <div class="workshop-program-card__meta">
+                                        <span>${durationText}</span>
+                                        <span>${priceText}</span>
+                                        <span>${partyText}</span>
+                                    </div>
+                                    ${points.length ? `<ul class="workshop-program-card__points">${points.map((x) => `<li>${escapeHtml(x)}</li>`).join("")}</ul>` : ""}
+                                    <div class="workshop-program-card__actions">
+                                        <a class="button button--primary" href="${actionHref}">${actionLabel}</a>
+                                    </div>
+                                </div>
+                            </article>
+                        `;
+                    }
 
                     return `
-                        <article class="workshop-program-card ${index % 2 === 0 ? "workshop-program-card--image-last" : ""}">
-                            <div class="${index % 2 === 0 ? "workshop-program-card__body" : "workshop-program-card__details"}">
-                                <span class="workshop-program-card__eyebrow">${escapeHtml(plan.plan_code || "PLAN")}</span>
-                                <h3>${escapeHtml(plan.plan_name || "Workshop Plan")}</h3>
-                                <p>${escapeHtml(plan.plan_summary || plan.plan_description || "説明準備中です。")}</p>
+                        <article class="workshop-program-card workshop-program-card--image-last">
+                            <div class="workshop-program-card__body">
+                                <span class="workshop-program-card__eyebrow">${eyebrowText}</span>
+                                <h3 class="workshop-program-card__title">${titleText}</h3>
+                                <p>${summaryText}</p>
                                 <div class="workshop-program-card__meta">
-                                    <span>所要時間: ${escapeHtml(String(mins))}分${maxs && maxs !== mins ? ` - ${escapeHtml(String(maxs))}分` : ""}</span>
-                                    <span>料金: ${escapeHtml(toYen(plan.base_price_jpy))}</span>
-                                    <span>人数: ${escapeHtml(String(plan.min_party_size || 1))} - ${escapeHtml(String(plan.max_party_size || 1))}名</span>
+                                    <span>${durationText}</span>
+                                    <span>${priceText}</span>
+                                    <span>${partyText}</span>
                                 </div>
                                 ${points.length ? `<ul class="workshop-program-card__points">${points.map((x) => `<li>${escapeHtml(x)}</li>`).join("")}</ul>` : ""}
                                 <div class="workshop-program-card__actions">
-                                    <a class="button button--primary" href="${buildBookingHref(plan)}">このプランで予約する</a>
+                                    <a class="button button--primary" href="${actionHref}">${actionLabel}</a>
                                 </div>
                             </div>
                             <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(imageAlt)}" loading="lazy">
@@ -181,4 +213,3 @@
 </body>
 
 </html>
-

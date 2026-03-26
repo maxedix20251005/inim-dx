@@ -400,3 +400,5 @@
 - Updated seed script sql/09_seed_workshop_booking_master_and_sessions.sql to populate plan_image_url for active plans.
 - Rebuilt subpages/workshop-plans.html in clean UTF-8 and bound plan card images to workshop_plans.plan_image_url with fallback images.
 - Moved admin logo to left-top brand area (same placement concept as main site) and removed topbar logo duplication.
+- 2026-03-26: Updated workshop plans card DOM pattern to match workshop page visual composition while preserving Supabase image binding.
+- 2026-03-26: UI adjustment: unified workshop-plan card title typography; updated seeded/default plan images to workshop canonical files; removed `admin-brand__eyebrow` from sidebar header.

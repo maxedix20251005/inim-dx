@@ -158,7 +158,6 @@
         <aside class="admin-sidebar">
             <div class="admin-brand">
                 <a class="admin-brand__logo" href="${escapeHtml(`${root}/index.html`)}" aria-label="Back to main site"><img src="${escapeHtml(`${root}/images/logo/logo-inim-dx.jpg`)}" alt="inim-dx logo"></a>
-                <span class="admin-brand__eyebrow">inim-dx</span>
                 <strong class="admin-brand__title">Admin Portal</strong>
             </div>
             <div class="admin-sidebar__profile">
@@ -806,6 +805,8 @@
     };
     init().catch((e) => setNotice(`初期化エラー: ${e.message}`, "error"));
 })();
+
+
 
 
 

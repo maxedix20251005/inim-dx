@@ -500,11 +500,18 @@
             text-transform: uppercase;
         }
 
-        .workshop-program-card__body h3,
-        .workshop-program-card__intro h3 {
-            margin: 14px 0 10px;
-            font-size: 1.42rem;
-        }
+.workshop-program-card__body h3,
+.workshop-program-card__intro h3 {
+    margin: 14px 0 10px;
+    font-size: 1.42rem;
+}
+
+.workshop-program-card__title {
+    margin: 14px 0 10px;
+    font-size: 1.42rem;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+}
 
         .workshop-program-card__meta,
         .workshop-program-card__points {

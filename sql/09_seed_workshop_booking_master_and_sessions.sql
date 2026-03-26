@@ -31,7 +31,7 @@ values
     '浅草スタンダード（60分）',
     '香りの方向性を短時間で見つける体験コース。',
     'ヒアリング、ノート選定、簡易ブレンドを行う基本コースです。',
-    '../images/Workshop/Workshop_ (6).png',
+    '../images/Workshop/Workshop_ (9-1).png',
     'スタンダード 60分',
     60,
     75,
@@ -55,7 +55,7 @@ values
     '浅草プレミアム（90分）',
     'ノート追加と対話を含む深掘り調香コース。',
     '標準体験に加えて、ノート追加と印象調整を行う上位コースです。',
-    '../images/Workshop/Workshop_ (4).png',
+    '../images/Workshop/Workshop_ (2-1).png',
     'プレミアム 90分',
     90,
     110,
@@ -210,4 +210,3 @@ do update set
     updated_at = now();
 
 commit;
-
