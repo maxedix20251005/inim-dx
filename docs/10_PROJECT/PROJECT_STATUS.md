@@ -449,4 +449,9 @@
   - EN: Added `Contact` and `SLA` columns to booking list with elapsed-time/overdue visibility for `pending/requested/in_progress`.
   - JA: 詳細パネルにステータス即時更新ボタン（In Progress / Confirmed / Cancelled）と内部メモテンプレートチップを追加し、更新操作を短縮。
   - EN: Added quick status actions (In Progress / Confirmed / Cancelled) and internal-note template chips in detail panel to shorten update flow.
+- 2026-03-26: Admin IA follow-up adjustment (navigation + enquiry link intent).
+  - JA: ダッシュボードのサイドナビへ `Workshop予約管理`（`app/pages/workshop.html`）と `Workshopプラン管理`（`app/pages/workshop-plans.html`）を追加。
+  - EN: Added `Workshop予約管理` (`app/pages/workshop.html`) and `Workshopプラン管理` (`app/pages/workshop-plans.html`) to dashboard side navigation.
+  - JA: `Unassigned Enquiries` の遷移先は現状 `Publish` が暫定運用であるため、リンク文言に「暫定: Publish」を明示。
+  - EN: Since `Unassigned Enquiries` currently uses `Publish` as a temporary destination, the link label now explicitly states `暫定: Publish`.
 

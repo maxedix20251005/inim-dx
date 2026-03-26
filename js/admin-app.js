@@ -17,26 +17,30 @@
         appDashboard: ["app/dashboard.html", "ダッシュボード", "hub / overview", "KPI、優先タスク、主要導線ショートカットを確認します。"],
         appPagesHome: ["app/pages/home.html", "トップ編集", "top_hero_items / preview", "ヒーロー文言、CTA、公開状態を更新します。"],
         appPagesJourney: ["app/pages/journey.html", "導線設定", "journey_steps / cta", "体験導線の表示順、リンク先、状態を管理します。"],
-        appPagesWorkshop: ["app/pages/workshop.html", "Workshop Bookings", "reserved", "この画面は次の実装対象として確保しています。"],
+        appPagesWorkshop: ["app/pages/workshop.html", "Workshop Bookings", "operations / bookings", "予約一覧、検索、状態更新、内部メモ更新を実行します。"],
+        appPagesWorkshopPlans: ["app/pages/workshop-plans.html", "Workshop Plans", "catalog / plans", "ワークショッププランと含有要素を管理します。"],
         appPublish: ["app/publish.html", "公開管理", "publish / checklist", "公開前のチェックと更新状況の確認を行います。"],
         appUsersMe: ["app/users/me.html", "アカウント設定", "session / profile", "現在の管理者セッションとロールを確認します。"],
         appPasswordForgot: ["app/password/forgot.html", "パスワード再設定", "forgot password", "再設定メールを送信します。"],
         appPasswordReset: ["app/password/reset.html", "新しいパスワード設定", "reset password", "再設定リンクから新しいパスワードを設定します。"]
     };
-    const protectedPages = new Set(["appDashboard", "appPagesHome", "appPagesJourney", "appPagesWorkshop", "appPublish", "appUsersMe"]);
+    const protectedPages = new Set(["appDashboard", "appPagesHome", "appPagesJourney", "appPagesWorkshop", "appPagesWorkshopPlans", "appPublish", "appUsersMe"]);
     const accessRules = {
         appDashboard: ["admin"],
         appPagesHome: ["admin", "editor"],
         appPagesJourney: ["admin", "editor"],
         appPagesWorkshop: ["admin"],
+        appPagesWorkshopPlans: ["admin"],
         appPublish: ["admin", "editor", "operator"]
     };
     const navItems = [
         ["appDashboard", "ダッシュボード", "01"],
         ["appPagesHome", "トップ編集", "02"],
         ["appPagesJourney", "導線設定", "03"],
-        ["appPublish", "公開管理", "04"],
-        ["appUsersMe", "アカウント設定", "05"]
+        ["appPagesWorkshop", "Workshop予約管理", "04"],
+        ["appPagesWorkshopPlans", "Workshopプラン管理", "05"],
+        ["appPublish", "公開管理", "06"],
+        ["appUsersMe", "アカウント設定", "07"]
     ];
     const state = {
         session: null,
@@ -392,7 +396,7 @@
                 <article class="admin-ops-card">
                     <strong>Unassigned Enquiries</strong>
                     <span>${escapeHtml(String(state.operations.unassignedEnquiries))}</span>
-                    <a href="${escapeHtml(toPath("appPublish"))}">問い合わせ状況を確認</a>
+                    <a href="${escapeHtml(toPath("appPublish"))}">問い合わせ状況を確認（暫定: Publish）</a>
                 </article>
             </div>
         </section>

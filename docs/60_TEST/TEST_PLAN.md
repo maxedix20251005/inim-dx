@@ -287,3 +287,25 @@
   - quick filter による優先キュー確認が可能
   - SLA可視化により未対応案件を識別できる
   - 詳細更新操作が短手順で完了できる
+
+## 2026-03-26 追加テスト / Added Test (Admin Side Navi Workshop Links)
+- 対象:
+  - `app/dashboard.html`
+  - `js/admin-app.js`
+- 手順:
+  1. admin ログイン後、ダッシュボードのサイドナビを確認する
+  2. `Workshop予約管理` を押下し、`app/pages/workshop.html` へ遷移することを確認する
+  3. `Workshopプラン管理` を押下し、`app/pages/workshop-plans.html` へ遷移することを確認する
+- 期待結果:
+  - Dashboard から booking / plan 管理画面へ直接遷移できる
+
+## 2026-03-26 追加テスト / Added Test (Unassigned Enquiries Link Intent)
+- 対象:
+  - `app/dashboard.html`
+  - `js/admin-app.js`
+- 手順:
+  1. dashboard の `Operations Home` で `Unassigned Enquiries` カードを確認する
+  2. リンク文言に `暫定: Publish` が含まれることを確認する
+  3. リンク押下で `app/publish.html` へ遷移することを確認する
+- 期待結果:
+  - 現在の暫定運用（Publish遷移）が利用者に誤解なく伝わる

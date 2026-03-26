@@ -123,4 +123,9 @@
   - EN: Added `Operations Home` to dashboard to centralise booking/enquiry indicators for daily operations.
   - JA: 予約管理画面に quick tabs、SLA表示、詳細パネル quick actions、メモテンプレートを追加して triage 速度を改善。
   - EN: Improved triage speed in booking management with quick tabs, SLA labels, detail-panel quick actions, and note templates.
+- 2026-03-26: Admin navigation IA updated after user review.
+  - JA: サイドナビに `Workshop予約管理` / `Workshopプラン管理` を追加し、Dashboard から直接アクセス可能にした。
+  - EN: Added `Workshop予約管理` / `Workshopプラン管理` to side navigation for direct access from dashboard.
+  - JA: `Unassigned Enquiries` は専用画面未実装のため、暫定遷移先が Publish であることをリンク文言で明示。
+  - EN: Since a dedicated enquiries screen is not yet implemented, the temporary Publish destination is now explicitly indicated in link text.
 
