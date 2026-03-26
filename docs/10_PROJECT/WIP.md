@@ -75,3 +75,7 @@
 - 2026-03-26: `Sessions>0` でも空き表示されない不具合を修正。`subpages/workshop-booking.html` で store lookup を `store_id` ベースへ切替（`buildStoreByIdMap` 追加、store key 正規化）。
 - 2026-03-26: `app/pages/workshop.html` にフル予約管理画面を実装（一覧、検索/絞り込み、詳細、status/internal_note 更新）。スタンドアロン構成で `bookings` を直接参照し、`stores` / `user_profiles` を補助参照。
 - 2026-03-26: `subpages/workshop.html` のインラインCSSを `css/workshop.css` へ外部化。`プランを見る` 導線を `subpages/workshop-plans.html` に変更。予約CTA帯へ Dashboard リンクを追加。トップページスライダーは初期化タイミングを `DOMContentLoaded` 併用へ修正。
+- 2026-03-26: Task #1 実装。`app/dashboard.html` を admin ロール限定に変更（`js/admin-app.js` の accessRules で `appDashboard: ["admin"]` を追加）。
+- 2026-03-26: `app/pages/workshop.html` に admin ロールチェックを追加。非adminは一覧表示せず `Access denied` を表示。
+- 2026-03-26: Task #2 完了。公開予約ページの稼働チェック（Diagnostics + LED + data件数）を `CHECKLIST_SUPABASE` / `TEST_PLAN` に追加。
+- 2026-03-26: Task #3 着手/反映。`subpages/workshop-plans.html` を Supabase連携化（`workshop_plans` 読み込み、`workshop_plan_inclusions` 任意表示、データ未取得時はフォールバック表示）。

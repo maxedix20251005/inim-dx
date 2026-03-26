@@ -675,10 +675,22 @@
         }
 
         .workshop-reserve__actions {
-            display: flex;
-            flex-wrap: wrap;
+            margin-top: 16px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(220px, 1fr));
             gap: 12px;
-            justify-content: flex-end;
+            justify-content: start;
+            max-width: 760px;
+        }
+
+        .workshop-reserve__actions .button {
+            width: 100%;
+            min-height: 56px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            white-space: nowrap;
         }
 
         @media (max-width: 1180px) {
@@ -734,6 +746,11 @@
             .workshop-hero .experience-banner__actions,
             .workshop-anchor-nav {
                 grid-template-columns: 1fr;
+            }
+
+            .workshop-reserve__actions {
+                grid-template-columns: 1fr;
+                max-width: none;
             }
 
             .workshop-cta-band,

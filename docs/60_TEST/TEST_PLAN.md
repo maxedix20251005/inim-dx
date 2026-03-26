@@ -104,3 +104,36 @@
   - workshop ページにインラインCSSが存在しない
   - プラン導線/ダッシュボード導線が有効
   - トップスライダーが自動再生される
+
+## 2026-03-26 追加テスト / Added Test (Admin Access Control)
+- 対象:
+  - `app/dashboard.html`
+  - `app/pages/workshop.html`
+- 手順:
+  1. admin ロールでログインし、両ページにアクセス
+  2. non-admin ロールでログインし、同じURLへアクセス
+- 期待結果:
+  - admin: ページ表示可
+  - non-admin: 管理データが表示されずアクセス拒否される
+
+## 2026-03-26 追加テスト / Added Test (Booking LED + Runtime Data)
+- 対象: `subpages/workshop-booking.html`
+- 手順:
+  1. 公開予約ページを開く
+  2. Diagnostics の `Source/Error/Plans/Sessions` を確認
+  3. カレンダーで予約可能日の選択ができることを確認
+- 期待結果:
+  - `Source=Supabase`, `Error=-`, `Plans>0`, `Sessions>0`
+  - LED が緑で表示される
+  - 予約可能日が表示される
+
+## 2026-03-26 追加テスト / Added Test (Workshop Plans DB Binding)
+- 対象: `subpages/workshop-plans.html`
+- 手順:
+  1. ページを開いて plans status を確認
+  2. active plan 件数が表示されることを確認
+  3. 各カードから予約画面へ遷移できることを確認
+- 期待結果:
+  - Supabase接続時は `workshop_plans` を表示
+  - `workshop_plan_inclusions` があれば要点がカードに表示される
+  - データ未取得時はフォールバックカードを表示

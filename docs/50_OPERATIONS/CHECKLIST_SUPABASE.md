@@ -213,3 +213,18 @@
 - このチェックリストを見ながら Supabase 管理画面を確認する
 - `Project URL` と `publishable key` を用意する
 - その後、`site-config.js` と `site-shell.js` の接続実装に進む
+
+## Workshop Booking Runtime Checklist / ワークショップ予約 稼働チェック
+- JA: 公開予約ページ (`subpages/workshop-booking.html`) を開き、Diagnostics を確認する。
+- EN: Open public booking page and verify Diagnostics block.
+
+### Required pass conditions / 必須合格条件
+1. `Source = Supabase`
+2. `Error = -`
+3. `Plans > 0`
+4. `Sessions > 0`
+5. LED is green (`is-ok`) on normal connection
+
+### If failed / 失敗時
+- JA: `Plans/Sessions = 0` の場合は `sql/09 -> sql/11` を再実行し、必要なら `sql/10 -> sql/11` を実行する。
+- EN: If Plans/Sessions are zero, run `09 -> 11`; if still zero, run `10 -> 11`.

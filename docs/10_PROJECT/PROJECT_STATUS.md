@@ -373,3 +373,18 @@
 - Added dedicated plan page `subpages/workshop-plans.html` and rewired "プランを見る" links.
 - Added dashboard link from workshop reserve actions to `app/dashboard.html`.
 - Fixed top-page slider init timing in `index.html` by combining `DOMContentLoaded` and `site-shell:ready` startup.
+
+### 2026-03-26 Update (Admin-Only Access)
+- Enforced admin-only access on `app/dashboard.html` via `js/admin-app.js` access rule.
+- Enforced admin-only access on `app/pages/workshop.html` by role resolution (`user_profiles` + `user_role_assignments` + `roles`).
+- Non-admin users now receive access denial instead of management data.
+
+### 2026-03-26 Update (Task #2 Completed)
+- Added runtime operational checklist for booking Diagnostics/LED in `docs/50_OPERATIONS/CHECKLIST_SUPABASE.md`.
+- Added dedicated test scenario for booking runtime data health in `docs/60_TEST/TEST_PLAN.md`.
+- This closes Task #2 (LED + booking operational verification flow).
+
+### 2026-03-26 Update (Task #3 In Progress)
+- `subpages/workshop-plans.html` now loads active plans from `workshop_plans`.
+- Optional inclusion bullets are loaded from `workshop_plan_inclusions` when available.
+- Added fallback rendering when Supabase data/config is unavailable.

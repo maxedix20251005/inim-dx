@@ -275,10 +275,36 @@
                     return;
                 }
                 const { data: sessionData } = await supabase.auth.getSession();
-                if (!sessionData?.session?.user) {
+                const user = sessionData?.session?.user || null;
+                if (!user) {
                     window.location.href = "../login.html";
                     return;
                 }
+
+                const { data: profileRows } = await supabase
+                    .from("user_profiles")
+                    .select("id")
+                    .eq("auth_user_id", user.id)
+                    .limit(1);
+                const profileId = profileRows?.[0]?.id || "";
+                if (!profileId) {
+                    summary.textContent = "Access denied: profile not found.";
+                    return;
+                }
+
+                const { data: roleRows } = await supabase
+                    .from("user_role_assignments")
+                    .select("roles(role_code)")
+                    .eq("user_profile_id", profileId);
+                const roleCodes = (roleRows || [])
+                    .map((row) => String(row?.roles?.role_code || "").trim().toLowerCase())
+                    .filter(Boolean);
+                const isAdmin = roleCodes.includes("admin");
+                if (!isAdmin) {
+                    summary.textContent = "Access denied: admin role required.";
+                    return;
+                }
+
                 await loadData();
 
                 filterForm.addEventListener("submit", (e) => {
@@ -295,3 +321,4 @@
 </body>
 
 </html>
+

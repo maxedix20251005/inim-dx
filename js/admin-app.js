@@ -1,4 +1,4 @@
-(() => {
+﻿(() => {
     const body = document.body;
     const main = document.getElementById("page-main");
     if (!body || !main) return;
@@ -25,9 +25,10 @@
     };
     const protectedPages = new Set(["appDashboard", "appPagesHome", "appPagesJourney", "appPagesWorkshop", "appPublish", "appUsersMe"]);
     const accessRules = {
+        appDashboard: ["admin"],
         appPagesHome: ["admin", "editor"],
         appPagesJourney: ["admin", "editor"],
-        appPagesWorkshop: ["admin", "editor"],
+        appPagesWorkshop: ["admin"],
         appPublish: ["admin", "editor", "operator"]
     };
     const navItems = [
@@ -804,3 +805,6 @@
     };
     init().catch((e) => setNotice(`初期化エラー: ${e.message}`, "error"));
 })();
+
+
+
