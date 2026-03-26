@@ -98,7 +98,7 @@
 - 手順:
   1. `subpages/workshop.html` を開き、レイアウト崩れがないことを確認
   2. 「プランを見る」で `subpages/workshop-plans.html` へ遷移することを確認
-  3. `subpages/workshop.html` の「ダッシュボード」で `aapp/dashboard.html` へ遷移することを確認
+  3. `subpages/workshop.html` の「ダッシュボード」で `app/dashboard.html` へ遷移することを確認
   4. `index.html` でヒーロー画像が3秒ごとに切り替わることを確認
 - 期待結果:
   - workshop ページにインラインCSSが存在しない
@@ -107,7 +107,7 @@
 
 ## 2026-03-26 追加テスト / Added Test (Admin Access Control)
 - 対象:
-  - `aapp/dashboard.html`
+  - `app/dashboard.html`
   - `app/pages/workshop.html`
 - 手順:
   1. admin ロールでログインし、両ページにアクセス
@@ -173,3 +173,17 @@
   3. `workshop_plans.base_price_jpy` の最小値変更後に料金目安が追従することを確認
 - 期待結果:
   - 開催期間/対象店舗/予約方式/料金目安がDB由来で表示される
+
+## 2026-03-26 追加テスト / Added Test (Workshop Plan Admin Screen)
+- 対象:
+  - `app/pages/workshop-plans.html`
+  - `app/pages/workshop.html`
+- 手順:
+  1. admin で `app/pages/workshop-plans.html` を開く
+  2. 既存プランを編集し保存後、`subpages/workshop-plans.html` へ反映されることを確認
+  3. Inclusion を追加/削除し、公開プランカードへ反映されることを確認
+  4. `app/pages/workshop.html` から `Plan Management` リンクで遷移できることを確認
+- 期待結果:
+  - プラン管理が画面から実行できる
+  - 保存内容が公開プランページに反映される
+

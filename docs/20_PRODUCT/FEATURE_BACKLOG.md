@@ -87,7 +87,7 @@
 - EN: Non-admin login verification is currently blocked by environment constraints; keep deny-access scenario as backlog test item.
 
 ### 2.10 Workshop Plan/Course Management IA Optimisation / ワークショッププラン管理導線の情報設計最適化
-- Status: Proposed
+- Status: `In Progress`
 - JA: 現状、ワークショップのプラン/コース管理画面への導線が見つけにくいため、管理者向けナビゲーション構造を再設計する。
 - EN: Current navigation to workshop plan/course management is hard to find; redesign admin IA and entry points.
 - Scope candidates:
@@ -97,3 +97,5 @@
   - EN: Replace static booking summary labels in workshop-booking.html with DB-driven dynamic values
   - JA: プラン管理画面への導線をヘッダー/サイド/フッターのどこに置くかを統一ルール化
   - EN: Define a consistent placement rule for plan-management links across header/side/footer
+
+

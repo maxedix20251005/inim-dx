@@ -404,3 +404,4 @@
 - 2026-03-26: UI adjustment: unified workshop-plan card title typography; updated seeded/default plan images to workshop canonical files; removed `admin-brand__eyebrow` from sidebar header.
 - 2026-03-26: `subpages/workshop-booking.html` summary panel (`開催期間/対象店舗/予約方式/料金目安`) switched from static text to runtime DB-derived values (`workshop_sessions`, `stores`, `workshop_plans`).
 - 2026-03-26: Fixed mojibake in `subpages/workshop-booking.html` by rebuilding the page in UTF-8 and removing broken Japanese strings/tags while preserving booking flow IDs and DB summary behavior.
+- 2026-03-26: Added admin screen `app/pages/workshop-plans.html` for DB-driven workshop plan management (create/update/delete + inclusion management) and linked it from booking management screen.
