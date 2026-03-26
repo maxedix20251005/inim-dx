@@ -3,5 +3,6 @@ window.INIM_SITE_CONFIG = {
     supabasePublishableKey: 'sb_publishable_ROCyYciMQhG6cH9EI3SkiQ_BDfQgLm8',
     authRedirectUrl: 'https://maxedix20251005.github.io/inim-dx/subpages/account.html',
     adminResetRedirectUrl: 'https://maxedix20251005.github.io/inim-dx/app/password/reset.html',
-    enablePublicSideNav: false
+    enablePublicSideNav: false,
+    adminAccessMode: 'open_demo'
 };

@@ -521,3 +521,72 @@
   - 浮遊ナビの compact 状態（`is-compact`）を追加し、スクロール時の占有面積を縮小
   - サイドナビOFF時のモバイル余白補正（左余白過大の解消）
 - 対象ファイル: `js/site-shell.js`, `css/style.css`, `js/site-config.js`.
+### ドキュメント更新（2026-03-26 追加13）
+- 公開ヘッダーの左上表示をテキストからロゴへ変更しました（`images/logo/logo-inim-dx.jpg`）。
+- notice bar の左テキスト（配送・返品・お支払い...）を削除し、導線リンクのみ表示に変更しました。
+- グローバルナビを drilldown 対応へ刷新し、子メニューを既存サイドナビ構成（group items）から抽出して表示するようにしました。
+- グローバルナビ改善内容:
+  - top-level + child current state 表示
+  - submenu toggle（開閉）と outside click / Esc でのクローズ
+  - `aria-current="page"` の維持
+- rollback: `js/site-config.js` の `enablePublicSideNav: true` で旧サイドナビを即時復帰可能です。
+- 対象ファイル: `js/site-shell.js`, `css/style.css`, `js/site-config.js`.
+### ドキュメント更新（2026-03-26 追加14）
+- グローバルナビの drilldown 表示をクリック主導から hover 展開中心へ調整しました（Desktop）。
+- モバイルでは従来どおりトグルで開閉できるよう、`category-nav__toggle` を 980px 以下で表示する構成にしています。
+- グローバルナビの可読性向上として、トップレベル項目を太字化し、中央寄せに統一しました。
+- 対象ファイル: `css/style.css`.
+### ドキュメント更新（2026-03-26 追加15）
+- グローバルナビの hover drilldown で、親メニューから子メニューへマウス移動時にフォーカスが切れて閉じる問題を修正しました。
+- `css/style.css` にて dropdown の縦ギャップを縮小（`top: calc(100% + 2px)`）し、`has-children` 項目に hover bridge（透明領域）を追加しました。
+- これにより、親→子へのポインタ移動中でも hover 状態を維持できるようにしています。
+### ドキュメント更新（2026-03-26 追加16）
+- 管理画面のデモ公開要件に対応するため、`js/site-config.js` に `adminAccessMode` フラグを追加しました。
+- 値は2モードです。
+  - `open_demo`: 未ログイン含む全ユーザーが管理画面（`app/dashboard.html`, `app/pages/*`）へアクセス可能
+  - `admin_only`: 従来どおりログイン必須 + ロール制御
+- 現在値はデモ用途で `adminAccessMode: 'open_demo'` に設定しています。
+- `js/admin-workshop-page.js` / `js/admin-workshop-plans-page.js` / `js/admin-enquiries-page.js` の未ログイン時強制リダイレクトを、`open_demo` 時はバイパスするよう更新しました。
+- `js/admin-app.js` では既存の `adminAccessMode` 分岐により、`open_demo` 時はサイドナビ表示と保護ページ表示を許可し、`admin_only` に戻すと即時ロックダウンできます。
+- EN: Added switchable admin access mode via `adminAccessMode` in `js/site-config.js`.
+  - `open_demo`: allow access to admin pages without login (for demo)
+  - `admin_only`: require login and role-based access control
+- EN: Current setting is `open_demo` for demo use, and can be rolled back by changing only config value.
+### ドキュメント更新（2026-03-26 追加17）
+- 公開ヘッダーのグローバルナビ `Admin` メニュー表示をロール依存から常時表示へ変更しました。
+- `js/site-shell.js` の `renderAdminLinks()` を更新し、未ログイン時でも `Admin` を表示します。
+- `Admin` は他メニューと同じ `.category-nav__item > a` 構造で描画するようにし、見た目・挙動を統一しました。
+- `app/*` ページ表示時は `Admin` に `is-current` を付与します。
+- EN: Updated global navigation to always show `Admin` regardless of login/role state.
+- EN: Admin nav item now uses the same `.category-nav__item` structure as other top-level menus and keeps current-state highlight on `app/*` pages.
+### ドキュメント更新（2026-03-26 追加18）
+- `open_demo` で未ログイン時に `Workshop Bookings` / `Enquiries` の一覧が0件表示になる事象へ対処しました。
+- 原因: 画面アクセスは許可されても、Supabase RLS のためデータ取得時に authenticated セッションが必要なケースがあるため。
+- 対応: `js/admin-app.js` と `js/admin-workshop-page.js` / `js/admin-workshop-plans-page.js` / `js/admin-enquiries-page.js` で、`open_demo` かつ未ログイン時に `supabase.auth.signInAnonymously()` を試行する処理を追加。
+- これにより、匿名認証が有効な環境では authenticated セッションを確立して一覧取得できるようになります。
+- EN: Fixed zero-record behavior in `open_demo` when logged off by adding anonymous-auth bootstrap before admin data queries.
+- EN: In environments where Supabase anonymous auth is enabled, pages can now establish an authenticated session and load booking/enquiry records.
+### ドキュメント更新（2026-03-26 追加19）
+- `open_demo` で `Workshop Bookings / Enquiries` が `0/0` になる原因を確認しました。
+- 原因: Supabase publishable key（anon）で `bookings` / `enquiries` を直接確認した結果、HTTP 200 かつ `[]`（RLSにより非表示）でした。
+- 対応として、デモ専用の read policy SQL を追加しました。
+  - `sql/13_admin_demo_read_policies.sql`（適用）
+  - `sql/14_revert_admin_demo_read_policies.sql`（ロールバック）
+- これにより、デモ環境では未ログインでも `bookings` / `enquiries` 一覧を表示可能にできます（適用後）。
+- EN: Confirmed root cause of `0/0` was RLS visibility (`200 []` for `bookings/enquiries` via publishable key).
+- EN: Added demo-only policy scripts to enable/rollback read access:
+  - `sql/13_admin_demo_read_policies.sql`
+  - `sql/14_revert_admin_demo_read_policies.sql`
+### ドキュメント更新（2026-03-26 追加20: open_demo から admin_only への戻し手順）
+- JA: デモ終了後に保護モードへ戻す標準手順（順番厳守）
+  1. Supabase SQL Editor で `sql/14_revert_admin_demo_read_policies.sql` を実行（demo read policy を削除）
+  2. `js/site-config.js` の `adminAccessMode` を `open_demo` から `admin_only` へ変更
+  3. ブラウザをハードリロードしてキャッシュを破棄
+  4. 未ログインで `app/dashboard.html` / `app/pages/workshop.html` / `app/pages/enquiries.html` を開き、`app/login.html` へリダイレクトされることを確認
+  5. 管理者ログイン後は従来どおりデータ表示・更新できることを確認
+- EN: Standard rollback procedure from demo-open mode to secure admin-only mode (strict order):
+  1. Run `sql/14_revert_admin_demo_read_policies.sql` in Supabase SQL Editor.
+  2. Change `adminAccessMode` in `js/site-config.js` from `open_demo` to `admin_only`.
+  3. Hard-refresh browser cache.
+  4. Verify logged-off access to admin pages redirects to `app/login.html`.
+  5. Verify admin users can still view/update data after login.

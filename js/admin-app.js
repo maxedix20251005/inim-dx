@@ -7,6 +7,8 @@
     const ADMIN_BUILD_VERSION = "20260322a";
     const pageKey = body.dataset.pageKey || "appLogin";
     const cfg = window.INIM_SITE_CONFIG || {};
+    const adminAccessMode = String(cfg.adminAccessMode || "admin_only").trim().toLowerCase();
+    const isOpenDemoMode = adminAccessMode === "open_demo";
     const sbApi = window.supabase || null;
     const supabase = cfg.supabaseUrl && cfg.supabasePublishableKey && sbApi?.createClient
         ? sbApi.createClient(cfg.supabaseUrl, cfg.supabasePublishableKey)
@@ -155,10 +157,13 @@
     const heroFieldKeys = ["title", "lead_text", "cta_label", "cta_url", "asset_id", "display_order", "is_active"];
     const journeyFieldKeys = ["step_no", "step_name", "link_url", "helper_text", "is_visible"];
     const hasAllowedRole = () => {
+        if (isOpenDemoMode) return true;
         const allowed = accessRules[pageKey];
         return !allowed || state.roles.some((r) => allowed.includes(r));
     };
-    const visibleNav = () => navItems.filter(([key]) => {
+    const visibleNav = () => isOpenDemoMode
+        ? navItems
+        : navItems.filter(([key]) => {
         const allowed = accessRules[key];
         return !allowed || state.roles.some((r) => allowed.includes(r));
     });
@@ -180,8 +185,8 @@
                 <strong class="admin-brand__title">Admin Portal</strong>
             </div>
             <div class="admin-sidebar__profile">
-                <strong>${escapeHtml(state.profile?.display_name || state.profile?.full_name || state.user?.email || "未ログイン")}</strong>
-                <span>${escapeHtml(state.user?.email || "セッション未確立")}</span>
+                <strong>${escapeHtml(state.profile?.display_name || state.profile?.full_name || state.user?.email || (isOpenDemoMode ? "Demo Guest" : "未ログイン"))}</strong>
+                <span>${escapeHtml(state.user?.email || (isOpenDemoMode ? "demo mode / no login required" : "セッション未確立"))}</span>
                 <ul class="admin-role-list">
                     ${(state.roles.length ? state.roles : ["unknown"]).map((r) => `<li class="admin-role-badge">${escapeHtml(roleLabel(r))}</li>`).join("")}
                 </ul>
@@ -206,7 +211,7 @@
             </div>
             <div class="admin-topbar__meta">
                 <span>現在: ${escapeHtml(fmtDate(new Date().toISOString()))}</span>
-                <span>権限: ${escapeHtml(state.roles.map(roleLabel).join(", ") || "未取得")}</span>
+                <span>権限: ${escapeHtml((isOpenDemoMode ? ["admin", "editor", "operator"] : state.roles).map(roleLabel).join(", ") || "未取得")}</span>
             </div>
         </div>
     `;
@@ -892,19 +897,39 @@
         if (error) return setNotice(`セッション確認に失敗しました: ${error.message}`, "error");
         state.session = data.session;
         state.user = data.session?.user || null;
-        if (pageKey === "appLogin" && state.user) return redirect("appDashboard");
-        if (protectedPages.has(pageKey) && !state.user) return redirect("appLogin");
+        if (!state.user && isOpenDemoMode) {
+            try {
+                const { data: anonData, error: anonError } = await supabase.auth.signInAnonymously();
+                if (!anonError) {
+                    state.session = anonData?.session || state.session;
+                    state.user = anonData?.user || state.user;
+                }
+            } catch {
+                // Keep open-demo UI behavior even when anonymous auth is unavailable.
+            }
+        }
+        if (pageKey === "appLogin" && state.user && !isOpenDemoMode) return redirect("appDashboard");
+        if (protectedPages.has(pageKey) && !state.user && !isOpenDemoMode) return redirect("appLogin");
         if (state.user) {
             state.queryWarnings = [];
             state.profile = await loadProfile(state.user.id);
             state.roles = await loadRoles(state.user.id, state.profile);
+            render();
+        } else if (isOpenDemoMode && protectedPages.has(pageKey)) {
+            state.profile = { display_name: "Demo Guest", account_status: "active" };
+            state.roles = ["admin", "editor", "operator"];
             render();
         }
         if (protectedPages.has(pageKey)) await loadPageData();
         supabase.auth.onAuthStateChange((_event, session) => {
             state.session = session;
             state.user = session?.user || null;
-            if (!state.user && protectedPages.has(pageKey)) redirect("appLogin");
+            if (!state.user && protectedPages.has(pageKey) && !isOpenDemoMode) redirect("appLogin");
+            if (!state.user && isOpenDemoMode && protectedPages.has(pageKey)) {
+                state.profile = { display_name: "Demo Guest", account_status: "active" };
+                state.roles = ["admin", "editor", "operator"];
+                render();
+            }
         });
     };
     init().catch((e) => setNotice(`初期化エラー: ${e.message}`, "error"));

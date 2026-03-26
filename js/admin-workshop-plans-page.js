@@ -92,6 +92,8 @@
     `;
 
         const cfg = window.INIM_SITE_CONFIG || {};
+        const adminAccessMode = String(cfg.adminAccessMode || "admin_only").trim().toLowerCase();
+        const isOpenDemoMode = adminAccessMode === "open_demo";
         const sbApi = window.supabase;
         const supabase = cfg.supabaseUrl && cfg.supabasePublishableKey && sbApi?.createClient
             ? sbApi.createClient(cfg.supabaseUrl, cfg.supabasePublishableKey)
@@ -337,8 +339,18 @@
                 return;
             }
             const { data: sessionData } = await supabase.auth.getSession();
-            const user = sessionData?.session?.user || null;
-            if (!user) {
+            let user = sessionData?.session?.user || null;
+            if (!user && isOpenDemoMode && supabase.auth?.signInAnonymously) {
+                try {
+                    const { data: anonData, error: anonError } = await supabase.auth.signInAnonymously();
+                    if (!anonError) {
+                        user = anonData?.user || null;
+                    }
+                } catch {
+                    // Continue in open demo mode even when anonymous auth is unavailable.
+                }
+            }
+            if (!user && !isOpenDemoMode) {
                 window.location.href = "../login.html";
                 return;
             }

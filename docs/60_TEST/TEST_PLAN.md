@@ -461,3 +461,119 @@
   - 公開導線は重複ナビなしで運用できる
   - ロールバック手段が設定値のみで機能する
   - Desktop/Mobile でナビ表示崩れが発生しない
+
+## 2026-03-26 追加テスト / Added Test (Public Header + Drilldown Global Nav)
+- 対象:
+  - `js/site-shell.js`
+  - `css/style.css`
+  - `js/site-config.js`
+- 手順:
+  1. 公開ページを開き、左上が `images/logo/logo-inim-dx.jpg` 表示になっていることを確認する
+  2. notice bar に「配送・返品・お支払い...」文言が表示されないことを確認する
+  3. グローバルナビの親メニュー（例: ブランド / アイテム / 香りから探す / 香りと遊ぶ）で子メニューが開くことを確認する
+  4. 子メニュー項目が旧サイドナビの構成と一致することを確認する
+  5. 画面外クリックまたは Esc で submenu が閉じることを確認する
+  6. 現在ページに `is-current` と `aria-current="page"` が適用されることを確認する
+  7. `enablePublicSideNav: true` へ変更した場合、旧サイドナビが再表示されることを確認する
+- 期待結果:
+  - 公開ヘッダーはロゴ中心で重複情報が減り、視認性が向上する
+  - グローバルナビ単体で主要導線と子導線に到達できる
+  - ロールバックは設定値変更のみで可能
+
+## 2026-03-26 追加テスト / Added Test (Global Nav Hover Expand + Typography)
+- 対象:
+  - `css/style.css`
+  - `js/site-shell.js`
+- 手順:
+  1. Desktop 幅で公開ページを開き、親メニューにホバーした際に子メニューが展開されることを確認する
+  2. 親メニューからマウスを外すと子メニューが閉じることを確認する
+  3. グローバルナビのトップレベル文字が太字かつ中央配置であることを確認する
+  4. 980px 以下で開き、トグル操作で子メニューが開閉できることを確認する
+- 期待結果:
+  - Desktop は hover で直感的に drilldown が利用できる
+  - Mobile は誤操作を抑えたトグル開閉を維持する
+  - ナビ文字の視認性が向上している
+
+## 2026-03-26 追加テスト / Added Test (Global Nav Hover Bridge)
+- 対象:
+  - `css/style.css`
+- 手順:
+  1. Desktop 幅で親メニューへホバーし、submenu を展開する
+  2. 親メニューから submenu へマウスを移動し、submenu が閉じずに維持されることを確認する
+  3. submenu 項目をクリックして遷移できることを確認する
+- 期待結果:
+  - hover drilldown の実運用で submenu を安定して選択できる
+## 2026-03-26 追加テスト / Added Test (Admin Access Mode Switch: open_demo vs admin_only)
+- 対象:
+  - `js/site-config.js`
+  - `js/admin-app.js`
+  - `js/admin-workshop-page.js`
+  - `js/admin-workshop-plans-page.js`
+  - `js/admin-enquiries-page.js`
+- 手順:
+  1. `adminAccessMode: "open_demo"` に設定し、未ログイン状態で `app/dashboard.html` / `app/pages/workshop.html` / `app/pages/workshop-plans.html` / `app/pages/enquiries.html` を開く
+  2. 各画面で本文データが表示されることを確認する（ログイン画面へリダイレクトされない）
+  3. `adminAccessMode: "admin_only"` に切替えて同URLを再確認する
+  4. 未ログイン時は `app/login.html` へリダイレクトされることを確認する
+- 期待結果:
+  - `open_demo`: 未ログインでも管理画面アクセス可能（デモ運用）
+  - `admin_only`: 従来どおりログイン必須で保護される
+  - EN: Admin access behavior switches correctly by config without code changes.
+## 2026-03-26 追加テスト / Added Test (Global Nav Admin Always Visible)
+- 対象:
+  - `js/site-shell.js`
+- 手順:
+  1. 未ログイン状態で公開ページを開き、グローバルナビに `Admin` が表示されることを確認する
+  2. ログイン状態でも `Admin` が表示され続けることを確認する
+  3. `Admin` の見た目（高さ、余白、ホバー）が他トップメニューと同一であることを確認する
+  4. `app/dashboard.html` を開いたとき `Admin` が current 表示（`is-current`）になることを確認する
+- 期待結果:
+  - `Admin` はセッション有無に関係なく常時表示される
+  - グローバルナビ内で他メニューと同じUI構造・挙動を維持する
+  - EN: Admin top-level menu remains visible at all times with consistent styling/active state behavior.
+## 2026-03-26 追加テスト / Added Test (Open Demo Anonymous Session Bootstrap)
+- 対象:
+  - `js/admin-app.js`
+  - `js/admin-workshop-page.js`
+  - `js/admin-workshop-plans-page.js`
+  - `js/admin-enquiries-page.js`
+- 手順:
+  1. `adminAccessMode: "open_demo"` に設定し、ログアウト状態で `app/pages/workshop.html` と `app/pages/enquiries.html` を開く
+  2. 一覧が0件固定でなく、実データ件数（またはRLSエラー表示）へ遷移することを確認する
+  3. Supabase で Anonymous auth を有効/無効それぞれで挙動を確認する
+- 期待結果:
+  - Anonymous auth 有効時: 匿名認証セッションが確立され、一覧データが表示される
+  - Anonymous auth 無効時: 認証確立不可のためデータ取得は制限されるが、画面自体は `open_demo` として表示継続される
+  - EN: Demo mode attempts anonymous-auth bootstrap and loads records when policy/environment permits.
+## 2026-03-26 追加テスト / Added Test (Demo Read Policy Apply/Rollback for Admin Ops)
+- 対象:
+  - `sql/13_admin_demo_read_policies.sql`
+  - `sql/14_revert_admin_demo_read_policies.sql`
+  - `app/pages/workshop.html`
+  - `app/pages/enquiries.html`
+- 手順:
+  1. `sql/13_admin_demo_read_policies.sql` を Supabase SQL Editor で実行する
+  2. ログアウト状態 + `adminAccessMode: "open_demo"` で `Workshop Bookings / Enquiries` を開き、一覧に実データが表示されることを確認する
+  3. `sql/14_revert_admin_demo_read_policies.sql` を実行する
+  4. 同条件で再確認し、再び `0/0` になる（またはRLSにより非表示になる）ことを確認する
+- 期待結果:
+  - 適用時: デモ用途の一覧確認が可能
+  - 巻き戻し時: RLS保護状態へ即時復帰
+  - EN: Apply/rollback scripts switch demo visibility predictably for admin operations pages.
+## 2026-03-26 追加テスト / Added Test (Rollback to Admin-Only: Final Security Restore)
+- 対象:
+  - `sql/14_revert_admin_demo_read_policies.sql`
+  - `js/site-config.js`
+  - `app/dashboard.html`
+  - `app/pages/workshop.html`
+  - `app/pages/enquiries.html`
+- 手順:
+  1. `sql/14_revert_admin_demo_read_policies.sql` を実行する
+  2. `js/site-config.js` で `adminAccessMode: "admin_only"` に変更する
+  3. ブラウザをハードリロードする
+  4. 未ログインで対象URLへアクセスし、`app/login.html` に遷移することを確認する
+  5. 管理者ログイン後は対象ページでデータ表示・更新が可能なことを確認する
+- 期待結果:
+  - デモ向けの公開読取状態が解除される
+  - 管理画面はログイン必須の通常保護状態へ復帰する
+  - EN: Security posture returns to admin-only with predictable rollback behavior.

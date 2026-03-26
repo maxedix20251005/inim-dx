@@ -169,3 +169,41 @@
   - EN: Disabled public side navigation via feature flag (`enablePublicSideNav`) and moved to a single global-navigation model.
   - JA: 旧サイドナビはコード保持しており、フラグONで即時ロールバック可能。
   - EN: Legacy side-nav code is retained and can be rolled back instantly by enabling the flag.
+- 2026-03-26: Public header/nav UX redesign delivered (logo + no notice text + drilldown nav).
+  - JA: ヘッダー左上をロゴ表示へ変更し、notice bar の案内文を削除。
+  - EN: Replaced top-left header text with logo and removed notice-bar message text.
+  - JA: グローバルナビを drilldown 化し、サイドナビ由来の子メニューを統合。
+  - EN: Upgraded global navigation with drilldown menus populated from side-nav child structure.
+- 2026-03-26: Global nav interaction/typography refinement applied.
+  - JA: Desktop では親メニュー hover でサブメニュー展開、Mobile ではトグル開閉を維持。
+  - EN: Desktop now expands submenus on hover, while mobile keeps toggle-based opening.
+  - JA: グローバルナビのトップレベル文字を太字＋中央配置へ調整。
+  - EN: Updated global-nav top-level labels to bold and centered alignment.
+- 2026-03-26: Global nav submenu hover-stability fix applied.
+  - JA: 親→子メニュー遷移時の hover ロストを防ぐため、dropdown位置と hover bridge を調整。
+  - EN: Improved hover stability by reducing dropdown gap and adding a hover bridge between parent and submenu.
+- 2026-03-26: Admin demo-access switch delivered.
+  - JA: `js/site-config.js` に `adminAccessMode`（`open_demo` / `admin_only`）を追加。現設定は `open_demo`。
+  - EN: Added `adminAccessMode` (`open_demo` / `admin_only`) in `js/site-config.js`; current value is `open_demo`.
+  - JA: `js/admin-workshop-page.js` / `js/admin-workshop-plans-page.js` / `js/admin-enquiries-page.js` で、`open_demo` 時は未ログイン強制リダイレクトを無効化。
+  - EN: Disabled login-forced redirect in 3 admin page modules when `adminAccessMode` is `open_demo`.
+  - JA: `admin_only` へ戻す場合は `js/site-config.js` の値変更のみで切替可能。
+  - EN: Rollback to secure mode is a config-only change (`adminAccessMode: 'admin_only'`).
+- 2026-03-26: Global nav `Admin` visibility updated per UX request.
+  - JA: 未ログイン時でも `Admin` メニューを常時表示するよう変更（`js/site-shell.js`）。
+  - EN: `Admin` menu is now always visible in global nav even when logged off (`js/site-shell.js`).
+  - JA: DOM 構造を他メニューと同一化（`.category-nav__item > a`）し、表示一貫性を確保。
+  - EN: Matched DOM pattern with other menus (`.category-nav__item > a`) for consistent UI.
+- 2026-03-26: Demo-mode data visibility fix for admin operations pages.
+  - JA: `open_demo` + 未ログイン時に `signInAnonymously()` を試行し、RLS下でも一覧取得できるよう調整。
+  - EN: Added `signInAnonymously()` attempt in `open_demo` when logged off, so list queries can run under authenticated session where allowed by RLS.
+  - JA: 対象は `js/admin-app.js` / `js/admin-workshop-page.js` / `js/admin-workshop-plans-page.js` / `js/admin-enquiries-page.js`。
+  - EN: Scope: `js/admin-app.js` / `js/admin-workshop-page.js` / `js/admin-workshop-plans-page.js` / `js/admin-enquiries-page.js`.
+- 2026-03-26: Root-cause verified for `0/0` on admin bookings/enquiries in open demo mode.
+  - JA: publishable key 直叩きで `bookings/enquiries` が `200 []` を返し、RLS非表示であることを確認。
+  - EN: Verified via direct publishable-key API check that `bookings/enquiries` return `200 []` due to RLS visibility.
+  - JA: デモ表示用として `sql/13_admin_demo_read_policies.sql`（適用）と `sql/14_revert_admin_demo_read_policies.sql`（巻き戻し）を追加。
+  - EN: Added `sql/13_admin_demo_read_policies.sql` (apply) and `sql/14_revert_admin_demo_read_policies.sql` (rollback) for demo visibility.
+- 2026-03-26: Rollback runbook added for `open_demo` -> `admin_only`.
+  - JA: 実施順は `sql/14_revert_admin_demo_read_policies.sql` 実行 -> `js/site-config.js` の `adminAccessMode` を `admin_only` へ変更 -> ハードリロード -> 未ログイン時リダイレクト確認。
+  - EN: Required order is: run `sql/14_revert_admin_demo_read_policies.sql` -> set `adminAccessMode` to `admin_only` in `js/site-config.js` -> hard refresh -> verify logged-off redirect to login.

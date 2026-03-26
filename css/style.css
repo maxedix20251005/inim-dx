@@ -217,7 +217,7 @@ main,
     min-height: 44px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     gap: 12px;
     font-size: 0.84rem;
     color: var(--color-muted);
@@ -241,12 +241,20 @@ main,
     gap: 20px;
 }
 
-.utility-header__brand {
-    font-size: 1.15rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-main);
+.utility-header__brand-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 170px;
+    max-width: 44vw;
+}
+
+.utility-header__brand-logo img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid rgba(201, 197, 187, 0.9);
+    box-shadow: 0 4px 12px rgba(44, 44, 44, 0.12);
 }
 
 .utility-header__tools {
@@ -273,17 +281,128 @@ main,
     transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
 
-.category-nav a {
+.category-nav__item {
+    position: relative;
     display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex: 1 1 0;
+    gap: 6px;
+    min-width: 0;
+}
+
+.category-nav__item > a {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     min-height: 42px;
+    width: 100%;
+    padding: 0 12px;
     text-align: center;
     line-height: 1;
     font-size: 0.92rem;
+    font-weight: 700;
     color: var(--color-main);
     white-space: nowrap;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.category-nav__item > a:hover,
+.category-nav__item > a:focus-visible {
+    background: rgba(234, 228, 211, 0.95);
+    outline: none;
+}
+
+.category-nav__item > a.is-current {
+    background: rgba(178, 69, 49, 0.1);
+    color: #8b3829;
+    font-weight: 700;
+}
+
+.category-nav__toggle {
+    display: none;
+    width: 24px;
+    min-height: 24px;
+    border: 1px solid rgba(201, 197, 187, 0.92);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--color-main);
+    cursor: pointer;
+    position: relative;
+}
+
+.category-nav__toggle::before {
+    content: "▾";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 0.9rem;
+}
+
+.category-nav__item.is-open .category-nav__toggle::before {
+    content: "▴";
+}
+
+.category-nav__dropdown {
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 0;
+    min-width: 220px;
+    max-width: min(42vw, 360px);
+    display: grid;
+    gap: 2px;
+    padding: 8px;
+    border: 1px solid rgba(201, 197, 187, 0.95);
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 14px 30px rgba(44, 44, 44, 0.14);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    z-index: 40;
+}
+
+.category-nav__item.has-children::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 10px;
+}
+
+.category-nav__dropdown a {
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border-radius: 8px;
+    color: var(--color-main);
+}
+
+.category-nav__dropdown a:hover,
+.category-nav__dropdown a:focus-visible {
+    background: rgba(234, 228, 211, 0.95);
+    outline: none;
+}
+
+.category-nav__dropdown a.is-current {
+    background: rgba(178, 69, 49, 0.1);
+    color: #8b3829;
+    font-weight: 700;
+}
+
+.category-nav__item.is-open .category-nav__dropdown,
+.category-nav__item.has-children:hover .category-nav__dropdown,
+.category-nav__item:focus-within .category-nav__dropdown {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
 }
 
 .category-nav.is-floating {
@@ -996,9 +1115,31 @@ main {
         overflow-x: auto;
     }
 
+    .category-nav__item {
+        flex: 0 0 auto;
+    }
+
     .category-nav a {
         min-height: 40px;
         flex: 0 0 auto;
+    }
+
+    .category-nav__toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .category-nav__item > a {
+        width: auto;
+    }
+
+    .category-nav__dropdown {
+        position: fixed;
+        left: 22px;
+        right: 22px;
+        top: 132px;
+        max-width: none;
     }
 
     .category-nav.is-floating {

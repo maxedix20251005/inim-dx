@@ -185,6 +185,95 @@
     const renderStandaloneLink = (item) => item.modal
         ? `<a class="${isCurrent(item.key).trim()}" href="${accountHref(item.modal)}" data-account-modal="${item.modal}">${item.label}</a>`
         : `<a class="${isCurrent(item.key).trim()}" href="${link(item.key)}">${item.label}</a>`;
+    const sidebarGroupMap = Object.fromEntries(sidebarGroups.map((group) => [group.key, group]));
+    const buildGlobalChildren = (groupKey) => {
+        const group = sidebarGroupMap[groupKey];
+        if (!group || !Array.isArray(group.items)) return [];
+        return group.items.map((item) => {
+            if (typeof item === 'string') {
+                return {
+                    key: item,
+                    label: pages[item]?.label || item,
+                    href: link(item),
+                    current: pageKey === item
+                };
+            }
+            return {
+                key: '',
+                label: item.label,
+                href: item.href,
+                current: false
+            };
+        });
+    };
+    const globalNavItems = [
+        { key: 'home', label: 'Home', href: link('home'), current: pageKey === 'home', children: [] },
+        {
+            key: 'brand',
+            label: 'ブランド',
+            href: link('brand'),
+            current: ['about', 'brand', 'brandGroundbreakers', 'brandNezs', 'brandAromaCrops', 'brandKosaido', 'brandWatoyo', 'brandCocktailSoap', 'brandEnjoyth', 'brandAwaji', 'brandOldAroma'].includes(pageKey),
+            children: buildGlobalChildren('brand')
+        },
+        {
+            key: 'items',
+            label: 'アイテム',
+            href: link('items'),
+            current: ['items', 'itemHomeFragrance', 'itemBodyCare', 'itemDiy', 'itemSale', 'itemEcology', 'itemRefillTools', 'itemGiftSet'].includes(pageKey),
+            children: buildGlobalChildren('items')
+        },
+        {
+            key: 'scentSearch',
+            label: '香りから探す',
+            href: link('scentSearch'),
+            current: ['scentSearch', 'searchStoreInfo', 'searchProjects', 'searchEvents'].includes(pageKey),
+            children: buildGlobalChildren('scentSearch')
+        },
+        {
+            key: 'workshop',
+            label: '香りと遊ぶ',
+            href: link('workshop'),
+            current: ['workshop', 'workshopBooking', 'workshopBookingEntry', 'workshopBookingConfirm', 'smartScent'].includes(pageKey),
+            children: buildGlobalChildren('workshop')
+        },
+        {
+            key: 'article',
+            label: '記事',
+            href: link('article'),
+            current: pageKey === 'article',
+            children: buildGlobalChildren('article')
+        },
+        {
+            key: 'sale',
+            label: 'Sale',
+            href: link('sale'),
+            current: ['sale', 'itemSale'].includes(pageKey),
+            children: buildGlobalChildren('sale')
+        },
+        {
+            key: 'stores',
+            label: '実店舗',
+            href: link('stores'),
+            current: pageKey === 'stores',
+            children: buildGlobalChildren('stores')
+        }
+    ];
+    const renderGlobalNav = () => `
+        <nav class="category-nav" aria-label="グローバルナビゲーション">
+            ${globalNavItems.map((item) => {
+                const hasChildren = item.children.length > 0;
+                return `
+                    <div class="category-nav__item ${hasChildren ? 'has-children' : ''} ${item.current ? 'is-current' : ''}">
+                        <a class="${item.current ? 'is-current' : ''}" href="${item.href}">${item.label}</a>
+                        ${hasChildren ? `<button type="button" class="category-nav__toggle" aria-expanded="false" aria-label="${item.label} submenu"></button>
+                        <div class="category-nav__dropdown" role="menu">
+                            ${item.children.map((child) => `<a class="${child.current ? 'is-current' : ''}" href="${child.href}" role="menuitem">${child.label}</a>`).join('')}
+                        </div>` : ''}
+                    </div>
+                `;
+            }).join('')}
+        </nav>
+    `;
 
     const openGroups = new Set();
     const currentTopLevel = {
@@ -256,30 +345,22 @@
 
     const headerHtml = `
         <div class="notice-bar">
-            <p>配送・返品・お支払いに関する最新情報をご案内しています。</p>
             <div class="notice-bar__actions">
                 <a href="${link('shoppingGuide')}">ショッピングガイド</a>
                 <a href="${link('contact')}">お問い合わせ</a>
             </div>
         </div>
         <div class="utility-header">
-            <a class="utility-header__brand" href="${link('home')}">${currentPage.title}</a>
+            <a class="utility-header__brand-logo" href="${link('home')}" aria-label="inim-dx top">
+                <img src="${root}/images/logo/logo-inim-dx.jpg" alt="inim-dx logo">
+            </a>
             <div class="utility-header__tools">
                 <a href="${link('scentSearch')}">検索</a>
                 ${accountModalLink('account', 'マイアカウント')}
                 <a href="${link('cart')}">カート</a>
             </div>
         </div>
-        <nav class="category-nav" aria-label="グローバルナビゲーション">
-            <a class="${isCurrent('home').trim()}" href="${link('home')}">Home</a>
-            <a class="${['about', 'brand', 'brandGroundbreakers', 'brandNezs', 'brandAromaCrops', 'brandKosaido', 'brandWatoyo', 'brandCocktailSoap', 'brandEnjoyth', 'brandAwaji', 'brandOldAroma'].includes(pageKey) ? 'is-current' : ''}" href="${link('brand')}">ブランド</a>
-            <a class="${['items', 'itemHomeFragrance', 'itemBodyCare', 'itemDiy', 'itemSale', 'itemEcology', 'itemRefillTools', 'itemGiftSet'].includes(pageKey) ? 'is-current' : ''}" href="${link('items')}">アイテム</a>
-            <a class="${['scentSearch', 'searchStoreInfo', 'searchProjects', 'searchEvents'].includes(pageKey) ? 'is-current' : ''}" href="${link('scentSearch')}">香りから探す</a>
-            <a class="${['workshop', 'workshopBooking', 'workshopBookingEntry', 'workshopBookingConfirm', 'smartScent'].includes(pageKey) ? 'is-current' : ''}" href="${link('workshop')}">香りと遊ぶ</a>
-            <a class="${pageKey === 'article' ? 'is-current' : ''}" href="${link('article')}">記事</a>
-            <a class="${['sale', 'itemSale'].includes(pageKey) ? 'is-current' : ''}" href="${link('sale')}">Sale</a>
-            <a class="${pageKey === 'stores' ? 'is-current' : ''}" href="${link('stores')}">実店舗</a>
-        </nav>
+        ${renderGlobalNav()}
         <div class="news-strip">
             <span>Latest</span>
             <p>${currentPage.latest}</p>
@@ -415,19 +496,22 @@
 
     const renderAdminLinks = () => {
         const show = isAdminUser();
+        const isAdminPage = String(pageKey || '').startsWith('app');
 
         const globalNav = header.querySelector('.category-nav');
         if (globalNav) {
             let item = globalNav.querySelector('[data-admin-link="global"]');
-            if (show && !item) {
-                item = document.createElement('a');
-                item.href = link('appDashboard');
+            if (!item) {
+                item = document.createElement('div');
+                item.className = 'category-nav__item';
                 item.dataset.adminLink = 'global';
-                item.textContent = 'Admin';
+                item.innerHTML = `<a href="${link('appDashboard')}">Admin</a>`;
                 globalNav.appendChild(item);
             }
-            if (!show && item) {
-                item.remove();
+            item.classList.toggle('is-current', isAdminPage);
+            const linkNode = item.querySelector('a');
+            if (linkNode) {
+                linkNode.classList.toggle('is-current', isAdminPage);
             }
             syncGlobalNavA11y();
         }
@@ -687,6 +771,42 @@
             }
         });
     };
+    const initGlobalNavDrilldown = () => {
+        const nav = header.querySelector('.category-nav');
+        if (!nav) return;
+        const items = nav.querySelectorAll('.category-nav__item.has-children');
+        const closeAll = () => {
+            items.forEach((item) => {
+                item.classList.remove('is-open');
+                const toggle = item.querySelector('.category-nav__toggle');
+                if (toggle) toggle.setAttribute('aria-expanded', 'false');
+            });
+        };
+        items.forEach((item) => {
+            const toggle = item.querySelector('.category-nav__toggle');
+            if (!toggle) return;
+            toggle.addEventListener('click', (event) => {
+                event.preventDefault();
+                const willOpen = !item.classList.contains('is-open');
+                closeAll();
+                if (willOpen) {
+                    item.classList.add('is-open');
+                    toggle.setAttribute('aria-expanded', 'true');
+                }
+            });
+        });
+        document.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof Element)) return;
+            if (!nav.contains(target)) closeAll();
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') closeAll();
+        });
+        nav.querySelectorAll('.category-nav__dropdown a').forEach((linkNode) => {
+            linkNode.addEventListener('click', () => closeAll());
+        });
+    };
 
     pageContent.appendChild(header);
     pageContent.appendChild(main);
@@ -702,6 +822,7 @@
     body.appendChild(shell);
     body.appendChild(modalHost.firstElementChild);
     syncGlobalNavA11y();
+    initGlobalNavDrilldown();
 
     const modal = document.getElementById('account-modal');
     const modalTitle = document.getElementById('account-modal-title');
