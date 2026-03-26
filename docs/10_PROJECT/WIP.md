@@ -91,3 +91,5 @@
 - 2026-03-26: Mojibake remediation completed for `subpages/workshop-booking.html` (UTF-8 rebuilt page).
 - 2026-03-26: Implemented `app/pages/workshop-plans.html` + `css/app-workshop-plans.css` and added `Plan Management` link from `app/pages/workshop.html`.
 
+- 2026-03-26: Refined `app/pages/workshop-plans.html` visual design to align with `DESIGN_GUIDELINE` tokens (palette, typography, spacing, button/input standards) via `css/app-workshop-plans.css` refresh.
+- 2026-03-26: Shared footer Guide first link label changed from `Top` to `サイトマップ` in `js/site-shell.js` (target page creation deferred as backlog item 2.11).

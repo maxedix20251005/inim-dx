@@ -291,7 +291,7 @@
             </div>
             <div>
                 <p class="site-footer__title">Guide</p>
-                <a href="${link('home')}">Top</a>
+                <a href="${link('home')}">サイトマップ</a>
                 <a href="${link('shoppingGuide')}">配送・送料について</a>
                 <a href="${link('shoppingGuide')}">返品について</a>
                 <a href="${link('shoppingGuide')}">お支払い方法について</a>
@@ -1269,28 +1269,4 @@
 
     document.dispatchEvent(new CustomEvent('site-shell:ready', { detail: { pageKey, root } }));
 })();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

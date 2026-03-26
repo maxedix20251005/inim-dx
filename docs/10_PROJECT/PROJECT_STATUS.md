@@ -405,3 +405,5 @@
 - 2026-03-26: `subpages/workshop-booking.html` summary panel (`開催期間/対象店舗/予約方式/料金目安`) switched from static text to runtime DB-derived values (`workshop_sessions`, `stores`, `workshop_plans`).
 - 2026-03-26: Fixed mojibake in `subpages/workshop-booking.html` by rebuilding the page in UTF-8 and removing broken Japanese strings/tags while preserving booking flow IDs and DB summary behavior.
 - 2026-03-26: Added admin screen `app/pages/workshop-plans.html` for DB-driven workshop plan management (create/update/delete + inclusion management) and linked it from booking management screen.
+- 2026-03-26: Refined `app/pages/workshop-plans.html` visual design to align with `DESIGN_GUIDELINE` tokens (palette, typography, spacing, button/input standards) via `css/app-workshop-plans.css` refresh.
+- 2026-03-26: Shared footer Guide first link label changed from `Top` to `サイトマップ` in `js/site-shell.js` (target page creation deferred as backlog item 2.11).

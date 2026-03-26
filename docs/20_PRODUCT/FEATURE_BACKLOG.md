@@ -99,3 +99,15 @@
   - EN: Define a consistent placement rule for plan-management links across header/side/footer
 
 
+
+### 2.11 Sitemap Page Creation + Footer Link Finalisation / サイトマップページ作成とフッター導線確定
+- Status: `Proposed`
+- JA: フッターの「サイトマップ」リンクに対応する `sitemap.html` を新規作成し、全ページ導線を一覧化する。
+- EN: Create a dedicated `sitemap.html` page for the footer sitemap link and list all site navigation paths.
+- Scope candidates:
+  - JA: 公開ページ/管理ページの導線一覧表示（管理画面は権限注記付き）
+  - EN: List public and admin navigation paths (admin links with access notes)
+  - JA: `04-sitemap` と実装差分の可視化
+  - EN: Highlight differences between `04-sitemap` and implemented pages
+  - JA: フッター「サイトマップ」リンクを `sitemap.html` に切り替え
+  - EN: Switch footer “サイトマップ” link target to `sitemap.html`
