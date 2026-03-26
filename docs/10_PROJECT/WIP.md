@@ -88,3 +88,4 @@
 - 2026-03-26: Normalised workshop-plan card title sizing, corrected plan image mapping to workshop canonical assets (`Workshop_ (9-1).png` / `Workshop_ (2-1).png`), and removed sidebar eyebrow text from admin top-left brand block.
 - 2026-03-26: Added backlog item for workshop plan/course management IA optimisation and dynamic booking summary replacement (currently static text).`r`n
 - 2026-03-26: Implemented dynamic booking summary panel on workshop booking page; static generic values removed.
+- 2026-03-26: Mojibake remediation completed for `subpages/workshop-booking.html` (UTF-8 rebuilt page).

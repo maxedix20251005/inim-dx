@@ -1,576 +1,226 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>繝ｯ繝ｼ繧ｯ繧ｷ繝ｧ繝・・莠育ｴ・| inim-dx</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="icon" href="../images/logo/logo-inim-dx.jpg">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/workshop-booking.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ワークショップ予約 | inim-dx</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/workshop-booking.css">
+  <link rel="icon" href="../images/logo/logo-inim-dx.jpg">
 </head>
-
 <body data-root=".." data-page-key="workshopBooking">
-    <main id="page-main" class="booking-page">
-        <div class="booking-wrap">
-            <p class="section-kicker booking-kicker">Workshop Booking <span class="supabase-led" id="connection-led" aria-label="Supabase connection status"></span></p>
-            <div class="booking-diagnostics" id="booking-diagnostics" hidden>
-                <p class="booking-diagnostics__title">Data Diagnostics</p>
-                <dl class="booking-diagnostics__grid">
-                    <div><dt>Source</dt><dd id="diag-source">-</dd></div>
-                    <div><dt>Plans</dt><dd id="diag-plans">-</dd></div>
-                    <div><dt>Stores</dt><dd id="diag-stores">-</dd></div>
-                    <div><dt>Sessions</dt><dd id="diag-sessions">-</dd></div>
-                    <div><dt>Range</dt><dd id="diag-range">-</dd></div>
-                    <div><dt>Error</dt><dd id="diag-error">-</dd></div>
-                </dl>
-            </div>
+  <main id="page-main" class="booking-page">
+    <div class="booking-wrap">
+      <p class="section-kicker booking-kicker">Workshop Booking <span class="supabase-led" id="connection-led"></span></p>
+      <div class="booking-diagnostics" id="booking-diagnostics" hidden>
+        <p class="booking-diagnostics__title">Data Diagnostics</p>
+        <dl class="booking-diagnostics__grid">
+          <div><dt>Source</dt><dd id="diag-source">-</dd></div>
+          <div><dt>Plans</dt><dd id="diag-plans">-</dd></div>
+          <div><dt>Stores</dt><dd id="diag-stores">-</dd></div>
+          <div><dt>Sessions</dt><dd id="diag-sessions">-</dd></div>
+          <div><dt>Range</dt><dd id="diag-range">-</dd></div>
+          <div><dt>Error</dt><dd id="diag-error">-</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <section class="booking-hero">
+      <div class="booking-wrap booking-hero__grid">
+        <div>
+          <p class="section-kicker">Workshop Booking</p>
+          <h1 class="booking-hero__title">予約日を選んで体験枠を確保する</h1>
+          <p class="booking-hero__lead">カレンダーで日付を選ぶと、店舗ごとの予約枠と料金目安を確認できます。</p>
         </div>
-        <section class="booking-hero">
-            <div class="booking-wrap booking-hero__grid">
-                <div>
-                    <p class="section-kicker">Workshop Booking</p>
-                    <h1 class="booking-hero__title">遨ｺ縺咲憾豕√ｒ隕九↑縺後ｉ縲∽ｽ馴ｨ捺律譎ゅｒ驕ｸ縺ｶ</h1>
-                    <p class="booking-hero__lead">Draft 迚医・莠育ｴ・判髱｢縺ｧ縺吶ゆｸ企Κ繧ｫ繝ｬ繝ｳ繝繝ｼ縺ｧ髢句ぎ譌･縺ｨ遨ｺ縺咲憾豕√ｒ遒ｺ隱阪＠縲∽ｺ育ｴ・庄閭ｽ譌･繧帝∈縺ｶ縺ｨ縲∽ｸ矩Κ縺ｫ髮・粋譎る俣縲∽ｽ馴ｨ捺凾髢薙∵侭驥代∽ｺ育ｴ・ｰ守ｷ壹ｒ陦ｨ遉ｺ縺励∪縺吶・/p>
-                </div>
-                <aside class="booking-summary">
-                    <div class="booking-summary__row"><span>開催期間</span><strong id="summary-period">読み込み中...</strong></div>
-                    <div class="booking-summary__row"><span>対象店舗</span><strong id="summary-stores">読み込み中...</strong></div>
-                    <div class="booking-summary__row"><span>予約方式</span><strong id="summary-methods">読み込み中...</strong></div>
-                    <div class="booking-summary__row"><span>料金目安</span><strong id="summary-price">読み込み中...</strong></div>
-                </aside>
-            </div>
-        </section>
+        <aside class="booking-summary">
+          <div class="booking-summary__row"><span>開催期間</span><strong id="summary-period">読み込み中...</strong></div>
+          <div class="booking-summary__row"><span>対象店舗</span><strong id="summary-stores">読み込み中...</strong></div>
+          <div class="booking-summary__row"><span>予約方式</span><strong id="summary-methods">読み込み中...</strong></div>
+          <div class="booking-summary__row"><span>料金目安</span><strong id="summary-price">読み込み中...</strong></div>
+        </aside>
+      </div>
+    </section>
 
-        <section class="booking-wrap">
-            <section class="booking-panel">
-                <div class="booking-panel__head">
-                    <div><p class="section-kicker">Availability</p><h2>遨ｺ縺咲憾豕・/h2></div>
-                    <p>菴馴ｨ灘ｸ梧悍譌･繧帝∈縺ｶ縺ｨ縲∽ｸ矩Κ縺ｫ譎る俣蟶ｯ縺ｨ譁咎≡繧定｡ｨ遉ｺ縺励∪縺吶・/p>
-                </div>
-                <div class="booking-store-bar">
-                    <div class="booking-store-bar__head">
-                        <div>
-                            <p class="section-kicker">Store</p>
-                            <h3>驕ｸ謚槫ｺ苓・</h3>
-                        </div>
-                        <p class="booking-store-bar__meta" id="booking-store-meta">驕ｸ謚槭＠縺溷ｺ苓・縺ｮ髢句ぎ譌･縺縺代ｒ陦ｨ遉ｺ縺励∪縺吶・/p>
-                    </div>
-                    <div class="booking-store-picker" id="booking-store-picker"></div>
-                </div>
-                <div class="booking-calendar-grid" id="booking-calendar"></div>
-                <div class="booking-legend">
-                    <span><i class="booking-mark" data-status="instant">笳・/i> 蜊ｳ譎ゆｺ育ｴ・庄</span>
-                    <span><i class="booking-mark" data-status="request">笆｡</i> 繝ｪ繧ｯ繧ｨ繧ｹ繝井ｺ育ｴ・庄</span>
-                    <span><i class="booking-mark" data-status="few">笆ｳ</i> 谿句ｸｭ謨ｰ蟆代↑縺・/span>
-                    <span><i class="booking-mark" data-status="full">ﾃ・/i> 遨ｺ縺咲┌縺・/span>
-                    <span><i class="booking-mark" data-status="closed">-</i> 髢句ぎ辟｡縺・/span>
-                </div>
-                <div class="booking-selection-bar">
-                    <div>
-                        <strong id="booking-selection-label">驕ｸ謚樔ｸｭ: 2026蟷ｴ4譛・譌･(譌･)</strong>
-                        <p id="booking-selection-meta">荳九・譎る俣蟶ｯ荳隕ｧ縺ｫ縲∝ｯｾ雎｡譌･縺ｮ髮・粋譎る俣縺ｨ譁咎≡繧定｡ｨ遉ｺ縺励※縺・∪縺吶・/p>
-                    </div>
-                    <a class="button button--secondary" href="#booking-slots-panel">譎る俣蟶ｯ繧堤｢ｺ隱阪☆繧・/a>
-                </div>
-            </section>
-        </section>
+    <section class="booking-wrap">
+      <section class="booking-panel">
+        <div class="booking-panel__head">
+          <div><p class="section-kicker">Availability</p><h2>予約可能日</h2></div>
+          <p>店舗を選ぶと、その店舗の開催日だけを表示します。</p>
+        </div>
+        <div class="booking-store-bar">
+          <div class="booking-store-bar__head">
+            <div><p class="section-kicker">Store</p><h3>選択店舗</h3></div>
+            <p class="booking-store-bar__meta" id="booking-store-meta">店舗を選択してください。</p>
+          </div>
+          <div class="booking-store-picker" id="booking-store-picker"></div>
+        </div>
+        <div class="booking-calendar-grid" id="booking-calendar"></div>
+        <div class="booking-legend">
+          <span><i class="booking-mark" data-status="instant">○</i> 即時予約可</span>
+          <span><i class="booking-mark" data-status="request">□</i> リクエスト予約</span>
+          <span><i class="booking-mark" data-status="few">△</i> 残席わずか</span>
+          <span><i class="booking-mark" data-status="full">×</i> 満席</span>
+          <span><i class="booking-mark" data-status="closed">-</i> 開催なし</span>
+        </div>
+        <div class="booking-selection-bar">
+          <div>
+            <strong id="booking-selection-label">選択中: 日付未選択</strong>
+            <p id="booking-selection-meta">日付を選択すると、下部に予約枠が表示されます。</p>
+          </div>
+          <a class="button button--secondary" href="#booking-slots-panel">予約枠を確認する</a>
+        </div>
+      </section>
+    </section>
 
-        <section class="booking-wrap">
-            <section class="booking-panel" id="booking-slots-panel">
-                <div class="booking-panel__head">
-                    <div><p class="section-kicker">Selected Date</p><h2>譌･譎ゅ・遒ｺ隱阪→莠育ｴ・/h2></div>
-                    <p>笳・/ 笆｡ / 笆ｳ 縺ｮ譌･繧帝∈縺ｶ縺ｨ縲∽ｸ矩Κ縺ｫ髮・粋譎る俣縲∵侭驥代∽ｺ育ｴ・ｰ守ｷ壹ｒ陦ｨ遉ｺ縺励∪縺吶・/p>
-                </div>
-                <div class="booking-slots">
-                    <div class="booking-selected">
-                        <h3 id="booking-selected-title">2026蟷ｴ4譛・譌･(譌･)</h3>
-                        <p class="booking-selected__status" id="booking-selected-status">蜊ｳ譎ゆｺ育ｴ・庄縲よｵ・拷蠎鈴幕蛯ｬ / 譁咎≡ 5,500蜀・・/p>
-                        <div class="booking-slot-list" id="booking-slot-list"></div>
-                    </div>
-                    <aside class="booking-aside">
-                        <div class="booking-aside__card">
-                            <h3>驕ｸ謚樊凾縺ｮ陦ｨ遉ｺ繝ｫ繝ｼ繝ｫ</h3>
-                            <p>ﾃ・縺ｨ - 縺ｯ驕ｸ謚樔ｸ榊庄縺ｧ縺吶や雷 縺ｯ蜊ｳ譎ゆｺ育ｴ・≫味 縺ｯ繝ｪ繧ｯ繧ｨ繧ｹ繝磯∽ｿ｡縲≫無 縺ｯ谿句ｸｭ繧上★縺九・蜑肴署縺ｧ Draft 繧剃ｽ懊▲縺ｦ縺・∪縺吶・/p>
-                        </div>
-                        <div class="booking-aside__card">
-                            <h3>縺薙・ Draft 縺ｧ隧ｰ繧√ｋ鬆・岼</h3>
-                            <ul>
-                                <li>莠ｺ謨ｰ蜈･蜉帙ｒ縺薙・逕ｻ髱｢縺ｫ鄂ｮ縺上°</li>
-                                <li>蠎苓・驕ｸ謚槭ｒ莠句燕縺ｫ蜃ｺ縺吶°</li>
-                                <li>蜊ｳ譎ゆｺ育ｴ・→繝ｪ繧ｯ繧ｨ繧ｹ繝井ｺ育ｴ・〒蜈･蜉幃・岼繧貞・縺代ｋ縺・/li>
-                            </ul>
-                        </div>
-                    </aside>
-                </div>
-            </section>
-        </section>
+    <section class="booking-wrap">
+      <section class="booking-panel" id="booking-slots-panel">
+        <div class="booking-panel__head">
+          <div><p class="section-kicker">Selected Date</p><h2>日付別の予約枠</h2></div>
+          <p>希望の時間帯を選んで予約へ進んでください。</p>
+        </div>
+        <div class="booking-slots">
+          <div class="booking-selected">
+            <h3 id="booking-selected-title">日付未選択</h3>
+            <p class="booking-selected__status" id="booking-selected-status">予約可能な日付を選択してください。</p>
+            <div class="booking-slot-list" id="booking-slot-list"></div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
 
-        <section class="booking-wrap">
-            <section class="booking-detail__panel">
-                <div>
-                    <div class="booking-panel__head">
-                        <div><p class="section-kicker">Detail</p><h2>隧ｳ邏ｰ諠・ｱ</h2></div>
-                        <p>莠育ｴ・峩蜑阪↓遒ｺ隱阪＠縺溘＞隱ｬ譏弱ｒ繧ｿ繝悶〒縺ｾ縺ｨ繧√※縺・∪縺吶・/p>
-                    </div>
-                    <div class="booking-tabs" role="tablist" aria-label="隧ｳ邏ｰ諠・ｱ繧ｿ繝・>
-                        <button class="booking-tab is-active" type="button" data-tab="plan">繝励Λ繝ｳ諠・ｱ</button>
-                        <button class="booking-tab" type="button" data-tab="flow">菴馴ｨ薙・豬√ｌ</button>
-                        <button class="booking-tab" type="button" data-tab="location">髮・粋蝣ｴ謇繝ｻ菴馴ｨ灘ｴ謇</button>
-                        <button class="booking-tab" type="button" data-tab="notes">豕ｨ諢丈ｺ矩・・縺昴・莉・/button>
-                    </div>
-                    <div class="booking-tab-panel is-active" data-panel="plan">
-                        <h3>豬・拷縺ｧ鬥呎ｰｴ縺･縺上ｊ / 鬥吶ｊ繧帝∈繧薙〒閾ｪ蛻・〒繝悶Ξ繝ｳ繝峨☆繧九Ρ繝ｼ繧ｯ繧ｷ繝ｧ繝・・</h3>
-                        <p>蛻晏ｿ・・髄縺代・隱ｿ鬥吩ｽ馴ｨ・Draft 縺ｧ縺吶ょｮ溯｣・凾縺ｫ縺ｯ繝励Λ繝ｳ蜷阪∵園隕∵凾髢薙∵侭驥代・幕蛯ｬ譖懈律縲∽ｺ育ｴ・庄閭ｽ莠ｺ謨ｰ繧・`bookings` 險ｭ險医→蜷医ｏ縺帙※遒ｺ螳壹＠縺ｾ縺吶・/p>
-                        <table class="booking-detail__table"><tbody>
-                            <tr><th>髢句ぎ譛滄俣</th><td>2026蟷ｴ4譛・譌･縲・026蟷ｴ5譛・1譌･</td></tr>
-                            <tr><th>謇隕∵凾髢・/th><td>邏・0蛻・・5蛻・/td></tr>
-                            <tr><th>譁咎≡</th><td>縺翫・縺ｨ繧翫＆縺ｾ 5,500蜀・/ 繝壹い 10,000蜀・/td></tr>
-                            <tr><th>蜷ｫ縺ｾ繧後ｋ繧ゅ・</th><td>菴馴ｨ捺侭縲・ｦ呎ｰｴ1譛ｬ(10ml)縲・ｦ呎侭繝｡繝｢</td></tr>
-                            <tr><th>莠育ｴ・ｺｺ謨ｰ</th><td>1蜷阪・蜷・/ 蝗・/td></tr>
-                        </tbody></table>
-                    </div>
-                    <div class="booking-tab-panel" data-panel="flow">
-                        <div class="booking-detail__grid">
-                            <article class="booking-detail__step"><img src="../images/Workshop/Workshop_ (1).png" alt="蜿嶺ｻ倥き繧ｦ繝ｳ繧ｿ繝ｼ縺ｮ讒伜ｭ・><div><h3>1. 髮・粋繝ｻ蜿嶺ｻ・/h3><p>縺比ｺ育ｴ・凾髢薙・10蛻・燕繧堤岼螳峨↓縺疲擂蠎励￥縺縺輔＞縲・/p></div></article>
-                            <article class="booking-detail__step"><img src="../images/Workshop/Workshop_ (2).png" alt="鬥呎侭譽壹・讒伜ｭ・><div><h3>2. 鬥吶ｊ驕ｸ縺ｳ</h3><p>蛟呵｣懊ｒ豈碑ｼ・＠縺ｪ縺後ｉ螂ｽ縺阪↑鬥吶ｊ繧帝∈縺ｳ縺ｾ縺吶・/p></div></article>
-                            <article class="booking-detail__step"><img src="../images/Workshop/Workshop_ (3).png" alt="隱ｿ鬥吶・讒伜ｭ・><div><h3>3. 菴馴ｨ薙・莉穂ｸ翫￡</h3><p>驟榊粋豈斐ｒ謨ｴ縺医※荳譛ｬ縺ｫ莉穂ｸ翫￡縺ｾ縺吶・/p></div></article>
-                        </div>
-                    </div>
-                    <div class="booking-tab-panel" data-panel="location">
-                        <table class="booking-detail__table"><tbody>
-                            <tr><th>髮・粋蝣ｴ謇</th><td>縲・11-0032 譚ｱ莠ｬ驛ｽ蜿ｰ譚ｱ蛹ｺ豬・拷2荳∫岼1-5 inim-dx 豬・拷蠎・/td></tr>
-                            <tr><th>繧｢繧ｯ繧ｻ繧ｹ</th><td>縺､縺上・繧ｨ繧ｯ繧ｹ繝励Ξ繧ｹ豬・拷鬧・ｈ繧雁ｾ呈ｭｩ6蛻・/ 譚ｱ莠ｬ繝｡繝医Ο驫蠎ｧ邱壽ｵ・拷鬧・ｈ繧雁ｾ呈ｭｩ9蛻・/td></tr>
-                            <tr><th>菴馴ｨ灘ｴ謇</th><td>蜷悟ｺ苓・ 2F Workshop Space</td></tr>
-                        </tbody></table>
-                        <div class="booking-map"><iframe title="豬・拷蠎励・蝨ｰ蝗ｳ" src="https://www.google.com/maps?q=%E6%B5%85%E8%8D%89%E5%AF%BA&output=embed"></iframe></div>
-                    </div>
-                    <div class="booking-tab-panel" data-panel="notes">
-                        <table class="booking-detail__table"><tbody>
-                            <tr><th>豕ｨ諢丈ｺ矩・/th><td>繝ｯ繝ｼ繧ｯ繧ｷ繝ｧ繝・・荳榊盾蜉縺ｧ縺ｮ蜷御ｼｴ縺ｯ蝓ｺ譛ｬ逧・↓縺頑妙繧翫＠縺ｦ縺・∪縺吶ょ惠蠎ｫ迥ｶ豕√↓繧医ｊ驕ｸ縺ｹ繧矩ｦ呎侭縺御ｸ驛ｨ螟峨ｏ繧句ｴ蜷医′縺ゅｊ縺ｾ縺吶・/td></tr>
-                            <tr><th>繧ｭ繝｣繝ｳ繧ｻ繝ｫ</th><td>蜑肴律18:00縺ｾ縺ｧ縺ｯ辟｡譁吶√◎繧御ｻ･髯阪・蠎苓・遒ｺ隱阪・縺・∴蟇ｾ蠢應ｺ亥ｮ壹〒縺吶よ怙邨ゆｻ墓ｧ俶凾縺ｫ cancellation policy 繧堤｢ｺ螳壹＠縺ｾ縺吶・/td></tr>
-                            <tr><th>蛯呵・/th><td>縺薙％縺ｫ縺ｯ莠育ｴ・ｮ御ｺ・燕縺ｫ蠢・★隱ｭ繧薙〒縺ｻ縺励＞蜀・ｮｹ繧呈紛逅・☆繧区Φ螳壹〒縺吶・/td></tr>
-                        </tbody></table>
-                    </div>
-                </div>
-            </section>
-        </section>
-    </main>
-    <script src="../js/site-config.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/site-shell.js"></script>
-    <script>
-        (() => {
-            const BOOKING_BUILD = "20260322b";
-            const siteConfig = window.INIM_SITE_CONFIG || {};
-            const supabaseApi = window.supabase || null;
-            const supabase = (() => {
-                if (window.__INIM_SUPABASE_CLIENT) return window.__INIM_SUPABASE_CLIENT;
-                if (siteConfig.supabaseUrl && siteConfig.supabasePublishableKey && supabaseApi?.createClient) {
-                    const client = supabaseApi.createClient(siteConfig.supabaseUrl, siteConfig.supabasePublishableKey);
-                    window.__INIM_SUPABASE_CLIENT = client;
-                    return client;
-                }
-                return null;
-            })();
-            const calendarHost = document.getElementById("booking-calendar");
-            const connectionLed = document.getElementById("connection-led");
-            const selectedTitle = document.getElementById("booking-selected-title");
-            const selectedStatus = document.getElementById("booking-selected-status");
-            const slotList = document.getElementById("booking-slot-list");
-            const selectionLabel = document.getElementById("booking-selection-label");
-            const selectionMeta = document.getElementById("booking-selection-meta");
-            const slotsPanel = document.getElementById("booking-slots-panel");
-            const storePicker = document.getElementById("booking-store-picker");
-            const storeMeta = document.getElementById("booking-store-meta");
-            const diagnosticsHost = document.getElementById("booking-diagnostics");
-            const diagSource = document.getElementById("diag-source");
-            const diagPlans = document.getElementById("diag-plans");
-            const diagStores = document.getElementById("diag-stores");
-            const diagSessions = document.getElementById("diag-sessions");
-            const diagRange = document.getElementById("diag-range");
-            const diagError = document.getElementById("diag-error");
-            const summaryPeriod = document.getElementById("summary-period");
-            const summaryStores = document.getElementById("summary-stores");
-            const summaryMethods = document.getElementById("summary-methods");
-            const summaryPrice = document.getElementById("summary-price");
-            const params = new URLSearchParams(window.location.search);
-            const fallbackStores = {
-                asakusa: { label: "豬・拷蠎・, caption: "Fri - Sun" },
-                shibamata: { label: "譟ｴ蜿亥ｺ・, caption: "Sat - Mon" },
-                solamachi: { label: "繧ｽ繝ｩ繝槭メ蠎・, caption: "Daily" }
-            };
-            // fallback months/schedule remain similar to previous draft; rebuilt dynamically from fetched data if available.
-            let stores = { ...fallbackStores };
-            let months = [];
-            let schedule = {};
-            let emptyStateMessage = "";
-            const marks = { instant: "笳・, request: "笆｡", few: "笆ｳ", full: "ﾃ・, closed: "-" };
-            const days = ["譛・, "轣ｫ", "豌ｴ", "譛ｨ", "驥・, "蝨・, "譌･"];
-            let selectedStore = params.get("store");
-            let selectedKey = "";
-            const syncStoreQuery = () => {
-                const target = new URL(window.location.href);
-                target.searchParams.set("store", selectedStore);
-                target.searchParams.set("storeLabel", stores[selectedStore].label);
-                window.history.replaceState({}, "", target.toString());
-            };
-            const slugifyStore = (name) => String(name || "").toLowerCase().replace(/\s+/g, "").replace(/[繝ｻ\-_/]/g, "");
-            const normalizeStoreKey = (value, fallback = "store") => {
-                const raw = String(value || "").toLowerCase();
-                if (raw.includes("asakusa") || raw.includes("豬・拷")) return "asakusa";
-                if (raw.includes("shibamata") || raw.includes("譟ｴ蜿・)) return "shibamata";
-                if (raw.includes("solamachi") || raw.includes("繧ｽ繝ｩ繝槭メ")) return "solamachi";
-                const slug = slugifyStore(value);
-                return slug || fallback;
-            };
-            const chooseInitialStore = () => {
-                const paramStore = params.get("store");
-                if (paramStore && stores[paramStore]) return paramStore;
-                const keys = Object.keys(stores);
-                return keys.length ? keys[0] : "asakusa";
-            };
-            const renderStorePicker = () => {
-                storePicker.innerHTML = Object.entries(stores).map(([key, value]) => `<button class="booking-store-chip${key === selectedStore ? " is-active" : ""}" type="button" data-store-key="${key}">${value.label} / ${value.caption}</button>`).join("");
-                storeMeta.textContent = `${stores[selectedStore].label} 縺ｮ髢句ぎ譌･縺縺代ｒ陦ｨ遉ｺ縺励※縺・∪縺吶Ａ;
-                storePicker.querySelectorAll("[data-store-key]").forEach((button) => {
-                    button.addEventListener("click", () => {
-                        selectedStore = button.dataset.storeKey;
-                        const firstAvailable = Object.entries(schedule).find(([, value]) => value.store === selectedStore)?.[0];
-                        if (firstAvailable) {
-                            selectedKey = firstAvailable;
-                        }
-                        syncStoreQuery();
-                        renderStorePicker();
-                        renderCalendar();
-                        renderSlots();
-                    });
-                });
-            };
-            const buildBookingHref = (current, slot) => {
-                const target = new URL("./workshop-booking-entry.html", window.location.href);
-                const payload = {
-                    build: BOOKING_BUILD,
-                    date_key: selectedKey,
-                    date: current.label,
-                    label: current.label,
-                    gather: slot.g,
-                    start_time: slot.start,
-                    end_time: slot.end,
-                    experience: `${slot.start}縲・{slot.end}`,
-                    price: slot.price.display,
-                    price_jpy: String(slot.price.jpy),
-                    currency_code: slot.price.currency,
-                    note: slot.n,
-                    booking_method: slot.method,
-                    method: slot.method === "request" ? "繝ｪ繧ｯ繧ｨ繧ｹ繝井ｺ育ｴ・ : "蜊ｳ譎ゆｺ育ｴ・,
-                    plan: "豬・拷縺ｧ鬥呎ｰｴ縺･縺上ｊ / 鬥吶ｊ繧帝∈繧薙〒閾ｪ蛻・〒繝悶Ξ繝ｳ繝峨☆繧九Ρ繝ｼ繧ｯ繧ｷ繝ｧ繝・・",
-                    store: current.store,
-                    storeLabel: current.storeLabel,
-                    plan_id: slot.planId && /^[0-9a-fA-F-]{36}$/.test(slot.planId) ? slot.planId : "",
-                    session_id: slot.sessionId && /^[0-9a-fA-F-]{36}$/.test(slot.sessionId) ? slot.sessionId : "",
-                    min_party_size: slot.minP ?? "",
-                    max_party_size: slot.maxP ?? ""
-                };
-                Object.entries(payload).forEach(([key, value]) => target.searchParams.set(key, value));
-                return target.toString();
-            };
-            const renderSlots = () => {
-                const current = schedule[selectedKey];
-                selectedTitle.textContent = current?.label || "莠育ｴ・庄閭ｽ譌･繧帝∈謚槭＠縺ｦ縺上□縺輔＞";
-                selectedStatus.textContent = current?.status || emptyStateMessage || "笳・/ 笆｡ / 笆ｳ 縺ｮ譌･繧帝∈縺ｶ縺ｨ縲∵凾髢灘ｸｯ繧定｡ｨ遉ｺ縺励∪縺吶・;
-                selectionLabel.textContent = current ? `驕ｸ謚樔ｸｭ: ${current.storeLabel} / ${current.label}` : "驕ｸ謚樔ｸｭ縺ｮ譌･莉倥・縺ゅｊ縺ｾ縺帙ｓ";
-                selectionMeta.textContent = current ? `${current.storeLabel} 縺ｮ譎る俣蟶ｯ荳隕ｧ縺ｫ縲∝ｯｾ雎｡譌･縺ｮ髮・粋譎る俣縺ｨ譁咎≡繧定｡ｨ遉ｺ縺励※縺・∪縺吶Ａ : "莠育ｴ・庄閭ｽ譌･繧帝∈縺ｶ縺ｨ縲∽ｸ矩Κ縺ｫ譎る俣蟶ｯ繧定｡ｨ遉ｺ縺励∪縺吶・;
-                slotList.innerHTML = (current?.slots || []).map((slot) => `<article class="booking-slot"><div><strong>${current.label}</strong><div class="booking-slot__time"><span>髮・粋 ${slot.g}</span><span>菴馴ｨ・${slot.start}縲・{slot.end}</span></div><p class="booking-slot__price">${slot.price.display}</p></div><div class="booking-slot__actions"><span class="booking-slot__note">${slot.n}</span><a class="button button--primary booking-slot__button" href="${buildBookingHref(current, slot)}">莠育ｴ・∈騾ｲ繧</a></div></article>`).join("");
-            };
-            const renderCalendar = () => {
-                calendarHost.innerHTML = months.map((month) => `<section class="booking-month"><div class="booking-month__header"><h3>${month.label}</h3><span>${stores[selectedStore].label} 縺ｮ髢句ぎ譌･</span></div><table><thead><tr>${days.map((d) => `<th>${d}</th>`).join("")}</tr></thead><tbody>${Array.from({ length: Math.ceil(month.cells.length / 7) }, (_, i) => `<tr>${month.cells.slice(i * 7, i * 7 + 7).map((cell) => { if (!cell) return '<td class="is-outside"></td>'; const filtered = cell.store && cell.store !== selectedStore ? { ...cell, s: "closed", p: null, k: null } : cell; const mark = marks[filtered.s]; const selectable = ["instant", "request", "few"].includes(filtered.s); return `<td><button class="booking-day${selectable ? ' is-selectable' : ''}${filtered.k === selectedKey ? ' is-selected' : ''}" type="button" ${filtered.k ? `data-date-key="${filtered.k}"` : ''} ${!selectable ? 'disabled' : ''}><span class="booking-day__date">${filtered.d}</span><span class="booking-day__status"><i class="booking-mark" data-status="${filtered.s}">${mark}</i></span>${filtered.p ? `<div class="booking-day__price">${filtered.p.display}</div>` : ''}</button></td>`; }).join("")}</tr>`).join("")}</tbody></table></section>`).join("");
-                calendarHost.querySelectorAll("[data-date-key]").forEach((button) => button.addEventListener("click", () => { selectedKey = button.dataset.dateKey; renderCalendar(); renderSlots(); slotsPanel?.scrollIntoView({ behavior: "smooth", block: "start" }); }));
-            };
-            const statusFromSession = (session) => {
-                const capRemaining = (session.capacity_total ?? 0) - (session.capacity_reserved ?? 0);
-                const isOpen = session.session_status === "open";
-                if (!isOpen) {
-                    if (session.session_status === "limited") return "few";
-                    if (session.session_status === "full") return "full";
-                    return "closed";
-                }
-                if (capRemaining <= 0) return "full";
-                if (capRemaining <= 2 || session.session_status === "limited") return "few";
-                if (session.booking_method === "request") return "request";
-                return "instant";
-            };
-            const buildCalendarCells = (sessionMap, startDate, endDate) => {
-                const monthsArr = [];
-                const current = new Date(startDate);
-                current.setDate(1);
-                while (current <= endDate) {
-                    const year = current.getFullYear();
-                    const month = current.getMonth();
-                    const label = `${year}蟷ｴ${month + 1}譛・;
-                    const firstWeekday = new Date(year, month, 1).getDay(); // 0=Sun
-                    const daysInMonth = new Date(year, month + 1, 0).getDate();
-                    const cells = [];
-                    // pad before
-                    for (let i = 0; i < ((firstWeekday + 6) % 7); i++) cells.push(null); // start week on Mon
-                    for (let d = 1; d <= daysInMonth; d++) {
-                        const iso = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
-                        const daySessions = sessionMap[iso] || [];
-                        if (daySessions.length === 0) {
-                            cells.push({ d, s: "closed", k: iso });
-                            continue;
-                        }
-                        const primary = daySessions[0];
-                        cells.push({
-                            d,
-                            s: primary.status,
-                            p: { display: primary.price.display },
-                            k: iso,
-                            store: primary.storeKey,
-                            planId: primary.planId
-                        });
-                    }
-                    while (cells.length % 7 !== 0) cells.push(null);
-                    monthsArr.push({ label, cells });
-                    current.setMonth(month + 1);
-                }
-                return monthsArr;
-            };
-            const buildSchedule = (sessions, planById, storeById) => {
-                const sessionMap = {};
-                const scheduleMap = {};
-                sessions.forEach((row) => {
-                    const dateKey = row.session_date;
-                    const plan = planById[row.plan_id] || {};
-                    const storeInfo = storeById[row.store_id] || {};
-                    const storeKey = storeInfo.key || storeInfo.slug || storeInfo.id || "store";
-                    const priceValue = row.price_override_jpy ?? plan.base_price_jpy ?? 0;
-                    const cur = row.currency_code || plan.currency_code || "JPY";
-                    const priceObj = { display: `ﾂ･${Number(priceValue || 0).toLocaleString("ja-JP")}`, jpy: Number(priceValue || 0), currency: cur };
-                    const sessionPayload = {
-                        sessionId: row.id,
-                        planId: row.plan_id,
-                        g: row.gather_time?.slice(0, 5) || "",
-                        start: row.start_time?.slice(0, 5) || "",
-                        end: row.end_time?.slice(0, 5) || "",
-                        price: priceObj,
-                        n: row.public_note || (row.booking_method === "request" ? "遒ｺ隱榊ｾ後↓縺秘｣邨｡" : "蜊ｳ譎ら｢ｺ螳・),
-                        method: row.booking_method || "instant",
-                        minP: row.min_party_size || plan.min_party_size || 1,
-                        maxP: row.max_party_size || plan.max_party_size || 4,
-                        status: statusFromSession(row),
-                        storeKey,
-                        storeLabel: storeInfo.label || storeInfo.name || "",
-                        planName: plan.plan_name || ""
-                    };
-                    sessionMap[dateKey] = sessionMap[dateKey] || [];
-                    sessionMap[dateKey].push(sessionPayload);
-                });
-                Object.entries(sessionMap).forEach(([dateKey, slots]) => {
-                    const exemplar = slots[0];
-                    scheduleMap[dateKey] = {
-                        label: new Date(dateKey).toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric", weekday: "short" }),
-                        store: exemplar.storeKey,
-                        storeLabel: exemplar.storeLabel,
-                        planId: exemplar.planId,
-                        status: exemplar.status === "request" ? "繝ｪ繧ｯ繧ｨ繧ｹ繝井ｺ育ｴ・庄" : exemplar.status === "few" ? "谿句ｸｭ繧上★縺・ : exemplar.status === "full" ? "貅蟶ｭ" : "蜊ｳ譎ゆｺ育ｴ・庄",
-                        slots
-                    };
-                });
-                return { sessionMap, scheduleMap };
-            };
-            const fetchData = async () => {
-                if (!supabase) return { sessions: [], plans: [], stores: [], error: new Error("Supabase client unavailable") };
-                try {
-                    const { data: planRows, error: planErr } = await supabase
-                        .from("workshop_plans")
-                        .select("id, plan_name, plan_code, base_price_jpy, currency_code, min_party_size, max_party_size, status");
-                    const { data: storeRows, error: storeErr } = await supabase
-                        .from("stores")
-                        .select("id, store_name, is_active, deleted_at");
-                    const { data: sessionRows, error: sessErr } = await supabase
-                        .from("workshop_sessions")
-                        .select("id, plan_id, store_id, session_date, gather_time, start_time, end_time, booking_method, capacity_total, capacity_reserved, price_override_jpy, currency_code, min_party_size, max_party_size, session_status, public_note, published_at")
-                        .order("session_date", { ascending: true })
-                        .limit(500);
-                    const firstError = planErr || storeErr || sessErr || null;
-                    return {
-                        plans: planRows || [],
-                        stores: storeRows || [],
-                        sessions: sessionRows || [],
-                        error: firstError
-                    };
-                } catch (err) {
-                    return { sessions: [], plans: [], stores: [], error: err };
-                }
-            };
-            const buildStoreMap = (rows) => {
-                if (!rows || rows.length === 0) return { ...fallbackStores };
-                const map = {};
-                rows.forEach((row) => {
-                    const key = normalizeStoreKey(row.store_name || row.id, row.id);
-                    map[key] = {
-                        label: row.store_name || key,
-                        caption: map[key]?.caption || "",
-                        id: row.id,
-                        key,
-                        name: row.store_name || key
-                    };
-                });
-                return map;
-            };
-            const buildStoreByIdMap = (rows) => {
-                const byId = {};
-                (rows || []).forEach((row) => {
-                    byId[row.id] = {
-                        id: row.id,
-                        name: row.store_name || "",
-                        label: row.store_name || "",
-                        key: normalizeStoreKey(row.store_name || row.id, row.id),
-                        slug: slugifyStore(row.store_name || row.id)
-                    };
-                });
-                return byId;
-            };
-            const setLed = (state, title) => {
-                if (!connectionLed) return;
-                connectionLed.classList.remove("is-ok", "is-bad");
-                if (state === "ok") connectionLed.classList.add("is-ok");
-                if (state === "bad") connectionLed.classList.add("is-bad");
-                if (title) connectionLed.title = title;
-            };
-            const setDiagnostics = ({ source = "-", plans = "-", storesCount = "-", sessions = "-", range = "-", error = "-" }) => {
-                if (!diagnosticsHost) return;
-                diagnosticsHost.hidden = false;
-                if (diagSource) diagSource.textContent = source;
-                if (diagPlans) diagPlans.textContent = String(plans);
-                if (diagStores) diagStores.textContent = String(storesCount);
-                if (diagSessions) diagSessions.textContent = String(sessions);
-                if (diagRange) diagRange.textContent = range;
-                if (diagError) diagError.textContent = error;
-            };
-            const formatSummaryPeriod = (sessions) => {
-                const dates = (sessions || []).map((s) => s.session_date).filter(Boolean).sort();
-                if (!dates.length) return "公開期間未設定";
-                const first = new Date(dates[0]);
-                const last = new Date(dates[dates.length - 1]);
-                if (Number.isNaN(first.getTime()) || Number.isNaN(last.getTime())) return "公開期間未設定";
-                const start = `${first.getFullYear()}年${first.getMonth() + 1}月`;
-                const end = `${last.getFullYear()}年${last.getMonth() + 1}月`;
-                return start === end ? start : `${start}〜${end}`;
-            };
-            const updateSummary = (plans, storeRows, sessions) => {
-                if (!summaryPeriod || !summaryStores || !summaryMethods || !summaryPrice) return;
-                const activeStores = (storeRows || [])
-                    .filter((x) => (x.deleted_at == null) && (x.is_active !== false))
-                    .map((x) => x.store_name)
-                    .filter(Boolean);
-                const methodSet = new Set((sessions || []).map((x) => x.booking_method).filter(Boolean));
-                const methodLabels = [];
-                if (methodSet.has("instant")) methodLabels.push("即時予約");
-                if (methodSet.has("request")) methodLabels.push("リクエスト予約");
-                const prices = (plans || [])
-                    .map((x) => Number(x.base_price_jpy || 0))
-                    .filter((x) => Number.isFinite(x) && x > 0);
-                const minPrice = prices.length ? Math.min(...prices) : 0;
-                summaryPeriod.textContent = formatSummaryPeriod(sessions);
-                summaryStores.textContent = activeStores.length ? activeStores.join(" / ") : "対象店舗未設定";
-                summaryMethods.textContent = methodLabels.length ? methodLabels.join(" / ") : "予約方式未設定";
-                summaryPrice.textContent = minPrice > 0 ? `おひとりさま ${minPrice.toLocaleString("ja-JP")}円〜` : "料金未設定";
-            };
-            const applyEmptySessionsState = (reason) => {
-                stores = { ...fallbackStores };
-                const now = new Date();
-                const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-                const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-                months = buildCalendarCells({}, startDate, endDate);
-                schedule = {};
-                selectedStore = chooseInitialStore();
-                selectedKey = "";
-                emptyStateMessage = reason;
-            };
-            const initData = async () => {
-                const rangeLabel = "all sessions (ordered by session_date, limit 500)";
-                try {
-                    const { plans, stores: storeRows, sessions, error } = await fetchData();
-                    if (error) throw error;
-                    setLed("ok", "Supabase: connected");
-                    const hasSessions = sessions && sessions.length > 0;
-                    setDiagnostics({
-                        source: "Supabase",
-                        plans: plans?.length || 0,
-                        storesCount: storeRows?.length || 0,
-                        sessions: sessions?.length || 0,
-                        range: rangeLabel,
-                        error: "-"
-                    });
-                    updateSummary(plans || [], storeRows || [], sessions || []);
-                    if (hasSessions) {
-                        emptyStateMessage = "";
-                        stores = buildStoreMap(storeRows);
-                        const storeById = buildStoreByIdMap(storeRows);
-                        const planById = {};
-                        (plans || []).forEach((p) => (planById[p.id] = p));
-                        const { sessionMap, scheduleMap } = buildSchedule(sessions, planById, storeById);
-                        const dates = Object.keys(sessionMap).sort();
-                        if (dates.length > 0) {
-                            const startDate = new Date(dates[0]);
-                            const endDate = new Date(dates[dates.length - 1]);
-                            months = buildCalendarCells(sessionMap, startDate, endDate);
-                            schedule = scheduleMap;
-                            selectedStore = chooseInitialStore();
-                            selectedKey = dates.find((d) => sessionMap[d][0].storeKey === selectedStore) || dates[0];
-                            return;
-                        }
-                    }
-                    setLed("bad", "Supabase connected, but no workshop_sessions returned (check date range/RLS/seed data)");
-                    applyEmptySessionsState("Supabase 縺九ｉ莠育ｴ・棧縺悟叙蠕励〒縺阪∪縺帙ｓ縺ｧ縺励◆縲ょ・髢九そ繝・す繝ｧ繝ｳ繝・・繧ｿ・・orkshop_sessions・峨→RLS險ｭ螳壹ｒ縺皮｢ｺ隱阪￥縺縺輔＞縲・);
-                } catch (e) {
-                    setLed("bad", "Supabase: fallback (error)");
-                    console.error("Supabase fetch error", e);
-                    setDiagnostics({
-                        source: "Supabase",
-                        plans: 0,
-                        storesCount: 0,
-                        sessions: 0,
-                        range: rangeLabel,
-                        error: e?.message || String(e)
-                    });
-                    applyEmptySessionsState("Supabase 蜿門ｾ励〒繧ｨ繝ｩ繝ｼ縺檎匱逕溘＠縺ｾ縺励◆縲よ磁邯夊ｨｭ螳壹→RLS險ｭ螳壹ｒ縺皮｢ｺ隱阪￥縺縺輔＞縲・);
-                    updateSummary([], [], []);
-                }
-            };
-            document.querySelectorAll(".booking-tab").forEach((button) => {
-                button.addEventListener("click", () => {
-                    const target = button.dataset.tab;
-                    document.querySelectorAll(".booking-tab").forEach((item) => item.classList.toggle("is-active", item === button));
-                    document.querySelectorAll(".booking-tab-panel").forEach((panel) => panel.classList.toggle("is-active", panel.dataset.panel === target));
-                });
-            });
-            (async () => {
-                if (!supabase) {
-                    connectionLed?.classList.remove("is-ok");
-                    connectionLed?.classList.add("is-bad");
-                }
-                await initData();
-                selectedStore = selectedStore || chooseInitialStore();
-                if (!selectedKey) {
-                    selectedKey = Object.keys(schedule).find((k) => schedule[k].store === selectedStore) || Object.keys(schedule)[0];
-                }
-                renderStorePicker();
-                syncStoreQuery();
-                renderCalendar();
-                renderSlots();
-            })();
-        })();
-    </script>
+  <script src="../js/site-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/site-shell.js"></script>
+  <script>
+  (() => {
+    const cfg = window.INIM_SITE_CONFIG || {};
+    const api = window.supabase || null;
+    const supabase = cfg.supabaseUrl && cfg.supabasePublishableKey && api?.createClient ? api.createClient(cfg.supabaseUrl, cfg.supabasePublishableKey) : null;
+
+    const el = (id) => document.getElementById(id);
+    const led = el("connection-led");
+    const cal = el("booking-calendar");
+    const slots = el("booking-slot-list");
+    const title = el("booking-selected-title");
+    const status = el("booking-selected-status");
+    const label = el("booking-selection-label");
+    const meta = el("booking-selection-meta");
+    const picker = el("booking-store-picker");
+    const storeMeta = el("booking-store-meta");
+    const summaryPeriod = el("summary-period");
+    const summaryStores = el("summary-stores");
+    const summaryMethods = el("summary-methods");
+    const summaryPrice = el("summary-price");
+    const dHost = el("booking-diagnostics");
+    const diag = { src: el("diag-source"), plans: el("diag-plans"), stores: el("diag-stores"), sessions: el("diag-sessions"), range: el("diag-range"), err: el("diag-error") };
+
+    const marks = { instant: "○", request: "□", few: "△", full: "×", closed: "-" };
+    const days = ["月", "火", "水", "木", "金", "土", "日"];
+    const fallbackStores = { asakusa: { label: "浅草店", caption: "Fri - Sun" }, shibamata: { label: "柴又店", caption: "Sat - Mon" }, solamachi: { label: "ソラマチ店", caption: "Daily" } };
+    let stores = { ...fallbackStores }, schedule = {}, months = [], selectedStore = "asakusa", selectedKey = "";
+
+    const setDiag = (v) => { dHost.hidden = false; diag.src.textContent = v.source; diag.plans.textContent = v.plans; diag.stores.textContent = v.stores; diag.sessions.textContent = v.sessions; diag.range.textContent = v.range; diag.err.textContent = v.error; };
+    const setLed = (ok) => { led.classList.remove("is-ok", "is-bad"); led.classList.add(ok ? "is-ok" : "is-bad"); };
+    const jpy = (n) => `¥${Number(n || 0).toLocaleString("ja-JP")}`;
+    const normStore = (v) => { const t = String(v || "").toLowerCase(); if (t.includes("asakusa") || t.includes("浅草")) return "asakusa"; if (t.includes("shibamata") || t.includes("柴又")) return "shibamata"; if (t.includes("solamachi") || t.includes("ソラマチ")) return "solamachi"; return t || "asakusa"; };
+
+    const buildCells = (map, start, end) => {
+      const out = []; const cur = new Date(start); cur.setDate(1);
+      while (cur <= end) {
+        const y = cur.getFullYear(), m = cur.getMonth();
+        const label = `${y}年${m + 1}月`; const first = new Date(y, m, 1).getDay(); const dim = new Date(y, m + 1, 0).getDate();
+        const cells = []; for (let i = 0; i < ((first + 6) % 7); i++) cells.push(null);
+        for (let d = 1; d <= dim; d++) {
+          const iso = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`; const ss = map[iso] || [];
+          if (!ss.length) cells.push({ d, s: "closed", k: iso }); else { const p = ss[0]; cells.push({ d, s: p.status, p: { display: p.price.display }, k: iso, store: p.storeKey }); }
+        }
+        while (cells.length % 7 !== 0) cells.push(null); out.push({ label, cells }); cur.setMonth(m + 1);
+      } return out;
+    };
+
+    const renderPicker = () => {
+      picker.innerHTML = Object.entries(stores).map(([k, v]) => `<button class="booking-store-chip${k === selectedStore ? " is-active" : ""}" type="button" data-store="${k}">${v.label} / ${v.caption}</button>`).join("");
+      storeMeta.textContent = `${stores[selectedStore].label} の開催日を表示しています。`;
+      picker.querySelectorAll("[data-store]").forEach((b) => b.onclick = () => { selectedStore = b.dataset.store; const first = Object.keys(schedule).find((k) => schedule[k].store === selectedStore); if (first) selectedKey = first; renderPicker(); renderCal(); renderSlots(); });
+    };
+
+    const href = (cur, s) => {
+      const u = new URL("./workshop-booking-entry.html", window.location.href);
+      [["date_key", selectedKey], ["date", cur.label], ["label", cur.label], ["gather", s.g], ["start_time", s.start], ["end_time", s.end], ["price_display", s.price.display], ["price_jpy", String(s.price.jpy || "")], ["booking_method", s.method], ["note", s.n], ["store", cur.store], ["storeLabel", cur.storeLabel], ["plan_id", cur.planId || ""], ["session_id", s.sessionId || ""]].forEach(([k, v]) => u.searchParams.set(k, v));
+      return u.toString();
+    };
+
+    const renderSlots = () => {
+      const cur = schedule[selectedKey];
+      title.textContent = cur?.label || "日付未選択";
+      status.textContent = cur?.status || "予約可能な日付を選択してください。";
+      label.textContent = cur ? `選択中: ${cur.storeLabel} / ${cur.label}` : "選択中の日付はありません";
+      meta.textContent = cur ? `${cur.storeLabel} の予約枠一覧です。` : "日付を選択すると予約枠が表示されます。";
+      slots.innerHTML = (cur?.slots || []).map((s) => `<article class="booking-slot"><div><strong>${cur.label}</strong><div class="booking-slot__time"><span>集合 ${s.g}</span><span>体験 ${s.start} - ${s.end}</span></div><p class="booking-slot__price">${s.price.display}</p></div><div class="booking-slot__actions"><span class="booking-slot__note">${s.n}</span><a class="button button--primary booking-slot__button" href="${href(cur, s)}">予約へ進む</a></div></article>`).join("");
+    };
+
+    const renderCal = () => {
+      cal.innerHTML = months.map((m) => `<section class="booking-month"><div class="booking-month__header"><h3>${m.label}</h3><span>${stores[selectedStore].label} の開催日</span></div><table><thead><tr>${days.map((d) => `<th>${d}</th>`).join("")}</tr></thead><tbody>${Array.from({ length: Math.ceil(m.cells.length / 7) }, (_, i) => `<tr>${m.cells.slice(i * 7, i * 7 + 7).map((c) => { if (!c) return "<td class='is-outside'></td>"; const f = c.store && c.store !== selectedStore ? { ...c, s: "closed", p: null, k: null } : c; const selectable = ["instant", "request", "few"].includes(f.s); return `<td><button class="booking-day${selectable ? " is-selectable" : ""}${f.k === selectedKey ? " is-selected" : ""}" type="button" ${f.k ? `data-key="${f.k}"` : ""} ${!selectable ? "disabled" : ""}><span class="booking-day__date">${f.d}</span><span class="booking-day__status"><i class="booking-mark" data-status="${f.s}">${marks[f.s]}</i></span>${f.p ? `<div class="booking-day__price">${f.p.display}</div>` : ""}</button></td>`; }).join("")}</tr>`).join("")}</tbody></table></section>`).join("");
+      cal.querySelectorAll("[data-key]").forEach((b) => b.onclick = () => { selectedKey = b.dataset.key; renderCal(); renderSlots(); });
+    };
+
+    const toStatus = (r) => {
+      const rem = (r.capacity_total ?? 0) - (r.capacity_reserved ?? 0);
+      if (r.session_status === "limited" || rem <= 2) return "few";
+      if (r.session_status === "full" || rem <= 0) return "full";
+      if (r.session_status !== "open") return "closed";
+      return r.booking_method === "request" ? "request" : "instant";
+    };
+
+    const updateSummary = (plans, storeRows, sessions) => {
+      const dates = (sessions || []).map((s) => s.session_date).filter(Boolean).sort();
+      if (!dates.length) summaryPeriod.textContent = "公開期間未設定"; else {
+        const a = new Date(dates[0]), z = new Date(dates[dates.length - 1]);
+        const s = `${a.getFullYear()}年${a.getMonth() + 1}月`, e = `${z.getFullYear()}年${z.getMonth() + 1}月`;
+        summaryPeriod.textContent = s === e ? s : `${s}〜${e}`;
+      }
+      const ss = (storeRows || []).filter((x) => x.deleted_at == null && x.is_active !== false).map((x) => x.store_name).filter(Boolean);
+      summaryStores.textContent = ss.length ? ss.join(" / ") : "対象店舗未設定";
+      const ms = new Set((sessions || []).map((x) => x.booking_method).filter(Boolean)); const labels = []; if (ms.has("instant")) labels.push("即時予約"); if (ms.has("request")) labels.push("リクエスト予約");
+      summaryMethods.textContent = labels.length ? labels.join(" / ") : "予約方式未設定";
+      const prices = (plans || []).map((x) => Number(x.base_price_jpy || 0)).filter((x) => x > 0);
+      summaryPrice.textContent = prices.length ? `おひとりさま ${Math.min(...prices).toLocaleString("ja-JP")}円〜` : "料金未設定";
+    };
+
+    const init = async () => {
+      const range = "all sessions (ordered by session_date, limit 500)";
+      if (!supabase) { setLed(false); setDiag({ source: "Supabase", plans: 0, stores: 0, sessions: 0, range, error: "client unavailable" }); return; }
+      try {
+        const [p, s, w] = await Promise.all([
+          supabase.from("workshop_plans").select("id,plan_name,base_price_jpy,currency_code,min_party_size,max_party_size,status"),
+          supabase.from("stores").select("id,store_name,is_active,deleted_at"),
+          supabase.from("workshop_sessions").select("id,plan_id,store_id,session_date,gather_time,start_time,end_time,booking_method,capacity_total,capacity_reserved,price_override_jpy,currency_code,min_party_size,max_party_size,session_status,public_note,published_at").order("session_date", { ascending: true }).limit(500)
+        ]);
+        if (p.error || s.error || w.error) throw (p.error || s.error || w.error);
+        const plans = p.data || [], storeRows = s.data || [], sessions = w.data || [];
+        setLed(true); setDiag({ source: "Supabase", plans: plans.length, stores: storeRows.length, sessions: sessions.length, range, error: "-" }); updateSummary(plans, storeRows, sessions);
+        stores = storeRows.length ? storeRows.reduce((a, x) => { const k = normStore(x.store_name || x.id); a[k] = { label: x.store_name || k, caption: "" }; return a; }, {}) : { ...fallbackStores };
+        const byPlan = Object.fromEntries(plans.map((x) => [x.id, x]));
+        const byStore = Object.fromEntries((storeRows || []).map((x) => [x.id, { label: x.store_name || "", key: normStore(x.store_name || x.id) }]));
+        const map = {}, list = {};
+        sessions.forEach((r) => {
+          const p0 = byPlan[r.plan_id] || {}, st = byStore[r.store_id] || { label: "", key: "asakusa" };
+          const price = r.price_override_jpy ?? p0.base_price_jpy ?? 0;
+          const payload = { sessionId: r.id, planId: r.plan_id, g: (r.gather_time || "").slice(0, 5), start: (r.start_time || "").slice(0, 5), end: (r.end_time || "").slice(0, 5), price: { display: jpy(price), jpy: Number(price || 0) }, n: r.public_note || (r.booking_method === "request" ? "リクエスト回答待ち" : "即時予約可"), method: r.booking_method || "instant", status: toStatus(r), storeKey: st.key, storeLabel: st.label };
+          map[r.session_date] = map[r.session_date] || []; map[r.session_date].push(payload);
+        });
+        Object.entries(map).forEach(([k, arr]) => { const e = arr[0]; list[k] = { label: new Date(k).toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric", weekday: "short" }), store: e.storeKey, storeLabel: e.storeLabel, planId: e.planId, status: e.status === "request" ? "リクエスト予約" : e.status === "few" ? "残席わずか" : e.status === "full" ? "満席" : "即時予約可", slots: arr }; });
+        schedule = list;
+        const dates = Object.keys(map).sort(); if (dates.length) { months = buildCells(map, new Date(dates[0]), new Date(dates[dates.length - 1])); selectedStore = Object.keys(stores)[0]; selectedKey = dates.find((d) => map[d][0].storeKey === selectedStore) || dates[0]; }
+      } catch (e) {
+        setLed(false); setDiag({ source: "Supabase", plans: 0, stores: 0, sessions: 0, range, error: e.message || String(e) }); updateSummary([], [], []);
+      }
+      renderPicker(); renderCal(); renderSlots();
+    };
+    init();
+  })();
+  </script>
 </body>
-
 </html>
-
-
-
-
-
 

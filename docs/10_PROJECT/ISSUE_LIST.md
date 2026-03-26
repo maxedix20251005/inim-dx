@@ -224,3 +224,12 @@
 - `対策:` `app/pages/workshop.html` にフル予約管理UI（検索、絞り込み、詳細表示、status/internal_note更新）を実装。
 - `再発防止:` 予約運用で必要な最低操作（一覧、検索、更新）は管理画面側で先行実装し、DB直参照依存を残さない。
 - `状態:` Fix 適用済み（ユーザー確認待ち）
+
+### Issue 2026-03-26-23
+- 発生日: 2026-03-26
+- 発生箇所: [subpages/workshop-booking.html](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html)
+- 症状: 日本語テキストの文字化け（mojibake）と壊れたHTML断片が混在し、表示品質と保守性が低下。
+- 原因: 過去編集時のエンコーディング不整合により、ファイル全体へ文字化けが波及。
+- 対策: subpages/workshop-booking.html を UTF-8 で再構築し、文字化け文字列・壊れたタグを除去。必要なID/動線（Diagnostics、Summary、Calendar、Slots）を維持。
+- 再発防止: 文字化けが出たファイルは部分修正ではなくUTF-8再構成を優先し、編集後に mojibake パターン（縺,繝,�）をスキャンする。
+- 状態: Fix 適用済み（ユーザー確認待ち）
