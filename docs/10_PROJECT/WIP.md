@@ -83,3 +83,4 @@
 - 2026-03-26: `subpages/workshop.html` から管理画面ボタンを削除し、公開導線を一般ユーザー向けに統一。
 - 2026-03-26: 管理画面に右上ロゴと「メインサイトへ戻る」導線を追加。
 - 2026-03-26: 非adminログイン検証は環境未整備のため FEATURE_BACKLOG に保留登録。
+- 2026-03-26: Added DB image column migration for workshop plans (sql/12_add_workshop_plan_image_url.sql), updated seed data with plan_image_url, rebuilt subpages/workshop-plans.html in UTF-8 with DB image binding, and moved admin logo to left-top brand area.

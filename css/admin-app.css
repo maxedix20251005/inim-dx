@@ -103,6 +103,22 @@ textarea:focus {
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
+.admin-brand__logo {
+    display: inline-flex;
+    width: fit-content;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.admin-brand__logo img {
+    width: 150px;
+    height: 44px;
+    object-fit: cover;
+    display: block;
+}
+
 .admin-brand__eyebrow {
     font-size: 0.72rem;
     letter-spacing: 0.22em;
@@ -274,21 +290,6 @@ textarea:focus {
     text-align: right;
     font-size: 0.88rem;
     color: var(--admin-sub);
-}
-
-.admin-topbar__logo {
-    display: inline-flex;
-    border: 1px solid var(--admin-line);
-    border-radius: 10px;
-    overflow: hidden;
-    background: #fff;
-}
-
-.admin-topbar__logo img {
-    width: 150px;
-    height: 44px;
-    object-fit: cover;
-    display: block;
 }
 
 .admin-main {

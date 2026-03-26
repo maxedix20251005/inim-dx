@@ -394,3 +394,9 @@
 - Removed admin entry button from public workshop reserve panel.
 - Added top-right logo and "Back to main site" link in admin UI (`js/admin-app.js` + `css/admin-app.css`).
 - Added non-admin access verification as backlog due unavailable non-admin login test environment.
+
+### 2026-03-26 Update (Workshop Plan Images + Admin Logo Position)
+- Added schema migration sql/12_add_workshop_plan_image_url.sql to store workshop plan image URL/path in DB.
+- Updated seed script sql/09_seed_workshop_booking_master_and_sessions.sql to populate plan_image_url for active plans.
+- Rebuilt subpages/workshop-plans.html in clean UTF-8 and bound plan card images to workshop_plans.plan_image_url with fallback images.
+- Moved admin logo to left-top brand area (same placement concept as main site) and removed topbar logo duplication.

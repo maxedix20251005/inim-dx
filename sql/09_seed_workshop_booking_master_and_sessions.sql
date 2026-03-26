@@ -6,6 +6,7 @@ insert into public.workshop_plans (
     plan_name,
     plan_summary,
     plan_description,
+    plan_image_url,
     booking_label,
     duration_min_minutes,
     duration_max_minutes,
@@ -27,9 +28,10 @@ insert into public.workshop_plans (
 values
 (
     'asakusa_standard_60',
-    '香遊スタンダード（60分）',
-    '香りの方向性を短時間で見つける標準コース。',
-    '香りの好みヒアリング、ノート選択、簡易ブレンドを行う基本コースです。',
+    '浅草スタンダード（60分）',
+    '香りの方向性を短時間で見つける体験コース。',
+    'ヒアリング、ノート選定、簡易ブレンドを行う基本コースです。',
+    '../images/Workshop/Workshop_ (6).png',
     'スタンダード 60分',
     60,
     75,
@@ -40,19 +42,20 @@ values
     4,
     current_date,
     current_date + 120,
-    'inim-dx 浅草店 1F 受付前',
+    'inim-dx 浅草店 1F 集合',
     'inim-dx Workshop Space',
     'つくばエクスプレス浅草駅から徒歩6分',
-    '前日18:00以降のキャンセルは1枠分の手数料が発生します。',
-    '香り成分にアレルギーの懸念がある場合は事前にお知らせください。',
+    '前日18:00以降のキャンセルは1名分料金が発生します。',
+    '香り選定後にアレルギーの有無を確認します。',
     'active',
     10
 ),
 (
     'asakusa_premium_90',
-    '香遊プレミアム（90分）',
-    'ノート選定から比率調整まで深く体験する上位コース。',
-    'スタンダード内容に加えて、ノート比率調整と比較試作を行う拡張コースです。',
+    '浅草プレミアム（90分）',
+    'ノート追加と対話を含む深掘り調香コース。',
+    '標準体験に加えて、ノート追加と印象調整を行う上位コースです。',
+    '../images/Workshop/Workshop_ (4).png',
     'プレミアム 90分',
     90,
     110,
@@ -63,11 +66,11 @@ values
     2,
     current_date,
     current_date + 120,
-    'inim-dx 浅草店 1F 受付前',
+    'inim-dx 浅草店 1F 集合',
     'inim-dx Workshop Space',
     'つくばエクスプレス浅草駅から徒歩6分',
-    '前日18:00以降のキャンセルは1枠分の手数料が発生します。',
-    '試作回数が多いため、開始10分前までに受付をお願いします。',
+    '前日18:00以降のキャンセルは1名分料金が発生します。',
+    '試香数が多いため、開始10分前までに集合してください。',
     'active',
     20
 )
@@ -76,6 +79,7 @@ do update set
     plan_name = excluded.plan_name,
     plan_summary = excluded.plan_summary,
     plan_description = excluded.plan_description,
+    plan_image_url = excluded.plan_image_url,
     booking_label = excluded.booking_label,
     duration_min_minutes = excluded.duration_min_minutes,
     duration_max_minutes = excluded.duration_max_minutes,
@@ -106,7 +110,7 @@ with ranked_stores as (
     limit 3
 ),
 active_plans as (
-    select id, plan_code, base_price_jpy, min_party_size, max_party_size
+    select id, plan_code
     from public.workshop_plans
     where status = 'active'
       and plan_code in ('asakusa_standard_60', 'asakusa_premium_90')
@@ -182,8 +186,8 @@ select
     null,
     'JPY',
     case
-        when extract(dow from sc.session_date) = 0 then '残席わずか'
-        when extract(dow from sc.session_date) in (0, 6) then '即時予約可'
+        when extract(dow from sc.session_date) = 0 then '週末は混雑します。'
+        when extract(dow from sc.session_date) in (0, 6) then '土日開催日'
         else 'リクエスト受付中'
     end as public_note,
     now()
@@ -206,3 +210,4 @@ do update set
     updated_at = now();
 
 commit;
+

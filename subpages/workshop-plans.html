@@ -13,8 +13,8 @@
 
 <body data-root=".." data-page-key="workshop">
     <main id="page-main">
-        <section class="section">
-            <div class="section-heading">
+        <section class="section workshop-programs">
+            <div class="section-heading workshop-program-heading">
                 <p class="section-kicker">Workshop Plans</p>
                 <h2>プラン一覧</h2>
             </div>
@@ -22,6 +22,7 @@
             <div class="workshop-program-grid" id="plans-grid"></div>
         </section>
     </main>
+
     <script src="../js/site-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/site-shell.js"></script>
@@ -37,8 +38,27 @@
             const gridEl = document.getElementById("plans-grid");
             if (!statusEl || !gridEl) return;
 
+            const defaultImage = "../images/Workshop/Workshop_ (6).png";
+            const fallbackImages = [
+                "../images/Workshop/Workshop_ (6).png",
+                "../images/Workshop/Workshop_ (4).png",
+                "../images/Workshop/Workshop_ (3).png"
+            ];
+
             const toYen = (v) => `¥${Number(v || 0).toLocaleString("ja-JP")}`;
-            const escapeHtml = (v) => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
+            const escapeHtml = (v) => String(v ?? "")
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#39;");
+
+            const resolveImage = (url, index) => {
+                const candidate = String(url || "").trim();
+                if (candidate) return candidate;
+                return fallbackImages[index % fallbackImages.length] || defaultImage;
+            };
+
             const buildBookingHref = (plan) => {
                 const target = new URL("./workshop-booking.html", window.location.href);
                 target.searchParams.set("planCode", plan.plan_code || "");
@@ -51,63 +71,65 @@
                     id: "fallback-quick",
                     plan_code: "quick_trial",
                     plan_name: "Quick Trial",
-                    plan_summary: "短時間で香りの方向性を見つける導入プラン。",
+                    plan_summary: "短時間で香りの方向性を見つける体験プラン。",
                     duration_min_minutes: 45,
                     duration_max_minutes: 45,
                     base_price_jpy: 5500,
                     min_party_size: 1,
-                    max_party_size: 2
+                    max_party_size: 2,
+                    plan_image_url: "../images/Workshop/Workshop_ (6).png"
                 },
                 {
                     id: "fallback-signature",
                     plan_code: "signature_blend",
                     plan_name: "Signature Blend",
-                    plan_summary: "人気の標準プラン。迷ったらここから。",
+                    plan_summary: "人気のノートでオリジナルブレンドを作る体験。",
                     duration_min_minutes: 60,
                     duration_max_minutes: 75,
                     base_price_jpy: 6600,
                     min_party_size: 1,
-                    max_party_size: 4
-                },
-                {
-                    id: "fallback-gift",
-                    plan_code: "gift_workshop",
-                    plan_name: "Gift Workshop",
-                    plan_summary: "ペア・記念日に向くギフト体験プラン。",
-                    duration_min_minutes: 75,
-                    duration_max_minutes: 90,
-                    base_price_jpy: 10000,
-                    min_party_size: 1,
-                    max_party_size: 2
+                    max_party_size: 4,
+                    plan_image_url: "../images/Workshop/Workshop_ (4).png"
                 }
             ];
 
             const renderCards = (plans, inclusionsByPlan = {}) => {
                 if (!plans.length) {
-                    gridEl.innerHTML = `<article class="workshop-program-card"><div class="workshop-program-card__intro"><h3>Plan data is not available</h3><p>現在表示できるプランデータがありません。</p></div></article>`;
+                    gridEl.innerHTML = `
+                        <article class="workshop-program-card">
+                            <div class="workshop-program-card__intro">
+                                <h3>Plan data is not available</h3>
+                                <p>現在表示できるプランデータがありません。</p>
+                            </div>
+                        </article>
+                    `;
                     return;
                 }
+
                 gridEl.innerHTML = plans.map((plan, index) => {
-                    const mins = plan.duration_min_minutes || 0;
-                    const maxs = plan.duration_max_minutes || mins;
+                    const mins = Number(plan.duration_min_minutes || 0);
+                    const maxs = Number(plan.duration_max_minutes || mins);
                     const points = (inclusionsByPlan[plan.id] || []).slice(0, 3);
+                    const imageUrl = resolveImage(plan.plan_image_url, index);
+                    const imageAlt = `${plan.plan_name || "Workshop Plan"} image`;
+
                     return `
                         <article class="workshop-program-card ${index % 2 === 0 ? "workshop-program-card--image-last" : ""}">
                             <div class="${index % 2 === 0 ? "workshop-program-card__body" : "workshop-program-card__details"}">
                                 <span class="workshop-program-card__eyebrow">${escapeHtml(plan.plan_code || "PLAN")}</span>
                                 <h3>${escapeHtml(plan.plan_name || "Workshop Plan")}</h3>
-                                <p>${escapeHtml(plan.plan_summary || plan.plan_description || "説明は準備中です。")}</p>
+                                <p>${escapeHtml(plan.plan_summary || plan.plan_description || "説明準備中です。")}</p>
                                 <div class="workshop-program-card__meta">
-                                    <span>所要時間: ${escapeHtml(String(mins))}分${maxs && maxs !== mins ? `〜${escapeHtml(String(maxs))}分` : ""}</span>
-                                    <span>料金: ${escapeHtml(toYen(plan.base_price_jpy))}〜</span>
-                                    <span>定員: ${escapeHtml(String(plan.min_party_size || 1))}〜${escapeHtml(String(plan.max_party_size || 1))}名</span>
+                                    <span>所要時間: ${escapeHtml(String(mins))}分${maxs && maxs !== mins ? ` - ${escapeHtml(String(maxs))}分` : ""}</span>
+                                    <span>料金: ${escapeHtml(toYen(plan.base_price_jpy))}</span>
+                                    <span>人数: ${escapeHtml(String(plan.min_party_size || 1))} - ${escapeHtml(String(plan.max_party_size || 1))}名</span>
                                 </div>
                                 ${points.length ? `<ul class="workshop-program-card__points">${points.map((x) => `<li>${escapeHtml(x)}</li>`).join("")}</ul>` : ""}
                                 <div class="workshop-program-card__actions">
-                                    <a class="button button--primary" href="${buildBookingHref(plan)}">このプランで予約</a>
+                                    <a class="button button--primary" href="${buildBookingHref(plan)}">このプランで予約する</a>
                                 </div>
                             </div>
-                            ${index % 2 === 0 ? '<img src="../images/Workshop/Workshop_ (6).png" alt="Workshop plan image">' : ""}
+                            <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(imageAlt)}" loading="lazy">
                         </article>
                     `;
                 }).join("");
@@ -119,9 +141,10 @@
                     renderCards(fallbackPlans);
                     return;
                 }
+
                 const { data: planRows, error: planErr } = await supabase
                     .from("workshop_plans")
-                    .select("id, plan_code, plan_name, plan_summary, plan_description, duration_min_minutes, duration_max_minutes, base_price_jpy, min_party_size, max_party_size, status, sort_order")
+                    .select("id, plan_code, plan_name, plan_summary, plan_description, plan_image_url, duration_min_minutes, duration_max_minutes, base_price_jpy, min_party_size, max_party_size, status, sort_order")
                     .eq("status", "active")
                     .order("sort_order", { ascending: true });
 
@@ -134,12 +157,14 @@
                 const plans = planRows || [];
                 const planIds = plans.map((x) => x.id).filter(Boolean);
                 const inclusionsByPlan = {};
+
                 if (planIds.length) {
                     const { data: inclusionRows } = await supabase
                         .from("workshop_plan_inclusions")
                         .select("plan_id, inclusion_text, display_order")
                         .in("plan_id", planIds)
                         .order("display_order", { ascending: true });
+
                     (inclusionRows || []).forEach((row) => {
                         inclusionsByPlan[row.plan_id] = inclusionsByPlan[row.plan_id] || [];
                         inclusionsByPlan[row.plan_id].push(row.inclusion_text);
@@ -156,3 +181,4 @@
 </body>
 
 </html>
+

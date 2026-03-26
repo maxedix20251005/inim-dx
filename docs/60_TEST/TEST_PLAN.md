@@ -98,7 +98,7 @@
 - 手順:
   1. `subpages/workshop.html` を開き、レイアウト崩れがないことを確認
   2. 「プランを見る」で `subpages/workshop-plans.html` へ遷移することを確認
-  3. `subpages/workshop.html` の「ダッシュボード」で `app/dashboard.html` へ遷移することを確認
+  3. `subpages/workshop.html` の「ダッシュボード」で `aapp/dashboard.html` へ遷移することを確認
   4. `index.html` でヒーロー画像が3秒ごとに切り替わることを確認
 - 期待結果:
   - workshop ページにインラインCSSが存在しない
@@ -107,7 +107,7 @@
 
 ## 2026-03-26 追加テスト / Added Test (Admin Access Control)
 - 対象:
-  - `app/dashboard.html`
+  - `aapp/dashboard.html`
   - `app/pages/workshop.html`
 - 手順:
   1. admin ロールでログインし、両ページにアクセス
@@ -147,3 +147,20 @@
 - 期待結果:
   - admin のみ管理リンクを視認できる
   - 一般ユーザーに管理リンクが露出しない
+
+## 2026-03-26 追加テスト / Added Test (Workshop Plan Images + Admin Logo)
+- 対象:
+  - subpages/workshop-plans.html
+  - app/dashboard.html, app/publish.html, app/pages/home.html（admin shell pages）
+- 手順:
+  1. sql/12_add_workshop_plan_image_url.sql を実行する
+  2. sql/09_seed_workshop_booking_master_and_sessions.sql を再実行する
+  3. subpages/workshop-plans.html を開き、各カード画像がDB値またはフォールバックで表示されることを確認する
+  4. 任意の管理画面を開き、ロゴが左上サイドバー内に表示されることを確認する
+- 期待結果:
+  - plan_image_url を設定したプランは指定画像が表示される
+  - 未設定時はフォールバック画像が表示される
+  - 管理画面ロゴは左上で統一される
+
+
+

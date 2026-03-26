@@ -157,6 +157,7 @@
     const renderSidebar = () => `
         <aside class="admin-sidebar">
             <div class="admin-brand">
+                <a class="admin-brand__logo" href="${escapeHtml(`${root}/index.html`)}" aria-label="Back to main site"><img src="${escapeHtml(`${root}/images/logo/logo-inim-dx.jpg`)}" alt="inim-dx logo"></a>
                 <span class="admin-brand__eyebrow">inim-dx</span>
                 <strong class="admin-brand__title">Admin Portal</strong>
             </div>
@@ -186,7 +187,6 @@
                 <p>${escapeHtml(currentPage[3])}</p>
             </div>
             <div class="admin-topbar__meta">
-                <a class="admin-topbar__logo" href="${escapeHtml(`${root}/index.html`)}" aria-label="Back to main site"><img src="${escapeHtml(`${root}/images/logo/logo-inim-dx.jpg`)}" alt="inim-dx logo"></a>
                 <span>現在: ${escapeHtml(fmtDate(new Date().toISOString()))}</span>
                 <span>権限: ${escapeHtml(state.roles.map(roleLabel).join(", ") || "未取得")}</span>
             </div>
@@ -806,6 +806,7 @@
     };
     init().catch((e) => setNotice(`初期化エラー: ${e.message}`, "error"));
 })();
+
 
 
 
