@@ -34,6 +34,11 @@
     padding: 26px;
 }
 
+.thanks-panel__lead {
+    margin-top: 10px;
+    color: var(--color-muted);
+}
+
 .thanks-table {
     width: 100%;
     border-collapse: collapse;

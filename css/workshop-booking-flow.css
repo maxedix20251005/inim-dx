@@ -79,6 +79,10 @@
 .confirm-summary__value { text-align: right; font-weight: 700; }
 .confirm-actions { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-top: 22px; }
 .confirm-actions__meta { color: var(--color-muted); font-size: .9rem; }
+.confirm-preflight { margin-top: 14px; padding: 12px 14px; border: 1px solid rgba(217,210,198,.95); border-radius: 14px; background: #fffdfa; font-size: .9rem; color: var(--color-muted); }
+.confirm-preflight.is-info { border-color: rgba(83,101,129,.28); background: rgba(83,101,129,.08); color: #3f4d63; }
+.confirm-preflight.is-ok { border-color: rgba(47,122,74,.3); background: rgba(47,122,74,.1); color: #1f5a35; }
+.confirm-preflight.is-error { border-color: rgba(178,69,49,.35); background: rgba(178,69,49,.1); color: #8d3023; }
 .confirm-build { margin-top: 14px; color: var(--color-muted); font-size: .85rem; }
 .confirm-note p, .confirm-note li { color: var(--color-muted); line-height: 1.7; }
 .confirm-success { display: none; margin-top: 18px; padding: 16px 18px; border-radius: 18px; background: rgba(37,103,86,.12); color: #1d5d4c; }

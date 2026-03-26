@@ -88,21 +88,22 @@
                     <div class="confirm-actions">
                         <button class="button button--primary" type="button" id="confirm-submit">この内容で予約を送信する</button>
                         <a class="button button--secondary" href="./workshop-booking-entry.html" id="confirm-back-link">入力内容を修正する</a>
-                        <span class="confirm-actions__meta">送信時にログイン状態と入力値を確認し、`bookings` へ保存します。</span>
+                        <span class="confirm-actions__meta">送信前に予約枠の最終状態を確認し、問題がなければ保存します。</span>
                     </div>
+                    <div class="confirm-preflight" id="confirm-preflight" aria-live="polite">予約枠を確認中です...</div>
                     <p class="confirm-build" id="confirm-build"></p>
                     <div class="confirm-success" id="confirm-success"></div>
                 </section>
 
                 <aside class="confirm-note">
                     <div>
-                        <p class="section-kicker">Draft Scope</p>
-                        <h2>この画面で詰めること</h2>
+                        <p class="section-kicker">Final Check</p>
+                        <h2>送信前に確認すること</h2>
                     </div>
                     <ul>
-                        <li>送信前に確認したい情報が過不足なく並んでいるか</li>
-                        <li>戻る導線で入力内容を保ったまま修正できるか</li>
-                        <li>保存後の完了画面導線は次段階で確定する</li>
+                        <li>表示されている日時・店舗・料金が希望内容と一致しているか</li>
+                        <li>代表者の連絡先に誤りがないか</li>
+                        <li>送信時点で予約枠が受付可能か</li>
                     </ul>
                 </aside>
             </div>
@@ -186,11 +187,19 @@
 
             const success = document.getElementById("confirm-success");
             const submitButton = document.getElementById("confirm-submit");
+            const preflight = document.getElementById("confirm-preflight");
+            if (submitButton) submitButton.disabled = true;
             const setResultMessage = (html, isError = false) => {
                 success.innerHTML = html;
                 success.classList.toggle("is-error", isError);
                 success.classList.add("is-visible");
                 success.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            };
+            const setPreflightMessage = (text, kind = "info") => {
+                if (!preflight) return;
+                preflight.textContent = text;
+                preflight.classList.remove("is-info", "is-ok", "is-error");
+                preflight.classList.add(`is-${kind}`);
             };
             const validateRequiredSelections = () => {
                 const missing = [];
@@ -215,6 +224,8 @@
                 if (!partySize || partySize === "未入力") missing.push("参加人数");
                 const isoDate = toIsoDate(selected.dateKey, selected.label || selected.date);
                 if (!isoDate) missing.push("日時情報");
+                if (!isUuid(selected.sessionId)) missing.push("セッションID");
+                if (!isUuid(selected.planId)) missing.push("プランID");
                 if (missing.length > 0) {
                     if (submitButton) submitButton.disabled = true;
                     setResultMessage(`<strong>確認項目に不足があります</strong><p>${missing.join(" / ")} を確認し、入力画面から再設定してください。</p>`, true);
@@ -226,6 +237,7 @@
                 const matched = String(priceText || "").replace(/,/g, "").match(/(\d+)/);
                 return matched ? Number(matched[1]) : null;
             };
+            const toYenText = (value) => `¥${Number(value || 0).toLocaleString("ja-JP")}`;
             const toCurrencyCode = (value) => (value && value.length === 3 ? value.toUpperCase() : "JPY");
             const isUuid = (value) => /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(String(value || ""));
             const toIsoDate = (selectedDateKey, selectedDateLabel) => {
@@ -248,6 +260,68 @@
                 const mm = timeMatched ? timeMatched[2] : "00";
                 return `${isoDate}T${hh}:${mm}:00+09:00`;
             };
+            const normaliseTimeText = (value) => String(value || "").slice(0, 5);
+            const remainingCapacity = (sessionRow) => {
+                const total = Number(sessionRow?.capacity_total || 0);
+                const reserved = Number(sessionRow?.capacity_reserved || 0);
+                return total - reserved;
+            };
+            const resolveBookingMethod = (sessionRow) => {
+                const candidate = String(sessionRow?.booking_method || selected.bookingMethod || "").toLowerCase();
+                if (candidate.includes("request")) return "request";
+                return "instant";
+            };
+            const fetchBookingSnapshot = async () => {
+                if (!isUuid(selected.sessionId) || !isUuid(selected.planId)) {
+                    throw new Error("予約枠情報が不足しています。日時選択からやり直してください。");
+                }
+                const { data: sessionRow, error: sessionError } = await supabase
+                    .from("workshop_sessions")
+                    .select("id, plan_id, store_id, session_date, gather_time, start_time, end_time, booking_method, capacity_total, capacity_reserved, price_override_jpy, currency_code, min_party_size, max_party_size, session_status, published_at")
+                    .eq("id", selected.sessionId)
+                    .maybeSingle();
+                if (sessionError) throw sessionError;
+                if (!sessionRow) throw new Error("選択した予約枠が見つかりません。日時選択からやり直してください。");
+                if (sessionRow.plan_id !== selected.planId) {
+                    throw new Error("プランと予約枠の組み合わせが一致しません。日時選択からやり直してください。");
+                }
+
+                const { data: planRow, error: planError } = await supabase
+                    .from("workshop_plans")
+                    .select("id, plan_name, base_price_jpy, currency_code, min_party_size, max_party_size, status")
+                    .eq("id", sessionRow.plan_id)
+                    .maybeSingle();
+                if (planError) throw planError;
+                if (!planRow) throw new Error("プラン情報を取得できませんでした。時間をおいて再度お試しください。");
+                if (String(planRow.status || "").toLowerCase() !== "active") {
+                    throw new Error("このプランは現在予約受付対象外です。別のプランを選択してください。");
+                }
+
+                const sessionDate = sessionRow.session_date || "";
+                const method = resolveBookingMethod(sessionRow);
+                const remain = remainingCapacity(sessionRow);
+                const isPublished = !!sessionRow.published_at;
+                const statusCode = String(sessionRow.session_status || "").toLowerCase();
+                if (!sessionDate) throw new Error("予約枠の日付情報が不正です。日時選択からやり直してください。");
+                if (!isPublished) throw new Error("この予約枠は現在公開されていません。別の日程を選択してください。");
+                if (statusCode === "full" || remain <= 0) throw new Error("この予約枠は満席です。別の日程を選択してください。");
+
+                const minParty = Number(sessionRow.min_party_size || planRow.min_party_size || selected.minPartySize || 1);
+                const maxParty = Number(sessionRow.max_party_size || planRow.max_party_size || selected.maxPartySize || 4);
+                const quotedPrice = Number(sessionRow.price_override_jpy || planRow.base_price_jpy || 0);
+                const currencyCode = toCurrencyCode(sessionRow.currency_code || planRow.currency_code || selected.currencyCode || "JPY");
+                return {
+                    session: sessionRow,
+                    plan: planRow,
+                    method,
+                    remain,
+                    minParty: Math.max(1, minParty),
+                    maxParty: Math.max(Math.max(1, minParty), maxParty),
+                    quotedPrice,
+                    currencyCode,
+                    isoDate: sessionDate
+                };
+            };
             const resolveStoreLabel = () => {
                 if (selected.storeLabel) return selected.storeLabel;
                 const storeLabels = {
@@ -257,7 +331,8 @@
                 };
                 return storeLabels[selected.store] || "";
             };
-            const resolveStoreId = async () => {
+            const resolveStoreId = async (sessionRow) => {
+                if (sessionRow?.store_id) return sessionRow.store_id;
                 const storeLabel = resolveStoreLabel();
                 if (!storeLabel) {
                     throw new Error("店舗情報が不足しています。予約画面からやり直してください。");
@@ -348,12 +423,52 @@
                 }
                 return value;
             };
-            const normalisePartySize = (value) => {
+            const normalisePartySize = (value, min, max) => {
                 const partySize = Number(value);
                 if (!Number.isInteger(partySize) || partySize < 1) {
                     throw new Error("参加人数の値が不正です。入力画面へ戻って修正してください。");
                 }
+                if (partySize < min || partySize > max) {
+                    throw new Error(`参加人数は ${min}名〜${max}名で指定してください。`);
+                }
                 return partySize;
+            };
+            const runPreflight = async () => {
+                if (!supabase) {
+                    setPreflightMessage("Supabase 接続設定を読み込めないため、予約枠を確認できません。", "error");
+                    return false;
+                }
+                if (!validateRequiredSelections()) {
+                    setPreflightMessage("入力内容に不足があるため、予約枠確認を保留しています。", "error");
+                    return false;
+                }
+                setPreflightMessage("予約枠の最新状態を確認中です...", "info");
+                try {
+                    const snapshot = await fetchBookingSnapshot();
+                    const gatherText = normaliseTimeText(snapshot.session.gather_time) || selected.gather;
+                    const startText = normaliseTimeText(snapshot.session.start_time);
+                    const endText = normaliseTimeText(snapshot.session.end_time);
+                    const experienceText = startText && endText ? `${startText} - ${endText}` : selected.experience;
+                    const priceText = snapshot.quotedPrice > 0 ? toYenText(snapshot.quotedPrice) : selected.price;
+                    const methodLabel = snapshot.method === "request" ? "リクエスト予約" : "即時予約";
+                    document.getElementById("confirm-plan").textContent = snapshot.plan.plan_name || selected.plan;
+                    document.getElementById("confirm-gather").textContent = gatherText;
+                    document.getElementById("confirm-experience").textContent = experienceText;
+                    document.getElementById("confirm-price").textContent = priceText;
+                    document.getElementById("confirm-method").textContent = methodLabel;
+                    document.getElementById("confirm-summary-gather").textContent = gatherText;
+                    document.getElementById("confirm-summary-experience").textContent = experienceText;
+                    document.getElementById("confirm-summary-price").textContent = priceText;
+                    document.getElementById("confirm-summary-method").textContent = methodLabel;
+                    setPreflightMessage(`予約枠確認OK: ${snapshot.isoDate} / ${methodLabel} / 残席 ${snapshot.remain}。`, "ok");
+                    if (submitButton) submitButton.disabled = false;
+                    return true;
+                } catch (error) {
+                    const message = error?.message || "予約枠の確認に失敗しました。";
+                    setPreflightMessage(message, "error");
+                    if (submitButton) submitButton.disabled = true;
+                    return false;
+                }
             };
             submitButton?.addEventListener("click", async () => {
                 if (!supabase) {
@@ -367,23 +482,22 @@
                 try {
                     submitButton.disabled = true;
                     submitButton.textContent = "送信中...";
-                    const partySize = normalisePartySize(selected.partySize);
-                    const quotedPriceJpy = selected.priceJpy ? Number(selected.priceJpy) : parsePriceJpy(selected.price);
-                    const currencyCode = toCurrencyCode(selected.currencyCode);
-                    const methodCode = (selected.bookingMethod || "").toLowerCase().includes("request") || selected.method.includes("リクエスト") ? "request" : "instant";
-                    const isoDate = toIsoDate(selected.dateKey, selected.label || selected.date);
-                    if (!isoDate) {
-                        throw new Error("日付情報が不足しています。日時選択からやり直してください。");
-                    }
+                    const snapshot = await fetchBookingSnapshot();
+                    const partySize = normalisePartySize(selected.partySize, snapshot.minParty, snapshot.maxParty);
+                    const quotedPriceJpy = snapshot.quotedPrice || (selected.priceJpy ? Number(selected.priceJpy) : parsePriceJpy(selected.price));
+                    const currencyCode = snapshot.currencyCode || toCurrencyCode(selected.currencyCode);
+                    const methodCode = snapshot.method;
+                    const isoDate = snapshot.isoDate || toIsoDate(selected.dateKey, selected.label || selected.date);
+                    if (!isoDate) throw new Error("日付情報が不足しています。日時選択からやり直してください。");
                     const customerProfileId = await resolveProfileId();
-                    const storeId = await resolveStoreId();
-                    const planId = isUuid(selected.planId) ? selected.planId : null;
-                    const sessionId = isUuid(selected.sessionId) ? selected.sessionId : null;
+                    const storeId = await resolveStoreId(snapshot.session);
+                    const planId = snapshot.plan.id;
+                    const sessionId = snapshot.session.id;
                     const payload = {
                         customer_profile_id: customerProfileId,
                         store_id: storeId,
                         booking_type: "workshop",
-                        booked_at: toBookedAtIso(isoDate, selected.gather),
+                        booked_at: toBookedAtIso(isoDate, normaliseTimeText(snapshot.session.gather_time) || selected.gather),
                         participant_count: partySize,
                         status: methodCode === "request" ? "pending" : "confirmed",
                         note: selected.note || null,
@@ -414,11 +528,11 @@
                         status: data.status || "",
                         date: selected.date || "",
                         label: selected.label || "",
-                        gather: selected.gather || "",
+                        gather: normaliseTimeText(snapshot.session.gather_time) || selected.gather || "",
                         party_size: String(partySize),
-                        start_time: selected.startTime || "",
-                        end_time: selected.endTime || "",
-                        plan: selected.plan || "",
+                        start_time: normaliseTimeText(snapshot.session.start_time) || selected.startTime || "",
+                        end_time: normaliseTimeText(snapshot.session.end_time) || selected.endTime || "",
+                        plan: snapshot.plan.plan_name || selected.plan || "",
                         store_label: resolveStoreLabel() || "",
                         price: selected.price || ""
                     };
@@ -442,11 +556,12 @@
                     `, true);
                 } finally {
                     if (submitButton) {
-                        submitButton.disabled = false;
                         submitButton.textContent = "この内容で予約を送信する";
+                        submitButton.disabled = !preflight?.classList.contains("is-ok");
                     }
                 }
             });
+            runPreflight();
         })();
     </script>
 </body>

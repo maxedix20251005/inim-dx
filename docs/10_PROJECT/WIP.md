@@ -96,4 +96,11 @@
 - 2026-03-26: Created `subpages/sitemap.html` to visualise full site structure (public + admin links) for IA review and quick navigation.
 - 2026-03-26: Updated shared footer guide link in `js/site-shell.js` to route `サイトマップ` -> `subpages/sitemap.html`.
 - 2026-03-26: Added backlog item `2.12 Breadcrumb Navigation` in `FEATURE_BACKLOG.md` for shared hierarchy cues on public/admin pages.
+- 2026-03-26: Task #3 hardening slice implemented for booking completion quality.
+  - JA: 確認画面で送信前プリフライト（予約枠の実在/公開状態/満席判定/プランactive判定）を追加し、送信可否を画面内で明示化。
+  - EN: Added pre-submit preflight on confirm page (slot existence/public state/full-capacity checks and plan active-state check) with explicit in-page sendability feedback.
+  - JA: 参加人数はセッション/プランの `min_party_size`〜`max_party_size` で再検証するよう変更。
+  - EN: Party size is now revalidated against session/plan `min_party_size` to `max_party_size` at submit time.
+  - JA: 公開予約フロー文言の Draft 表記を除去し、完了画面のステータス表示を利用者向け文言へ変換。
+  - EN: Removed draft-facing wording from public booking flow and converted thanks status display to user-readable messaging.
 

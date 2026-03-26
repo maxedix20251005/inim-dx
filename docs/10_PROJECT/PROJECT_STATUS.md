@@ -410,4 +410,13 @@
 - 2026-03-26: Created `subpages/sitemap.html` to visualise full site structure (public + admin links) for IA review and quick navigation.
 - 2026-03-26: Updated shared footer guide link in `js/site-shell.js` to route `サイトマップ` -> `subpages/sitemap.html`.
 - 2026-03-26: Added backlog item `2.12 Breadcrumb Navigation` in `FEATURE_BACKLOG.md` for shared hierarchy cues on public/admin pages.
+- 2026-03-26: Task #3 hardening update applied to booking completion flow.
+  - JA: `subpages/workshop-booking-confirm.html` で送信前の予約枠プリフライト検証（`session_id`/`plan_id` 必須、`workshop_sessions` + `workshop_plans` 実データ再確認、満席/非公開/非active プランの送信ブロック）を追加。
+  - EN: Added pre-submit booking-slot preflight validation in `subpages/workshop-booking-confirm.html` (required `session_id`/`plan_id`, live revalidation against `workshop_sessions` + `workshop_plans`, and blocking on full/unpublished/non-active plan states).
+  - JA: 送信 payload は確認時の実データ（方式、価格、日時、人数範囲）を優先採用し、`bookings` 保存の整合性を強化。
+  - EN: Submit payload now prioritises live-confirmed values (method, price, date-time, party-size range) to improve `bookings` write consistency.
+  - JA: 公開側 UI 文言を Draft 表現から本番向け表現へ更新（entry/confirm/thanks）、完了画面のステータス表示を利用者向けラベル化。
+  - EN: Updated public booking UI copy from draft phrasing to production-ready messaging (entry/confirm/thanks), and mapped thanks-page status text to user-facing labels.
+  - JA: `subpages/workshop-booking.html` の Supabase client 生成を singleton 化し、クライアント重複生成リスクを低減。
+  - EN: Switched `subpages/workshop-booking.html` Supabase client creation to singleton to reduce duplicate client-instance risk.
 

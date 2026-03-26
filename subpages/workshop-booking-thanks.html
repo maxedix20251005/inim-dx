@@ -24,6 +24,7 @@
         <section class="thanks-wrap">
             <section class="thanks-panel">
                 <h2>予約情報</h2>
+                <p class="thanks-panel__lead">ご入力いただいた内容で予約を受け付けました。ステータスが <strong>pending</strong> の場合は、店舗確認後に確定連絡があります。</p>
                 <table class="thanks-table">
                     <tbody>
                         <tr><th>予約ID</th><td id="thanks-booking-id">-</td></tr>
@@ -53,7 +54,13 @@
             const params = new URLSearchParams(window.location.search);
             const byId = (id) => document.getElementById(id);
             const bookingId = params.get("booking_id") || "-";
-            const status = params.get("status") || "-";
+            const rawStatus = params.get("status") || "-";
+            const statusMap = {
+                pending: "pending（店舗確認待ち）",
+                confirmed: "confirmed（予約確定）",
+                cancelled: "cancelled（キャンセル）"
+            };
+            const status = statusMap[String(rawStatus).toLowerCase()] || rawStatus;
             const label = params.get("label") || params.get("date") || "-";
             const gather = params.get("gather") || "-";
             const party = params.get("party_size") || "-";

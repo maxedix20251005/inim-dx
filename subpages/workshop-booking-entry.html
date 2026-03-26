@@ -18,7 +18,7 @@
                 <div>
                     <p class="section-kicker">Workshop Booking Entry</p>
                     <h1 class="entry-hero__title">選んだ枠を確認しながら、申込情報を入力する</h1>
-                    <p class="entry-hero__lead">Draft 版の予約入力画面です。選択した日時と予約方式を上段で確認しながら、代表者情報と人数を入力できます。次段階では確認画面へ渡し、その後に `bookings` 保存処理へ接続します。</p>
+                    <p class="entry-hero__lead">選択した日時と予約方式を上段で確認しながら、代表者情報と人数を入力できます。入力後は確認画面で最終チェックしてから送信します。</p>
                 </div>
                 <aside class="entry-summary">
                     <div class="entry-summary__grid">
@@ -58,7 +58,7 @@
                     <div class="entry-panel__head">
                         <div>
                             <p class="section-kicker">Booking Form</p>
-                            <h2>予約入力 Draft</h2>
+                            <h2>予約入力</h2>
                         </div>
                         <p>ここで確定した項目を、次に確認画面へ渡します。</p>
                     </div>
@@ -95,33 +95,28 @@
                                 ご要望・配慮事項
                                 <textarea name="special_requests" placeholder="香りの好み、アレルギー配慮、同伴者情報などがあればご記入ください。"></textarea>
                             </label>
-                            <label class="entry-form__full">
-                                <span>内部確認用メモ Draft</span>
-                                <input type="text" name="draft_note" value="この項目は公開画面では送信せず、最終実装時に内部メモと分離予定です。" readonly>
-                                <span class="field-note">現時点では、公開入力項目と管理用項目の境界を確認するために表示しています。</span>
-                            </label>
                         </div>
                         <label class="entry-check">
                             <input type="checkbox" name="agreement" required>
                             <span>注意事項とキャンセルポリシーを確認し、内容に同意します。</span>
                         </label>
                         <div class="entry-actions">
-                            <button class="button button--primary" type="submit" id="entry-submit" disabled>確認 Draft を表示する</button>
+                            <button class="button button--primary" type="submit" id="entry-submit" disabled>確認画面へ進む</button>
                             <a class="button button--secondary" href="./workshop-booking.html">日時選択へ戻る</a>
-                            <span class="entry-actions__meta">このボタンは確認画面へ進みます。送信処理は次段階で Supabase 保存へ繋ぎます。</span>
+                            <span class="entry-actions__meta">次の画面で最終確認後、予約を送信します。</span>
                         </div>
                     </form>
                 </section>
 
                 <aside class="entry-note">
                     <div>
-                        <p class="section-kicker">Draft Scope</p>
-                        <h2>この画面で確定したいこと</h2>
+                        <p class="section-kicker">Booking Guide</p>
+                        <h2>入力時のチェックポイント</h2>
                     </div>
                     <ul>
-                        <li>公開側で取る入力項目を `bookings` 追加列と矛盾なく揃える</li>
-                        <li>即時予約とリクエスト予約で見せ方を分けるかを判断する</li>
-                        <li>確認画面で見直したい情報が過不足なく揃っているかを決める</li>
+                        <li>メールアドレスと電話番号は当日連絡が取れる情報を入力してください</li>
+                        <li>参加人数は予約枠ごとの上限人数内で選択してください</li>
+                        <li>ご要望欄にはアレルギー配慮や同伴者情報を記載できます</li>
                     </ul>
                     <div>
                         <p class="section-kicker">Selected Slot</p>

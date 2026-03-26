@@ -96,7 +96,15 @@
   (() => {
     const cfg = window.INIM_SITE_CONFIG || {};
     const api = window.supabase || null;
-    const supabase = cfg.supabaseUrl && cfg.supabasePublishableKey && api?.createClient ? api.createClient(cfg.supabaseUrl, cfg.supabasePublishableKey) : null;
+    const supabase = (() => {
+      if (window.__INIM_SUPABASE_CLIENT) return window.__INIM_SUPABASE_CLIENT;
+      if (cfg.supabaseUrl && cfg.supabasePublishableKey && api?.createClient) {
+        const client = api.createClient(cfg.supabaseUrl, cfg.supabasePublishableKey);
+        window.__INIM_SUPABASE_CLIENT = client;
+        return client;
+      }
+      return null;
+    })();
 
     const el = (id) => document.getElementById(id);
     const led = el("connection-led");

@@ -199,3 +199,19 @@
 - 期待結果:
   - Footer「サイトマップ」からサイト構造ページへ遷移できる
   - サイト構造確認とページ探索が可能
+
+## 2026-03-26 追加テスト / Added Test (Task #3 Booking Completion Hardening)
+- 対象:
+  - `subpages/workshop-booking-entry.html`
+  - `subpages/workshop-booking-confirm.html`
+  - `subpages/workshop-booking-thanks.html`
+- 手順:
+  1. `workshop-booking.html` から有効な予約枠を選択し、entry -> confirm へ遷移する
+  2. confirm 画面で「予約枠確認OK」プリフライト表示が出ることを確認する
+  3. `session_id` または `plan_id` を欠損させたURLで confirm を開き、送信がブロックされることを確認する
+  4. 満席/非公開セッション、または非activeプランを選んだ場合に送信がブロックされることを確認する
+  5. 正常送信後、thanks 画面で status が利用者向けラベル（pending/confirmed など）で表示されることを確認する
+- 期待結果:
+  - 送信前に予約枠の実データ検証が必ず実行される
+  - 不正/無効な予約枠では `bookings` insert が行われない
+  - 正常な予約のみ完了画面へ遷移する
