@@ -164,3 +164,8 @@
 - 2026-03-26: Phase 2 hardening slice #2 delivered on Bookings (04) and Plans (05).
   - JA: 04/05 に列ソート、ページング、状態保持（localStorage）を追加し、大量データ時の運用探索性を改善。
   - EN: Added column sorting, pagination, and persisted state (localStorage) to 04/05 for better high-volume operational usability.
+- 2026-03-26: Public navigation IA consolidation implemented (rollback-safe).
+  - JA: 公開サイドナビを feature flag（`enablePublicSideNav`）で停止し、グローバルナビ単一運用へ移行。
+  - EN: Disabled public side navigation via feature flag (`enablePublicSideNav`) and moved to a single global-navigation model.
+  - JA: 旧サイドナビはコード保持しており、フラグONで即時ロールバック可能。
+  - EN: Legacy side-nav code is retained and can be rolled back instantly by enabling the flag.

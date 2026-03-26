@@ -511,3 +511,13 @@
   - sort/page size の localStorage 保持（`admin_workshop_plans_preferences_v1`）
   - 空結果/取得失敗時のテーブルメッセージ表示
 - 対象ファイル: `js/admin-workshop-page.js`, `js/admin-workshop-plans-page.js`, `css/app-workshop-bookings.css`, `css/app-workshop-plans.css`.
+### ドキュメント更新（2026-03-26 追加12）
+- 公開サイトの重複ナビ問題に対応し、サイドナビを機能フラグで無効化（既定OFF）しました。
+- 追加フラグ: `js/site-config.js` の `enablePublicSideNav`。
+  - `false`（既定）: サイドナビ非表示、グローバルナビ中心運用
+  - `true`: 旧サイドナビ構成へ即時ロールバック可能
+- グローバルナビ強化:
+  - `aria-current="page"` 付与で現在ページのアクセシビリティを改善
+  - 浮遊ナビの compact 状態（`is-compact`）を追加し、スクロール時の占有面積を縮小
+  - サイドナビOFF時のモバイル余白補正（左余白過大の解消）
+- 対象ファイル: `js/site-shell.js`, `css/style.css`, `js/site-config.js`.

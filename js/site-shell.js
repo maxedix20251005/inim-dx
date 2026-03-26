@@ -73,6 +73,7 @@
     let authStateReady = false;
     let recoveryFlowActive = initialHashParams.get('type') === 'recovery';
     const siteConfig = window.INIM_SITE_CONFIG || {};
+    const showPublicSideNav = siteConfig.enablePublicSideNav === true;
     const supabaseConfig = {
         url: siteConfig.supabaseUrl || '',
         publishableKey: siteConfig.supabasePublishableKey || ''
@@ -354,21 +355,25 @@
         `;
     }
 
-    const hamburger = document.createElement('button');
-    hamburger.className = 'hamburger';
-    hamburger.type = 'button';
-    hamburger.setAttribute('aria-label', 'メニューを開く');
-    hamburger.setAttribute('aria-expanded', 'false');
-    hamburger.setAttribute('aria-controls', 'sidebar');
-    hamburger.innerHTML = '<span></span><span></span><span></span>';
-
     const shell = document.createElement('div');
     shell.className = 'page-shell';
 
-    const sidebar = document.createElement('aside');
-    sidebar.className = 'sidebar';
-    sidebar.id = 'sidebar';
-    sidebar.innerHTML = sidebarHtml;
+    let hamburger = null;
+    let sidebar = null;
+    if (showPublicSideNav) {
+        hamburger = document.createElement('button');
+        hamburger.className = 'hamburger';
+        hamburger.type = 'button';
+        hamburger.setAttribute('aria-label', 'メニューを開く');
+        hamburger.setAttribute('aria-expanded', 'false');
+        hamburger.setAttribute('aria-controls', 'sidebar');
+        hamburger.innerHTML = '<span></span><span></span><span></span>';
+
+        sidebar = document.createElement('aside');
+        sidebar.className = 'sidebar';
+        sidebar.id = 'sidebar';
+        sidebar.innerHTML = sidebarHtml;
+    }
 
     const pageContent = document.createElement('div');
     pageContent.className = 'page-content';
@@ -381,6 +386,7 @@
     footer.className = 'site-footer';
     footer.id = 'contact';
     footer.innerHTML = footerHtml;
+    body.classList.toggle('public-nav--no-side', !showPublicSideNav);
 
     const renderHeaderTools = () => {
         const tools = header.querySelector('.utility-header__tools');
@@ -391,6 +397,7 @@
     };
 
     const renderSidebarAccountLinks = () => {
+        if (!showPublicSideNav || !sidebar) { return; }
         const standalone = sidebar.querySelector('.sidebar__standalone');
         if (!standalone) { return; }
         standalone.innerHTML = currentUser
@@ -422,10 +429,13 @@
             if (!show && item) {
                 item.remove();
             }
+            syncGlobalNavA11y();
         }
 
-        const standalone = sidebar.querySelector('.sidebar__standalone');
-        if (standalone) {
+        const standalone = showPublicSideNav && sidebar
+            ? sidebar.querySelector('.sidebar__standalone')
+            : null;
+        if (showPublicSideNav && sidebar && standalone) {
             const ensureSideLink = (key, label) => {
                 const selector = `[data-admin-link="${key}"]`;
                 let item = standalone.querySelector(selector);
@@ -666,15 +676,32 @@
         </div>
     `;
 
+    const syncGlobalNavA11y = () => {
+        const nav = header.querySelector('.category-nav');
+        if (!nav) return;
+        nav.querySelectorAll('a').forEach((anchor) => {
+            if (anchor.classList.contains('is-current')) {
+                anchor.setAttribute('aria-current', 'page');
+            } else {
+                anchor.removeAttribute('aria-current');
+            }
+        });
+    };
+
     pageContent.appendChild(header);
     pageContent.appendChild(main);
     pageContent.appendChild(footer);
-    shell.appendChild(sidebar);
+    if (showPublicSideNav && sidebar) {
+        shell.appendChild(sidebar);
+    }
     shell.appendChild(pageContent);
 
-    body.prepend(hamburger);
+    if (showPublicSideNav && hamburger) {
+        body.prepend(hamburger);
+    }
     body.appendChild(shell);
     body.appendChild(modalHost.firstElementChild);
+    syncGlobalNavA11y();
 
     const modal = document.getElementById('account-modal');
     const modalTitle = document.getElementById('account-modal-title');
@@ -946,20 +973,24 @@
             globalNav.dataset.initialTop = String(navTop);
         }
 
-        globalNav.classList.toggle('is-floating', window.scrollY > navTop);
+        const isFloating = window.scrollY > navTop;
+        globalNav.classList.toggle('is-floating', isFloating);
+        globalNav.classList.toggle('is-compact', isFloating && window.scrollY > (navTop + 80));
     };
 
-    hamburger.addEventListener('click', () => {
-        const isOpen = sidebar.classList.toggle('is-open');
-        hamburger.setAttribute('aria-expanded', String(isOpen));
-    });
-
-    sidebar.querySelectorAll('a').forEach((item) => {
-        item.addEventListener('click', () => {
-            sidebar.classList.remove('is-open');
-            hamburger.setAttribute('aria-expanded', 'false');
+    if (showPublicSideNav && hamburger && sidebar) {
+        hamburger.addEventListener('click', () => {
+            const isOpen = sidebar.classList.toggle('is-open');
+            hamburger.setAttribute('aria-expanded', String(isOpen));
         });
-    });
+
+        sidebar.querySelectorAll('a').forEach((item) => {
+            item.addEventListener('click', () => {
+                sidebar.classList.remove('is-open');
+                hamburger.setAttribute('aria-expanded', 'false');
+            });
+        });
+    }
 
     body.addEventListener('click', (event) => {
         const logoutTrigger = event.target.closest('[data-account-logout]');

@@ -445,3 +445,19 @@
 - 期待結果:
   - 04/05/06 すべてでページング＋ソート基盤が揃う
   - 再訪時の作業コンテキスト保持により運用効率が向上する
+
+## 2026-03-26 追加テスト / Added Test (Public Nav Consolidation + Rollback Flag)
+- 対象:
+  - `js/site-config.js`
+  - `js/site-shell.js`
+  - `css/style.css`
+- 手順:
+  1. `enablePublicSideNav: false` で公開ページを開き、サイドナビが表示されずグローバルナビのみ表示されることを確認する
+  2. グローバルナビの現在ページに `aria-current="page"` が付与されることを確認する
+  3. スクロール時にグローバルナビへ `is-floating` と `is-compact` が適用され、表示が詰まることを確認する
+  4. 980px 以下で公開ページを開き、左余白過大が発生しないことを確認する
+  5. `enablePublicSideNav: true` に変更して再確認し、旧サイドナビ＋ハンバーガー構成へ戻ることを確認する
+- 期待結果:
+  - 公開導線は重複ナビなしで運用できる
+  - ロールバック手段が設定値のみで機能する
+  - Desktop/Mobile でナビ表示崩れが発生しない
