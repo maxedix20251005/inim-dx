@@ -30,7 +30,7 @@
         <div>
           <p class="section-kicker">Workshop Booking</p>
           <h1 class="booking-hero__title">予約日を選んで体験枠を確保する</h1>
-          <p class="booking-hero__lead">カレンダーで日付を選ぶと、店舗ごとの予約枠と料金目安を確認できます。</p>
+          <p class="booking-hero__lead">まず店舗を選び、カレンダーから予約可能日を選択してください。選択後は下部の予約枠からそのまま申込へ進めます。</p>
         </div>
         <aside class="booking-summary">
           <div class="booking-summary__row"><span>開催期間</span><strong id="summary-period">読み込み中...</strong></div>
@@ -54,7 +54,26 @@
           </div>
           <div class="booking-store-picker" id="booking-store-picker"></div>
         </div>
-        <div class="booking-calendar-grid" id="booking-calendar"></div>
+        <div class="booking-calendar-layout">
+          <div class="booking-calendar-main">
+            <div class="booking-calendar-nav">
+              <button class="button button--secondary booking-calendar-nav__button" type="button" id="booking-cal-prev" aria-label="前の月">&lt;</button>
+              <strong class="booking-calendar-nav__label" id="booking-cal-label">-</strong>
+              <button class="button button--secondary booking-calendar-nav__button" type="button" id="booking-cal-next" aria-label="次の月">&gt;</button>
+            </div>
+            <div class="booking-calendar-grid" id="booking-calendar"></div>
+          </div>
+          <aside class="booking-selected-date" id="booking-selected-date">
+            <p class="section-kicker">Selected Date</p>
+            <h3 id="booking-selected-date-title">日付未選択</h3>
+            <dl class="booking-selected-date__grid">
+              <div><dt>店舗</dt><dd id="booking-selected-date-store">-</dd></div>
+              <div><dt>状態</dt><dd id="booking-selected-date-status">-</dd></div>
+              <div><dt>料金目安</dt><dd id="booking-selected-date-price">-</dd></div>
+            </dl>
+            <a class="button button--primary booking-selected-date__cta" href="#booking-slots-panel" id="booking-selected-date-cta" aria-disabled="true">この日程の予約枠を見る</a>
+          </aside>
+        </div>
         <div class="booking-legend">
           <span><i class="booking-mark" data-status="instant">○</i> 即時予約可</span>
           <span><i class="booking-mark" data-status="request">□</i> リクエスト予約</span>
@@ -62,26 +81,17 @@
           <span><i class="booking-mark" data-status="full">×</i> 満席</span>
           <span><i class="booking-mark" data-status="closed">-</i> 開催なし</span>
         </div>
-        <div class="booking-selection-bar">
-          <div>
-            <strong id="booking-selection-label">選択中: 日付未選択</strong>
-            <p id="booking-selection-meta">日付を選択すると、下部に予約枠が表示されます。</p>
-          </div>
-          <a class="button button--secondary" href="#booking-slots-panel">予約枠を確認する</a>
-        </div>
       </section>
     </section>
 
     <section class="booking-wrap">
       <section class="booking-panel" id="booking-slots-panel">
         <div class="booking-panel__head">
-          <div><p class="section-kicker">Selected Date</p><h2>日付別の予約枠</h2></div>
+          <div><p class="section-kicker">Available Slots</p><h2>予約枠一覧</h2></div>
           <p>希望の時間帯を選んで予約へ進んでください。</p>
         </div>
         <div class="booking-slots">
           <div class="booking-selected">
-            <h3 id="booking-selected-title">日付未選択</h3>
-            <p class="booking-selected__status" id="booking-selected-status">予約可能な日付を選択してください。</p>
             <div class="booking-slot-list" id="booking-slot-list"></div>
           </div>
         </div>
@@ -110,10 +120,14 @@
     const led = el("connection-led");
     const cal = el("booking-calendar");
     const slots = el("booking-slot-list");
-    const title = el("booking-selected-title");
-    const status = el("booking-selected-status");
-    const label = el("booking-selection-label");
-    const meta = el("booking-selection-meta");
+    const calPrev = el("booking-cal-prev");
+    const calNext = el("booking-cal-next");
+    const calLabel = el("booking-cal-label");
+    const selectedDateTitle = el("booking-selected-date-title");
+    const selectedDateStore = el("booking-selected-date-store");
+    const selectedDateStatus = el("booking-selected-date-status");
+    const selectedDatePrice = el("booking-selected-date-price");
+    const selectedDateCta = el("booking-selected-date-cta");
     const picker = el("booking-store-picker");
     const storeMeta = el("booking-store-meta");
     const summaryPeriod = el("summary-period");
@@ -126,7 +140,7 @@
     const marks = { instant: "○", request: "□", few: "△", full: "×", closed: "-" };
     const days = ["月", "火", "水", "木", "金", "土", "日"];
     const fallbackStores = { asakusa: { label: "浅草店", caption: "Fri - Sun" }, shibamata: { label: "柴又店", caption: "Sat - Mon" }, solamachi: { label: "ソラマチ店", caption: "Daily" } };
-    let stores = { ...fallbackStores }, schedule = {}, months = [], selectedStore = "asakusa", selectedKey = "";
+    let stores = { ...fallbackStores }, schedule = {}, months = [], selectedStore = "asakusa", selectedKey = "", currentMonthIndex = 0;
 
     const setDiag = (v) => { dHost.hidden = false; diag.src.textContent = v.source; diag.plans.textContent = v.plans; diag.stores.textContent = v.stores; diag.sessions.textContent = v.sessions; diag.range.textContent = v.range; diag.err.textContent = v.error; };
     const setLed = (ok) => { led.classList.remove("is-ok", "is-bad"); led.classList.add(ok ? "is-ok" : "is-bad"); };
@@ -143,14 +157,29 @@
           const iso = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`; const ss = map[iso] || [];
           if (!ss.length) cells.push({ d, s: "closed", k: iso }); else { const p = ss[0]; cells.push({ d, s: p.status, p: { display: p.price.display }, k: iso, store: p.storeKey }); }
         }
-        while (cells.length % 7 !== 0) cells.push(null); out.push({ label, cells }); cur.setMonth(m + 1);
+        while (cells.length % 7 !== 0) cells.push(null); out.push({ label, year: y, month: m + 1, cells }); cur.setMonth(m + 1);
       } return out;
+    };
+
+    const monthIndexFromDateKey = (key) => {
+      if (!key || !months.length) return 0;
+      const m = String(key).match(/^(\d{4})-(\d{2})-/);
+      if (!m) return 0;
+      const y = Number(m[1]); const mm = Number(m[2]);
+      const idx = months.findIndex((item) => item.year === y && item.month === mm);
+      return idx >= 0 ? idx : 0;
     };
 
     const renderPicker = () => {
       picker.innerHTML = Object.entries(stores).map(([k, v]) => `<button class="booking-store-chip${k === selectedStore ? " is-active" : ""}" type="button" data-store="${k}">${v.label} / ${v.caption}</button>`).join("");
       storeMeta.textContent = `${stores[selectedStore].label} の開催日を表示しています。`;
-      picker.querySelectorAll("[data-store]").forEach((b) => b.onclick = () => { selectedStore = b.dataset.store; const first = Object.keys(schedule).find((k) => schedule[k].store === selectedStore); if (first) selectedKey = first; renderPicker(); renderCal(); renderSlots(); });
+      picker.querySelectorAll("[data-store]").forEach((b) => b.onclick = () => {
+        selectedStore = b.dataset.store;
+        const first = Object.keys(schedule).find((k) => schedule[k].store === selectedStore);
+        selectedKey = first || "";
+        currentMonthIndex = monthIndexFromDateKey(selectedKey);
+        renderPicker(); renderCal(); renderSlots();
+      });
     };
 
     const href = (cur, s) => {
@@ -161,16 +190,34 @@
 
     const renderSlots = () => {
       const cur = schedule[selectedKey];
-      title.textContent = cur?.label || "日付未選択";
-      status.textContent = cur?.status || "予約可能な日付を選択してください。";
-      label.textContent = cur ? `選択中: ${cur.storeLabel} / ${cur.label}` : "選択中の日付はありません";
-      meta.textContent = cur ? `${cur.storeLabel} の予約枠一覧です。` : "日付を選択すると予約枠が表示されます。";
-      slots.innerHTML = (cur?.slots || []).map((s) => `<article class="booking-slot"><div><strong>${cur.label}</strong><div class="booking-slot__time"><span>集合 ${s.g}</span><span>体験 ${s.start} - ${s.end}</span></div><p class="booking-slot__price">${s.price.display}</p></div><div class="booking-slot__actions"><span class="booking-slot__note">${s.n}</span><a class="button button--primary booking-slot__button" href="${href(cur, s)}">予約へ進む</a></div></article>`).join("");
+      selectedDateTitle.textContent = cur?.label || "日付未選択";
+      selectedDateStore.textContent = cur?.storeLabel || "-";
+      selectedDateStatus.textContent = cur?.status || "-";
+      selectedDatePrice.textContent = cur?.slots?.[0]?.price?.display || "-";
+      selectedDateCta.setAttribute("aria-disabled", cur ? "false" : "true");
+      selectedDateCta.classList.toggle("is-disabled", !cur);
+      if (!cur) {
+        slots.innerHTML = `<p class="booking-slot-empty">予約可能な日付を選択すると、ここに予約枠が表示されます。</p>`;
+        return;
+      }
+      slots.innerHTML = (cur.slots || []).map((s) => `<article class="booking-slot"><div><strong>${cur.label}</strong><div class="booking-slot__time"><span>集合 ${s.g}</span><span>体験 ${s.start} - ${s.end}</span></div><p class="booking-slot__price">${s.price.display}</p></div><div class="booking-slot__actions"><span class="booking-slot__note">${s.n}</span><a class="button button--primary booking-slot__button" href="${href(cur, s)}">予約へ進む</a></div></article>`).join("");
     };
 
     const renderCal = () => {
-      cal.innerHTML = months.map((m) => `<section class="booking-month"><div class="booking-month__header"><h3>${m.label}</h3><span>${stores[selectedStore].label} の開催日</span></div><table><thead><tr>${days.map((d) => `<th>${d}</th>`).join("")}</tr></thead><tbody>${Array.from({ length: Math.ceil(m.cells.length / 7) }, (_, i) => `<tr>${m.cells.slice(i * 7, i * 7 + 7).map((c) => { if (!c) return "<td class='is-outside'></td>"; const f = c.store && c.store !== selectedStore ? { ...c, s: "closed", p: null, k: null } : c; const selectable = ["instant", "request", "few"].includes(f.s); return `<td><button class="booking-day${selectable ? " is-selectable" : ""}${f.k === selectedKey ? " is-selected" : ""}" type="button" ${f.k ? `data-key="${f.k}"` : ""} ${!selectable ? "disabled" : ""}><span class="booking-day__date">${f.d}</span><span class="booking-day__status"><i class="booking-mark" data-status="${f.s}">${marks[f.s]}</i></span>${f.p ? `<div class="booking-day__price">${f.p.display}</div>` : ""}</button></td>`; }).join("")}</tr>`).join("")}</tbody></table></section>`).join("");
-      cal.querySelectorAll("[data-key]").forEach((b) => b.onclick = () => { selectedKey = b.dataset.key; renderCal(); renderSlots(); });
+      if (!months.length) {
+        calLabel.textContent = "-";
+        cal.innerHTML = `<section class="booking-month booking-month--empty"><div class="booking-month__empty">表示できる開催日がありません。</div></section>`;
+        if (calPrev) calPrev.disabled = true;
+        if (calNext) calNext.disabled = true;
+        return;
+      }
+      currentMonthIndex = Math.max(0, Math.min(currentMonthIndex, months.length - 1));
+      const m = months[currentMonthIndex];
+      calLabel.textContent = m.label;
+      cal.innerHTML = `<section class="booking-month"><div class="booking-month__header"><h3>${m.label}</h3><span>${stores[selectedStore].label} の開催日</span></div><table><thead><tr>${days.map((d) => `<th>${d}</th>`).join("")}</tr></thead><tbody>${Array.from({ length: Math.ceil(m.cells.length / 7) }, (_, i) => `<tr>${m.cells.slice(i * 7, i * 7 + 7).map((c) => { if (!c) return "<td class='is-outside'></td>"; const f = c.store && c.store !== selectedStore ? { ...c, s: "closed", p: null, k: null } : c; const selectable = ["instant", "request", "few"].includes(f.s); return `<td><button class="booking-day${selectable ? " is-selectable" : ""}${f.k === selectedKey ? " is-selected" : ""}" type="button" ${f.k ? `data-key="${f.k}"` : ""} ${!selectable ? "disabled" : ""}><span class="booking-day__date">${f.d}</span><span class="booking-day__status"><i class="booking-mark" data-status="${f.s}">${marks[f.s]}</i></span>${f.p ? `<div class="booking-day__price">${f.p.display}</div>` : ""}</button></td>`; }).join("")}</tr>`).join("")}</tbody></table></section>`;
+      if (calPrev) calPrev.disabled = currentMonthIndex <= 0;
+      if (calNext) calNext.disabled = currentMonthIndex >= months.length - 1;
+      cal.querySelectorAll("[data-key]").forEach((b) => b.onclick = () => { selectedKey = b.dataset.key; currentMonthIndex = monthIndexFromDateKey(selectedKey); renderCal(); renderSlots(); });
     };
 
     const toStatus = (r) => {
@@ -220,10 +267,12 @@
         });
         Object.entries(map).forEach(([k, arr]) => { const e = arr[0]; list[k] = { label: new Date(k).toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric", weekday: "short" }), store: e.storeKey, storeLabel: e.storeLabel, planId: e.planId, status: e.status === "request" ? "リクエスト予約" : e.status === "few" ? "残席わずか" : e.status === "full" ? "満席" : "即時予約可", slots: arr }; });
         schedule = list;
-        const dates = Object.keys(map).sort(); if (dates.length) { months = buildCells(map, new Date(dates[0]), new Date(dates[dates.length - 1])); selectedStore = Object.keys(stores)[0]; selectedKey = dates.find((d) => map[d][0].storeKey === selectedStore) || dates[0]; }
+        const dates = Object.keys(map).sort(); if (dates.length) { months = buildCells(map, new Date(dates[0]), new Date(dates[dates.length - 1])); selectedStore = Object.keys(stores)[0]; selectedKey = dates.find((d) => map[d][0].storeKey === selectedStore) || dates[0]; currentMonthIndex = monthIndexFromDateKey(selectedKey); }
       } catch (e) {
         setLed(false); setDiag({ source: "Supabase", plans: 0, stores: 0, sessions: 0, range, error: e.message || String(e) }); updateSummary([], [], []);
       }
+      if (calPrev) calPrev.onclick = () => { if (currentMonthIndex > 0) { currentMonthIndex -= 1; renderCal(); } };
+      if (calNext) calNext.onclick = () => { if (currentMonthIndex < months.length - 1) { currentMonthIndex += 1; renderCal(); } };
       renderPicker(); renderCal(); renderSlots();
     };
     init();

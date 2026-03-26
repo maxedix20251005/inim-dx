@@ -103,4 +103,19 @@
   - EN: Party size is now revalidated against session/plan `min_party_size` to `max_party_size` at submit time.
   - JA: 公開予約フロー文言の Draft 表記を除去し、完了画面のステータス表示を利用者向け文言へ変換。
   - EN: Removed draft-facing wording from public booking flow and converted thanks status display to user-readable messaging.
+- 2026-03-26: Step 1 UX conversion tuning completed on public booking page.
+  - JA: `workshop-booking.html` のヒーロー説明と選択バー文言を、予約完了までの次アクションが分かる表現へ更新。
+  - EN: Updated `workshop-booking.html` hero/selection-bar copy so users can clearly understand the next action toward completion.
+  - JA: `css/workshop-booking.css` で店舗チップ、日付セル、予約枠カード、選択バーCTAの視覚強度を上げ、予約導線の視認性を改善。
+  - EN: Increased visual emphasis for store chips, date cells, slot cards, and selection-bar CTA in `css/workshop-booking.css` to improve booking-flow visibility.
+- 2026-03-26: Calendar layout refinement applied (single-month + selected-date panel).
+  - JA: カレンダーを2か月同時表示から1か月表示へ変更し、月送りナビゲーション（`<` / `>`）を追加。
+  - EN: Changed calendar from dual-month display to a single-month view with month navigation (`<` / `>`).
+  - JA: カレンダー横に `Selected Date` パネルを追加し、選択中日程の文脈情報を保持したまま予約枠選択へ誘導。
+  - EN: Added a side `Selected Date` panel to keep contextual details visible and guide users into slot selection.
+- 2026-03-26: Removed duplicated labels/CTA in Step 1 booking UI.
+  - JA: 下段 `Selected Date` 重複表示を削除し、右側パネルの情報表示に一本化。
+  - EN: Removed duplicated lower `Selected Date` display and unified context into the side panel.
+  - JA: 重複していた遷移CTAを整理し、`この日程の予約枠を見る` の単一導線へ統一。
+  - EN: Consolidated duplicate navigation CTAs into a single route via `この日程の予約枠を見る`.
 

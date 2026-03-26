@@ -419,4 +419,23 @@
   - EN: Updated public booking UI copy from draft phrasing to production-ready messaging (entry/confirm/thanks), and mapped thanks-page status text to user-facing labels.
   - JA: `subpages/workshop-booking.html` の Supabase client 生成を singleton 化し、クライアント重複生成リスクを低減。
   - EN: Switched `subpages/workshop-booking.html` Supabase client creation to singleton to reduce duplicate client-instance risk.
+- 2026-03-26: Task #3 UX conversion tuning applied on Step 1 (`subpages/workshop-booking.html` + `css/workshop-booking.css`).
+  - JA: カレンダー選択から予約枠確認への次アクションを強化するため、選択バーCTAを Primary 化し、文言を「次に何をするか」が明確な内容へ更新。
+  - EN: Strengthened the next-action from calendar selection to slot confirmation by promoting the selection-bar CTA to Primary and rewriting copy for clearer action intent.
+  - JA: 選択可能日・店舗チップ・予約枠カードの hover/selected 視認性を改善し、クリック判断をしやすく調整。
+  - EN: Improved hover/selected visibility on selectable days, store chips, and slot cards to reduce click hesitation.
+  - JA: 凡例をタグ化し、選択バーを sticky 表示（モバイルでは通常表示）にして、スクロール中でも予約導線を維持。
+  - EN: Converted legend into tag-style pills and made the selection bar sticky (reverted to static on mobile) to keep conversion guidance visible during scroll.
+- 2026-03-26: Booking calendar IA updated to 1-month navigation + right-side selected-date context (`subpages/workshop-booking.html` + `css/workshop-booking.css`).
+  - JA: カレンダー表示を 1か月単位へ変更し、`<` / `>` で前月・翌月へ移動できるUIを追加（境界月ではボタン無効）。
+  - EN: Changed calendar rendering to a single-month view and added `<` / `>` month navigation controls with boundary-state disabling.
+  - JA: カレンダー右側に `Selected Date` パネルを追加し、選択日・店舗・状態・料金目安を常時表示。
+  - EN: Added a right-side `Selected Date` panel to continuously show selected date, store, status, and indicative price.
+  - JA: 日付選択に連動して表示月が自動追従し、`この日程の予約枠を見る` CTA で下部の予約枠へ遷移可能。
+  - EN: Month view now auto-syncs with selected date, and a dedicated CTA (`この日程の予約枠を見る`) links users directly to slot selection.
+- 2026-03-26: Duplicate UI cues in booking step were consolidated for clarity.
+  - JA: 下段パネル側の `Selected Date` 表示（見出し重複）を削除し、右側 `Selected Date` パネルを正本表示として統一。
+  - EN: Removed duplicated `Selected Date` cues in the lower panel and unified context display into the right-side `Selected Date` panel.
+  - JA: `予約枠を確認する` と `この日程の予約枠を見る` の重複CTAを解消し、後者1つへ統一。
+  - EN: Removed duplicated CTAs (`予約枠を確認する` and `この日程の予約枠を見る`) and standardised on a single CTA flow.
 
