@@ -402,3 +402,4 @@
 - Moved admin logo to left-top brand area (same placement concept as main site) and removed topbar logo duplication.
 - 2026-03-26: Updated workshop plans card DOM pattern to match workshop page visual composition while preserving Supabase image binding.
 - 2026-03-26: UI adjustment: unified workshop-plan card title typography; updated seeded/default plan images to workshop canonical files; removed `admin-brand__eyebrow` from sidebar header.
+- 2026-03-26: `subpages/workshop-booking.html` summary panel (`開催期間/対象店舗/予約方式/料金目安`) switched from static text to runtime DB-derived values (`workshop_sessions`, `stores`, `workshop_plans`).

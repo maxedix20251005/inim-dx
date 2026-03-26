@@ -85,3 +85,15 @@
 - Status: `Proposed`
 - JA: 非adminロールでのログイン検証環境が未整備のため、アクセス拒否シナリオを後続テストとしてバックログ管理する。
 - EN: Non-admin login verification is currently blocked by environment constraints; keep deny-access scenario as backlog test item.
+
+### 2.10 Workshop Plan/Course Management IA Optimisation / ワークショッププラン管理導線の情報設計最適化
+- Status: Proposed
+- JA: 現状、ワークショップのプラン/コース管理画面への導線が見つけにくいため、管理者向けナビゲーション構造を再設計する。
+- EN: Current navigation to workshop plan/course management is hard to find; redesign admin IA and entry points.
+- Scope candidates:
+  - JA: 管理画面のグローバルナビ再編（Dashboard配下の明示セクション化）
+  - EN: Restructure admin global navigation with explicit workshop-management section
+  - JA: workshop-booking.html の「開催期間/対象店舗/予約方式/料金目安」を DB連携で動的表示に置換（静的文言の解消）
+  - EN: Replace static booking summary labels in workshop-booking.html with DB-driven dynamic values
+  - JA: プラン管理画面への導線をヘッダー/サイド/フッターのどこに置くかを統一ルール化
+  - EN: Define a consistent placement rule for plan-management links across header/side/footer

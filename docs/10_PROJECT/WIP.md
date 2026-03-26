@@ -86,3 +86,5 @@
 - 2026-03-26: Added DB image column migration for workshop plans (sql/12_add_workshop_plan_image_url.sql), updated seed data with plan_image_url, rebuilt subpages/workshop-plans.html in UTF-8 with DB image binding, and moved admin logo to left-top brand area.
 - 2026-03-26: Aligned `subpages/workshop-plans.html` card structure to match `subpages/workshop.html` card layout pattern (intro/detail card + image-last cards) while keeping DB-driven plan images.
 - 2026-03-26: Normalised workshop-plan card title sizing, corrected plan image mapping to workshop canonical assets (`Workshop_ (9-1).png` / `Workshop_ (2-1).png`), and removed sidebar eyebrow text from admin top-left brand block.
+- 2026-03-26: Added backlog item for workshop plan/course management IA optimisation and dynamic booking summary replacement (currently static text).`r`n
+- 2026-03-26: Implemented dynamic booking summary panel on workshop booking page; static generic values removed.

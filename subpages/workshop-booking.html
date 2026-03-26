@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ワークショップ予約 | inim-dx</title>
+    <title>繝ｯ繝ｼ繧ｯ繧ｷ繝ｧ繝・・莠育ｴ・| inim-dx</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="icon" href="../images/logo/logo-inim-dx.jpg">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -31,14 +31,14 @@
             <div class="booking-wrap booking-hero__grid">
                 <div>
                     <p class="section-kicker">Workshop Booking</p>
-                    <h1 class="booking-hero__title">空き状況を見ながら、体験日時を選ぶ</h1>
-                    <p class="booking-hero__lead">Draft 版の予約画面です。上部カレンダーで開催日と空き状況を確認し、予約可能日を選ぶと、下部に集合時間、体験時間、料金、予約導線を表示します。</p>
+                    <h1 class="booking-hero__title">遨ｺ縺咲憾豕√ｒ隕九↑縺後ｉ縲∽ｽ馴ｨ捺律譎ゅｒ驕ｸ縺ｶ</h1>
+                    <p class="booking-hero__lead">Draft 迚医・莠育ｴ・判髱｢縺ｧ縺吶ゆｸ企Κ繧ｫ繝ｬ繝ｳ繝繝ｼ縺ｧ髢句ぎ譌･縺ｨ遨ｺ縺咲憾豕√ｒ遒ｺ隱阪＠縲∽ｺ育ｴ・庄閭ｽ譌･繧帝∈縺ｶ縺ｨ縲∽ｸ矩Κ縺ｫ髮・粋譎る俣縲∽ｽ馴ｨ捺凾髢薙∵侭驥代∽ｺ育ｴ・ｰ守ｷ壹ｒ陦ｨ遉ｺ縺励∪縺吶・/p>
                 </div>
                 <aside class="booking-summary">
-                    <div class="booking-summary__row"><span>開催期間</span><strong>2026年4月〜5月</strong></div>
-                    <div class="booking-summary__row"><span>対象店舗</span><strong>浅草店 / 柴又店 / ソラマチ店</strong></div>
-                    <div class="booking-summary__row"><span>予約方式</span><strong>即時予約 / リクエスト予約</strong></div>
-                    <div class="booking-summary__row"><span>料金目安</span><strong>おひとりさま 5,500円〜</strong></div>
+                    <div class="booking-summary__row"><span>開催期間</span><strong id="summary-period">読み込み中...</strong></div>
+                    <div class="booking-summary__row"><span>対象店舗</span><strong id="summary-stores">読み込み中...</strong></div>
+                    <div class="booking-summary__row"><span>予約方式</span><strong id="summary-methods">読み込み中...</strong></div>
+                    <div class="booking-summary__row"><span>料金目安</span><strong id="summary-price">読み込み中...</strong></div>
                 </aside>
             </div>
         </section>
@@ -46,33 +46,33 @@
         <section class="booking-wrap">
             <section class="booking-panel">
                 <div class="booking-panel__head">
-                    <div><p class="section-kicker">Availability</p><h2>空き状況</h2></div>
-                    <p>体験希望日を選ぶと、下部に時間帯と料金を表示します。</p>
+                    <div><p class="section-kicker">Availability</p><h2>遨ｺ縺咲憾豕・/h2></div>
+                    <p>菴馴ｨ灘ｸ梧悍譌･繧帝∈縺ｶ縺ｨ縲∽ｸ矩Κ縺ｫ譎る俣蟶ｯ縺ｨ譁咎≡繧定｡ｨ遉ｺ縺励∪縺吶・/p>
                 </div>
                 <div class="booking-store-bar">
                     <div class="booking-store-bar__head">
                         <div>
                             <p class="section-kicker">Store</p>
-                            <h3>選択店舗</h3>
+                            <h3>驕ｸ謚槫ｺ苓・</h3>
                         </div>
-                        <p class="booking-store-bar__meta" id="booking-store-meta">選択した店舗の開催日だけを表示します。</p>
+                        <p class="booking-store-bar__meta" id="booking-store-meta">驕ｸ謚槭＠縺溷ｺ苓・縺ｮ髢句ぎ譌･縺縺代ｒ陦ｨ遉ｺ縺励∪縺吶・/p>
                     </div>
                     <div class="booking-store-picker" id="booking-store-picker"></div>
                 </div>
                 <div class="booking-calendar-grid" id="booking-calendar"></div>
                 <div class="booking-legend">
-                    <span><i class="booking-mark" data-status="instant">○</i> 即時予約可</span>
-                    <span><i class="booking-mark" data-status="request">□</i> リクエスト予約可</span>
-                    <span><i class="booking-mark" data-status="few">△</i> 残席数少ない</span>
-                    <span><i class="booking-mark" data-status="full">×</i> 空き無し</span>
-                    <span><i class="booking-mark" data-status="closed">-</i> 開催無し</span>
+                    <span><i class="booking-mark" data-status="instant">笳・/i> 蜊ｳ譎ゆｺ育ｴ・庄</span>
+                    <span><i class="booking-mark" data-status="request">笆｡</i> 繝ｪ繧ｯ繧ｨ繧ｹ繝井ｺ育ｴ・庄</span>
+                    <span><i class="booking-mark" data-status="few">笆ｳ</i> 谿句ｸｭ謨ｰ蟆代↑縺・/span>
+                    <span><i class="booking-mark" data-status="full">ﾃ・/i> 遨ｺ縺咲┌縺・/span>
+                    <span><i class="booking-mark" data-status="closed">-</i> 髢句ぎ辟｡縺・/span>
                 </div>
                 <div class="booking-selection-bar">
                     <div>
-                        <strong id="booking-selection-label">選択中: 2026年4月5日(日)</strong>
-                        <p id="booking-selection-meta">下の時間帯一覧に、対象日の集合時間と料金を表示しています。</p>
+                        <strong id="booking-selection-label">驕ｸ謚樔ｸｭ: 2026蟷ｴ4譛・譌･(譌･)</strong>
+                        <p id="booking-selection-meta">荳九・譎る俣蟶ｯ荳隕ｧ縺ｫ縲∝ｯｾ雎｡譌･縺ｮ髮・粋譎る俣縺ｨ譁咎≡繧定｡ｨ遉ｺ縺励※縺・∪縺吶・/p>
                     </div>
-                    <a class="button button--secondary" href="#booking-slots-panel">時間帯を確認する</a>
+                    <a class="button button--secondary" href="#booking-slots-panel">譎る俣蟶ｯ繧堤｢ｺ隱阪☆繧・/a>
                 </div>
             </section>
         </section>
@@ -80,26 +80,26 @@
         <section class="booking-wrap">
             <section class="booking-panel" id="booking-slots-panel">
                 <div class="booking-panel__head">
-                    <div><p class="section-kicker">Selected Date</p><h2>日時の確認と予約</h2></div>
-                    <p>○ / □ / △ の日を選ぶと、下部に集合時間、料金、予約導線を表示します。</p>
+                    <div><p class="section-kicker">Selected Date</p><h2>譌･譎ゅ・遒ｺ隱阪→莠育ｴ・/h2></div>
+                    <p>笳・/ 笆｡ / 笆ｳ 縺ｮ譌･繧帝∈縺ｶ縺ｨ縲∽ｸ矩Κ縺ｫ髮・粋譎る俣縲∵侭驥代∽ｺ育ｴ・ｰ守ｷ壹ｒ陦ｨ遉ｺ縺励∪縺吶・/p>
                 </div>
                 <div class="booking-slots">
                     <div class="booking-selected">
-                        <h3 id="booking-selected-title">2026年4月5日(日)</h3>
-                        <p class="booking-selected__status" id="booking-selected-status">即時予約可。浅草店開催 / 料金 5,500円〜</p>
+                        <h3 id="booking-selected-title">2026蟷ｴ4譛・譌･(譌･)</h3>
+                        <p class="booking-selected__status" id="booking-selected-status">蜊ｳ譎ゆｺ育ｴ・庄縲よｵ・拷蠎鈴幕蛯ｬ / 譁咎≡ 5,500蜀・・/p>
                         <div class="booking-slot-list" id="booking-slot-list"></div>
                     </div>
                     <aside class="booking-aside">
                         <div class="booking-aside__card">
-                            <h3>選択時の表示ルール</h3>
-                            <p>× と - は選択不可です。○ は即時予約、□ はリクエスト送信、△ は残席わずかの前提で Draft を作っています。</p>
+                            <h3>驕ｸ謚樊凾縺ｮ陦ｨ遉ｺ繝ｫ繝ｼ繝ｫ</h3>
+                            <p>ﾃ・縺ｨ - 縺ｯ驕ｸ謚樔ｸ榊庄縺ｧ縺吶や雷 縺ｯ蜊ｳ譎ゆｺ育ｴ・≫味 縺ｯ繝ｪ繧ｯ繧ｨ繧ｹ繝磯∽ｿ｡縲≫無 縺ｯ谿句ｸｭ繧上★縺九・蜑肴署縺ｧ Draft 繧剃ｽ懊▲縺ｦ縺・∪縺吶・/p>
                         </div>
                         <div class="booking-aside__card">
-                            <h3>この Draft で詰める項目</h3>
+                            <h3>縺薙・ Draft 縺ｧ隧ｰ繧√ｋ鬆・岼</h3>
                             <ul>
-                                <li>人数入力をこの画面に置くか</li>
-                                <li>店舗選択を事前に出すか</li>
-                                <li>即時予約とリクエスト予約で入力項目を分けるか</li>
+                                <li>莠ｺ謨ｰ蜈･蜉帙ｒ縺薙・逕ｻ髱｢縺ｫ鄂ｮ縺上°</li>
+                                <li>蠎苓・驕ｸ謚槭ｒ莠句燕縺ｫ蜃ｺ縺吶°</li>
+                                <li>蜊ｳ譎ゆｺ育ｴ・→繝ｪ繧ｯ繧ｨ繧ｹ繝井ｺ育ｴ・〒蜈･蜉幃・岼繧貞・縺代ｋ縺・/li>
                             </ul>
                         </div>
                     </aside>
@@ -111,46 +111,46 @@
             <section class="booking-detail__panel">
                 <div>
                     <div class="booking-panel__head">
-                        <div><p class="section-kicker">Detail</p><h2>詳細情報</h2></div>
-                        <p>予約直前に確認したい説明をタブでまとめています。</p>
+                        <div><p class="section-kicker">Detail</p><h2>隧ｳ邏ｰ諠・ｱ</h2></div>
+                        <p>莠育ｴ・峩蜑阪↓遒ｺ隱阪＠縺溘＞隱ｬ譏弱ｒ繧ｿ繝悶〒縺ｾ縺ｨ繧√※縺・∪縺吶・/p>
                     </div>
-                    <div class="booking-tabs" role="tablist" aria-label="詳細情報タブ">
-                        <button class="booking-tab is-active" type="button" data-tab="plan">プラン情報</button>
-                        <button class="booking-tab" type="button" data-tab="flow">体験の流れ</button>
-                        <button class="booking-tab" type="button" data-tab="location">集合場所・体験場所</button>
-                        <button class="booking-tab" type="button" data-tab="notes">注意事項・その他</button>
+                    <div class="booking-tabs" role="tablist" aria-label="隧ｳ邏ｰ諠・ｱ繧ｿ繝・>
+                        <button class="booking-tab is-active" type="button" data-tab="plan">繝励Λ繝ｳ諠・ｱ</button>
+                        <button class="booking-tab" type="button" data-tab="flow">菴馴ｨ薙・豬√ｌ</button>
+                        <button class="booking-tab" type="button" data-tab="location">髮・粋蝣ｴ謇繝ｻ菴馴ｨ灘ｴ謇</button>
+                        <button class="booking-tab" type="button" data-tab="notes">豕ｨ諢丈ｺ矩・・縺昴・莉・/button>
                     </div>
                     <div class="booking-tab-panel is-active" data-panel="plan">
-                        <h3>浅草で香水づくり / 香りを選んで自分でブレンドするワークショップ</h3>
-                        <p>初心者向けの調香体験 Draft です。実装時にはプラン名、所要時間、料金、開催曜日、予約可能人数を `bookings` 設計と合わせて確定します。</p>
+                        <h3>豬・拷縺ｧ鬥呎ｰｴ縺･縺上ｊ / 鬥吶ｊ繧帝∈繧薙〒閾ｪ蛻・〒繝悶Ξ繝ｳ繝峨☆繧九Ρ繝ｼ繧ｯ繧ｷ繝ｧ繝・・</h3>
+                        <p>蛻晏ｿ・・髄縺代・隱ｿ鬥吩ｽ馴ｨ・Draft 縺ｧ縺吶ょｮ溯｣・凾縺ｫ縺ｯ繝励Λ繝ｳ蜷阪∵園隕∵凾髢薙∵侭驥代・幕蛯ｬ譖懈律縲∽ｺ育ｴ・庄閭ｽ莠ｺ謨ｰ繧・`bookings` 險ｭ險医→蜷医ｏ縺帙※遒ｺ螳壹＠縺ｾ縺吶・/p>
                         <table class="booking-detail__table"><tbody>
-                            <tr><th>開催期間</th><td>2026年4月1日〜2026年5月31日</td></tr>
-                            <tr><th>所要時間</th><td>約60分〜75分</td></tr>
-                            <tr><th>料金</th><td>おひとりさま 5,500円 / ペア 10,000円</td></tr>
-                            <tr><th>含まれるもの</th><td>体験料、香水1本(10ml)、香料メモ</td></tr>
-                            <tr><th>予約人数</th><td>1名〜4名 / 回</td></tr>
+                            <tr><th>髢句ぎ譛滄俣</th><td>2026蟷ｴ4譛・譌･縲・026蟷ｴ5譛・1譌･</td></tr>
+                            <tr><th>謇隕∵凾髢・/th><td>邏・0蛻・・5蛻・/td></tr>
+                            <tr><th>譁咎≡</th><td>縺翫・縺ｨ繧翫＆縺ｾ 5,500蜀・/ 繝壹い 10,000蜀・/td></tr>
+                            <tr><th>蜷ｫ縺ｾ繧後ｋ繧ゅ・</th><td>菴馴ｨ捺侭縲・ｦ呎ｰｴ1譛ｬ(10ml)縲・ｦ呎侭繝｡繝｢</td></tr>
+                            <tr><th>莠育ｴ・ｺｺ謨ｰ</th><td>1蜷阪・蜷・/ 蝗・/td></tr>
                         </tbody></table>
                     </div>
                     <div class="booking-tab-panel" data-panel="flow">
                         <div class="booking-detail__grid">
-                            <article class="booking-detail__step"><img src="../images/Workshop/Workshop_ (1).png" alt="受付カウンターの様子"><div><h3>1. 集合・受付</h3><p>ご予約時間の10分前を目安にご来店ください。</p></div></article>
-                            <article class="booking-detail__step"><img src="../images/Workshop/Workshop_ (2).png" alt="香料棚の様子"><div><h3>2. 香り選び</h3><p>候補を比較しながら好きな香りを選びます。</p></div></article>
-                            <article class="booking-detail__step"><img src="../images/Workshop/Workshop_ (3).png" alt="調香の様子"><div><h3>3. 体験・仕上げ</h3><p>配合比を整えて一本に仕上げます。</p></div></article>
+                            <article class="booking-detail__step"><img src="../images/Workshop/Workshop_ (1).png" alt="蜿嶺ｻ倥き繧ｦ繝ｳ繧ｿ繝ｼ縺ｮ讒伜ｭ・><div><h3>1. 髮・粋繝ｻ蜿嶺ｻ・/h3><p>縺比ｺ育ｴ・凾髢薙・10蛻・燕繧堤岼螳峨↓縺疲擂蠎励￥縺縺輔＞縲・/p></div></article>
+                            <article class="booking-detail__step"><img src="../images/Workshop/Workshop_ (2).png" alt="鬥呎侭譽壹・讒伜ｭ・><div><h3>2. 鬥吶ｊ驕ｸ縺ｳ</h3><p>蛟呵｣懊ｒ豈碑ｼ・＠縺ｪ縺後ｉ螂ｽ縺阪↑鬥吶ｊ繧帝∈縺ｳ縺ｾ縺吶・/p></div></article>
+                            <article class="booking-detail__step"><img src="../images/Workshop/Workshop_ (3).png" alt="隱ｿ鬥吶・讒伜ｭ・><div><h3>3. 菴馴ｨ薙・莉穂ｸ翫￡</h3><p>驟榊粋豈斐ｒ謨ｴ縺医※荳譛ｬ縺ｫ莉穂ｸ翫￡縺ｾ縺吶・/p></div></article>
                         </div>
                     </div>
                     <div class="booking-tab-panel" data-panel="location">
                         <table class="booking-detail__table"><tbody>
-                            <tr><th>集合場所</th><td>〒111-0032 東京都台東区浅草2丁目1-5 inim-dx 浅草店</td></tr>
-                            <tr><th>アクセス</th><td>つくばエクスプレス浅草駅より徒歩6分 / 東京メトロ銀座線浅草駅より徒歩9分</td></tr>
-                            <tr><th>体験場所</th><td>同店舗 2F Workshop Space</td></tr>
+                            <tr><th>髮・粋蝣ｴ謇</th><td>縲・11-0032 譚ｱ莠ｬ驛ｽ蜿ｰ譚ｱ蛹ｺ豬・拷2荳∫岼1-5 inim-dx 豬・拷蠎・/td></tr>
+                            <tr><th>繧｢繧ｯ繧ｻ繧ｹ</th><td>縺､縺上・繧ｨ繧ｯ繧ｹ繝励Ξ繧ｹ豬・拷鬧・ｈ繧雁ｾ呈ｭｩ6蛻・/ 譚ｱ莠ｬ繝｡繝医Ο驫蠎ｧ邱壽ｵ・拷鬧・ｈ繧雁ｾ呈ｭｩ9蛻・/td></tr>
+                            <tr><th>菴馴ｨ灘ｴ謇</th><td>蜷悟ｺ苓・ 2F Workshop Space</td></tr>
                         </tbody></table>
-                        <div class="booking-map"><iframe title="浅草店の地図" src="https://www.google.com/maps?q=%E6%B5%85%E8%8D%89%E5%AF%BA&output=embed"></iframe></div>
+                        <div class="booking-map"><iframe title="豬・拷蠎励・蝨ｰ蝗ｳ" src="https://www.google.com/maps?q=%E6%B5%85%E8%8D%89%E5%AF%BA&output=embed"></iframe></div>
                     </div>
                     <div class="booking-tab-panel" data-panel="notes">
                         <table class="booking-detail__table"><tbody>
-                            <tr><th>注意事項</th><td>ワークショップ不参加での同伴は基本的にお断りしています。在庫状況により選べる香料が一部変わる場合があります。</td></tr>
-                            <tr><th>キャンセル</th><td>前日18:00までは無料、それ以降は店舗確認のうえ対応予定です。最終仕様時に cancellation policy を確定します。</td></tr>
-                            <tr><th>備考</th><td>ここには予約完了前に必ず読んでほしい内容を整理する想定です。</td></tr>
+                            <tr><th>豕ｨ諢丈ｺ矩・/th><td>繝ｯ繝ｼ繧ｯ繧ｷ繝ｧ繝・・荳榊盾蜉縺ｧ縺ｮ蜷御ｼｴ縺ｯ蝓ｺ譛ｬ逧・↓縺頑妙繧翫＠縺ｦ縺・∪縺吶ょ惠蠎ｫ迥ｶ豕√↓繧医ｊ驕ｸ縺ｹ繧矩ｦ呎侭縺御ｸ驛ｨ螟峨ｏ繧句ｴ蜷医′縺ゅｊ縺ｾ縺吶・/td></tr>
+                            <tr><th>繧ｭ繝｣繝ｳ繧ｻ繝ｫ</th><td>蜑肴律18:00縺ｾ縺ｧ縺ｯ辟｡譁吶√◎繧御ｻ･髯阪・蠎苓・遒ｺ隱阪・縺・∴蟇ｾ蠢應ｺ亥ｮ壹〒縺吶よ怙邨ゆｻ墓ｧ俶凾縺ｫ cancellation policy 繧堤｢ｺ螳壹＠縺ｾ縺吶・/td></tr>
+                            <tr><th>蛯呵・/th><td>縺薙％縺ｫ縺ｯ莠育ｴ・ｮ御ｺ・燕縺ｫ蠢・★隱ｭ繧薙〒縺ｻ縺励＞蜀・ｮｹ繧呈紛逅・☆繧区Φ螳壹〒縺吶・/td></tr>
                         </tbody></table>
                     </div>
                 </div>
@@ -191,19 +191,23 @@
             const diagSessions = document.getElementById("diag-sessions");
             const diagRange = document.getElementById("diag-range");
             const diagError = document.getElementById("diag-error");
+            const summaryPeriod = document.getElementById("summary-period");
+            const summaryStores = document.getElementById("summary-stores");
+            const summaryMethods = document.getElementById("summary-methods");
+            const summaryPrice = document.getElementById("summary-price");
             const params = new URLSearchParams(window.location.search);
             const fallbackStores = {
-                asakusa: { label: "浅草店", caption: "Fri - Sun" },
-                shibamata: { label: "柴又店", caption: "Sat - Mon" },
-                solamachi: { label: "ソラマチ店", caption: "Daily" }
+                asakusa: { label: "豬・拷蠎・, caption: "Fri - Sun" },
+                shibamata: { label: "譟ｴ蜿亥ｺ・, caption: "Sat - Mon" },
+                solamachi: { label: "繧ｽ繝ｩ繝槭メ蠎・, caption: "Daily" }
             };
             // fallback months/schedule remain similar to previous draft; rebuilt dynamically from fetched data if available.
             let stores = { ...fallbackStores };
             let months = [];
             let schedule = {};
             let emptyStateMessage = "";
-            const marks = { instant: "○", request: "□", few: "△", full: "×", closed: "-" };
-            const days = ["月", "火", "水", "木", "金", "土", "日"];
+            const marks = { instant: "笳・, request: "笆｡", few: "笆ｳ", full: "ﾃ・, closed: "-" };
+            const days = ["譛・, "轣ｫ", "豌ｴ", "譛ｨ", "驥・, "蝨・, "譌･"];
             let selectedStore = params.get("store");
             let selectedKey = "";
             const syncStoreQuery = () => {
@@ -212,12 +216,12 @@
                 target.searchParams.set("storeLabel", stores[selectedStore].label);
                 window.history.replaceState({}, "", target.toString());
             };
-            const slugifyStore = (name) => String(name || "").toLowerCase().replace(/\s+/g, "").replace(/[・\-_/]/g, "");
+            const slugifyStore = (name) => String(name || "").toLowerCase().replace(/\s+/g, "").replace(/[繝ｻ\-_/]/g, "");
             const normalizeStoreKey = (value, fallback = "store") => {
                 const raw = String(value || "").toLowerCase();
-                if (raw.includes("asakusa") || raw.includes("浅草")) return "asakusa";
-                if (raw.includes("shibamata") || raw.includes("柴又")) return "shibamata";
-                if (raw.includes("solamachi") || raw.includes("ソラマチ")) return "solamachi";
+                if (raw.includes("asakusa") || raw.includes("豬・拷")) return "asakusa";
+                if (raw.includes("shibamata") || raw.includes("譟ｴ蜿・)) return "shibamata";
+                if (raw.includes("solamachi") || raw.includes("繧ｽ繝ｩ繝槭メ")) return "solamachi";
                 const slug = slugifyStore(value);
                 return slug || fallback;
             };
@@ -229,7 +233,7 @@
             };
             const renderStorePicker = () => {
                 storePicker.innerHTML = Object.entries(stores).map(([key, value]) => `<button class="booking-store-chip${key === selectedStore ? " is-active" : ""}" type="button" data-store-key="${key}">${value.label} / ${value.caption}</button>`).join("");
-                storeMeta.textContent = `${stores[selectedStore].label} の開催日だけを表示しています。`;
+                storeMeta.textContent = `${stores[selectedStore].label} 縺ｮ髢句ぎ譌･縺縺代ｒ陦ｨ遉ｺ縺励※縺・∪縺吶Ａ;
                 storePicker.querySelectorAll("[data-store-key]").forEach((button) => {
                     button.addEventListener("click", () => {
                         selectedStore = button.dataset.storeKey;
@@ -254,14 +258,14 @@
                     gather: slot.g,
                     start_time: slot.start,
                     end_time: slot.end,
-                    experience: `${slot.start}〜${slot.end}`,
+                    experience: `${slot.start}縲・{slot.end}`,
                     price: slot.price.display,
                     price_jpy: String(slot.price.jpy),
                     currency_code: slot.price.currency,
                     note: slot.n,
                     booking_method: slot.method,
-                    method: slot.method === "request" ? "リクエスト予約" : "即時予約",
-                    plan: "浅草で香水づくり / 香りを選んで自分でブレンドするワークショップ",
+                    method: slot.method === "request" ? "繝ｪ繧ｯ繧ｨ繧ｹ繝井ｺ育ｴ・ : "蜊ｳ譎ゆｺ育ｴ・,
+                    plan: "豬・拷縺ｧ鬥呎ｰｴ縺･縺上ｊ / 鬥吶ｊ繧帝∈繧薙〒閾ｪ蛻・〒繝悶Ξ繝ｳ繝峨☆繧九Ρ繝ｼ繧ｯ繧ｷ繝ｧ繝・・",
                     store: current.store,
                     storeLabel: current.storeLabel,
                     plan_id: slot.planId && /^[0-9a-fA-F-]{36}$/.test(slot.planId) ? slot.planId : "",
@@ -274,14 +278,14 @@
             };
             const renderSlots = () => {
                 const current = schedule[selectedKey];
-                selectedTitle.textContent = current?.label || "予約可能日を選択してください";
-                selectedStatus.textContent = current?.status || emptyStateMessage || "○ / □ / △ の日を選ぶと、時間帯を表示します。";
-                selectionLabel.textContent = current ? `選択中: ${current.storeLabel} / ${current.label}` : "選択中の日付はありません";
-                selectionMeta.textContent = current ? `${current.storeLabel} の時間帯一覧に、対象日の集合時間と料金を表示しています。` : "予約可能日を選ぶと、下部に時間帯を表示します。";
-                slotList.innerHTML = (current?.slots || []).map((slot) => `<article class="booking-slot"><div><strong>${current.label}</strong><div class="booking-slot__time"><span>集合 ${slot.g}</span><span>体験 ${slot.start}〜${slot.end}</span></div><p class="booking-slot__price">${slot.price.display}</p></div><div class="booking-slot__actions"><span class="booking-slot__note">${slot.n}</span><a class="button button--primary booking-slot__button" href="${buildBookingHref(current, slot)}">予約へ進む</a></div></article>`).join("");
+                selectedTitle.textContent = current?.label || "莠育ｴ・庄閭ｽ譌･繧帝∈謚槭＠縺ｦ縺上□縺輔＞";
+                selectedStatus.textContent = current?.status || emptyStateMessage || "笳・/ 笆｡ / 笆ｳ 縺ｮ譌･繧帝∈縺ｶ縺ｨ縲∵凾髢灘ｸｯ繧定｡ｨ遉ｺ縺励∪縺吶・;
+                selectionLabel.textContent = current ? `驕ｸ謚樔ｸｭ: ${current.storeLabel} / ${current.label}` : "驕ｸ謚樔ｸｭ縺ｮ譌･莉倥・縺ゅｊ縺ｾ縺帙ｓ";
+                selectionMeta.textContent = current ? `${current.storeLabel} 縺ｮ譎る俣蟶ｯ荳隕ｧ縺ｫ縲∝ｯｾ雎｡譌･縺ｮ髮・粋譎る俣縺ｨ譁咎≡繧定｡ｨ遉ｺ縺励※縺・∪縺吶Ａ : "莠育ｴ・庄閭ｽ譌･繧帝∈縺ｶ縺ｨ縲∽ｸ矩Κ縺ｫ譎る俣蟶ｯ繧定｡ｨ遉ｺ縺励∪縺吶・;
+                slotList.innerHTML = (current?.slots || []).map((slot) => `<article class="booking-slot"><div><strong>${current.label}</strong><div class="booking-slot__time"><span>髮・粋 ${slot.g}</span><span>菴馴ｨ・${slot.start}縲・{slot.end}</span></div><p class="booking-slot__price">${slot.price.display}</p></div><div class="booking-slot__actions"><span class="booking-slot__note">${slot.n}</span><a class="button button--primary booking-slot__button" href="${buildBookingHref(current, slot)}">莠育ｴ・∈騾ｲ繧</a></div></article>`).join("");
             };
             const renderCalendar = () => {
-                calendarHost.innerHTML = months.map((month) => `<section class="booking-month"><div class="booking-month__header"><h3>${month.label}</h3><span>${stores[selectedStore].label} の開催日</span></div><table><thead><tr>${days.map((d) => `<th>${d}</th>`).join("")}</tr></thead><tbody>${Array.from({ length: Math.ceil(month.cells.length / 7) }, (_, i) => `<tr>${month.cells.slice(i * 7, i * 7 + 7).map((cell) => { if (!cell) return '<td class="is-outside"></td>'; const filtered = cell.store && cell.store !== selectedStore ? { ...cell, s: "closed", p: null, k: null } : cell; const mark = marks[filtered.s]; const selectable = ["instant", "request", "few"].includes(filtered.s); return `<td><button class="booking-day${selectable ? ' is-selectable' : ''}${filtered.k === selectedKey ? ' is-selected' : ''}" type="button" ${filtered.k ? `data-date-key="${filtered.k}"` : ''} ${!selectable ? 'disabled' : ''}><span class="booking-day__date">${filtered.d}</span><span class="booking-day__status"><i class="booking-mark" data-status="${filtered.s}">${mark}</i></span>${filtered.p ? `<div class="booking-day__price">${filtered.p.display}</div>` : ''}</button></td>`; }).join("")}</tr>`).join("")}</tbody></table></section>`).join("");
+                calendarHost.innerHTML = months.map((month) => `<section class="booking-month"><div class="booking-month__header"><h3>${month.label}</h3><span>${stores[selectedStore].label} 縺ｮ髢句ぎ譌･</span></div><table><thead><tr>${days.map((d) => `<th>${d}</th>`).join("")}</tr></thead><tbody>${Array.from({ length: Math.ceil(month.cells.length / 7) }, (_, i) => `<tr>${month.cells.slice(i * 7, i * 7 + 7).map((cell) => { if (!cell) return '<td class="is-outside"></td>'; const filtered = cell.store && cell.store !== selectedStore ? { ...cell, s: "closed", p: null, k: null } : cell; const mark = marks[filtered.s]; const selectable = ["instant", "request", "few"].includes(filtered.s); return `<td><button class="booking-day${selectable ? ' is-selectable' : ''}${filtered.k === selectedKey ? ' is-selected' : ''}" type="button" ${filtered.k ? `data-date-key="${filtered.k}"` : ''} ${!selectable ? 'disabled' : ''}><span class="booking-day__date">${filtered.d}</span><span class="booking-day__status"><i class="booking-mark" data-status="${filtered.s}">${mark}</i></span>${filtered.p ? `<div class="booking-day__price">${filtered.p.display}</div>` : ''}</button></td>`; }).join("")}</tr>`).join("")}</tbody></table></section>`).join("");
                 calendarHost.querySelectorAll("[data-date-key]").forEach((button) => button.addEventListener("click", () => { selectedKey = button.dataset.dateKey; renderCalendar(); renderSlots(); slotsPanel?.scrollIntoView({ behavior: "smooth", block: "start" }); }));
             };
             const statusFromSession = (session) => {
@@ -304,7 +308,7 @@
                 while (current <= endDate) {
                     const year = current.getFullYear();
                     const month = current.getMonth();
-                    const label = `${year}年${month + 1}月`;
+                    const label = `${year}蟷ｴ${month + 1}譛・;
                     const firstWeekday = new Date(year, month, 1).getDay(); // 0=Sun
                     const daysInMonth = new Date(year, month + 1, 0).getDate();
                     const cells = [];
@@ -343,7 +347,7 @@
                     const storeKey = storeInfo.key || storeInfo.slug || storeInfo.id || "store";
                     const priceValue = row.price_override_jpy ?? plan.base_price_jpy ?? 0;
                     const cur = row.currency_code || plan.currency_code || "JPY";
-                    const priceObj = { display: `¥${Number(priceValue || 0).toLocaleString("ja-JP")}`, jpy: Number(priceValue || 0), currency: cur };
+                    const priceObj = { display: `ﾂ･${Number(priceValue || 0).toLocaleString("ja-JP")}`, jpy: Number(priceValue || 0), currency: cur };
                     const sessionPayload = {
                         sessionId: row.id,
                         planId: row.plan_id,
@@ -351,7 +355,7 @@
                         start: row.start_time?.slice(0, 5) || "",
                         end: row.end_time?.slice(0, 5) || "",
                         price: priceObj,
-                        n: row.public_note || (row.booking_method === "request" ? "確認後にご連絡" : "即時確定"),
+                        n: row.public_note || (row.booking_method === "request" ? "遒ｺ隱榊ｾ後↓縺秘｣邨｡" : "蜊ｳ譎ら｢ｺ螳・),
                         method: row.booking_method || "instant",
                         minP: row.min_party_size || plan.min_party_size || 1,
                         maxP: row.max_party_size || plan.max_party_size || 4,
@@ -370,7 +374,7 @@
                         store: exemplar.storeKey,
                         storeLabel: exemplar.storeLabel,
                         planId: exemplar.planId,
-                        status: exemplar.status === "request" ? "リクエスト予約可" : exemplar.status === "few" ? "残席わずか" : exemplar.status === "full" ? "満席" : "即時予約可",
+                        status: exemplar.status === "request" ? "繝ｪ繧ｯ繧ｨ繧ｹ繝井ｺ育ｴ・庄" : exemplar.status === "few" ? "谿句ｸｭ繧上★縺・ : exemplar.status === "full" ? "貅蟶ｭ" : "蜊ｳ譎ゆｺ育ｴ・庄",
                         slots
                     };
                 });
@@ -446,6 +450,35 @@
                 if (diagRange) diagRange.textContent = range;
                 if (diagError) diagError.textContent = error;
             };
+            const formatSummaryPeriod = (sessions) => {
+                const dates = (sessions || []).map((s) => s.session_date).filter(Boolean).sort();
+                if (!dates.length) return "公開期間未設定";
+                const first = new Date(dates[0]);
+                const last = new Date(dates[dates.length - 1]);
+                if (Number.isNaN(first.getTime()) || Number.isNaN(last.getTime())) return "公開期間未設定";
+                const start = `${first.getFullYear()}年${first.getMonth() + 1}月`;
+                const end = `${last.getFullYear()}年${last.getMonth() + 1}月`;
+                return start === end ? start : `${start}〜${end}`;
+            };
+            const updateSummary = (plans, storeRows, sessions) => {
+                if (!summaryPeriod || !summaryStores || !summaryMethods || !summaryPrice) return;
+                const activeStores = (storeRows || [])
+                    .filter((x) => (x.deleted_at == null) && (x.is_active !== false))
+                    .map((x) => x.store_name)
+                    .filter(Boolean);
+                const methodSet = new Set((sessions || []).map((x) => x.booking_method).filter(Boolean));
+                const methodLabels = [];
+                if (methodSet.has("instant")) methodLabels.push("即時予約");
+                if (methodSet.has("request")) methodLabels.push("リクエスト予約");
+                const prices = (plans || [])
+                    .map((x) => Number(x.base_price_jpy || 0))
+                    .filter((x) => Number.isFinite(x) && x > 0);
+                const minPrice = prices.length ? Math.min(...prices) : 0;
+                summaryPeriod.textContent = formatSummaryPeriod(sessions);
+                summaryStores.textContent = activeStores.length ? activeStores.join(" / ") : "対象店舗未設定";
+                summaryMethods.textContent = methodLabels.length ? methodLabels.join(" / ") : "予約方式未設定";
+                summaryPrice.textContent = minPrice > 0 ? `おひとりさま ${minPrice.toLocaleString("ja-JP")}円〜` : "料金未設定";
+            };
             const applyEmptySessionsState = (reason) => {
                 stores = { ...fallbackStores };
                 const now = new Date();
@@ -472,6 +505,7 @@
                         range: rangeLabel,
                         error: "-"
                     });
+                    updateSummary(plans || [], storeRows || [], sessions || []);
                     if (hasSessions) {
                         emptyStateMessage = "";
                         stores = buildStoreMap(storeRows);
@@ -491,7 +525,7 @@
                         }
                     }
                     setLed("bad", "Supabase connected, but no workshop_sessions returned (check date range/RLS/seed data)");
-                    applyEmptySessionsState("Supabase から予約枠が取得できませんでした。公開セッションデータ（workshop_sessions）とRLS設定をご確認ください。");
+                    applyEmptySessionsState("Supabase 縺九ｉ莠育ｴ・棧縺悟叙蠕励〒縺阪∪縺帙ｓ縺ｧ縺励◆縲ょ・髢九そ繝・す繝ｧ繝ｳ繝・・繧ｿ・・orkshop_sessions・峨→RLS險ｭ螳壹ｒ縺皮｢ｺ隱阪￥縺縺輔＞縲・);
                 } catch (e) {
                     setLed("bad", "Supabase: fallback (error)");
                     console.error("Supabase fetch error", e);
@@ -503,7 +537,8 @@
                         range: rangeLabel,
                         error: e?.message || String(e)
                     });
-                    applyEmptySessionsState("Supabase 取得でエラーが発生しました。接続設定とRLS設定をご確認ください。");
+                    applyEmptySessionsState("Supabase 蜿門ｾ励〒繧ｨ繝ｩ繝ｼ縺檎匱逕溘＠縺ｾ縺励◆縲よ磁邯夊ｨｭ螳壹→RLS險ｭ螳壹ｒ縺皮｢ｺ隱阪￥縺縺輔＞縲・);
+                    updateSummary([], [], []);
                 }
             };
             document.querySelectorAll(".booking-tab").forEach((button) => {
@@ -533,3 +568,9 @@
 </body>
 
 </html>
+
+
+
+
+
+

@@ -164,3 +164,12 @@
 
 
 
+
+## 2026-03-26 追加テスト / Added Test (Booking Summary Dynamic)
+- 対象: `subpages/workshop-booking.html`
+- 手順:
+  1. ページを開き、Summary 4項目が固定文言でなくデータ連動値になることを確認
+  2. `workshop_sessions` 期間変更後に開催期間表示が追従することを確認
+  3. `workshop_plans.base_price_jpy` の最小値変更後に料金目安が追従することを確認
+- 期待結果:
+  - 開催期間/対象店舗/予約方式/料金目安がDB由来で表示される
