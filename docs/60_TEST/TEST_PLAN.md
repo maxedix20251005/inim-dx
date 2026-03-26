@@ -411,3 +411,37 @@
 - 期待結果:
   - Enquiries 画面に水平はみ出しが発生しない
   - 幅比率（Workshop Bookings同等）を維持したまま表示安定性が確保される
+
+## 2026-03-26 追加テスト / Added Test (Phase 2 Slice #1: Enquiries Pagination/Sorting/Persistence)
+- 対象:
+  - `app/pages/enquiries.html`
+  - `js/admin-enquiries-page.js`
+  - `css/app-enquiries.css`
+- 手順:
+  1. `app/pages/enquiries.html` を開き、各列ヘッダークリックで昇順/降順ソートが切替わることを確認する
+  2. Pager の `Prev/Next` と `Rows(10/20/50/100)` 変更で表示件数とページ情報が連動することを確認する
+  3. quick/filter/sort/page size を設定後にページを再読込し、状態が復元されることを確認する
+  4. `?quick=unassigned` などURL指定で該当quickが優先適用されることを確認する
+  5. 条件に一致するデータが0件のとき `No enquiries matched your filter.` が表示されることを確認する
+  6. 取得エラー時にテーブル内へ `Load failed: ...` が表示されることを確認する
+- 期待結果:
+  - Enquiries 画面で大量データ運用時の探索性が向上する
+  - 再訪時も前回の作業コンテキスト（filter/sort/page size）が維持される
+  - 空データ/エラー時に操作判断可能な状態表示がされる
+
+## 2026-03-26 追加テスト / Added Test (Phase 2 Slice #2: Bookings/Plans Pagination+Sorting)
+- 対象:
+  - `app/pages/workshop.html`
+  - `app/pages/workshop-plans.html`
+  - `js/admin-workshop-page.js`
+  - `js/admin-workshop-plans-page.js`
+- 手順:
+  1. `app/pages/workshop.html` で各列ヘッダーソート、Prev/Next、Rows変更が動作することを確認する
+  2. Bookings の quick/filter/sort/page size を設定して再読込し、状態が復元されることを確認する
+  3. `?quick=today` などURL指定時に quick が優先適用されることを確認する
+  4. `app/pages/workshop-plans.html` で各列ヘッダーソート、Prev/Next、Rows変更が動作することを確認する
+  5. Plans の sort/page size を変更して再読込し、状態が復元されることを確認する
+  6. 0件条件または取得失敗時にテーブル内メッセージが表示されることを確認する
+- 期待結果:
+  - 04/05/06 すべてでページング＋ソート基盤が揃う
+  - 再訪時の作業コンテキスト保持により運用効率が向上する

@@ -121,6 +121,20 @@
   white-space: nowrap;
 }
 
+.wb-sort {
+  font: inherit;
+  font-weight: 700;
+  color: #1f2735;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.wb-sort.is-active {
+  color: #9b3f2d;
+}
+
 .wb-table tbody tr {
   cursor: pointer;
 }
@@ -192,6 +206,29 @@
   border-radius: 10px;
 }
 
+.wb-pager {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.wb-pager button,
+.wb-pager select {
+  font: inherit;
+  border: 1px solid #c9cfda;
+  border-radius: 8px;
+  padding: 6px 10px;
+  background: #fff;
+  color: #243042;
+}
+
+.wb-pager button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 @media (max-width: 980px) {
   .wb-filters {
     grid-template-columns: 1fr 1fr;
@@ -203,5 +240,10 @@
 
   #wb-detail {
     position: static;
+  }
+
+  .wb-pager {
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
 }

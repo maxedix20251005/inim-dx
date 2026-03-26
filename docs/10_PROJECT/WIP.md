@@ -158,3 +158,9 @@
 - 2026-03-26: Enquiries overflow fix applied after width-ratio alignment.
   - JA: 幅比率を合わせた後に発生した横はみ出しを、`minmax(0, ...)` + `min-width:0` + `overflow-wrap:anywhere` で修正。
   - EN: Fixed post-ratio horizontal overflow using `minmax(0, ...)`, `min-width:0`, and `overflow-wrap:anywhere` safeguards.
+- 2026-03-26: Phase 2 hardening slice #1 delivered on Enquiries (06).
+  - JA: Enquiries に列ソート、ページング、フィルタ永続化（localStorage）、quick URL同期、空/エラー状態表示を追加。
+  - EN: Added column sorting, pagination, persisted filters (localStorage), quick URL sync, and empty/error table states to Enquiries.
+- 2026-03-26: Phase 2 hardening slice #2 delivered on Bookings (04) and Plans (05).
+  - JA: 04/05 に列ソート、ページング、状態保持（localStorage）を追加し、大量データ時の運用探索性を改善。
+  - EN: Added column sorting, pagination, and persisted state (localStorage) to 04/05 for better high-volume operational usability.

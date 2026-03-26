@@ -130,6 +130,20 @@
   white-space: nowrap;
 }
 
+.eq-sort {
+  font: inherit;
+  font-weight: 700;
+  color: #1f2735;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.eq-sort.is-active {
+  color: #9b3f2d;
+}
+
 .eq-table tbody tr {
   cursor: pointer;
 }
@@ -192,6 +206,29 @@
   gap: 8px;
 }
 
+.eq-pager {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.eq-pager button,
+.eq-pager select {
+  font: inherit;
+  border: 1px solid #c9cfda;
+  border-radius: 8px;
+  padding: 6px 10px;
+  background: #fff;
+  color: #243042;
+}
+
+.eq-pager button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 .eq-note-chips button,
 .eq-quick-actions button {
   border: 1px solid #cfd6e2;
@@ -213,6 +250,11 @@
 
   .eq-grid {
     grid-template-columns: 1fr;
+  }
+
+  .eq-pager {
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
 
   #eq-detail {

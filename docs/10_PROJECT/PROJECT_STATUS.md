@@ -488,3 +488,26 @@
 - Enquiries 画面で画面幅を超えて右側が欠ける事象を修正しました。
 - `css/app-enquiries.css` に overflow-safe のグリッド指定（`minmax(0, ...)`）と `min-width: 0` を追加し、フィルタ行および2カラム本文の横はみ出しを抑制しました。
 - 詳細パネルの長いID文字列でレイアウトが押し広がらないよう、`.eq-kv span` に `overflow-wrap: anywhere` を追加しました。
+### ドキュメント更新（2026-03-26 追加10）
+- Admin hardening Phase 2 の第1スライスとして、`06 Enquiries` にページング・列ソート・フィルタ状態保持を追加しました。
+- 追加内容:
+  - テーブル列ソート（ID / Created / Status / Category / Subject / Assigned / SLA）
+  - ページング（Prev/Next、ページ情報、1ページ件数 10/20/50/100）
+  - quick/filter/sort/page size の localStorage 保持（`admin_enquiries_preferences_v1`）
+  - quick tab の URL クエリ同期（`?quick=...`）
+  - 空結果時・取得失敗時のテーブル内メッセージ表示
+- 対象ファイル: `js/admin-enquiries-page.js`, `css/app-enquiries.css`.
+### ドキュメント更新（2026-03-26 追加11）
+- Admin hardening Phase 2 の第2スライスとして、`04 Workshop Bookings` と `05 Workshop Plans` にページング・列ソート・状態保持を追加しました。
+- `04 Workshop Bookings` 追加内容:
+  - 列ソート（ID / Booked At / Status / Contact / Store / Party / SLA）
+  - ページング（Prev/Next、ページ情報、Rows 10/20/50/100）
+  - quick/filter/sort/page size の localStorage 保持（`admin_workshop_bookings_preferences_v1`）
+  - quick tab の URL クエリ同期（`?quick=...`）
+  - 空結果/取得失敗時のテーブルメッセージ表示
+- `05 Workshop Plans` 追加内容:
+  - 列ソート（Code / Name / Status / Sort）
+  - ページング（Prev/Next、ページ情報、Rows 10/20/50/100）
+  - sort/page size の localStorage 保持（`admin_workshop_plans_preferences_v1`）
+  - 空結果/取得失敗時のテーブルメッセージ表示
+- 対象ファイル: `js/admin-workshop-page.js`, `js/admin-workshop-plans-page.js`, `css/app-workshop-bookings.css`, `css/app-workshop-plans.css`.

@@ -39,17 +39,29 @@
                     <table class="eq-table" id="eq-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Created</th>
-                                <th>Status</th>
-                                <th>Category</th>
-                                <th>Subject</th>
-                                <th>Assigned</th>
-                                <th>SLA</th>
+                                <th><button type="button" class="eq-sort" data-sort-key="id">ID</button></th>
+                                <th><button type="button" class="eq-sort" data-sort-key="created_at">Created</button></th>
+                                <th><button type="button" class="eq-sort" data-sort-key="status">Status</button></th>
+                                <th><button type="button" class="eq-sort" data-sort-key="category">Category</button></th>
+                                <th><button type="button" class="eq-sort" data-sort-key="subject">Subject</button></th>
+                                <th><button type="button" class="eq-sort" data-sort-key="assigned_to">Assigned</button></th>
+                                <th><button type="button" class="eq-sort" data-sort-key="sla_hours">SLA</button></th>
                             </tr>
                         </thead>
                         <tbody></tbody>
                     </table>
+                </div>
+                <div class="eq-pager" id="eq-pager">
+                    <button type="button" id="eq-prev">Prev</button>
+                    <span id="eq-page-info">Page 1 / 1</span>
+                    <button type="button" id="eq-next">Next</button>
+                    <label for="eq-page-size">Rows</label>
+                    <select id="eq-page-size">
+                        <option value="10">10</option>
+                        <option value="20" selected>20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
                 </div>
             </article>
 
@@ -72,7 +84,12 @@
     const filterForm = document.getElementById("eq-filters");
     const quickHost = document.getElementById("eq-quick");
     const statusFilter = document.getElementById("eq-status-filter");
-    if (!tableBody || !detailHost || !summary || !filterForm || !quickHost || !statusFilter) return;
+    const pager = document.getElementById("eq-pager");
+    const prevBtn = document.getElementById("eq-prev");
+    const nextBtn = document.getElementById("eq-next");
+    const pageInfo = document.getElementById("eq-page-info");
+    const pageSizeSelect = document.getElementById("eq-page-size");
+    if (!tableBody || !detailHost || !summary || !filterForm || !quickHost || !statusFilter || !pager || !prevBtn || !nextBtn || !pageInfo || !pageSizeSelect) return;
 
     const state = {
         rows: [],
@@ -80,8 +97,14 @@
         selectedId: "",
         profileMap: {},
         assigneeOptions: [],
-        quickKey: "all"
+        quickKey: "all",
+        sortKey: "created_at",
+        sortDir: "desc",
+        page: 1,
+        pageSize: 20,
+        loadError: ""
     };
+    const PREFERENCE_KEY = "admin_enquiries_preferences_v1";
 
     const esc = (v) => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
     const pick = (row, keys) => keys.map((k) => row?.[k]).find((x) => x !== undefined && x !== null && String(x).trim() !== "") ?? "";
@@ -118,6 +141,94 @@
         const p = state.profileMap[id];
         return p ? (p.display_name || p.full_name || p.email || id) : id;
     };
+    const getSlaHours = (row) => {
+        const status = String(row?.status || "").toLowerCase();
+        if (!isOpenStatus(status)) return -1;
+        const createdAt = new Date(pick(row, ["created_at", "updated_at"]) || "");
+        if (Number.isNaN(createdAt.getTime())) return -1;
+        return Math.floor((Date.now() - createdAt.getTime()) / (1000 * 60 * 60));
+    };
+    const getSortValue = (row, key) => {
+        if (key === "created_at") return String(pick(row, ["created_at", "updated_at"]) || "");
+        if (key === "assigned_to") return assigneeLabel(row.assigned_to || "").toLowerCase();
+        if (key === "sla_hours") return getSlaHours(row);
+        return String(row?.[key] || "").toLowerCase();
+    };
+    const sortRows = (rows) => {
+        const dir = state.sortDir === "asc" ? 1 : -1;
+        rows.sort((a, b) => {
+            const va = getSortValue(a, state.sortKey);
+            const vb = getSortValue(b, state.sortKey);
+            if (typeof va === "number" || typeof vb === "number") return (Number(va) - Number(vb)) * dir;
+            return String(va).localeCompare(String(vb), "ja") * dir;
+        });
+    };
+    const getMaxPage = () => Math.max(1, Math.ceil(state.filtered.length / Math.max(1, state.pageSize)));
+    const getPageRows = () => {
+        const start = (state.page - 1) * state.pageSize;
+        return state.filtered.slice(start, start + state.pageSize);
+    };
+    const savePreferences = () => {
+        const fd = new FormData(filterForm);
+        const payload = {
+            quickKey: state.quickKey,
+            sortKey: state.sortKey,
+            sortDir: state.sortDir,
+            pageSize: state.pageSize,
+            q: String(fd.get("q") || ""),
+            status: String(fd.get("status") || ""),
+            category: String(fd.get("category") || ""),
+            assigned: String(fd.get("assigned") || ""),
+            from: String(fd.get("from") || ""),
+            to: String(fd.get("to") || "")
+        };
+        try { window.localStorage.setItem(PREFERENCE_KEY, JSON.stringify(payload)); } catch { /* noop */ }
+    };
+    const applySavedPreferences = () => {
+        try {
+            const raw = window.localStorage.getItem(PREFERENCE_KEY);
+            if (!raw) return;
+            const pref = JSON.parse(raw);
+            const setValue = (name, value) => {
+                const el = filterForm.elements.namedItem(name);
+                if (el instanceof HTMLInputElement || el instanceof HTMLSelectElement) el.value = String(value || "");
+            };
+            setValue("q", pref.q);
+            setValue("status", pref.status);
+            setValue("category", pref.category);
+            setValue("assigned", pref.assigned);
+            setValue("from", pref.from);
+            setValue("to", pref.to);
+            if (["all", "unassigned", "open", "stale_open"].includes(String(pref.quickKey || ""))) state.quickKey = String(pref.quickKey);
+            if (["id", "created_at", "status", "category", "subject", "assigned_to", "sla_hours"].includes(String(pref.sortKey || ""))) state.sortKey = String(pref.sortKey);
+            if (["asc", "desc"].includes(String(pref.sortDir || ""))) state.sortDir = String(pref.sortDir);
+            const size = Number(pref.pageSize);
+            if ([10, 20, 50, 100].includes(size)) state.pageSize = size;
+        } catch { /* noop */ }
+    };
+    const syncQuickParam = () => {
+        const url = new URL(window.location.href);
+        url.searchParams.set("quick", state.quickKey);
+        window.history.replaceState({}, "", url.toString());
+    };
+    const syncSortButtons = () => {
+        const map = {
+            id: "ID",
+            created_at: "Created",
+            status: "Status",
+            category: "Category",
+            subject: "Subject",
+            assigned_to: "Assigned",
+            sla_hours: "SLA"
+        };
+        host.querySelectorAll(".eq-sort").forEach((btn) => {
+            const key = String(btn.getAttribute("data-sort-key") || "");
+            const isActive = key === state.sortKey;
+            const arrow = isActive ? (state.sortDir === "asc" ? " ▲" : " ▼") : "";
+            btn.classList.toggle("is-active", isActive);
+            btn.textContent = `${map[key] || key}${arrow}`;
+        });
+    };
 
     const populateStatusFilter = () => {
         const current = String(statusFilter.value || "");
@@ -133,13 +244,30 @@
     };
     const applyQuickFromUrl = () => {
         const params = new URLSearchParams(window.location.search);
+        if (!params.has("quick")) return;
         const quick = String(params.get("quick") || "all").trim().toLowerCase();
         const allowed = new Set(["all", "unassigned", "open", "stale_open"]);
         state.quickKey = allowed.has(quick) ? quick : "all";
     };
 
     const renderTable = () => {
-        tableBody.innerHTML = state.filtered.map((row) => {
+        const rows = getPageRows();
+        if (state.loadError) {
+            tableBody.innerHTML = `<tr><td colspan="7">Load failed: ${esc(state.loadError)}</td></tr>`;
+            pageInfo.textContent = "Page 1 / 1";
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+            return;
+        }
+        if (!rows.length) {
+            tableBody.innerHTML = `<tr><td colspan="7">No enquiries matched your filter.</td></tr>`;
+            pageInfo.textContent = "Page 1 / 1";
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+            return;
+        }
+
+        tableBody.innerHTML = rows.map((row) => {
             const id = row.id || "";
             const sla = getSlaText(row);
             const slaClass = sla.startsWith("Overdue") ? "is-overdue" : (sla === "-" ? "" : "is-warn");
@@ -161,6 +289,11 @@
                 renderDetail();
             });
         });
+
+        const maxPage = getMaxPage();
+        pageInfo.textContent = `Page ${state.page} / ${maxPage}`;
+        prevBtn.disabled = state.page <= 1;
+        nextBtn.disabled = state.page >= maxPage;
     };
 
     const renderDetail = () => {
@@ -305,7 +438,13 @@
             return true;
         });
 
-        summary.textContent = `${state.filtered.length} / ${state.rows.length} enquiries (quick: ${state.quickKey})`;
+        sortRows(state.filtered);
+        const maxPage = getMaxPage();
+        if (state.page > maxPage) state.page = maxPage;
+        if (state.page < 1) state.page = 1;
+        summary.textContent = `${state.filtered.length} / ${state.rows.length} enquiries (quick: ${state.quickKey}, sort: ${state.sortKey} ${state.sortDir})`;
+        savePreferences();
+        syncSortButtons();
     };
 
     const loadMaps = async (rows) => {
@@ -329,6 +468,7 @@
 
     const loadData = async () => {
         summary.textContent = "Loading...";
+        state.loadError = "";
         const { data, error } = await supabase
             .from("enquiries")
             .select("*")
@@ -336,9 +476,11 @@
             .limit(500);
 
         if (error) {
-            summary.textContent = `Load failed: ${error.message}`;
+            state.loadError = error.message || "Unknown error";
+            summary.textContent = `Load failed: ${state.loadError}`;
             state.rows = [];
             state.filtered = [];
+            state.page = 1;
             renderTable();
             renderDetail();
             return;
@@ -364,12 +506,15 @@
             return;
         }
 
+        applySavedPreferences();
+        pageSizeSelect.value = String(state.pageSize);
         applyQuickFromUrl();
         await loadData();
         syncQuickButtons();
 
         filterForm.addEventListener("submit", (e) => {
             e.preventDefault();
+            state.page = 1;
             applyFilters();
             renderTable();
             renderDetail();
@@ -377,11 +522,44 @@
         quickHost.querySelectorAll("[data-quick]").forEach((button) => {
             button.addEventListener("click", () => {
                 state.quickKey = String(button.getAttribute("data-quick") || "all");
+                state.page = 1;
                 syncQuickButtons();
+                syncQuickParam();
                 applyFilters();
                 renderTable();
                 renderDetail();
             });
+        });
+        host.querySelectorAll(".eq-sort").forEach((button) => {
+            button.addEventListener("click", () => {
+                const nextKey = String(button.getAttribute("data-sort-key") || "created_at");
+                if (state.sortKey === nextKey) state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
+                else {
+                    state.sortKey = nextKey;
+                    state.sortDir = nextKey === "created_at" || nextKey === "sla_hours" ? "desc" : "asc";
+                }
+                state.page = 1;
+                applyFilters();
+                renderTable();
+            });
+        });
+        prevBtn.addEventListener("click", () => {
+            if (state.page <= 1) return;
+            state.page -= 1;
+            renderTable();
+        });
+        nextBtn.addEventListener("click", () => {
+            const maxPage = getMaxPage();
+            if (state.page >= maxPage) return;
+            state.page += 1;
+            renderTable();
+        });
+        pageSizeSelect.addEventListener("change", () => {
+            const size = Number(pageSizeSelect.value);
+            state.pageSize = [10, 20, 50, 100].includes(size) ? size : 20;
+            state.page = 1;
+            applyFilters();
+            renderTable();
         });
     };
 
