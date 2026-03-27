@@ -272,3 +272,5 @@
 
 - 2026-03-27: Admin 05 (Workshopプラン管理) aligned with 04/06 design/visibility. Button labels are Japanese and action-button style is unified per guideline. Anonymous open_demo session is now explicit read-only (save/delete/add controls disabled). Asset version: 20260327i.
 - 2026-03-27: Admin 05 follow-up fix applied. Non-login demo session is now always treated as read-only on Workshop Plans, and disabled-button visibility is explicit. Asset version: 20260327j.
+- 2026-03-27: Step5 completed for 04/05/06. UI text labels/messages localized to Japanese and read-only disabled visibility aligned. Asset version: 20260327k.
+- 2026-03-27: Step2 save-fix applied on 04/06. Write auth check now uses strict non-login detection (started-without-session or anonymous provider => read-only), aligned with 05. Asset version: 20260327l.

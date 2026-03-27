@@ -269,3 +269,5 @@
 - Status: Fixed
 
 - 2026-03-27 follow-up (Issue 2026-03-27-27): non-login demo guest on page 05 now forced read-only with explicit disabled visuals. Status: Fixed (recheck requested).
+- 2026-03-27 follow-up: step5 text/style consistency pass applied on 04/05/06 (Japanese labels + read-only disabled visibility).
+- 2026-03-27 fix: update-revert issue mitigation extended to 04/06 by strict session-origin based read-only guard (same rule as 05).

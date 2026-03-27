@@ -36,7 +36,7 @@
                 <input type="date" name="to">
                 <button type="submit">検索</button>
             </form>
-            <p class="wb-note" id="wb-summary">Loading...</p>
+            <p class="wb-note" id="wb-summary">読み込み中...</p>
         </section>
 
         <section class="wb-grid">
@@ -59,9 +59,9 @@
                 </div>
                 <div class="wb-pager" id="wb-pager">
                     <button type="button" id="wb-prev">前へ</button>
-                    <span id="wb-page-info">Page 1 / 1</span>
+                    <span id="wb-page-info">ページ 1 / 1</span>
                     <button type="button" id="wb-next">次へ</button>
-                    <label for="wb-page-size">Rows</label>
+                    <label for="wb-page-size">件数</label>
                     <select id="wb-page-size">
                         <option value="10">10</option>
                         <option value="20" selected>20</option>
@@ -72,7 +72,7 @@
             </article>
 
             <aside class="wb-panel" id="wb-detail">
-                <h2>Booking Detail</h2>
+                <h2>予約詳細</h2>
                 <p class="wb-note">行を選択してください。</p>
             </aside>
         </section>
@@ -98,7 +98,16 @@
         if (!tableBody || !detailHost || !summary || !filterForm || !quickHost || !prevBtn || !nextBtn || !pageInfo || !pageSizeSelect) return;
 
         const PREFERENCE_KEY = "admin_workshop_bookings_preferences_v1";
-        const READ_ONLY_MESSAGE = "Demo mode is read-only. Login required to save.";
+        const READ_ONLY_MESSAGE = "デモモードは閲覧専用です。保存するにはログインしてください。";
+        let startedWithoutSession = false;
+        const isAnonymousUser = (u) => {
+            if (!u) return true;
+            const provider = String(u?.app_metadata?.provider || "").trim().toLowerCase();
+            const providers = Array.isArray(u?.app_metadata?.providers)
+                ? u.app_metadata.providers.map((x) => String(x || "").trim().toLowerCase())
+                : [];
+            return Boolean(u?.is_anonymous) || provider === "anonymous" || providers.includes("anonymous");
+        };
         const state = {
             rows: [],
             filtered: [],
@@ -146,7 +155,7 @@
         const getSlaText = (row) => {
             const hours = getSlaHours(row);
             if (hours < 0) return "-";
-            return hours >= 24 ? `Overdue ${hours}h` : `${hours}h`;
+            return hours >= 24 ? `期限超過 ${hours}h` : `${hours}h`;
         };
         const getSortValue = (row, key) => {
             if (key === "booked_at") return String(pick(row, ["booked_at", "created_at"]) || "");
@@ -240,15 +249,15 @@
         const renderTable = () => {
             const rows = getPageRows();
             if (state.loadError) {
-                tableBody.innerHTML = `<tr><td colspan="7">Load failed: ${esc(state.loadError)}</td></tr>`;
-                pageInfo.textContent = "Page 1 / 1";
+                tableBody.innerHTML = `<tr><td colspan="7">読込失敗: ${esc(state.loadError)}</td></tr>`;
+                pageInfo.textContent = "ページ 1 / 1";
                 prevBtn.disabled = true;
                 nextBtn.disabled = true;
                 return;
             }
             if (!rows.length) {
-                tableBody.innerHTML = `<tr><td colspan="7">No bookings matched your filter.</td></tr>`;
-                pageInfo.textContent = "Page 1 / 1";
+                tableBody.innerHTML = `<tr><td colspan="7">条件に一致する予約はありません。</td></tr>`;
+                pageInfo.textContent = "ページ 1 / 1";
                 prevBtn.disabled = true;
                 nextBtn.disabled = true;
                 return;
@@ -273,7 +282,7 @@
             });
 
             const maxPage = getMaxPage();
-            pageInfo.textContent = `Page ${state.page} / ${maxPage}`;
+            pageInfo.textContent = `ページ ${state.page} / ${maxPage}`;
             prevBtn.disabled = state.page <= 1;
             nextBtn.disabled = state.page >= maxPage;
         };
@@ -281,7 +290,7 @@
         const renderDetail = () => {
             const row = state.rows.find((x) => String(x.id) === String(state.selectedId));
             if (!row) {
-                detailHost.innerHTML = `<h2>Booking Detail</h2><p class="wb-note">行を選択してください。</p>`;
+                detailHost.innerHTML = `<h2>予約詳細</h2><p class="wb-note">行を選択してください。</p>`;
                 return;
             }
             const profile = state.profileMap[row.customer_profile_id] || {};
@@ -294,22 +303,22 @@
             const storeName = state.storeMap[row.store_id] || row.store_id || "-";
 
             detailHost.innerHTML = `
-                <h2>Booking Detail</h2>
+                <h2>予約詳細</h2>
                 <div class="wb-kv"><strong>ID</strong><span>${esc(row.id || "-")}</span></div>
                 <div class="wb-kv"><strong>状態</strong><span>${esc(row.status || "-")}</span></div>
                 <div class="wb-kv"><strong>予約日時</strong><span>${esc(bookedAt)}</span></div>
                 <div class="wb-kv"><strong>店舗</strong><span>${esc(storeName)}</span></div>
-                <div class="wb-kv"><strong>Party Size</strong><span>${esc(String(party))}</span></div>
-                <div class="wb-kv"><strong>Name</strong><span>${esc(contactName)}</span></div>
-                <div class="wb-kv"><strong>Email</strong><span>${esc(contactEmail)}</span></div>
-                <div class="wb-kv"><strong>Phone</strong><span>${esc(contactPhone)}</span></div>
+                <div class="wb-kv"><strong>人数</strong><span>${esc(String(party))}</span></div>
+                <div class="wb-kv"><strong>氏名</strong><span>${esc(contactName)}</span></div>
+                <div class="wb-kv"><strong>メール</strong><span>${esc(contactEmail)}</span></div>
+                <div class="wb-kv"><strong>電話</strong><span>${esc(contactPhone)}</span></div>
                 <form id="wb-update-form" class="wb-update">
                     <input type="hidden" name="id" value="${esc(row.id || "")}">
                     <label>状態</label>
                     <select name="status">
                         ${["pending", "requested", "in_progress", "confirmed", "completed", "cancelled"].map((s) => `<option value="${esc(s)}" ${String(row.status || "") === s ? "selected" : ""}>${esc(s)}</option>`).join("")}
                     </select>
-                    <label>Internal Note</label>
+                    <label>内部メモ</label>
                     <textarea name="internal_note" rows="4" maxlength="1000">${esc(note)}</textarea>
                     <div class="wb-note-chips">
                         <button type="button" data-note-template="電話確認済み。折返し連絡待ち。">電話確認済み</button>
@@ -361,7 +370,7 @@
                 const nextStatus = String(fd.get("status") || "").trim();
                 const internalNote = String(fd.get("internal_note") || "").trim();
                 if (!msg) return;
-                msg.textContent = "Updating...";
+                msg.textContent = "更新中...";
 
                 if (state.isReadOnly) {
                     msg.textContent = READ_ONLY_MESSAGE;
@@ -370,7 +379,7 @@
 
             const { data: liveSession } = await supabase.auth.getSession();
             const liveUser = liveSession?.session?.user || null;
-            if (!liveUser || liveUser.is_anonymous) {
+            if (isAnonymousUser(liveUser)) {
                 state.isReadOnly = true;
                 msg.textContent = READ_ONLY_MESSAGE;
                 return;
@@ -381,10 +390,10 @@
 
                 const { error } = await supabase.from("bookings").update(payload).eq("id", bookingId);
                 if (error) {
-                    msg.textContent = `Update failed: ${error.message}`;
+                    msg.textContent = `更新失敗: ${error.message}`;
                     return;
                 }
-                msg.textContent = "Updated.";
+                msg.textContent = "更新しました。";
                 await loadData();
                 state.selectedId = bookingId;
                 applyFilters();
@@ -432,7 +441,7 @@
                 if (state.quickKey === "today" && bookedKey !== todayKey) return false;
                 if (state.quickKey === "tomorrow" && bookedKey !== tomorrowKey) return false;
                 if (state.quickKey === "pending" && !isPendingLike(rowStatus)) return false;
-                if (state.quickKey === "stale_pending" && !getSlaText(row).startsWith("Overdue")) return false;
+                if (state.quickKey === "stale_pending" && !getSlaText(row).startsWith("期限超過")) return false;
                 return true;
             });
 
@@ -440,7 +449,7 @@
             const maxPage = getMaxPage();
             if (state.page > maxPage) state.page = maxPage;
             if (state.page < 1) state.page = 1;
-            summary.textContent = `${state.filtered.length} / ${state.rows.length} bookings (quick: ${state.quickKey}, sort: ${state.sortKey} ${state.sortDir})`;
+            summary.textContent = `${state.filtered.length} / ${state.rows.length} 件の予約 (quick: ${state.quickKey}, sort: ${state.sortKey} ${state.sortDir})`;
             savePreferences();
             syncSortButtons();
         };
@@ -462,7 +471,7 @@
         };
 
         const loadData = async () => {
-            summary.textContent = "Loading...";
+            summary.textContent = "読み込み中...";
             state.loadError = "";
             const { data, error } = await supabase
                 .from("bookings")
@@ -472,7 +481,7 @@
 
             if (error) {
                 state.loadError = error.message || "Unknown error";
-                summary.textContent = `Load failed: ${state.loadError}`;
+                summary.textContent = `読込失敗: ${state.loadError}`;
                 state.rows = [];
                 state.filtered = [];
                 state.page = 1;
@@ -490,11 +499,12 @@
 
         const init = async () => {
             if (!supabase) {
-                summary.textContent = "Supabase config missing in js/site-config.js";
+                summary.textContent = "js/site-config.js の Supabase 設定が不足しています";
                 return;
             }
             const { data: sessionData } = await supabase.auth.getSession();
             let user = sessionData?.session?.user || null;
+            startedWithoutSession = !user;
             if (!user && isOpenDemoMode && supabase.auth?.signInAnonymously) {
                 try {
                     const { data: anonData, error: anonError } = await supabase.auth.signInAnonymously();
@@ -509,7 +519,7 @@
                 window.location.href = "../login.html";
                 return;
             }
-            state.isReadOnly = !user || Boolean(user?.is_anonymous);
+            state.isReadOnly = startedWithoutSession || isAnonymousUser(user);
 
             applySavedPreferences();
             pageSizeSelect.value = String(state.pageSize);
@@ -580,6 +590,15 @@
         mount();
     }
 })();
+
+
+
+
+
+
+
+
+
 
 
 

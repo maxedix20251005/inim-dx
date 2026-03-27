@@ -10,8 +10,8 @@
         host.innerHTML = `
         <section class="wp-grid">
             <article class="wp-panel">
-                <h2>Plans</h2>
-                <p class="wp-note" id="wp-summary">Loading...</p>
+                <h2>プラン一覧</h2>
+                <p class="wp-note" id="wp-summary">読み込み中...</p>
                 <div class="wp-table-wrap">
                     <table class="wp-table" id="wp-table">
                         <thead>
@@ -27,7 +27,7 @@
                 </div>
                 <div class="wp-pager" id="wp-pager">
                     <button type="button" id="wp-prev">前へ</button>
-                    <span id="wp-page-info">Page 1 / 1</span>
+                    <span id="wp-page-info">ページ 1 / 1</span>
                     <button type="button" id="wp-next">次へ</button>
                     <label for="wp-page-size">件数</label>
                     <select id="wp-page-size">
@@ -75,7 +75,7 @@
                 </section>
 
                 <section class="wp-panel">
-                    <h3>Plan Inclusions</h3>
+                    <h3>含有要素</h3>
                     <p class="wp-note">選択中プランの workshop_plan_inclusions を管理します。</p>
                     <form class="wp-form" id="wp-inc-form">
                         <div class="wp-inline">
@@ -206,16 +206,16 @@
 
         const renderTable = () => {
             if (state.loadError) {
-                tableBody.innerHTML = `<tr><td colspan="4">Load failed: ${esc(state.loadError)}</td></tr>`;
-                pageInfo.textContent = "Page 1 / 1";
+                tableBody.innerHTML = `<tr><td colspan="4">読込失敗: ${esc(state.loadError)}</td></tr>`;
+                pageInfo.textContent = "ページ 1 / 1";
                 prevBtn.disabled = true;
                 nextBtn.disabled = true;
                 return;
             }
             const rows = getPageRows();
             if (!rows.length) {
-                tableBody.innerHTML = `<tr><td colspan="4">No plans found.</td></tr>`;
-                pageInfo.textContent = "Page 1 / 1";
+                tableBody.innerHTML = `<tr><td colspan="4">プランが見つかりません。</td></tr>`;
+                pageInfo.textContent = "ページ 1 / 1";
                 prevBtn.disabled = true;
                 nextBtn.disabled = true;
                 return;
@@ -236,7 +236,7 @@
             }));
 
             const maxPage = getMaxPage();
-            pageInfo.textContent = `Page ${state.page} / ${maxPage}`;
+            pageInfo.textContent = `ページ ${state.page} / ${maxPage}`;
             prevBtn.disabled = state.page <= 1;
             nextBtn.disabled = state.page >= maxPage;
         };
@@ -257,7 +257,7 @@
             form.elements.status.value = row?.status || "draft";
             form.elements.sort_order.value = row?.sort_order ?? 1;
             form.elements.booking_label.value = row?.booking_label || "";
-            msg.textContent = row ? `Editing: ${row.plan_code}` : "New plan mode";
+            msg.textContent = row ? `編集中: ${row.plan_code}` : "新規作成モード";
         };
 
         const renderInclusions = () => {
@@ -283,10 +283,10 @@
                 const id = btn.getAttribute("data-inc-id") || "";
                 const { error } = await supabase.from("workshop_plan_inclusions").delete().eq("id", id);
                 if (error) {
-                    incMsg.textContent = `Delete failed: ${error.message}`;
+                    incMsg.textContent = `削除失敗: ${error.message}`;
                     return;
                 }
-                incMsg.textContent = "Deleted.";
+                incMsg.textContent = "削除しました。";
                 await loadInclusions();
             }));
         };
@@ -305,7 +305,7 @@
                 .eq("plan_id", row.id)
                 .order("display_order", { ascending: true });
             if (error) {
-                incMsg.textContent = `Load failed: ${error.message}`;
+                incMsg.textContent = `読込失敗: ${error.message}`;
                 renderInclusions();
                 return;
             }
@@ -314,7 +314,7 @@
         };
 
         const loadPlans = async () => {
-            summary.textContent = "Loading...";
+            summary.textContent = "読み込み中...";
             state.loadError = "";
             const { data, error } = await supabase
                 .from("workshop_plans")
@@ -322,7 +322,7 @@
                 .order("sort_order", { ascending: true });
             if (error) {
                 state.loadError = error.message || "Unknown error";
-                summary.textContent = `Load failed: ${state.loadError}`;
+                summary.textContent = `読込失敗: ${state.loadError}`;
                 state.plans = [];
                 state.page = 1;
                 renderTable();
@@ -334,7 +334,7 @@
             if (state.page > maxPage) state.page = maxPage;
             if (!state.selectedId && state.plans.length) state.selectedId = state.plans[0].id;
             fillForm(getSelected() || null);
-            summary.textContent = `${state.plans.length} plans loaded (sort: ${state.sortKey} ${state.sortDir})`;
+            summary.textContent = `${state.plans.length} 件のプランを読み込みました (sort: ${state.sortKey} ${state.sortDir})`;
             savePreferences();
             syncSortButtons();
             renderTable();
@@ -360,21 +360,22 @@
         });
 
         const validate = (p) => {
-            if (!p.plan_code || !p.plan_name || !p.plan_summary || !p.plan_description) return "Required fields are missing.";
-            if (p.duration_min_minutes < 1) return "duration_min_minutes must be >= 1.";
-            if (p.duration_max_minutes !== null && p.duration_max_minutes < p.duration_min_minutes) return "duration_max_minutes must be >= duration_min_minutes.";
-            if (p.max_party_size < p.min_party_size) return "max_party_size must be >= min_party_size.";
-            if (!["draft", "active", "inactive"].includes(p.status)) return "status must be draft/active/inactive.";
+            if (!p.plan_code || !p.plan_name || !p.plan_summary || !p.plan_description) return "必須項目が不足しています。";
+            if (p.duration_min_minutes < 1) return "duration_min_minutes は 1 以上で入力してください。";
+            if (p.duration_max_minutes !== null && p.duration_max_minutes < p.duration_min_minutes) return "duration_max_minutes は duration_min_minutes 以上で入力してください。";
+            if (p.max_party_size < p.min_party_size) return "max_party_size は min_party_size 以上で入力してください。";
+            if (!["draft", "active", "inactive"].includes(p.status)) return "status は draft / active / inactive のいずれかを指定してください。";
             return "";
         };
 
         const init = async () => {
             if (!supabase) {
-                summary.textContent = "Supabase config missing in js/site-config.js";
+                summary.textContent = "js/site-config.js の Supabase 設定が不足しています";
                 return;
             }
             const { data: sessionData } = await supabase.auth.getSession();
             let user = sessionData?.session?.user || null;
+            startedWithoutSession = !user;
             if (!user && isOpenDemoMode && supabase.auth?.signInAnonymously) {
                 try {
                     const { data: anonData, error: anonError } = await supabase.auth.signInAnonymously();
@@ -427,22 +428,22 @@
                     msg.textContent = errMsg;
                     return;
                 }
-                msg.textContent = "Saving...";
+                msg.textContent = "保存中...";
                 if (id) {
                     const { error } = await supabase.from("workshop_plans").update(payload).eq("id", id);
                     if (error) {
-                        msg.textContent = `Save failed: ${error.message}`;
+                        msg.textContent = `保存失敗: ${error.message}`;
                         return;
                     }
-                    msg.textContent = "Updated.";
+                    msg.textContent = "更新しました。";
                     state.selectedId = id;
                 } else {
                     const { data, error } = await supabase.from("workshop_plans").insert(payload).select("id").limit(1);
                     if (error) {
-                        msg.textContent = `Create failed: ${error.message}`;
+                        msg.textContent = `作成失敗: ${error.message}`;
                         return;
                     }
-                    msg.textContent = "Created.";
+                    msg.textContent = "作成しました。";
                     state.selectedId = data?.[0]?.id || "";
                 }
                 await loadPlans();
@@ -463,17 +464,17 @@
                 }
                 const row = getSelected();
                 if (!row?.id) {
-                    msg.textContent = "Delete target is not selected.";
+                    msg.textContent = "削除対象が選択されていません。";
                     return;
                 }
                 if (!window.confirm(`Delete plan "${row.plan_code}"? Related sessions/inclusions may be deleted by FK cascade.`)) return;
-                msg.textContent = "Deleting...";
+                msg.textContent = "削除中...";
                 const { error } = await supabase.from("workshop_plans").delete().eq("id", row.id);
                 if (error) {
-                    msg.textContent = `Delete failed: ${error.message}`;
+                    msg.textContent = `削除失敗: ${error.message}`;
                     return;
                 }
-                msg.textContent = "Deleted.";
+                msg.textContent = "削除しました。";
                 state.selectedId = "";
                 await loadPlans();
             });
@@ -494,27 +495,27 @@
                 }
                 const row = getSelected();
                 if (!row?.id) {
-                    incMsg.textContent = "Select a plan first.";
+                    incMsg.textContent = "先にプランを選択してください。";
                     return;
                 }
                 const fd = new FormData(incForm);
                 const inclusionText = String(fd.get("inclusion_text") || "").trim();
                 const displayOrder = n(fd.get("display_order"), state.inclusions.length + 1);
                 if (!inclusionText) {
-                    incMsg.textContent = "inclusion_text is required.";
+                    incMsg.textContent = "inclusion_text は必須です。";
                     return;
                 }
-                incMsg.textContent = "Adding...";
+                incMsg.textContent = "追加中...";
                 const { error } = await supabase.from("workshop_plan_inclusions").insert({
                     plan_id: row.id,
                     inclusion_text: inclusionText,
                     display_order: displayOrder
                 });
                 if (error) {
-                    incMsg.textContent = `Add failed: ${error.message}`;
+                    incMsg.textContent = `追加失敗: ${error.message}`;
                     return;
                 }
-                incMsg.textContent = "Added.";
+                incMsg.textContent = "追加しました。";
                 incForm.reset();
                 await loadInclusions();
             });
@@ -563,6 +564,8 @@
         mount();
     }
 })();
+
+
 
 
 

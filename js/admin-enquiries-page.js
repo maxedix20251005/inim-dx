@@ -30,7 +30,7 @@
                 <input type="date" name="to">
                 <button type="submit">検索</button>
             </form>
-            <p class="eq-note" id="eq-summary">Loading...</p>
+            <p class="eq-note" id="eq-summary">読み込み中...</p>
         </section>
 
         <section class="eq-grid">
@@ -53,9 +53,9 @@
                 </div>
                 <div class="eq-pager" id="eq-pager">
                     <button type="button" id="eq-prev">前へ</button>
-                    <span id="eq-page-info">Page 1 / 1</span>
+                    <span id="eq-page-info">ページ 1 / 1</span>
                     <button type="button" id="eq-next">次へ</button>
-                    <label for="eq-page-size">Rows</label>
+                    <label for="eq-page-size">件数</label>
                     <select id="eq-page-size">
                         <option value="10">10</option>
                         <option value="20" selected>20</option>
@@ -66,7 +66,7 @@
             </article>
 
             <aside class="eq-panel" id="eq-detail">
-                <h2>Enquiry Detail</h2>
+                <h2>問い合わせ詳細</h2>
                 <p class="eq-note">行を選択してください。</p>
             </aside>
         </section>
@@ -93,7 +93,16 @@
     const pageSizeSelect = document.getElementById("eq-page-size");
     if (!tableBody || !detailHost || !summary || !filterForm || !quickHost || !statusFilter || !pager || !prevBtn || !nextBtn || !pageInfo || !pageSizeSelect) return;
 
-    const READ_ONLY_MESSAGE = "Demo mode is read-only. Login required to save.";
+    const READ_ONLY_MESSAGE = "デモモードは閲覧専用です。保存するにはログインしてください。";
+    let startedWithoutSession = false;
+    const isAnonymousUser = (u) => {
+        if (!u) return true;
+        const provider = String(u?.app_metadata?.provider || "").trim().toLowerCase();
+        const providers = Array.isArray(u?.app_metadata?.providers)
+            ? u.app_metadata.providers.map((x) => String(x || "").trim().toLowerCase())
+            : [];
+        return Boolean(u?.is_anonymous) || provider === "anonymous" || providers.includes("anonymous");
+    };
 
     const state = {
         rows: [],
@@ -134,7 +143,7 @@
         const createdAt = new Date(pick(row, ["created_at", "updated_at"]) || "");
         if (Number.isNaN(createdAt.getTime())) return "-";
         const hours = Math.floor((Date.now() - createdAt.getTime()) / (1000 * 60 * 60));
-        return hours >= 24 ? `Overdue ${hours}h` : `${hours}h`;
+        return hours >= 24 ? `期限超過 ${hours}h` : `${hours}h`;
     };
     const getNoteKey = (row) => {
         if (row && Object.prototype.hasOwnProperty.call(row, "internal_note")) return "internal_note";
@@ -258,15 +267,15 @@
     const renderTable = () => {
         const rows = getPageRows();
         if (state.loadError) {
-            tableBody.innerHTML = `<tr><td colspan="7">Load failed: ${esc(state.loadError)}</td></tr>`;
-            pageInfo.textContent = "Page 1 / 1";
+            tableBody.innerHTML = `<tr><td colspan="7">読込失敗: ${esc(state.loadError)}</td></tr>`;
+            pageInfo.textContent = "ページ 1 / 1";
             prevBtn.disabled = true;
             nextBtn.disabled = true;
             return;
         }
         if (!rows.length) {
-            tableBody.innerHTML = `<tr><td colspan="7">No enquiries matched your filter.</td></tr>`;
-            pageInfo.textContent = "Page 1 / 1";
+            tableBody.innerHTML = `<tr><td colspan="7">条件に一致する問い合わせはありません。</td></tr>`;
+            pageInfo.textContent = "ページ 1 / 1";
             prevBtn.disabled = true;
             nextBtn.disabled = true;
             return;
@@ -275,7 +284,7 @@
         tableBody.innerHTML = rows.map((row) => {
             const id = row.id || "";
             const sla = getSlaText(row);
-            const slaClass = sla.startsWith("Overdue") ? "is-overdue" : (sla === "-" ? "" : "is-warn");
+            const slaClass = sla.startsWith("期限超過") ? "is-overdue" : (sla === "-" ? "" : "is-warn");
             return `<tr data-id="${esc(id)}" class="${state.selectedId === id ? "is-selected" : ""}">
                 <td>${esc(id.slice(0, 8))}</td>
                 <td>${esc(fmtDate(pick(row, ["created_at", "updated_at"])))}</td>
@@ -296,7 +305,7 @@
         });
 
         const maxPage = getMaxPage();
-        pageInfo.textContent = `Page ${state.page} / ${maxPage}`;
+        pageInfo.textContent = `ページ ${state.page} / ${maxPage}`;
         prevBtn.disabled = state.page <= 1;
         nextBtn.disabled = state.page >= maxPage;
     };
@@ -304,7 +313,7 @@
     const renderDetail = () => {
         const row = state.rows.find((x) => String(x.id) === String(state.selectedId));
         if (!row) {
-            detailHost.innerHTML = `<h2>Enquiry Detail</h2><p class="eq-note">行を選択してください。</p>`;
+            detailHost.innerHTML = `<h2>問い合わせ詳細</h2><p class="eq-note">行を選択してください。</p>`;
             return;
         }
         const noteKey = getNoteKey(row);
@@ -316,13 +325,13 @@
         const customerProfile = state.profileMap[row.customer_profile_id] || {};
 
         detailHost.innerHTML = `
-            <h2>Enquiry Detail</h2>
+            <h2>問い合わせ詳細</h2>
             <div class="eq-kv"><strong>ID</strong><span>${esc(row.id || "-")}</span></div>
             <div class="eq-kv"><strong>状態</strong><span>${esc(row.status || "-")}</span></div>
             <div class="eq-kv"><strong>カテゴリ</strong><span>${esc(row.category || "-")}</span></div>
             <div class="eq-kv"><strong>件名</strong><span>${esc(row.subject || "-")}</span></div>
             <div class="eq-kv"><strong>作成日時</strong><span>${esc(fmtDate(row.created_at || row.updated_at || ""))}</span></div>
-            <div class="eq-kv"><strong>Customer</strong><span>${esc(customerProfile.display_name || customerProfile.full_name || customerProfile.email || row.customer_profile_id || "-")}</span></div>
+            <div class="eq-kv"><strong>顧客</strong><span>${esc(customerProfile.display_name || customerProfile.full_name || customerProfile.email || row.customer_profile_id || "-")}</span></div>
             <div class="eq-kv"><strong>担当</strong><span>${esc(assigneeLabel(row.assigned_to || ""))}</span></div>
             <form id="eq-update-form" class="eq-update">
                 <input type="hidden" name="id" value="${esc(row.id || "")}">
@@ -330,12 +339,12 @@
                 <select name="status">
                     ${statusOptions.map((s) => `<option value="${esc(s)}" ${String(row.status || "") === s ? "selected" : ""}>${esc(s)}</option>`).join("")}
                 </select>
-                <label>Assigned To</label>
+                <label>担当者</label>
                 <select name="assigned_to">
                     <option value="">未割当</option>
                     ${state.assigneeOptions.map((p) => `<option value="${esc(p.id)}" ${String(row.assigned_to || "") === String(p.id) ? "selected" : ""}>${esc(p.display_name || p.full_name || p.email || p.id)}</option>`).join("")}
                 </select>
-                <label>Internal Note</label>
+                <label>内部メモ</label>
                 <textarea name="internal_note" rows="4" maxlength="1000">${esc(noteValue)}</textarea>
                 <div class="eq-note-chips">
                     <button type="button" data-note-template="一次返信済み。追加情報待ち。">一次返信済み</button>
@@ -393,7 +402,7 @@
             const assignedTo = String(fd.get("assigned_to") || "").trim();
             const internalNote = String(fd.get("internal_note") || "").trim();
             if (!msg) return;
-            msg.textContent = "Updating...";
+            msg.textContent = "更新中...";
 
             if (state.isReadOnly) {
                 msg.textContent = READ_ONLY_MESSAGE;
@@ -402,7 +411,7 @@
 
             const { data: liveSession } = await supabase.auth.getSession();
             const liveUser = liveSession?.session?.user || null;
-            if (!liveUser || liveUser.is_anonymous) {
+            if (isAnonymousUser(liveUser)) {
                 state.isReadOnly = true;
                 msg.textContent = READ_ONLY_MESSAGE;
                 return;
@@ -413,10 +422,10 @@
 
             const { error } = await supabase.from("enquiries").update(payload).eq("id", enquiryId);
             if (error) {
-                msg.textContent = `Update failed: ${error.message}`;
+                msg.textContent = `更新失敗: ${error.message}`;
                 return;
             }
-            msg.textContent = "Updated.";
+            msg.textContent = "更新しました。";
             await loadData();
             state.selectedId = enquiryId;
             applyFilters();
@@ -465,7 +474,7 @@
             if (state.quickKey === "open" && !isOpenStatus(rowStatus)) return false;
             if (state.quickKey === "stale_open") {
                 if (!isOpenStatus(rowStatus)) return false;
-                if (!getSlaText(row).startsWith("Overdue")) return false;
+                if (!getSlaText(row).startsWith("期限超過")) return false;
             }
             if (state.quickKey === "all" && !createdKey && (from || to)) return false;
             return true;
@@ -475,7 +484,7 @@
         const maxPage = getMaxPage();
         if (state.page > maxPage) state.page = maxPage;
         if (state.page < 1) state.page = 1;
-        summary.textContent = `${state.filtered.length} / ${state.rows.length} enquiries (quick: ${state.quickKey}, sort: ${state.sortKey} ${state.sortDir})`;
+        summary.textContent = `${state.filtered.length} / ${state.rows.length} 件の問い合わせ (quick: ${state.quickKey}, sort: ${state.sortKey} ${state.sortDir})`;
         savePreferences();
         syncSortButtons();
     };
@@ -500,7 +509,7 @@
     };
 
     const loadData = async () => {
-        summary.textContent = "Loading...";
+        summary.textContent = "読み込み中...";
         state.loadError = "";
         const { data, error } = await supabase
             .from("enquiries")
@@ -510,7 +519,7 @@
 
         if (error) {
             state.loadError = error.message || "Unknown error";
-            summary.textContent = `Load failed: ${state.loadError}`;
+            summary.textContent = `読込失敗: ${state.loadError}`;
             state.rows = [];
             state.filtered = [];
             state.page = 1;
@@ -528,12 +537,13 @@
 
     const init = async () => {
         if (!supabase) {
-            summary.textContent = "Supabase config missing in js/site-config.js";
+            summary.textContent = "js/site-config.js の Supabase 設定が不足しています";
             return;
         }
 
         const { data: sessionData } = await supabase.auth.getSession();
         let user = sessionData?.session?.user || null;
+            startedWithoutSession = !user;
         if (!user && isOpenDemoMode && supabase.auth?.signInAnonymously) {
             try {
                 const { data: anonData, error: anonError } = await supabase.auth.signInAnonymously();
@@ -548,7 +558,7 @@
             window.location.href = "../login.html";
             return;
         }
-        state.isReadOnly = !user || Boolean(user?.is_anonymous);
+        state.isReadOnly = startedWithoutSession || isAnonymousUser(user);
 
         applySavedPreferences();
         pageSizeSelect.value = String(state.pageSize);
@@ -619,6 +629,14 @@
         mount();
     }
 })();
+
+
+
+
+
+
+
+
 
 
 

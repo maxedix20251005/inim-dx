@@ -1,4 +1,4 @@
-[data-admin-page-host="enquiries"] {
+﻿[data-admin-page-host="enquiries"] {
   display: grid;
   gap: 18px;
 }
@@ -266,7 +266,7 @@
 [data-admin-page-host='enquiries'], .eq-grid, .eq-grid > *, .eq-panel, .eq-table-wrap { min-width: 0; max-width: 100%; }
 
 /* open_demo anonymous read-only affordance */
-.eq-update button:disabled, .eq-quick-actions button:disabled { opacity: .48; cursor: not-allowed; filter: saturate(.4); }
+.eq-update button:disabled, .eq-quick-actions button:disabled, .eq-note-chips button:disabled { opacity: .48; cursor: not-allowed; filter: saturate(.4); }
 
 /* action button style unification (design guideline) */
 .eq-note-chips button,
@@ -280,3 +280,4 @@
   line-height: 1.4;
   letter-spacing: 0.02em;
 }
+

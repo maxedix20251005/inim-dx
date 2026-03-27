@@ -4,7 +4,7 @@
     if (!body || !main) return;
 
     const root = body.dataset.root || ".";
-    const ADMIN_BUILD_VERSION = "20260327j";
+    const ADMIN_BUILD_VERSION = "20260327l";
     const pageKey = body.dataset.pageKey || "appLogin";
     const cfg = window.INIM_SITE_CONFIG || {};
     const adminAccessMode = String(cfg.adminAccessMode || "admin_only").trim().toLowerCase();
@@ -934,6 +934,8 @@
     };
     init().catch((e) => setNotice(`初期化エラー: ${e.message}`, "error"));
 })();
+
+
 
 
 
