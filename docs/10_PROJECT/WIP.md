@@ -1,4 +1,4 @@
-# WIP / 作業中サマリ
+﻿# WIP / 作業中サマリ
 
 ## 1. Objective This Sprint / 現在スプリントの目的
 - JA: Workshop 予約導線と管理画面運用の整合を維持しつつ、次実装に即着手できる状態を保つ。
@@ -247,3 +247,27 @@
 - 2026-03-27: Step4 fix: quick status save in Enquiries now uses requestSubmit with submit-event fallback (dispatchEvent) for browser compatibility; status no longer reverts after click.
 - 2026-03-27: Step4 管理画面UX改善（Enquiries）を実施。js/admin-enquiries-page.js の quick status ボタン押下時に status 設定後の保存を submit 経由で確実化し、クリック後の戻り（revert）を防止。
 - 2026-03-27: Admin save fix applied. Enquiries and Workshop updates now require logged-in (non-anonymous) session and show explicit read-only message in open_demo anonymous mode; quick status buttons submit with compatibility fallback.
+
+## 4A. Today Execution Slice (2026-03-27)
+- Scope today: admin page stability + issue logging.
+- Save persistence issue in `open_demo` anonymous mode is logged and deferred.
+- Priority fix: admin sidebar visibility/scroll and white overlay issue on pages 04/05/06.
+
+## 4B. Acceptance Criteria (Today)
+1. Sidebar on admin pages 04/05/06 shows items 01-08 on desktop.
+2. Sidebar can scroll independently when viewport height is small.
+3. No white overlay panel blocks the lower-left area.
+
+## 4C. Progress Log (2026-03-27)
+- Applied Enquiries quick-status submit fallback (`requestSubmit` + submit-event fallback).
+- Applied admin sidebar visibility fix candidate in `css/admin-app.css`.
+- Bumped admin assets to `20260327c` for cache refresh.
+- Logged save issue + visibility issue in issue list.
+
+- 2026-03-27: Admin sidebar visibility fix (20260327c) user-verified as working on pages 04/05/06.
+
+- 2026-03-27: Admin read-only UX applied for anonymous open_demo session (Enquiries/Workshop). Update + quick-status buttons are disabled and fixed message is shown. Asset version: 20260327d.
+
+- 2026-03-27: Admin 04/06 button labels localized to Japanese and action-button style unified per design guideline (min-height 44px, radius 10px, consistent typography). Asset version: 20260327g.
+
+- 2026-03-27: Admin 05 (Workshopプラン管理) aligned with 04/06 design/visibility. Button labels are Japanese and action-button style is unified per guideline. Anonymous open_demo session is now explicit read-only (save/delete/add controls disabled). Asset version: 20260327i.

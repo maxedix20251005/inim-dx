@@ -1,4 +1,4 @@
-(() => {
+﻿(() => {
     if (document.body?.dataset.pageKey !== "appPagesEnquiries") return;
 
     let mountedHost = null;
@@ -10,10 +10,10 @@
         host.innerHTML = `
         <section class="eq-panel">
             <div class="eq-quick" id="eq-quick">
-                <button type="button" data-quick="all" class="is-active">All</button>
-                <button type="button" data-quick="unassigned">Unassigned</button>
-                <button type="button" data-quick="open">Open</button>
-                <button type="button" data-quick="stale_open">Stale &gt;24h</button>
+                <button type="button" data-quick="all" class="is-active">全件</button>
+                <button type="button" data-quick="unassigned">未割当</button>
+                <button type="button" data-quick="open">対応中</button>
+                <button type="button" data-quick="stale_open">24時間超</button>
             </div>
             <form class="eq-filters" id="eq-filters">
                 <input type="search" name="q" placeholder="検索: ID / 件名 / カテゴリ / 顧客名 / メモ">
@@ -40,11 +40,11 @@
                         <thead>
                             <tr>
                                 <th><button type="button" class="eq-sort" data-sort-key="id">ID</button></th>
-                                <th><button type="button" class="eq-sort" data-sort-key="created_at">Created</button></th>
-                                <th><button type="button" class="eq-sort" data-sort-key="status">Status</button></th>
-                                <th><button type="button" class="eq-sort" data-sort-key="category">Category</button></th>
-                                <th><button type="button" class="eq-sort" data-sort-key="subject">Subject</button></th>
-                                <th><button type="button" class="eq-sort" data-sort-key="assigned_to">Assigned</button></th>
+                                <th><button type="button" class="eq-sort" data-sort-key="created_at">作成日時</button></th>
+                                <th><button type="button" class="eq-sort" data-sort-key="status">状態</button></th>
+                                <th><button type="button" class="eq-sort" data-sort-key="category">カテゴリ</button></th>
+                                <th><button type="button" class="eq-sort" data-sort-key="subject">件名</button></th>
+                                <th><button type="button" class="eq-sort" data-sort-key="assigned_to">担当</button></th>
                                 <th><button type="button" class="eq-sort" data-sort-key="sla_hours">SLA</button></th>
                             </tr>
                         </thead>
@@ -52,9 +52,9 @@
                     </table>
                 </div>
                 <div class="eq-pager" id="eq-pager">
-                    <button type="button" id="eq-prev">Prev</button>
+                    <button type="button" id="eq-prev">前へ</button>
                     <span id="eq-page-info">Page 1 / 1</span>
-                    <button type="button" id="eq-next">Next</button>
+                    <button type="button" id="eq-next">次へ</button>
                     <label for="eq-page-size">Rows</label>
                     <select id="eq-page-size">
                         <option value="10">10</option>
@@ -93,6 +93,8 @@
     const pageSizeSelect = document.getElementById("eq-page-size");
     if (!tableBody || !detailHost || !summary || !filterForm || !quickHost || !statusFilter || !pager || !prevBtn || !nextBtn || !pageInfo || !pageSizeSelect) return;
 
+    const READ_ONLY_MESSAGE = "Demo mode is read-only. Login required to save.";
+
     const state = {
         rows: [],
         filtered: [],
@@ -104,7 +106,8 @@
         sortDir: "desc",
         page: 1,
         pageSize: 20,
-        loadError: ""
+        loadError: "",
+        isReadOnly: false
     };
     const PREFERENCE_KEY = "admin_enquiries_preferences_v1";
 
@@ -216,11 +219,11 @@
     const syncSortButtons = () => {
         const map = {
             id: "ID",
-            created_at: "Created",
-            status: "Status",
-            category: "Category",
-            subject: "Subject",
-            assigned_to: "Assigned",
+            created_at: "作成日時",
+            status: "状態",
+            category: "カテゴリ",
+            subject: "件名",
+            assigned_to: "担当",
             sla_hours: "SLA"
         };
         host.querySelectorAll(".eq-sort").forEach((btn) => {
@@ -315,15 +318,15 @@
         detailHost.innerHTML = `
             <h2>Enquiry Detail</h2>
             <div class="eq-kv"><strong>ID</strong><span>${esc(row.id || "-")}</span></div>
-            <div class="eq-kv"><strong>Status</strong><span>${esc(row.status || "-")}</span></div>
-            <div class="eq-kv"><strong>Category</strong><span>${esc(row.category || "-")}</span></div>
-            <div class="eq-kv"><strong>Subject</strong><span>${esc(row.subject || "-")}</span></div>
-            <div class="eq-kv"><strong>Created</strong><span>${esc(fmtDate(row.created_at || row.updated_at || ""))}</span></div>
+            <div class="eq-kv"><strong>状態</strong><span>${esc(row.status || "-")}</span></div>
+            <div class="eq-kv"><strong>カテゴリ</strong><span>${esc(row.category || "-")}</span></div>
+            <div class="eq-kv"><strong>件名</strong><span>${esc(row.subject || "-")}</span></div>
+            <div class="eq-kv"><strong>作成日時</strong><span>${esc(fmtDate(row.created_at || row.updated_at || ""))}</span></div>
             <div class="eq-kv"><strong>Customer</strong><span>${esc(customerProfile.display_name || customerProfile.full_name || customerProfile.email || row.customer_profile_id || "-")}</span></div>
-            <div class="eq-kv"><strong>Assigned</strong><span>${esc(assigneeLabel(row.assigned_to || ""))}</span></div>
+            <div class="eq-kv"><strong>担当</strong><span>${esc(assigneeLabel(row.assigned_to || ""))}</span></div>
             <form id="eq-update-form" class="eq-update">
                 <input type="hidden" name="id" value="${esc(row.id || "")}">
-                <label>Status</label>
+                <label>状態</label>
                 <select name="status">
                     ${statusOptions.map((s) => `<option value="${esc(s)}" ${String(row.status || "") === s ? "selected" : ""}>${esc(s)}</option>`).join("")}
                 </select>
@@ -340,17 +343,27 @@
                     <button type="button" data-note-template="解決済み。クローズ予定。">解決済み</button>
                 </div>
                 <div class="eq-quick-actions">
-                    <button type="button" data-quick-status="in_progress">Mark In Progress</button>
-                    <button type="button" data-quick-status="responded">Mark Responded</button>
-                    <button type="button" data-quick-status="closed">Mark Closed</button>
+                    <button type="button" data-quick-status="in_progress">対応中にする</button>
+                    <button type="button" data-quick-status="responded">返信済みにする</button>
+                    <button type="button" data-quick-status="closed">クローズにする</button>
                 </div>
-                <button type="submit">Update Enquiry</button>
+                <button type="submit">問い合わせを更新</button>
             </form>
             <p class="eq-note" id="eq-update-message"></p>
         `;
 
         const form = document.getElementById("eq-update-form");
+        const msg = document.getElementById("eq-update-message");
         const noteInput = form?.querySelector('textarea[name="internal_note"]');
+        if (state.isReadOnly) {
+            form?.querySelectorAll("button[type='submit'], [data-quick-status], [data-note-template], select, textarea").forEach((button) => {
+                if (button instanceof HTMLButtonElement || button instanceof HTMLSelectElement || button instanceof HTMLTextAreaElement) {
+                    button.disabled = true;
+                    button.setAttribute("aria-disabled", "true");
+                }
+            });
+            if (msg) msg.textContent = READ_ONLY_MESSAGE;
+        }
         form?.querySelectorAll("[data-note-template]").forEach((button) => {
             button.addEventListener("click", () => {
                 if (!noteInput) return;
@@ -360,6 +373,7 @@
         });
         form?.querySelectorAll("[data-quick-status]").forEach((button) => {
             button.addEventListener("click", () => {
+                if (state.isReadOnly) return;
                 const statusSelect = form.elements.namedItem("status");
                 if (statusSelect instanceof HTMLSelectElement) {
                     statusSelect.value = String(button.getAttribute("data-quick-status") || statusSelect.value);
@@ -378,14 +392,19 @@
             const nextStatus = String(fd.get("status") || "").trim();
             const assignedTo = String(fd.get("assigned_to") || "").trim();
             const internalNote = String(fd.get("internal_note") || "").trim();
-            const msg = document.getElementById("eq-update-message");
             if (!msg) return;
             msg.textContent = "Updating...";
+
+            if (state.isReadOnly) {
+                msg.textContent = READ_ONLY_MESSAGE;
+                return;
+            }
 
             const { data: liveSession } = await supabase.auth.getSession();
             const liveUser = liveSession?.session?.user || null;
             if (!liveUser || liveUser.is_anonymous) {
-                msg.textContent = "Update requires admin login. Demo anonymous mode is read-only.";
+                state.isReadOnly = true;
+                msg.textContent = READ_ONLY_MESSAGE;
                 return;
             }
 
@@ -529,6 +548,7 @@
             window.location.href = "../login.html";
             return;
         }
+        state.isReadOnly = !user || Boolean(user?.is_anonymous);
 
         applySavedPreferences();
         pageSizeSelect.value = String(state.pageSize);
@@ -599,3 +619,7 @@
         mount();
     }
 })();
+
+
+
+

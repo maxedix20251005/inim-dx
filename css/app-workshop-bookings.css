@@ -250,3 +250,19 @@
 
 /* overflow guard to prevent panel bleed across sidebar */
 [data-admin-page-host='workshop'], .wb-grid, .wb-grid > *, .wb-panel, .wb-table-wrap { min-width: 0; max-width: 100%; }
+
+/* open_demo anonymous read-only affordance */
+.wb-update button:disabled, .wb-quick-actions button:disabled { opacity: .48; cursor: not-allowed; filter: saturate(.4); }
+
+/* action button style unification (design guideline) */
+.wb-note-chips button,
+.wb-quick-actions button,
+.wb-update > button[type="submit"] {
+  min-height: 44px;
+  padding: 0 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}

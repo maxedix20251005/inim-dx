@@ -233,3 +233,38 @@
 - 対策: subpages/workshop-booking.html を UTF-8 で再構築し、文字化け文字列・壊れたタグを除去。必要なID/動線（Diagnostics、Summary、Calendar、Slots）を維持。
 - 再発防止: 文字化けが出たファイルは部分修正ではなくUTF-8再構成を優先し、編集後に mojibake パターン（縺,繝,�）をスキャンする。
 - 状態: Fix 適用済み（ユーザー確認待ち）
+
+### Issue 2026-03-27-24
+- Date: 2026-03-27
+- Area: `app/pages/enquiries.html`, `js/admin-enquiries-page.js`, `app/pages/workshop.html`, `js/admin-workshop-page.js`
+- Symptom: `Update Enquiry` and quick-status actions appear to change, then revert.
+- Root cause: In `adminAccessMode: open_demo` anonymous session, update/write is blocked by backend policy.
+- Action: Deferred for now. Anonymous demo mode is read-only; login is required for real persistence.
+- Status: Open (deferred)
+
+### Issue 2026-03-27-25
+- Date: 2026-03-27
+- Area: `js/admin-workshop-plans-page.js`, `app/pages/workshop-plans.html`, `css/app-workshop-plans.css`
+- Symptom: Lower sidebar area not visible, not scrollable, and white overlay appears on admin pages.
+- Action: Applied desktop sidebar layout/scroll fix and cache-busted assets to `20260327c`.
+- Verification target: Sidebar items 05-08 are visible and reachable after hard refresh.
+- User confirmation (2026-03-27): "`20260327c works fine`".
+- Status: Fixed (user verified)
+
+
+
+
+### Issue 2026-03-27-26
+- Date: 2026-03-27
+- Area: `js/admin-enquiries-page.js`, `js/admin-workshop-page.js`
+- Context: Save persistence is deferred in `open_demo` anonymous mode.
+- Action: Added explicit read-only UX. `Update` and quick-status buttons are disabled for anonymous session, with fixed message: `Demo mode is read-only. Login required to save.`
+- Status: Fixed (UX mitigation)
+
+### Issue 2026-03-27-27
+- Date: 2026-03-27
+- Area: `js/admin-workshop-plans-page.js`, `app/pages/workshop-plans.html`, `css/app-workshop-plans.css`
+- Symptom: In anonymous open_demo mode, page 05 still showed actionable controls and style/label mismatch remained vs 04/06.
+- Action: Unified page 05 button labels/style with 04/06 and enforced read-only disable for save/delete/add controls in anonymous session.
+- Status: Fixed
+

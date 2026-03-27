@@ -1,4 +1,4 @@
-(() => {
+﻿(() => {
     if (document.body?.dataset.pageKey !== "appPagesWorkshop") return;
 
     let mountedHost = null;
@@ -10,11 +10,11 @@
         host.innerHTML = `
         <section class="wb-panel">
             <div class="wb-quick" id="wb-quick">
-                <button type="button" data-quick="all" class="is-active">All</button>
-                <button type="button" data-quick="today">Today</button>
-                <button type="button" data-quick="tomorrow">Tomorrow</button>
-                <button type="button" data-quick="pending">Pending</button>
-                <button type="button" data-quick="stale_pending">Stale &gt;24h</button>
+                <button type="button" data-quick="all" class="is-active">全件</button>
+                <button type="button" data-quick="today">本日</button>
+                <button type="button" data-quick="tomorrow">明日</button>
+                <button type="button" data-quick="pending">保留</button>
+                <button type="button" data-quick="stale_pending">24時間超</button>
             </div>
             <form class="wb-filters" id="wb-filters">
                 <input type="search" name="q" placeholder="検索: ID / 名前 / メール / 電話 / メモ">
@@ -46,11 +46,11 @@
                         <thead>
                             <tr>
                                 <th><button type="button" class="wb-sort" data-sort-key="id">ID</button></th>
-                                <th><button type="button" class="wb-sort" data-sort-key="booked_at">Booked At</button></th>
-                                <th><button type="button" class="wb-sort" data-sort-key="status">Status</button></th>
-                                <th><button type="button" class="wb-sort" data-sort-key="contact_name">Contact</button></th>
-                                <th><button type="button" class="wb-sort" data-sort-key="store_name">Store</button></th>
-                                <th><button type="button" class="wb-sort" data-sort-key="party_size">Party</button></th>
+                                <th><button type="button" class="wb-sort" data-sort-key="booked_at">予約日時</button></th>
+                                <th><button type="button" class="wb-sort" data-sort-key="status">状態</button></th>
+                                <th><button type="button" class="wb-sort" data-sort-key="contact_name">連絡先</button></th>
+                                <th><button type="button" class="wb-sort" data-sort-key="store_name">店舗</button></th>
+                                <th><button type="button" class="wb-sort" data-sort-key="party_size">人数</button></th>
                                 <th><button type="button" class="wb-sort" data-sort-key="sla_hours">SLA</button></th>
                             </tr>
                         </thead>
@@ -58,9 +58,9 @@
                     </table>
                 </div>
                 <div class="wb-pager" id="wb-pager">
-                    <button type="button" id="wb-prev">Prev</button>
+                    <button type="button" id="wb-prev">前へ</button>
                     <span id="wb-page-info">Page 1 / 1</span>
-                    <button type="button" id="wb-next">Next</button>
+                    <button type="button" id="wb-next">次へ</button>
                     <label for="wb-page-size">Rows</label>
                     <select id="wb-page-size">
                         <option value="10">10</option>
@@ -98,6 +98,7 @@
         if (!tableBody || !detailHost || !summary || !filterForm || !quickHost || !prevBtn || !nextBtn || !pageInfo || !pageSizeSelect) return;
 
         const PREFERENCE_KEY = "admin_workshop_bookings_preferences_v1";
+        const READ_ONLY_MESSAGE = "Demo mode is read-only. Login required to save.";
         const state = {
             rows: [],
             filtered: [],
@@ -109,7 +110,8 @@
             sortDir: "desc",
             page: 1,
             pageSize: 20,
-            loadError: ""
+            loadError: "",
+            isReadOnly: false
         };
 
         const esc = (v) => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
@@ -177,7 +179,7 @@
             });
         };
         const syncSortButtons = () => {
-            const map = { id: "ID", booked_at: "Booked At", status: "Status", contact_name: "Contact", store_name: "Store", party_size: "Party", sla_hours: "SLA" };
+            const map = { id: "ID", booked_at: "予約日時", status: "状態", contact_name: "連絡先", store_name: "店舗", party_size: "人数", sla_hours: "SLA" };
             host.querySelectorAll(".wb-sort").forEach((btn) => {
                 const key = String(btn.getAttribute("data-sort-key") || "");
                 const isActive = key === state.sortKey;
@@ -294,16 +296,16 @@
             detailHost.innerHTML = `
                 <h2>Booking Detail</h2>
                 <div class="wb-kv"><strong>ID</strong><span>${esc(row.id || "-")}</span></div>
-                <div class="wb-kv"><strong>Status</strong><span>${esc(row.status || "-")}</span></div>
-                <div class="wb-kv"><strong>Booked At</strong><span>${esc(bookedAt)}</span></div>
-                <div class="wb-kv"><strong>Store</strong><span>${esc(storeName)}</span></div>
+                <div class="wb-kv"><strong>状態</strong><span>${esc(row.status || "-")}</span></div>
+                <div class="wb-kv"><strong>予約日時</strong><span>${esc(bookedAt)}</span></div>
+                <div class="wb-kv"><strong>店舗</strong><span>${esc(storeName)}</span></div>
                 <div class="wb-kv"><strong>Party Size</strong><span>${esc(String(party))}</span></div>
                 <div class="wb-kv"><strong>Name</strong><span>${esc(contactName)}</span></div>
                 <div class="wb-kv"><strong>Email</strong><span>${esc(contactEmail)}</span></div>
                 <div class="wb-kv"><strong>Phone</strong><span>${esc(contactPhone)}</span></div>
                 <form id="wb-update-form" class="wb-update">
                     <input type="hidden" name="id" value="${esc(row.id || "")}">
-                    <label>Status</label>
+                    <label>状態</label>
                     <select name="status">
                         ${["pending", "requested", "in_progress", "confirmed", "completed", "cancelled"].map((s) => `<option value="${esc(s)}" ${String(row.status || "") === s ? "selected" : ""}>${esc(s)}</option>`).join("")}
                     </select>
@@ -315,17 +317,27 @@
                         <button type="button" data-note-template="当日案内送付済み。">当日案内済み</button>
                     </div>
                     <div class="wb-quick-actions">
-                        <button type="button" data-quick-status="in_progress">Mark In Progress</button>
-                        <button type="button" data-quick-status="confirmed">Mark Confirmed</button>
-                        <button type="button" data-quick-status="cancelled">Mark Cancelled</button>
+                        <button type="button" data-quick-status="in_progress">対応中にする</button>
+                        <button type="button" data-quick-status="confirmed">確定にする</button>
+                        <button type="button" data-quick-status="cancelled">キャンセルにする</button>
                     </div>
-                    <button type="submit">Update Booking</button>
+                    <button type="submit">予約を更新</button>
                 </form>
                 <p class="wb-note" id="wb-update-message"></p>
             `;
 
             const form = document.getElementById("wb-update-form");
+            const msg = document.getElementById("wb-update-message");
             const noteInput = form?.querySelector('textarea[name="internal_note"]');
+            if (state.isReadOnly) {
+                form?.querySelectorAll("button[type='submit'], [data-quick-status], [data-note-template], select, textarea").forEach((button) => {
+                    if (button instanceof HTMLButtonElement || button instanceof HTMLSelectElement || button instanceof HTMLTextAreaElement) {
+                        button.disabled = true;
+                        button.setAttribute("aria-disabled", "true");
+                    }
+                });
+                if (msg) msg.textContent = READ_ONLY_MESSAGE;
+            }
             form?.querySelectorAll("[data-note-template]").forEach((button) => {
                 button.addEventListener("click", () => {
                     if (!noteInput) return;
@@ -335,6 +347,7 @@
             });
             form?.querySelectorAll("[data-quick-status]").forEach((button) => {
                 button.addEventListener("click", () => {
+                    if (state.isReadOnly) return;
                     const statusSelect = form.elements.namedItem("status");
                     if (statusSelect instanceof HTMLSelectElement) {
                         statusSelect.value = String(button.getAttribute("data-quick-status") || statusSelect.value);
@@ -347,14 +360,19 @@
                 const bookingId = String(fd.get("id") || "");
                 const nextStatus = String(fd.get("status") || "").trim();
                 const internalNote = String(fd.get("internal_note") || "").trim();
-                const msg = document.getElementById("wb-update-message");
                 if (!msg) return;
                 msg.textContent = "Updating...";
+
+                if (state.isReadOnly) {
+                    msg.textContent = READ_ONLY_MESSAGE;
+                    return;
+                }
 
             const { data: liveSession } = await supabase.auth.getSession();
             const liveUser = liveSession?.session?.user || null;
             if (!liveUser || liveUser.is_anonymous) {
-                msg.textContent = "Update requires admin login. Demo anonymous mode is read-only.";
+                state.isReadOnly = true;
+                msg.textContent = READ_ONLY_MESSAGE;
                 return;
             }
 
@@ -491,6 +509,7 @@
                 window.location.href = "../login.html";
                 return;
             }
+            state.isReadOnly = !user || Boolean(user?.is_anonymous);
 
             applySavedPreferences();
             pageSizeSelect.value = String(state.pageSize);
@@ -561,3 +580,7 @@
         mount();
     }
 })();
+
+
+
+

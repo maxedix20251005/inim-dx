@@ -617,3 +617,20 @@
 - EN: Scope is limited to admin Enquiries operation UX; no DB spec, SQL, or public UI impact.
 - 2026-03-27: Enquiries quick-status compatibility fix applied. After setting status by quick button, submit is triggered via requestSubmit() or submit-event fallback (dispatchEvent) to avoid non-submit/revert behavior in some browsers.
 - 2026-03-27: Added admin save guard for anonymous demo sessions (read-only message) in enquiries/workshop pages, and added quick-status submit fallback for browser compatibility.
+
+### 2026-03-27 Update (Admin UI Stability)
+- Save persistence in `open_demo` anonymous mode remains deferred (read-only behavior).
+- Admin sidebar visibility/overlay fix applied for pages 04/05/06.
+- Admin asset version updated to `20260327c` for revalidation.
+
+- 2026-03-27: Admin sidebar visibility issue resolved and user-verified (20260327c confirmed working).
+
+- 2026-03-27: Added explicit read-only UI in admin anonymous demo mode; saving requires login. (Enquiries/Workshop, version 20260327d)
+
+- 2026-03-27: Localized admin operation button labels (04/06) to Japanese and standardized action-button shape/style according to design guideline.
+
+### 2026-03-27 追加更新（Admin 05 UI/Visibility）
+- `app/pages/workshop-plans.html` / `js/admin-workshop-plans-page.js` / `css/app-workshop-plans.css` を 04/06 と同じ運用UI方針へ調整しました。
+- ボタンラベルを日本語化し、ボタン形状（44px高/10px角丸/同一タイポ）を統一しました。
+- `open_demo` 匿名セッションでは 05 を閲覧専用化し、保存・削除・追加操作を無効化しました。
+- 管理画面アセット版を `20260327i` へ更新しました。

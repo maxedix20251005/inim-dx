@@ -79,21 +79,26 @@ textarea:focus {
 }
 
 .admin-layout {
-    display: grid;
-    grid-template-columns: 280px minmax(0, 1fr);
+    position: relative;
     min-height: 100vh;
+    padding-left: 280px;
 }
 
 .admin-sidebar {
-    position: sticky;
+    position: fixed;
+    left: 0;
     top: 0;
-    height: 100vh;
+    bottom: 0;
+    width: 280px;
     padding: 28px 22px 24px;
     background: linear-gradient(180deg, #221d17 0%, #2d271f 100%);
     color: #f5ede2;
-    display: grid;
-    grid-template-rows: auto auto 1fr auto;
+    display: flex;
+    flex-direction: column;
     gap: 22px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    z-index: 20;
 }
 
 .admin-brand {
@@ -221,11 +226,13 @@ textarea:focus {
 .admin-sidebar__footer {
     display: grid;
     gap: 12px;
+    margin-top: auto;
 }
 
 .admin-content {
     min-width: 0;
     padding: 28px 28px 40px;
+    overflow-x: hidden;
 }
 
 .admin-topbar,
@@ -296,6 +303,7 @@ textarea:focus {
     display: grid;
     gap: 22px;
     margin-top: 24px;
+    min-width: 0;
 }
 
 .admin-panel,
@@ -750,9 +758,19 @@ textarea:focus {
         grid-template-columns: 1fr;
     }
 
+    .admin-layout {
+        padding-left: 0;
+    }
+
     .admin-sidebar {
         position: static;
-        height: auto;
+        bottom: auto;
+        width: auto;
+        overflow: visible;
+    }
+
+    .admin-nav {
+        margin-bottom: 0;
     }
 }
 

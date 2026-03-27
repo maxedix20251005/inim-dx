@@ -1,4 +1,4 @@
-# TEST PLAN / テスト計画
+﻿# TEST PLAN / テスト計画
 
 ## Purpose / 目的
 - JA: 本プロジェクトのテスト方針・対象・完了条件を管理する。
@@ -610,3 +610,28 @@
   - EN: Quick status actions persist in one click with no regressions.
 - Recheck note (2026-03-27): verify quick-status update persists on environments where requestSubmit is unsupported, using submit-event fallback path.
 - Recheck note (2026-03-27): in open_demo anonymous session, update actions must show read-only message; after admin login, updates must persist.
+
+## 2026-03-27 Added Test (Admin Sidebar Visibility / Overlay Fix)
+- Target files:
+  - `css/admin-app.css`
+  - `app/pages/workshop.html`
+  - `app/pages/workshop-plans.html`
+  - `app/pages/enquiries.html`
+- Steps:
+  1. Hard refresh (`Ctrl+F5`) after asset version update to `20260327c`.
+  2. Open pages 04/05/06 and verify sidebar shows items 01-08.
+  3. Reduce window height and verify sidebar scroll works independently.
+  4. Verify no white panel overlays lower-left area.
+
+- Result (2026-03-27): Sidebar visibility/overlay fix passed user verification with asset version 20260327c.
+
+## 2026-03-27 Added Test (Admin Anonymous Read-Only UX)
+- Target: `js/admin-enquiries-page.js`, `js/admin-workshop-page.js`
+- Verify in `open_demo` anonymous session:
+  1. `Update Enquiry` / `Update Booking` buttons are disabled.
+  2. quick-status buttons are disabled.
+  3. Fixed message appears: `Demo mode is read-only. Login required to save.`
+
+## 2026-03-27 Added Test (Admin JA Labels + Unified Button Style)
+- Target: js/admin-workshop-page.js, js/admin-enquiries-page.js, css/app-workshop-bookings.css, css/app-enquiries.css`r
+- Check: action buttons in 04/06 are Japanese labels and same geometry/style (44px height, 10px radius).

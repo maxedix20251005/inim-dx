@@ -215,3 +215,20 @@
 
 /* overflow guard to prevent panel bleed across sidebar */
 [data-admin-page-host='workshop-plans'], .wp-grid, .wp-grid > *, .wp-panel, .wp-table-wrap { min-width: 0; max-width: 100%; }
+
+/* action button style unification (design guideline) */
+.wp-btn-primary,
+.wp-btn-secondary,
+.wp-btn-danger,
+.wp-pager button,
+#wp-new,
+#wp-delete,
+#wp-inc-form .wp-btn-primary {
+  min-height: 44px;
+  padding: 0 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}

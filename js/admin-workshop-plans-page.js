@@ -1,4 +1,4 @@
-(() => {
+﻿(() => {
     if (document.body?.dataset.pageKey !== "appPagesWorkshopPlans") return;
 
     let mountedHost = null;
@@ -16,20 +16,20 @@
                     <table class="wp-table" id="wp-table">
                         <thead>
                             <tr>
-                                <th><button type="button" class="wp-sort" data-sort-key="plan_code">Code</button></th>
-                                <th><button type="button" class="wp-sort" data-sort-key="plan_name">Name</button></th>
-                                <th><button type="button" class="wp-sort" data-sort-key="status">Status</button></th>
-                                <th><button type="button" class="wp-sort" data-sort-key="sort_order">Sort</button></th>
+                                <th><button type="button" class="wp-sort" data-sort-key="plan_code">コード</button></th>
+                                <th><button type="button" class="wp-sort" data-sort-key="plan_name">プラン名</button></th>
+                                <th><button type="button" class="wp-sort" data-sort-key="status">状態</button></th>
+                                <th><button type="button" class="wp-sort" data-sort-key="sort_order">表示順</button></th>
                             </tr>
                         </thead>
                         <tbody></tbody>
                     </table>
                 </div>
                 <div class="wp-pager" id="wp-pager">
-                    <button type="button" id="wp-prev">Prev</button>
+                    <button type="button" id="wp-prev">前へ</button>
                     <span id="wp-page-info">Page 1 / 1</span>
-                    <button type="button" id="wp-next">Next</button>
-                    <label for="wp-page-size">Rows</label>
+                    <button type="button" id="wp-next">次へ</button>
+                    <label for="wp-page-size">件数</label>
                     <select id="wp-page-size">
                         <option value="10">10</option>
                         <option value="20" selected>20</option>
@@ -42,7 +42,7 @@
             <aside class="wp-subgrid">
                 <section class="wp-panel">
                     <div class="wp-actions">
-                        <button type="button" class="wp-btn-secondary" id="wp-new">New Plan</button>
+                        <button type="button" class="wp-btn-secondary" id="wp-new">新規プラン</button>
                     </div>
                     <form class="wp-form" id="wp-plan-form">
                         <input type="hidden" name="id">
@@ -67,8 +67,8 @@
                             <input class="wp-wide" name="booking_label" placeholder="booking_label">
                         </div>
                         <div class="wp-actions">
-                            <button class="wp-btn-primary" type="submit">Save Plan</button>
-                            <button class="wp-btn-danger" type="button" id="wp-delete">Delete Plan</button>
+                            <button class="wp-btn-primary" type="submit">プランを保存</button>
+                            <button class="wp-btn-danger" type="button" id="wp-delete">プランを削除</button>
                         </div>
                     </form>
                     <p class="wp-note" id="wp-plan-msg"></p>
@@ -81,7 +81,7 @@
                         <div class="wp-inline">
                             <input name="inclusion_text" placeholder="inclusion_text" required>
                             <input name="display_order" type="number" min="1" placeholder="order">
-                            <button class="wp-btn-primary" type="submit">Add</button>
+                            <button class="wp-btn-primary" type="submit">追加</button>
                         </div>
                     </form>
                     <ul class="wp-list" id="wp-inc-list"></ul>
@@ -115,6 +115,7 @@
         if (!tableBody || !summary || !form || !msg || !btnNew || !btnDelete || !incForm || !incList || !incMsg || !prevBtn || !nextBtn || !pageInfo || !pageSizeSelect) return;
 
         const PREFERENCE_KEY = "admin_workshop_plans_preferences_v1";
+        const READ_ONLY_MESSAGE = "デモモードは閲覧専用です。保存するにはログインしてください。";
         const state = {
             plans: [],
             selectedId: "",
@@ -123,7 +124,8 @@
             sortDir: "asc",
             page: 1,
             pageSize: 20,
-            loadError: ""
+            loadError: "",
+            isReadOnly: false
         };
         const esc = (v) => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
         const n = (v, d = null) => {
@@ -152,7 +154,7 @@
             return state.plans.slice(start, start + state.pageSize);
         };
         const syncSortButtons = () => {
-            const map = { plan_code: "Code", plan_name: "Name", status: "Status", sort_order: "Sort" };
+            const map = { plan_code: "コード", plan_name: "プラン名", status: "状態", sort_order: "表示順" };
             host.querySelectorAll(".wp-sort").forEach((btn) => {
                 const key = String(btn.getAttribute("data-sort-key") || "");
                 const isActive = key === state.sortKey;
@@ -180,6 +182,17 @@
                 const size = Number(pref.pageSize);
                 if ([10, 20, 50, 100].includes(size)) state.pageSize = size;
             } catch { }
+        };
+        const applyReadOnlyState = () => {
+            if (!state.isReadOnly) return;
+            host.querySelectorAll("#wp-new, #wp-plan-form input, #wp-plan-form select, #wp-plan-form textarea, #wp-plan-form button, #wp-inc-form input, #wp-inc-form button").forEach((node) => {
+                if (node instanceof HTMLButtonElement || node instanceof HTMLInputElement || node instanceof HTMLSelectElement || node instanceof HTMLTextAreaElement) {
+                    node.disabled = true;
+                    node.setAttribute("aria-disabled", "true");
+                }
+            });
+            msg.textContent = READ_ONLY_MESSAGE;
+            incMsg.textContent = READ_ONLY_MESSAGE;
         };
 
         const renderTable = () => {
@@ -242,10 +255,22 @@
             incList.innerHTML = state.inclusions.map((x) => `
                 <li>
                     <span>${esc(String(x.display_order ?? 0))}. ${esc(x.inclusion_text || "")}</span>
-                    <button class="wp-btn-danger" type="button" data-inc-id="${esc(x.id)}">Delete</button>
+                    <button class="wp-btn-danger" type="button" data-inc-id="${esc(x.id)}">削除</button>
                 </li>
             `).join("");
+            if (state.isReadOnly) {
+                incList.querySelectorAll("[data-inc-id]").forEach((btn) => {
+                    if (btn instanceof HTMLButtonElement) {
+                        btn.disabled = true;
+                        btn.setAttribute("aria-disabled", "true");
+                    }
+                });
+            }
             incList.querySelectorAll("[data-inc-id]").forEach((btn) => btn.addEventListener("click", async () => {
+                if (state.isReadOnly) {
+                    incMsg.textContent = READ_ONLY_MESSAGE;
+                    return;
+                }
                 const id = btn.getAttribute("data-inc-id") || "";
                 const { error } = await supabase.from("workshop_plan_inclusions").delete().eq("id", id);
                 if (error) {
@@ -305,6 +330,7 @@
             syncSortButtons();
             renderTable();
             await loadInclusions();
+            applyReadOnlyState();
         };
 
         const payloadFromForm = () => ({
@@ -355,11 +381,16 @@
                 return;
             }
 
+            state.isReadOnly = !user || Boolean(user?.is_anonymous);
             applySavedPreferences();
             pageSizeSelect.value = String(state.pageSize);
             await loadPlans();
 
             btnNew.addEventListener("click", async () => {
+                if (state.isReadOnly) {
+                    msg.textContent = READ_ONLY_MESSAGE;
+                    return;
+                }
                 state.selectedId = "";
                 fillForm(null);
                 renderTable();
@@ -368,6 +399,18 @@
 
             form.addEventListener("submit", async (e) => {
                 e.preventDefault();
+                if (state.isReadOnly) {
+                    msg.textContent = READ_ONLY_MESSAGE;
+                    return;
+                }
+                const { data: liveSession } = await supabase.auth.getSession();
+                const liveUser = liveSession?.session?.user || null;
+                if (!liveUser || liveUser.is_anonymous) {
+                    state.isReadOnly = true;
+                    applyReadOnlyState();
+                    msg.textContent = READ_ONLY_MESSAGE;
+                    return;
+                }
                 const id = String(form.elements.id.value || "").trim();
                 const payload = payloadFromForm();
                 const errMsg = validate(payload);
@@ -397,6 +440,18 @@
             });
 
             btnDelete.addEventListener("click", async () => {
+                if (state.isReadOnly) {
+                    msg.textContent = READ_ONLY_MESSAGE;
+                    return;
+                }
+                const { data: liveSession } = await supabase.auth.getSession();
+                const liveUser = liveSession?.session?.user || null;
+                if (!liveUser || liveUser.is_anonymous) {
+                    state.isReadOnly = true;
+                    applyReadOnlyState();
+                    msg.textContent = READ_ONLY_MESSAGE;
+                    return;
+                }
                 const row = getSelected();
                 if (!row?.id) {
                     msg.textContent = "Delete target is not selected.";
@@ -416,6 +471,18 @@
 
             incForm.addEventListener("submit", async (e) => {
                 e.preventDefault();
+                if (state.isReadOnly) {
+                    incMsg.textContent = READ_ONLY_MESSAGE;
+                    return;
+                }
+                const { data: liveSession } = await supabase.auth.getSession();
+                const liveUser = liveSession?.session?.user || null;
+                if (!liveUser || liveUser.is_anonymous) {
+                    state.isReadOnly = true;
+                    applyReadOnlyState();
+                    incMsg.textContent = READ_ONLY_MESSAGE;
+                    return;
+                }
                 const row = getSelected();
                 if (!row?.id) {
                     incMsg.textContent = "Select a plan first.";
@@ -487,3 +554,7 @@
         mount();
     }
 })();
+
+
+
+
