@@ -1,4 +1,4 @@
-[data-admin-page-host="workshop-plans"] {
+﻿[data-admin-page-host="workshop-plans"] {
   display: grid;
   gap: 18px;
 }
@@ -232,3 +232,16 @@
   line-height: 1.4;
   letter-spacing: 0.02em;
 }
+
+/* explicit disabled state for demo read-only */
+.wp-btn-primary:disabled,
+.wp-btn-secondary:disabled,
+.wp-btn-danger:disabled,
+#wp-new:disabled,
+#wp-delete:disabled,
+#wp-inc-form .wp-btn-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: saturate(0.35);
+}
+

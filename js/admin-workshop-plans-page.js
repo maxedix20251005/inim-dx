@@ -116,6 +116,15 @@
 
         const PREFERENCE_KEY = "admin_workshop_plans_preferences_v1";
         const READ_ONLY_MESSAGE = "デモモードは閲覧専用です。保存するにはログインしてください。";
+        let startedWithoutSession = false;
+        const isAnonymousUser = (u) => {
+            if (!u) return true;
+            const provider = String(u?.app_metadata?.provider || "").trim().toLowerCase();
+            const providers = Array.isArray(u?.app_metadata?.providers)
+                ? u.app_metadata.providers.map((x) => String(x || "").trim().toLowerCase())
+                : [];
+            return Boolean(u?.is_anonymous) || provider === "anonymous" || providers.includes("anonymous");
+        };
         const state = {
             plans: [],
             selectedId: "",
@@ -381,7 +390,7 @@
                 return;
             }
 
-            state.isReadOnly = !user || Boolean(user?.is_anonymous);
+            state.isReadOnly = startedWithoutSession || isAnonymousUser(user);
             applySavedPreferences();
             pageSizeSelect.value = String(state.pageSize);
             await loadPlans();
@@ -405,7 +414,7 @@
                 }
                 const { data: liveSession } = await supabase.auth.getSession();
                 const liveUser = liveSession?.session?.user || null;
-                if (!liveUser || liveUser.is_anonymous) {
+                if (isAnonymousUser(liveUser)) {
                     state.isReadOnly = true;
                     applyReadOnlyState();
                     msg.textContent = READ_ONLY_MESSAGE;
@@ -446,7 +455,7 @@
                 }
                 const { data: liveSession } = await supabase.auth.getSession();
                 const liveUser = liveSession?.session?.user || null;
-                if (!liveUser || liveUser.is_anonymous) {
+                if (isAnonymousUser(liveUser)) {
                     state.isReadOnly = true;
                     applyReadOnlyState();
                     msg.textContent = READ_ONLY_MESSAGE;
@@ -477,7 +486,7 @@
                 }
                 const { data: liveSession } = await supabase.auth.getSession();
                 const liveUser = liveSession?.session?.user || null;
-                if (!liveUser || liveUser.is_anonymous) {
+                if (isAnonymousUser(liveUser)) {
                     state.isReadOnly = true;
                     applyReadOnlyState();
                     incMsg.textContent = READ_ONLY_MESSAGE;
@@ -554,6 +563,7 @@
         mount();
     }
 })();
+
 
 
 

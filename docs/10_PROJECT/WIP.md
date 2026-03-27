@@ -271,3 +271,4 @@
 - 2026-03-27: Admin 04/06 button labels localized to Japanese and action-button style unified per design guideline (min-height 44px, radius 10px, consistent typography). Asset version: 20260327g.
 
 - 2026-03-27: Admin 05 (Workshopプラン管理) aligned with 04/06 design/visibility. Button labels are Japanese and action-button style is unified per guideline. Anonymous open_demo session is now explicit read-only (save/delete/add controls disabled). Asset version: 20260327i.
+- 2026-03-27: Admin 05 follow-up fix applied. Non-login demo session is now always treated as read-only on Workshop Plans, and disabled-button visibility is explicit. Asset version: 20260327j.

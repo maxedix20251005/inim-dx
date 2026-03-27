@@ -268,3 +268,4 @@
 - Action: Unified page 05 button labels/style with 04/06 and enforced read-only disable for save/delete/add controls in anonymous session.
 - Status: Fixed
 
+- 2026-03-27 follow-up (Issue 2026-03-27-27): non-login demo guest on page 05 now forced read-only with explicit disabled visuals. Status: Fixed (recheck requested).
