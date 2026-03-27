@@ -20,17 +20,17 @@
                 <input type="search" name="q" placeholder="検索: ID / 名前 / メール / 電話 / メモ">
                 <select name="status">
                     <option value="">全ステータス</option>
-                    <option value="pending">pending</option>
-                    <option value="requested">requested</option>
-                    <option value="in_progress">in_progress</option>
-                    <option value="confirmed">confirmed</option>
-                    <option value="completed">completed</option>
-                    <option value="cancelled">cancelled</option>
+                    <option value="pending">保留</option>
+                    <option value="requested">要確認</option>
+                    <option value="in_progress">対応中</option>
+                    <option value="confirmed">確定</option>
+                    <option value="completed">完了</option>
+                    <option value="cancelled">キャンセル</option>
                 </select>
                 <select name="method">
                     <option value="">全方式</option>
-                    <option value="instant">instant</option>
-                    <option value="request">request</option>
+                    <option value="instant">即時予約</option>
+                    <option value="request">リクエスト予約</option>
                 </select>
                 <input type="date" name="from">
                 <input type="date" name="to">
@@ -152,6 +152,10 @@
             if (Number.isNaN(bookedAt.getTime())) return -1;
             return Math.floor((Date.now() - bookedAt.getTime()) / (1000 * 60 * 60));
         };
+        const STATUS_LABELS = { pending: "保留", requested: "要確認", in_progress: "対応中", confirmed: "確定", completed: "完了", cancelled: "キャンセル" };
+        const statusLabel = (status) => STATUS_LABELS[String(status || "").toLowerCase()] || String(status || "-");
+        const QUICK_LABELS = { all: "全件", today: "本日", tomorrow: "明日", pending: "保留", stale_pending: "24時間超" };
+        const SORT_LABELS = { id: "ID", booked_at: "予約日時", status: "状態", contact_name: "連絡先", store_name: "店舗", party_size: "人数", sla_hours: "SLA" };
         const getSlaText = (row) => {
             const hours = getSlaHours(row);
             if (hours < 0) return "-";
@@ -188,7 +192,7 @@
             });
         };
         const syncSortButtons = () => {
-            const map = { id: "ID", booked_at: "予約日時", status: "状態", contact_name: "連絡先", store_name: "店舗", party_size: "人数", sla_hours: "SLA" };
+            const map = SORT_LABELS;
             host.querySelectorAll(".wb-sort").forEach((btn) => {
                 const key = String(btn.getAttribute("data-sort-key") || "");
                 const isActive = key === state.sortKey;
@@ -269,8 +273,8 @@
                 const party = pick(row, ["party_size", "participant_count"]) || "-";
                 const contactName = pick(row, ["contact_name"]) || state.profileMap[row.customer_profile_id]?.display_name || "-";
                 const sla = getSlaText(row);
-                const slaClass = sla.startsWith("Overdue") ? "is-overdue" : (sla === "-" ? "" : "is-warn");
-                return `<tr data-id="${esc(id)}" class="${state.selectedId === id ? "is-selected" : ""}"><td>${esc(id.slice(0, 8))}</td><td>${esc(fmtDate(pick(row, ["booked_at", "created_at"])))}</td><td>${esc(row.status || "-")}</td><td>${esc(contactName)}</td><td>${esc(storeName)}</td><td>${esc(String(party))}</td><td><span class="wb-sla ${slaClass}">${esc(sla)}</span></td></tr>`;
+                const slaClass = sla.startsWith("期限超過") ? "is-overdue" : (sla === "-" ? "" : "is-warn");
+                return `<tr data-id="${esc(id)}" class="${state.selectedId === id ? "is-selected" : ""}"><td>${esc(id.slice(0, 8))}</td><td>${esc(fmtDate(pick(row, ["booked_at", "created_at"])))}</td><td>${esc(statusLabel(row.status))}</td><td>${esc(contactName)}</td><td>${esc(storeName)}</td><td>${esc(String(party))}</td><td><span class="wb-sla ${slaClass}">${esc(sla)}</span></td></tr>`;
             }).join("");
 
             tableBody.querySelectorAll("tr[data-id]").forEach((tr) => {
@@ -305,7 +309,7 @@
             detailHost.innerHTML = `
                 <h2>予約詳細</h2>
                 <div class="wb-kv"><strong>ID</strong><span>${esc(row.id || "-")}</span></div>
-                <div class="wb-kv"><strong>状態</strong><span>${esc(row.status || "-")}</span></div>
+                <div class="wb-kv"><strong>状態</strong><span>${esc(statusLabel(row.status))}</span></div>
                 <div class="wb-kv"><strong>予約日時</strong><span>${esc(bookedAt)}</span></div>
                 <div class="wb-kv"><strong>店舗</strong><span>${esc(storeName)}</span></div>
                 <div class="wb-kv"><strong>人数</strong><span>${esc(String(party))}</span></div>
@@ -316,7 +320,7 @@
                     <input type="hidden" name="id" value="${esc(row.id || "")}">
                     <label>状態</label>
                     <select name="status">
-                        ${["pending", "requested", "in_progress", "confirmed", "completed", "cancelled"].map((s) => `<option value="${esc(s)}" ${String(row.status || "") === s ? "selected" : ""}>${esc(s)}</option>`).join("")}
+                        ${["pending", "requested", "in_progress", "confirmed", "completed", "cancelled"].map((s) => `<option value="${esc(s)}" ${String(row.status || "") === s ? "selected" : ""}>${esc(statusLabel(s))}</option>`).join("")}
                     </select>
                     <label>内部メモ</label>
                     <textarea name="internal_note" rows="4" maxlength="1000">${esc(note)}</textarea>
@@ -449,7 +453,7 @@
             const maxPage = getMaxPage();
             if (state.page > maxPage) state.page = maxPage;
             if (state.page < 1) state.page = 1;
-            summary.textContent = `${state.filtered.length} / ${state.rows.length} 件の予約 (quick: ${state.quickKey}, sort: ${state.sortKey} ${state.sortDir})`;
+            summary.textContent = `${state.filtered.length} / ${state.rows.length} 件の予約（クイック: ${QUICK_LABELS[state.quickKey] || state.quickKey}、並び順: ${SORT_LABELS[state.sortKey] || state.sortKey} ${state.sortDir === "asc" ? "昇順" : "降順"}）`;
             savePreferences();
             syncSortButtons();
         };
@@ -480,7 +484,7 @@
                 .limit(400);
 
             if (error) {
-                state.loadError = error.message || "Unknown error";
+                state.loadError = error.message || "不明なエラー";
                 summary.textContent = `読込失敗: ${state.loadError}`;
                 state.rows = [];
                 state.filtered = [];
@@ -590,6 +594,8 @@
         mount();
     }
 })();
+
+
 
 
 

@@ -299,6 +299,51 @@ textarea:focus {
     color: var(--admin-sub);
 }
 
+.admin-breadcrumb {
+    margin-top: 14px;
+    margin-bottom: 2px;
+    font-size: 0.85rem;
+    color: var(--admin-sub);
+}
+
+.admin-breadcrumb ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.admin-breadcrumb li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-breadcrumb li+li::before {
+    content: ">";
+    color: #938a7a;
+    font-size: 0.74rem;
+}
+
+.admin-breadcrumb a {
+    color: var(--admin-text);
+    text-decoration: none;
+}
+
+.admin-breadcrumb a:hover,
+.admin-breadcrumb a:focus-visible {
+    color: var(--admin-accent);
+    text-decoration: underline;
+}
+
+.admin-breadcrumb [aria-current="page"] {
+    color: var(--admin-accent);
+    font-weight: 700;
+}
+
 .admin-main {
     display: grid;
     gap: 22px;
@@ -810,3 +855,4 @@ textarea:focus {
         gap: 6px;
     }
 }
+

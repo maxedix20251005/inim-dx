@@ -214,7 +214,7 @@
 - `原因:` `workshop_sessions.store_id` 参照に対し、store lookup が slug key ベースだったため、`store_id` で店舗情報を引けず、全セルが実質 `closed` 扱いになっていた。
 - `対策:` store key 正規化関数を追加し、`store_id` 起点の map（`buildStoreByIdMap`）で `buildSchedule()` を構築するよう修正。
 - `再発防止:` `id` 参照が必要な処理では slug map を直接流用せず、`id->entity` map を明示的に生成する。
-- `状態:` Fix 適用済み（ユーザー再確認待ち）
+- `状態:` 解消済み（2026-03-27 確認反映）
 
 ### Issue 2026-03-26-22
 - `発生日:` 2026-03-26
@@ -223,7 +223,7 @@
 - `原因:` 管理画面に予約専用の一覧/更新UIが未実装だった。
 - `対策:` `app/pages/workshop.html` にフル予約管理UI（検索、絞り込み、詳細表示、status/internal_note更新）を実装。
 - `再発防止:` 予約運用で必要な最低操作（一覧、検索、更新）は管理画面側で先行実装し、DB直参照依存を残さない。
-- `状態:` Fix 適用済み（ユーザー確認待ち）
+- `状態:` 解消済み（2026-03-27 確認反映）
 
 ### Issue 2026-03-26-23
 - 発生日: 2026-03-26
@@ -232,15 +232,15 @@
 - 原因: 過去編集時のエンコーディング不整合により、ファイル全体へ文字化けが波及。
 - 対策: subpages/workshop-booking.html を UTF-8 で再構築し、文字化け文字列・壊れたタグを除去。必要なID/動線（Diagnostics、Summary、Calendar、Slots）を維持。
 - 再発防止: 文字化けが出たファイルは部分修正ではなくUTF-8再構成を優先し、編集後に mojibake パターン（縺,繝,�）をスキャンする。
-- 状態: Fix 適用済み（ユーザー確認待ち）
+- 状態: 解消済み（2026-03-27 確認反映）
 
 ### Issue 2026-03-27-24
 - Date: 2026-03-27
 - Area: `app/pages/enquiries.html`, `js/admin-enquiries-page.js`, `app/pages/workshop.html`, `js/admin-workshop-page.js`
 - Symptom: `Update Enquiry` and quick-status actions appear to change, then revert.
 - Root cause: In `adminAccessMode: open_demo` anonymous session, update/write is blocked by backend policy.
-- Action: Deferred for now. Anonymous demo mode is read-only; login is required for real persistence.
-- Status: Open (deferred)
+- Action: Kept anonymous open_demo as read-only by design. Confirmed that logged-in update persists (`予約を更新` works).
+- Status: Closed (by design + logged-in persistence verified)
 
 ### Issue 2026-03-27-25
 - Date: 2026-03-27
@@ -259,15 +259,16 @@
 - Area: `js/admin-enquiries-page.js`, `js/admin-workshop-page.js`
 - Context: Save persistence is deferred in `open_demo` anonymous mode.
 - Action: Added explicit read-only UX. `Update` and quick-status buttons are disabled for anonymous session, with fixed message: `Demo mode is read-only. Login required to save.`
-- Status: Fixed (UX mitigation)
+- Status: Fixed (user verified)
 
 ### Issue 2026-03-27-27
 - Date: 2026-03-27
 - Area: `js/admin-workshop-plans-page.js`, `app/pages/workshop-plans.html`, `css/app-workshop-plans.css`
 - Symptom: In anonymous open_demo mode, page 05 still showed actionable controls and style/label mismatch remained vs 04/06.
 - Action: Unified page 05 button labels/style with 04/06 and enforced read-only disable for save/delete/add controls in anonymous session.
-- Status: Fixed
+- Status: Fixed (user verified)
 
-- 2026-03-27 follow-up (Issue 2026-03-27-27): non-login demo guest on page 05 now forced read-only with explicit disabled visuals. Status: Fixed (recheck requested).
+- 2026-03-27 follow-up (Issue 2026-03-27-27): non-login demo guest on page 05 now forced read-only with explicit disabled visuals. Status: Fixed (user verified).
 - 2026-03-27 follow-up: step5 text/style consistency pass applied on 04/05/06 (Japanese labels + read-only disabled visibility).
 - 2026-03-27 fix: update-revert issue mitigation extended to 04/06 by strict session-origin based read-only guard (same rule as 05).
+

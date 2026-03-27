@@ -4,7 +4,7 @@
     if (!body || !main) return;
 
     const root = body.dataset.root || ".";
-    const ADMIN_BUILD_VERSION = "20260327l";
+    const ADMIN_BUILD_VERSION = "20260327m";
     const pageKey = body.dataset.pageKey || "appLogin";
     const cfg = window.INIM_SITE_CONFIG || {};
     const adminAccessMode = String(cfg.adminAccessMode || "admin_only").trim().toLowerCase();
@@ -15,17 +15,17 @@
         : null;
 
     const pages = {
-        appLogin: ["app/login.html", "ログイン", "role check / session start", "管理者または運用担当者向けの認証入口です。"],
-        appDashboard: ["app/dashboard.html", "ダッシュボード", "hub / overview", "KPI、優先タスク、主要導線ショートカットを確認します。"],
-        appPagesHome: ["app/pages/home.html", "トップ編集", "top_hero_items / preview", "ヒーロー文言、CTA、公開状態を更新します。"],
-        appPagesJourney: ["app/pages/journey.html", "導線設定", "journey_steps / cta", "体験導線の表示順、リンク先、状態を管理します。"],
-        appPagesWorkshop: ["app/pages/workshop.html", "Workshop Bookings", "operations / bookings", "予約一覧、検索、状態更新、内部メモ更新を実行します。"],
-        appPagesWorkshopPlans: ["app/pages/workshop-plans.html", "Workshop Plans", "catalog / plans", "ワークショッププランと含有要素を管理します。"],
-        appPagesEnquiries: ["app/pages/enquiries.html", "Enquiries", "operations / enquiries", "問い合わせの受付状況、担当、内部メモを管理します。"],
-        appPublish: ["app/publish.html", "公開管理", "publish / checklist", "公開前のチェックと更新状況の確認を行います。"],
-        appUsersMe: ["app/users/me.html", "アカウント設定", "session / profile", "現在の管理者セッションとロールを確認します。"],
-        appPasswordForgot: ["app/password/forgot.html", "パスワード再設定", "forgot password", "再設定メールを送信します。"],
-        appPasswordReset: ["app/password/reset.html", "新しいパスワード設定", "reset password", "再設定リンクから新しいパスワードを設定します。"]
+        appLogin: ["app/login.html", "ログイン", "権限確認 / セッション開始", "管理者または運用担当者向けの認証入口です。"],
+        appDashboard: ["app/dashboard.html", "ダッシュボード", "ハブ / 概要", "KPI、優先タスク、主要導線ショートカットを確認します。"],
+        appPagesHome: ["app/pages/home.html", "トップ編集", "top_hero_items / プレビュー", "ヒーロー文言、CTA、公開状態を更新します。"],
+        appPagesJourney: ["app/pages/journey.html", "導線設定", "journey_steps / CTA", "体験導線の表示順、リンク先、状態を管理します。"],
+        appPagesWorkshop: ["app/pages/workshop.html", "ワークショップ予約管理", "運用 / 予約", "予約一覧、検索、状態更新、内部メモ更新を実行します。"],
+        appPagesWorkshopPlans: ["app/pages/workshop-plans.html", "ワークショッププラン管理", "カタログ / プラン", "ワークショッププランと含有要素を管理します。"],
+        appPagesEnquiries: ["app/pages/enquiries.html", "問い合わせ管理", "運用 / 問い合わせ", "問い合わせの受付状況、担当、内部メモを管理します。"],
+        appPublish: ["app/publish.html", "公開管理", "公開 / チェック", "公開前のチェックと更新状況の確認を行います。"],
+        appUsersMe: ["app/users/me.html", "アカウント設定", "セッション / プロファイル", "現在の管理者セッションとロールを確認します。"],
+        appPasswordForgot: ["app/password/forgot.html", "パスワード再設定", "パスワード再設定", "再設定メールを送信します。"],
+        appPasswordReset: ["app/password/reset.html", "新しいパスワード設定", "パスワード更新", "再設定リンクから新しいパスワードを設定します。"]
     };
     const protectedPages = new Set(["appDashboard", "appPagesHome", "appPagesJourney", "appPagesWorkshop", "appPagesWorkshopPlans", "appPagesEnquiries", "appPublish", "appUsersMe"]);
     const accessRules = {
@@ -41,8 +41,8 @@
         ["appDashboard", "ダッシュボード", "01"],
         ["appPagesHome", "トップ編集", "02"],
         ["appPagesJourney", "導線設定", "03"],
-        ["appPagesWorkshop", "Workshop予約管理", "04"],
-        ["appPagesWorkshopPlans", "Workshopプラン管理", "05"],
+        ["appPagesWorkshop", "ワークショップ予約管理", "04"],
+        ["appPagesWorkshopPlans", "ワークショッププラン管理", "05"],
         ["appPagesEnquiries", "問い合わせ管理", "06"],
         ["appPublish", "公開管理", "07"],
         ["appUsersMe", "アカウント設定", "08"]
@@ -57,7 +57,7 @@
         noticeType: "info",
         queryWarnings: [],
         metrics: { bookings: "--", heroItems: "--", enquiries: "--" },
-        operations: { todayBookings: "--", tomorrowBookings: "--", pendingBookings: "--", stalePending: "--", unassignedEnquiries: "--", dataHealth: "unknown" },
+        operations: { todayBookings: "--", tomorrowBookings: "--", pendingBookings: "--", stalePending: "--", unassignedEnquiries: "--", dataHealth: "取得中" },
         recentBookings: [],
         recentEnquiries: [],
         contentAssets: [],
@@ -94,7 +94,7 @@
     `;
     const normalizeRole = (v) => String(v || "").trim().toLowerCase().replace(/[^a-z0-9_-]/g, "");
     const normalizeText = (v) => String(v || "").trim().toLowerCase();
-    const roleLabel = (r) => ({ admin: "Admin", editor: "Editor", operator: "Operator" }[r] || r || "Unknown");
+    const roleLabel = (r) => ({ admin: "管理者", editor: "編集者", operator: "運用者" }[r] || r || "不明");
     const pretty = (k) => ({
         auth_user_id: "AuthユーザーID",
         display_name: "表示名",
@@ -178,17 +178,22 @@
     };
     const statusHtml = () => state.notice ? `<div class="admin-status is-${escapeHtml(state.noticeType)}"><div class="admin-status__message">${escapeHtml(state.notice)}</div>${state.lastSaved && state.noticeType === "success" ? `<div class="admin-status__meta">最終保存: ${escapeHtml(state.lastSaved.label)} / ${escapeHtml(fmtDate(state.lastSaved.savedAt))}</div>` : ""}</div>` : "";
 
+    const dataHealthLabel = (value) => ({
+        ok: "正常",
+        partial: "一部不足",
+        unknown: "取得中"
+    }[String(value || "").toLowerCase()] || String(value || "取得中"));
     const renderSidebar = () => `
         <aside class="admin-sidebar">
             <div class="admin-brand">
-                <a class="admin-brand__logo" href="${escapeHtml(`${root}/index.html`)}" aria-label="Back to main site"><img src="${escapeHtml(`${root}/images/logo/logo-inim-dx.jpg`)}" alt="inim-dx logo"></a>
-                <strong class="admin-brand__title">Admin Portal</strong>
+                <a class="admin-brand__logo" href="${escapeHtml(`${root}/index.html`)}" aria-label="メインサイトへ戻る"><img src="${escapeHtml(`${root}/images/logo/logo-inim-dx.jpg`)}" alt="inim-dx ロゴ"></a>
+                <strong class="admin-brand__title">管理ポータル</strong>
             </div>
             <div class="admin-sidebar__profile">
-                <strong>${escapeHtml(state.profile?.display_name || state.profile?.full_name || state.user?.email || (isOpenDemoMode ? "Demo Guest" : "未ログイン"))}</strong>
-                <span>${escapeHtml(state.user?.email || (isOpenDemoMode ? "demo mode / no login required" : "セッション未確立"))}</span>
+                <strong>${escapeHtml(state.profile?.display_name || state.profile?.full_name || state.user?.email || (isOpenDemoMode ? "デモゲスト" : "未ログイン"))}</strong>
+                <span>${escapeHtml(state.user?.email || (isOpenDemoMode ? "デモモード / ログイン不要" : "セッション未確立"))}</span>
                 <ul class="admin-role-list">
-                    ${(state.roles.length ? state.roles : ["unknown"]).map((r) => `<li class="admin-role-badge">${escapeHtml(roleLabel(r))}</li>`).join("")}
+                    ${(state.roles.length ? state.roles : ["不明"]).map((r) => `<li class="admin-role-badge">${escapeHtml(roleLabel(r))}</li>`).join("")}
                 </ul>
             </div>
             <nav class="admin-nav" aria-label="管理画面ナビゲーション">
@@ -198,10 +203,39 @@
                 <a class="admin-link-button is-secondary" href="${escapeHtml(toPath("appUsersMe"))}">セッション確認</a><a class="admin-link-button is-secondary" href="${escapeHtml(`${root}/index.html`)}">メインサイトへ戻る</a>
                 <button class="admin-logout" type="button" data-action="logout">ログアウト</button>
                 <span class="admin-footer-note">公開サイト用の既存JS/CSSとは分離しています。</span>
-                <span class="admin-footer-note">Admin build: ${escapeHtml(ADMIN_BUILD_VERSION)}</span>
+                <span class="admin-footer-note">管理画面ビルド: ${escapeHtml(ADMIN_BUILD_VERSION)}</span>
             </div>
         </aside>
     `;
+    const adminBreadcrumbTrails = {
+        appDashboard: ['appDashboard'],
+        appPagesHome: ['appDashboard', 'appPagesHome'],
+        appPagesJourney: ['appDashboard', 'appPagesJourney'],
+        appPagesWorkshop: ['appDashboard', 'appPagesWorkshop'],
+        appPagesWorkshopPlans: ['appDashboard', 'appPagesWorkshopPlans'],
+        appPagesEnquiries: ['appDashboard', 'appPagesEnquiries'],
+        appPublish: ['appDashboard', 'appPublish'],
+        appUsersMe: ['appDashboard', 'appUsersMe'],
+        appLogin: ['appLogin'],
+        appPasswordForgot: ['appLogin', 'appPasswordForgot'],
+        appPasswordReset: ['appLogin', 'appPasswordReset']
+    };
+    const renderAdminBreadcrumb = () => {
+        const trail = adminBreadcrumbTrails[pageKey] || [];
+        if (!trail.length || (trail.length === 1 && trail[0] === "appDashboard")) return "";
+        return `
+            <nav class="admin-breadcrumb" aria-label="パンくず">
+                <ol>
+                    ${trail.map((key, index) => {
+                        const isLast = index === trail.length - 1;
+                        const label = pages[key]?.[1] || key;
+                        if (isLast) return `<li><span aria-current="page">${escapeHtml(label)}</span></li>`;
+                        return `<li><a href="${escapeHtml(toPath(key))}">${escapeHtml(label)}</a></li>`;
+                    }).join("")}
+                </ol>
+            </nav>
+        `;
+    };
     const renderTopbar = () => `
         <div class="admin-topbar">
             <div class="admin-topbar__title-wrap">
@@ -348,7 +382,7 @@
             <div class="admin-login-wrap">
                 <section class="admin-login-card">
                     <div class="admin-login-card__side">
-                        <div class="admin-brand"><span class="admin-brand__eyebrow">inim-dx</span><strong class="admin-brand__title">Admin Portal</strong></div>
+                        <div class="admin-brand"><span class="admin-brand__eyebrow">inim-dx</span><strong class="admin-brand__title">管理ポータル</strong></div>
                         <p>管理者・編集者・運用担当者の認証起点です。ログイン後にロールに応じたメニューだけを表示します。</p>
                         <ul class="admin-inline-list">
                             <li>ログイン後に user_profiles とロールを取得</li>
@@ -375,34 +409,34 @@
         <section class="admin-panel">
             <div class="admin-ops-head">
                 <div>
-                    <h2>Operations Home</h2>
+                    <h2>運用ホーム</h2>
                     <p>今日の対応優先度が高い項目を先に処理します。</p>
                 </div>
-                <span class="admin-record-list__status">Data health: ${escapeHtml(String(state.operations.dataHealth))}</span>
+                <span class="admin-record-list__status">データ状態: ${escapeHtml(dataHealthLabel(state.operations.dataHealth))}</span>
             </div>
             <div class="admin-grid admin-grid--ops">
                 <article class="admin-ops-card">
-                    <strong>Today's Bookings</strong>
+                    <strong>本日の予約</strong>
                     <span>${escapeHtml(String(state.operations.todayBookings))}</span>
                     <a href="${escapeHtml(`${toPath("appPagesWorkshop")}?quick=today`)}">今日の予約を見る</a>
                 </article>
                 <article class="admin-ops-card">
-                    <strong>Tomorrow</strong>
+                    <strong>翌日の予約</strong>
                     <span>${escapeHtml(String(state.operations.tomorrowBookings))}</span>
                     <a href="${escapeHtml(`${toPath("appPagesWorkshop")}?quick=tomorrow`)}">翌日の予約を見る</a>
                 </article>
                 <article class="admin-ops-card">
-                    <strong>Pending Requests</strong>
+                    <strong>未対応予約</strong>
                     <span>${escapeHtml(String(state.operations.pendingBookings))}</span>
-                    <a href="${escapeHtml(`${toPath("appPagesWorkshop")}?quick=pending`)}">pending対応へ</a>
+                    <a href="${escapeHtml(`${toPath("appPagesWorkshop")}?quick=pending`)}">未対応を確認</a>
                 </article>
                 <article class="admin-ops-card">
-                    <strong>Stale Pending &gt; 24h</strong>
+                    <strong>24時間超の未対応</strong>
                     <span>${escapeHtml(String(state.operations.stalePending))}</span>
                     <a href="${escapeHtml(`${toPath("appPagesWorkshop")}?quick=stale_pending`)}">未処理案件を確認</a>
                 </article>
                 <article class="admin-ops-card">
-                    <strong>Unassigned Enquiries</strong>
+                    <strong>未割当問い合わせ</strong>
                     <span>${escapeHtml(String(state.operations.unassignedEnquiries))}</span>
                     <a href="${escapeHtml(`${toPath("appPagesEnquiries")}?quick=unassigned`)}">未割当問い合わせを確認</a>
                 </article>
@@ -413,18 +447,18 @@
         <div class="admin-main">
             ${statusHtml()}
             <section class="admin-grid admin-grid--metrics">
-                <article class="admin-metric"><strong>Bookings</strong><span>${escapeHtml(String(state.metrics.bookings))}</span></article>
+                <article class="admin-metric"><strong>予約</strong><span>${escapeHtml(String(state.metrics.bookings))}</span></article>
                 <article class="admin-metric"><strong>トップ項目数</strong><span>${escapeHtml(String(state.metrics.heroItems))}</span></article>
-                <article class="admin-metric"><strong>Open Enquiries</strong><span>${escapeHtml(String(state.metrics.enquiries))}</span></article>
+                <article class="admin-metric"><strong>対応中問い合わせ</strong><span>${escapeHtml(String(state.metrics.enquiries))}</span></article>
             </section>
             ${renderOperationsBoard()}
             <section class="admin-grid admin-grid--panels">
-                <article class="admin-panel"><h2>本日の優先タスク</h2><ul class="admin-inline-list"><li>Pending/Request を先に確認して確定可否を更新</li><li>24時間以上経過した pending を優先対応</li><li>問い合わせ未割当を確認して担当を明確化</li></ul></article>
-                <article class="admin-panel"><h2>主要導線ショートカット</h2><ul class="admin-inline-list"><li><a href="${escapeHtml(`${toPath("appPagesWorkshop")}?quick=today`)}">Today's Bookings へ移動</a></li><li><a href="${escapeHtml(`${toPath("appPagesEnquiries")}?quick=unassigned`)}">Unassigned Enquiries へ移動</a></li><li><a href="${escapeHtml(toPath("appPagesHome"))}">トップ編集へ移動</a></li><li><a href="${escapeHtml(toPath("appPagesJourney"))}">導線設定へ移動</a></li><li><a href="${escapeHtml(toPath("appUsersMe"))}">現在のロールを確認</a></li></ul></article>
+                <article class="admin-panel"><h2>本日の優先タスク</h2><ul class="admin-inline-list"><li>未対応の予約を先に確認して確定可否を更新</li><li>24時間以上経過した未対応予約を優先対応</li><li>問い合わせ未割当を確認して担当を明確化</li></ul></article>
+                <article class="admin-panel"><h2>主要導線ショートカット</h2><ul class="admin-inline-list"><li><a href="${escapeHtml(`${toPath("appPagesWorkshop")}?quick=today`)}">本日の予約へ移動</a></li><li><a href="${escapeHtml(`${toPath("appPagesEnquiries")}?quick=unassigned`)}">未割当問い合わせへ移動</a></li><li><a href="${escapeHtml(toPath("appPagesHome"))}">トップ編集へ移動</a></li><li><a href="${escapeHtml(toPath("appPagesJourney"))}">導線設定へ移動</a></li><li><a href="${escapeHtml(toPath("appUsersMe"))}">現在のロールを確認</a></li></ul></article>
             </section>
             <section class="admin-grid admin-grid--double">
-                <article class="admin-panel"><h2>Recent Bookings</h2>${renderBookingSnapshot()}</article>
-                <article class="admin-panel"><h2>Recent Enquiries</h2>${renderEnquirySnapshot()}</article>
+                <article class="admin-panel"><h2>最新予約</h2>${renderBookingSnapshot()}</article>
+                <article class="admin-panel"><h2>最新問い合わせ</h2>${renderEnquirySnapshot()}</article>
             </section>
             ${state.queryWarnings.length ? `<section class="admin-state"><h2>取得時の注意</h2><ul class="admin-inline-list">${state.queryWarnings.map((w) => `<li>${escapeHtml(w)}</li>`).join("")}</ul></section>` : ""}
         </div>
@@ -463,18 +497,18 @@
             <section class="admin-panel"><h2>運用メモ</h2><p>DB 設計書の journey_steps 定義に合わせて step_no / step_name / link_url / helper_text / is_visible を更新します。</p></section>
         </div>`;
     };
-    const renderPublish = () => `<div class="admin-main">${statusHtml()}<section class="admin-grid admin-grid--double"><article class="admin-panel"><h2>公開前チェック</h2><ul class="admin-inline-list"><li>トップ編集の保存結果を確認</li><li>導線設定のリンク先と表示順を確認</li><li>ログイン中ユーザーのロールを確認</li></ul></article><article class="admin-panel"><h2>現在の状態</h2><ul class="admin-inline-list"><li>トップ項目数: ${escapeHtml(String(state.heroItems.length))}</li><li>導線項目数: ${escapeHtml(String(state.journeySteps.length))}</li><li>Bookings: ${escapeHtml(String(state.metrics.bookings))}</li><li>Open Enquiries: ${escapeHtml(String(state.metrics.enquiries))}</li><li>最終更新者: ${escapeHtml(state.user?.email || "未取得")}</li></ul></article></section><section class="admin-grid admin-grid--double"><article class="admin-panel"><h2>Pre-publish Bookings</h2>${renderBookingSnapshot()}</article><article class="admin-panel"><h2>Pre-publish Enquiries</h2>${renderEnquirySnapshot()}</article></section></div>`;
+    const renderPublish = () => `<div class="admin-main">${statusHtml()}<section class="admin-grid admin-grid--double"><article class="admin-panel"><h2>公開前チェック</h2><ul class="admin-inline-list"><li>トップ編集の保存結果を確認</li><li>導線設定のリンク先と表示順を確認</li><li>ログイン中ユーザーのロールを確認</li></ul></article><article class="admin-panel"><h2>現在の状態</h2><ul class="admin-inline-list"><li>トップ項目数: ${escapeHtml(String(state.heroItems.length))}</li><li>導線項目数: ${escapeHtml(String(state.journeySteps.length))}</li><li>予約: ${escapeHtml(String(state.metrics.bookings))}</li><li>対応中問い合わせ: ${escapeHtml(String(state.metrics.enquiries))}</li><li>最終更新者: ${escapeHtml(state.user?.email || "未取得")}</li></ul></article></section><section class="admin-grid admin-grid--double"><article class="admin-panel"><h2>公開前チェック: 予約</h2>${renderBookingSnapshot()}</article><article class="admin-panel"><h2>公開前チェック: 問い合わせ</h2>${renderEnquirySnapshot()}</article></section></div>`;
     const renderUsers = () => `<div class="admin-main">${statusHtml()}<section class="admin-grid admin-grid--double"><article class="admin-state"><h2>セッション</h2><div class="admin-key-value"><strong>ユーザーID</strong><span>${escapeHtml(state.user?.id || "未取得")}</span></div><div class="admin-key-value"><strong>メールアドレス</strong><span>${escapeHtml(state.user?.email || "未取得")}</span></div><div class="admin-key-value"><strong>最終サインイン</strong><span>${escapeHtml(fmtDate(state.user?.last_sign_in_at))}</span></div></article><article class="admin-state"><h2>プロフィール / ロール</h2><div class="admin-key-value"><strong>表示名</strong><span>${escapeHtml(state.profile?.display_name || "未取得")}</span></div><div class="admin-key-value"><strong>利用状態</strong><span>${escapeHtml(state.profile?.account_status || "未取得")}</span></div><div class="admin-key-value"><strong>ロール</strong><span>${escapeHtml(state.roles.map(roleLabel).join(", ") || "未取得")}</span></div></article></section>${state.profile ? `<section class="admin-state"><h2>取得済み user_profiles</h2>${Object.entries(state.profile).map(([k, v]) => `<div class="admin-key-value"><strong>${escapeHtml(pretty(k))}</strong><span>${escapeHtml(typeof v === "object" ? JSON.stringify(v) : String(v ?? ""))}</span></div>`).join("")}</section>` : ""}${state.roleAssignments.length ? `<section class="admin-state"><h2>取得済み user_role_assignments</h2>${state.roleAssignments.map((row, index) => `<div class="admin-key-value"><strong>行 ${escapeHtml(index + 1)}</strong><span>${escapeHtml(JSON.stringify(row))}</span></div>`).join("")}</section>` : ""}</div>`;
     const renderBookingSnapshot = () => {
-        if (!state.recentBookings.length) return `<div class="admin-empty">Bookings データはまだ取得されていません。</div>`;
-        return `<ul class="admin-record-list">${state.recentBookings.map((row) => `<li><div class="admin-record-list__title"><strong>${escapeHtml(row.booking_type || "booking")}</strong><span class="admin-record-list__status">${escapeHtml(row.status || "未設定")}</span></div><div class="admin-record-list__meta"><span>Booked at: ${escapeHtml(fmtDate(row.booked_at))}</span><span>人数: ${escapeHtml(String(row.participant_count ?? "未設定"))}</span></div><div class="admin-record-list__meta"><span>店舗ID: ${escapeHtml(fmtShortId(row.store_id))}</span><span>顧客ID: ${escapeHtml(fmtShortId(row.customer_profile_id))}</span></div></li>`).join("")}</ul>`;
+        if (!state.recentBookings.length) return `<div class="admin-empty">予約データはまだ取得されていません。</div>`;
+        return `<ul class="admin-record-list">${state.recentBookings.map((row) => `<li><div class="admin-record-list__title"><strong>${escapeHtml(row.booking_type || "予約")}</strong><span class="admin-record-list__status">${escapeHtml(row.status || "未設定")}</span></div><div class="admin-record-list__meta"><span>予約日時: ${escapeHtml(fmtDate(row.booked_at))}</span><span>人数: ${escapeHtml(String(row.participant_count ?? "未設定"))}</span></div><div class="admin-record-list__meta"><span>店舗ID: ${escapeHtml(fmtShortId(row.store_id))}</span><span>顧客ID: ${escapeHtml(fmtShortId(row.customer_profile_id))}</span></div></li>`).join("")}</ul>`;
     };
     const renderEnquirySnapshot = () => {
-        if (!state.recentEnquiries.length) return `<div class="admin-empty">Enquiries データはまだ取得されていません。</div>`;
-        return `<ul class="admin-record-list">${state.recentEnquiries.map((row) => `<li><div class="admin-record-list__title"><strong>${escapeHtml(row.subject || row.category || "enquiry")}</strong><span class="admin-record-list__status">${escapeHtml(row.status || "未設定")}</span></div><div class="admin-record-list__meta"><span>区分: ${escapeHtml(row.category || "general")}</span><span>受付: ${escapeHtml(fmtDate(row.created_at))}</span></div><div class="admin-record-list__meta"><span>顧客ID: ${escapeHtml(fmtShortId(row.customer_profile_id))}</span><span>担当者ID: ${escapeHtml(fmtShortId(row.assigned_to))}</span></div></li>`).join("")}</ul>`;
+        if (!state.recentEnquiries.length) return `<div class="admin-empty">問い合わせデータはまだ取得されていません。</div>`;
+        return `<ul class="admin-record-list">${state.recentEnquiries.map((row) => `<li><div class="admin-record-list__title"><strong>${escapeHtml(row.subject || row.category || "問い合わせ")}</strong><span class="admin-record-list__status">${escapeHtml(row.status || "未設定")}</span></div><div class="admin-record-list__meta"><span>区分: ${escapeHtml(row.category || "一般")}</span><span>受付: ${escapeHtml(fmtDate(row.created_at))}</span></div><div class="admin-record-list__meta"><span>顧客ID: ${escapeHtml(fmtShortId(row.customer_profile_id))}</span><span>担当者ID: ${escapeHtml(fmtShortId(row.assigned_to))}</span></div></li>`).join("")}</ul>`;
     };
-    const renderForgot = () => `<div class="admin-page"><div class="admin-login-wrap"><section class="admin-login-card"><div class="admin-login-card__side"><div class="admin-brand"><span class="admin-brand__eyebrow">inim-dx</span><strong class="admin-brand__title">Password Support</strong></div><p>管理画面ログインに使うメールアドレス宛に、再設定メールを送信します。</p></div><div class="admin-login-card__body"><div><p class="admin-topbar__eyebrow">${escapeHtml(currentPage[2])}</p><h1>${escapeHtml(currentPage[1])}</h1><p>${escapeHtml(currentPage[3])}</p></div>${statusHtml()}${renderDebugRedirectNote()}<form class="admin-form" data-form="forgot-password"><div class="admin-field is-full"><label for="forgot-email">メールアドレス</label><input id="forgot-email" name="email" type="email" autocomplete="email" placeholder="admin@inim-dx.jp" required></div><div class="admin-toolbar"><div class="admin-toolbar__group"><button class="admin-button" type="submit">再設定メールを送信</button><a class="admin-link-button is-secondary" href="${escapeHtml(toPath("appLogin"))}">ログインへ戻る</a></div></div></form></div></section></div></div>`;
-    const renderReset = () => `<div class="admin-page"><div class="admin-login-wrap"><section class="admin-login-card"><div class="admin-login-card__side"><div class="admin-brand"><span class="admin-brand__eyebrow">inim-dx</span><strong class="admin-brand__title">Reset Password</strong></div><p>再設定リンクから遷移したあと、新しいパスワードに更新します。</p></div><div class="admin-login-card__body"><div><p class="admin-topbar__eyebrow">${escapeHtml(currentPage[2])}</p><h1>${escapeHtml(currentPage[1])}</h1><p>${escapeHtml(currentPage[3])}</p></div>${statusHtml()}<form class="admin-form" data-form="reset-password"><div class="admin-form-grid"><div class="admin-field is-full"><label for="reset-password">新しいパスワード</label><input id="reset-password" name="password" type="password" autocomplete="new-password" required></div><div class="admin-field is-full"><label for="reset-password-confirm">確認用パスワード</label><input id="reset-password-confirm" name="password_confirm" type="password" autocomplete="new-password" required></div></div><div class="admin-toolbar"><div class="admin-toolbar__group"><button class="admin-button" type="submit">新しいパスワードを保存</button><a class="admin-link-button is-secondary" href="${escapeHtml(toPath("appLogin"))}">ログインへ戻る</a></div></div></form></div></section></div></div>`;
+    const renderForgot = () => `<div class="admin-page"><div class="admin-login-wrap"><section class="admin-login-card"><div class="admin-login-card__side"><div class="admin-brand"><span class="admin-brand__eyebrow">inim-dx</span><strong class="admin-brand__title">パスワードサポート</strong></div><p>管理画面ログインに使うメールアドレス宛に、再設定メールを送信します。</p></div><div class="admin-login-card__body"><div><p class="admin-topbar__eyebrow">${escapeHtml(currentPage[2])}</p><h1>${escapeHtml(currentPage[1])}</h1><p>${escapeHtml(currentPage[3])}</p></div>${statusHtml()}${renderDebugRedirectNote()}<form class="admin-form" data-form="forgot-password"><div class="admin-field is-full"><label for="forgot-email">メールアドレス</label><input id="forgot-email" name="email" type="email" autocomplete="email" placeholder="admin@inim-dx.jp" required></div><div class="admin-toolbar"><div class="admin-toolbar__group"><button class="admin-button" type="submit">再設定メールを送信</button><a class="admin-link-button is-secondary" href="${escapeHtml(toPath("appLogin"))}">ログインへ戻る</a></div></div></form></div></section></div></div>`;
+    const renderReset = () => `<div class="admin-page"><div class="admin-login-wrap"><section class="admin-login-card"><div class="admin-login-card__side"><div class="admin-brand"><span class="admin-brand__eyebrow">inim-dx</span><strong class="admin-brand__title">パスワード再設定</strong></div><p>再設定リンクから遷移したあと、新しいパスワードに更新します。</p></div><div class="admin-login-card__body"><div><p class="admin-topbar__eyebrow">${escapeHtml(currentPage[2])}</p><h1>${escapeHtml(currentPage[1])}</h1><p>${escapeHtml(currentPage[3])}</p></div>${statusHtml()}<form class="admin-form" data-form="reset-password"><div class="admin-form-grid"><div class="admin-field is-full"><label for="reset-password">新しいパスワード</label><input id="reset-password" name="password" type="password" autocomplete="new-password" required></div><div class="admin-field is-full"><label for="reset-password-confirm">確認用パスワード</label><input id="reset-password-confirm" name="password_confirm" type="password" autocomplete="new-password" required></div></div><div class="admin-toolbar"><div class="admin-toolbar__group"><button class="admin-button" type="submit">新しいパスワードを保存</button><a class="admin-link-button is-secondary" href="${escapeHtml(toPath("appLogin"))}">ログインへ戻る</a></div></div></form></div></section></div></div>`;
     const renderProtected = () => {
         let content = "";
         if (!hasAllowedRole()) {
@@ -488,7 +522,7 @@
         else if (pageKey === "appPublish") content = renderPublish();
         else if (pageKey === "appUsersMe") content = renderUsers();
         else content = `<div class="admin-main"><section class="admin-state"><h2>確保済み画面</h2><p>このURLは将来の管理画面拡張用に残しています。現時点ではトップ編集と導線設定を優先実装しています。</p></section></div>`;
-        return `<div class="admin-page"><div class="admin-layout">${renderSidebar()}<main class="admin-content">${renderTopbar()}${content}</main></div></div>`;
+        return `<div class="admin-page"><div class="admin-layout">${renderSidebar()}<main class="admin-content">${renderTopbar()}${renderAdminBreadcrumb()}${content}</main></div></div>`;
     };
     const render = () => {
         if (pageKey === "appLogin") main.innerHTML = renderLogin();
@@ -916,7 +950,7 @@
             state.roles = await loadRoles(state.user.id, state.profile);
             render();
         } else if (isOpenDemoMode && protectedPages.has(pageKey)) {
-            state.profile = { display_name: "Demo Guest", account_status: "active" };
+            state.profile = { display_name: "デモゲスト", account_status: "active" };
             state.roles = ["admin", "editor", "operator"];
             render();
         }
@@ -926,7 +960,7 @@
             state.user = session?.user || null;
             if (!state.user && protectedPages.has(pageKey) && !isOpenDemoMode) redirect("appLogin");
             if (!state.user && isOpenDemoMode && protectedPages.has(pageKey)) {
-                state.profile = { display_name: "Demo Guest", account_status: "active" };
+                state.profile = { display_name: "デモゲスト", account_status: "active" };
                 state.roles = ["admin", "editor", "operator"];
                 render();
             }
@@ -934,6 +968,15 @@
     };
     init().catch((e) => setNotice(`初期化エラー: ${e.message}`, "error"));
 })();
+
+
+
+
+
+
+
+
+
 
 
 

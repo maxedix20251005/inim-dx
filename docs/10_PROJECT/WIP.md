@@ -274,3 +274,5 @@
 - 2026-03-27: Admin 05 follow-up fix applied. Non-login demo session is now always treated as read-only on Workshop Plans, and disabled-button visibility is explicit. Asset version: 20260327j.
 - 2026-03-27: Step5 completed for 04/05/06. UI text labels/messages localized to Japanese and read-only disabled visibility aligned. Asset version: 20260327k.
 - 2026-03-27: Step2 save-fix applied on 04/06. Write auth check now uses strict non-login detection (started-without-session or anonymous provider => read-only), aligned with 05. Asset version: 20260327l.
+
+- 2026-03-27: Added FEATURE_BACKLOG 2.13 for site structure review + IA refinement (public/admin hierarchy review).

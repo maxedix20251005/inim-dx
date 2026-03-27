@@ -136,6 +136,10 @@
         const day = String(d.getDate()).padStart(2, "0");
         return `${y}-${m}-${day}`;
     };
+    const STATUS_LABELS = { open: "受付", in_progress: "対応中", responded: "返信済み", resolved: "解決済み", closed: "クローズ", cancelled: "キャンセル", completed: "完了" };
+    const statusLabel = (status) => STATUS_LABELS[String(status || "").toLowerCase()] || String(status || "-");
+    const QUICK_LABELS = { all: "全件", unassigned: "未割当", open: "対応中", stale_open: "24時間超" };
+    const SORT_LABELS = { id: "ID", created_at: "作成日時", status: "状態", category: "カテゴリ", subject: "件名", assigned_to: "担当", sla_hours: "SLA" };
     const isOpenStatus = (status) => !["closed", "completed", "resolved", "cancelled"].includes(String(status || "").toLowerCase());
     const getSlaText = (row) => {
         const status = String(row.status || "").toLowerCase();
@@ -248,7 +252,7 @@
         const current = String(statusFilter.value || "");
         const statuses = [...new Set(state.rows.map((row) => String(row.status || "").trim()).filter(Boolean))];
         statuses.sort((a, b) => a.localeCompare(b, "ja"));
-        statusFilter.innerHTML = `<option value="">全ステータス</option>${statuses.map((s) => `<option value="${esc(s)}">${esc(s)}</option>`).join("")}`;
+        statusFilter.innerHTML = `<option value="">全ステータス</option>${statuses.map((s) => `<option value="${esc(s)}">${esc(statusLabel(s))}</option>`).join("")}`;
         if (statuses.includes(current)) statusFilter.value = current;
     };
     const syncQuickButtons = () => {
@@ -288,7 +292,7 @@
             return `<tr data-id="${esc(id)}" class="${state.selectedId === id ? "is-selected" : ""}">
                 <td>${esc(id.slice(0, 8))}</td>
                 <td>${esc(fmtDate(pick(row, ["created_at", "updated_at"])))}</td>
-                <td>${esc(row.status || "-")}</td>
+                <td>${esc(statusLabel(row.status))}</td>
                 <td>${esc(row.category || "-")}</td>
                 <td>${esc(row.subject || "-")}</td>
                 <td>${esc(assigneeLabel(row.assigned_to || ""))}</td>
@@ -327,7 +331,7 @@
         detailHost.innerHTML = `
             <h2>問い合わせ詳細</h2>
             <div class="eq-kv"><strong>ID</strong><span>${esc(row.id || "-")}</span></div>
-            <div class="eq-kv"><strong>状態</strong><span>${esc(row.status || "-")}</span></div>
+            <div class="eq-kv"><strong>状態</strong><span>${esc(statusLabel(row.status))}</span></div>
             <div class="eq-kv"><strong>カテゴリ</strong><span>${esc(row.category || "-")}</span></div>
             <div class="eq-kv"><strong>件名</strong><span>${esc(row.subject || "-")}</span></div>
             <div class="eq-kv"><strong>作成日時</strong><span>${esc(fmtDate(row.created_at || row.updated_at || ""))}</span></div>
@@ -337,7 +341,7 @@
                 <input type="hidden" name="id" value="${esc(row.id || "")}">
                 <label>状態</label>
                 <select name="status">
-                    ${statusOptions.map((s) => `<option value="${esc(s)}" ${String(row.status || "") === s ? "selected" : ""}>${esc(s)}</option>`).join("")}
+                    ${statusOptions.map((s) => `<option value="${esc(s)}" ${String(row.status || "") === s ? "selected" : ""}>${esc(statusLabel(s))}</option>`).join("")}
                 </select>
                 <label>担当者</label>
                 <select name="assigned_to">
@@ -484,7 +488,7 @@
         const maxPage = getMaxPage();
         if (state.page > maxPage) state.page = maxPage;
         if (state.page < 1) state.page = 1;
-        summary.textContent = `${state.filtered.length} / ${state.rows.length} 件の問い合わせ (quick: ${state.quickKey}, sort: ${state.sortKey} ${state.sortDir})`;
+        summary.textContent = `${state.filtered.length} / ${state.rows.length} 件の問い合わせ（クイック: ${QUICK_LABELS[state.quickKey] || state.quickKey}、並び順: ${SORT_LABELS[state.sortKey] || state.sortKey} ${state.sortDir === "asc" ? "昇順" : "降順"}）`;
         savePreferences();
         syncSortButtons();
     };
@@ -518,7 +522,7 @@
             .limit(500);
 
         if (error) {
-            state.loadError = error.message || "Unknown error";
+            state.loadError = error.message || "不明なエラー";
             summary.textContent = `読込失敗: ${state.loadError}`;
             state.rows = [];
             state.filtered = [];
@@ -629,6 +633,8 @@
         mount();
     }
 })();
+
+
 
 
 

@@ -124,3 +124,12 @@
   - JA: `site-shell.js` での共通レンダリング化
   - EN: Centralised rendering via `site-shell.js`
 
+
+
+### 2.13 Site Structure Review + IA Refinement / サイト構造レビューとIA再設計
+- Status: `Proposed`
+- JA: 現行サイト構造（公開/管理）の導線を棚卸しし、情報設計とナビゲーション階層を再整理する。
+- EN: Review current public/admin site structure and refine IA + navigation hierarchy.
+- Scope candidates:
+  - JA: sitemap と実装ページの差分整理、階層ルールの再定義、命名/ラベル整合
+  - EN: Diff sitemap vs implementation, redefine hierarchy rules, align naming/labels

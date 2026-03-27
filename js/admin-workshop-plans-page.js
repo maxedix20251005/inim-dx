@@ -47,24 +47,24 @@
                     <form class="wp-form" id="wp-plan-form">
                         <input type="hidden" name="id">
                         <div class="wp-form-grid">
-                            <input name="plan_code" placeholder="plan_code (unique)" required>
-                            <input name="plan_name" placeholder="plan_name" required>
-                            <textarea class="wp-wide" name="plan_summary" rows="2" placeholder="plan_summary" required></textarea>
-                            <textarea class="wp-wide" name="plan_description" rows="3" placeholder="plan_description" required></textarea>
-                            <input class="wp-wide" name="plan_image_url" placeholder="plan_image_url (e.g. ../images/Workshop/xxx.png)">
-                            <input name="duration_min_minutes" type="number" min="1" placeholder="duration_min_minutes" required>
-                            <input name="duration_max_minutes" type="number" min="1" placeholder="duration_max_minutes">
-                            <input name="base_price_jpy" type="number" min="0" placeholder="base_price_jpy" required>
-                            <input name="pair_price_jpy" type="number" min="0" placeholder="pair_price_jpy">
-                            <input name="min_party_size" type="number" min="1" placeholder="min_party_size" required>
-                            <input name="max_party_size" type="number" min="1" placeholder="max_party_size" required>
+                            <input name="plan_code" placeholder="プランコード（一意）" required>
+                            <input name="plan_name" placeholder="プラン名" required>
+                            <textarea class="wp-wide" name="plan_summary" rows="2" placeholder="概要" required></textarea>
+                            <textarea class="wp-wide" name="plan_description" rows="3" placeholder="詳細説明" required></textarea>
+                            <input class="wp-wide" name="plan_image_url" placeholder="画像URL（例: ../images/Workshop/xxx.png）">
+                            <input name="duration_min_minutes" type="number" min="1" placeholder="最短時間（分）" required>
+                            <input name="duration_max_minutes" type="number" min="1" placeholder="最長時間（分）">
+                            <input name="base_price_jpy" type="number" min="0" placeholder="基本料金（円）" required>
+                            <input name="pair_price_jpy" type="number" min="0" placeholder="ペア料金（円）">
+                            <input name="min_party_size" type="number" min="1" placeholder="最少人数" required>
+                            <input name="max_party_size" type="number" min="1" placeholder="最大人数" required>
                             <select name="status">
-                                <option value="draft">draft</option>
-                                <option value="active">active</option>
-                                <option value="inactive">inactive</option>
+                                <option value="draft">下書き</option>
+                                <option value="active">公開</option>
+                                <option value="inactive">停止</option>
                             </select>
-                            <input name="sort_order" type="number" min="1" placeholder="sort_order" required>
-                            <input class="wp-wide" name="booking_label" placeholder="booking_label">
+                            <input name="sort_order" type="number" min="1" placeholder="表示順" required>
+                            <input class="wp-wide" name="booking_label" placeholder="予約ボタン表示名">
                         </div>
                         <div class="wp-actions">
                             <button class="wp-btn-primary" type="submit">プランを保存</button>
@@ -79,8 +79,8 @@
                     <p class="wp-note">選択中プランの workshop_plan_inclusions を管理します。</p>
                     <form class="wp-form" id="wp-inc-form">
                         <div class="wp-inline">
-                            <input name="inclusion_text" placeholder="inclusion_text" required>
-                            <input name="display_order" type="number" min="1" placeholder="order">
+                            <input name="inclusion_text" placeholder="含有要素テキスト" required>
+                            <input name="display_order" type="number" min="1" placeholder="表示順">
                             <button class="wp-btn-primary" type="submit">追加</button>
                         </div>
                     </form>
@@ -125,6 +125,9 @@
                 : [];
             return Boolean(u?.is_anonymous) || provider === "anonymous" || providers.includes("anonymous");
         };
+        const STATUS_LABELS = { draft: "下書き", active: "公開", inactive: "停止" };
+        const statusLabel = (status) => STATUS_LABELS[String(status || "").toLowerCase()] || String(status || "-");
+        const SORT_LABELS = { plan_code: "コード", plan_name: "プラン名", status: "状態", sort_order: "表示順" };
         const state = {
             plans: [],
             selectedId: "",
@@ -163,7 +166,7 @@
             return state.plans.slice(start, start + state.pageSize);
         };
         const syncSortButtons = () => {
-            const map = { plan_code: "コード", plan_name: "プラン名", status: "状態", sort_order: "表示順" };
+            const map = SORT_LABELS;
             host.querySelectorAll(".wp-sort").forEach((btn) => {
                 const key = String(btn.getAttribute("data-sort-key") || "");
                 const isActive = key === state.sortKey;
@@ -224,7 +227,7 @@
                 <tr data-id="${esc(p.id)}" class="${state.selectedId === p.id ? "is-selected" : ""}">
                     <td>${esc(p.plan_code || "")}</td>
                     <td>${esc(p.plan_name || "")}</td>
-                    <td>${esc(p.status || "")}</td>
+                    <td>${esc(statusLabel(p.status))}</td>
                     <td>${esc(String(p.sort_order ?? ""))}</td>
                 </tr>
             `).join("");
@@ -321,7 +324,7 @@
                 .select("id, plan_code, plan_name, plan_summary, plan_description, plan_image_url, booking_label, duration_min_minutes, duration_max_minutes, base_price_jpy, pair_price_jpy, min_party_size, max_party_size, status, sort_order")
                 .order("sort_order", { ascending: true });
             if (error) {
-                state.loadError = error.message || "Unknown error";
+                state.loadError = error.message || "不明なエラー";
                 summary.textContent = `読込失敗: ${state.loadError}`;
                 state.plans = [];
                 state.page = 1;
@@ -334,7 +337,7 @@
             if (state.page > maxPage) state.page = maxPage;
             if (!state.selectedId && state.plans.length) state.selectedId = state.plans[0].id;
             fillForm(getSelected() || null);
-            summary.textContent = `${state.plans.length} 件のプランを読み込みました (sort: ${state.sortKey} ${state.sortDir})`;
+            summary.textContent = `${state.plans.length} 件のプランを読み込みました（並び順: ${SORT_LABELS[state.sortKey] || state.sortKey} ${state.sortDir === "asc" ? "昇順" : "降順"}）`;
             savePreferences();
             syncSortButtons();
             renderTable();
@@ -361,10 +364,10 @@
 
         const validate = (p) => {
             if (!p.plan_code || !p.plan_name || !p.plan_summary || !p.plan_description) return "必須項目が不足しています。";
-            if (p.duration_min_minutes < 1) return "duration_min_minutes は 1 以上で入力してください。";
-            if (p.duration_max_minutes !== null && p.duration_max_minutes < p.duration_min_minutes) return "duration_max_minutes は duration_min_minutes 以上で入力してください。";
-            if (p.max_party_size < p.min_party_size) return "max_party_size は min_party_size 以上で入力してください。";
-            if (!["draft", "active", "inactive"].includes(p.status)) return "status は draft / active / inactive のいずれかを指定してください。";
+            if (p.duration_min_minutes < 1) return "最短時間（分）は 1 以上で入力してください。";
+            if (p.duration_max_minutes !== null && p.duration_max_minutes < p.duration_min_minutes) return "最長時間（分）は最短時間以上で入力してください。";
+            if (p.max_party_size < p.min_party_size) return "最大人数は最少人数以上で入力してください。";
+            if (!["draft", "active", "inactive"].includes(p.status)) return "状態は 下書き / 公開 / 停止 のいずれかを指定してください。";
             return "";
         };
 
@@ -467,7 +470,7 @@
                     msg.textContent = "削除対象が選択されていません。";
                     return;
                 }
-                if (!window.confirm(`Delete plan "${row.plan_code}"? Related sessions/inclusions may be deleted by FK cascade.`)) return;
+                if (!window.confirm(`プラン「${row.plan_code}」を削除しますか？関連データも削除される場合があります。`)) return;
                 msg.textContent = "削除中...";
                 const { error } = await supabase.from("workshop_plans").delete().eq("id", row.id);
                 if (error) {
@@ -502,7 +505,7 @@
                 const inclusionText = String(fd.get("inclusion_text") || "").trim();
                 const displayOrder = n(fd.get("display_order"), state.inclusions.length + 1);
                 if (!inclusionText) {
-                    incMsg.textContent = "inclusion_text は必須です。";
+                    incMsg.textContent = "含有要素テキストは必須です。";
                     return;
                 }
                 incMsg.textContent = "追加中...";
@@ -564,6 +567,8 @@
         mount();
     }
 })();
+
+
 
 
 

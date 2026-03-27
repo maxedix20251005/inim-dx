@@ -637,3 +637,5 @@
 - 2026-03-27 follow-up: page 05 read-only判定を強化し、未ログイン（demo guest）では常に保存系ボタンを無効化。無効状態の見た目も明示化。asset: 20260327j
 - 2026-03-27 Step5: 04/05/06 の文言を日本語へ統一（pager/detail/message）し、read-only無効状態の見た目を統一。asset: 20260327k
 - 2026-03-27 Step2: 04/06 に 05 と同じ厳格な書込判定を適用（未ログイン開始 or anonymous provider は保存不可/read-only）。asset: 20260327l
+
+- 2026-03-27: FEATURE_BACKLOG 2.13 added to review site structure and refine IA/navigation hierarchy.

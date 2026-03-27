@@ -110,6 +110,30 @@
 
 
     const link = (key, hash = '') => `${root}/${pages[key].path}${hash}`;
+    const breadcrumbChildMap = {
+        brand: ["about", "brand", "brandGroundbreakers", "brandNezs", "brandAromaCrops", "brandKosaido", "brandWatoyo", "brandCocktailSoap", "brandEnjoyth", "brandAwaji", "brandOldAroma"],
+        items: ["items", "itemHomeFragrance", "itemBodyCare", "itemDiy", "itemSale", "itemEcology", "itemRefillTools", "itemGiftSet"],
+        scentSearch: ["scentSearch", "searchStoreInfo", "searchProjects", "searchEvents"],
+        workshop: ["workshop", "workshopBooking", "workshopBookingEntry", "workshopBookingConfirm", "smartScent"],
+        article: ["article"],
+        sale: ["sale", "itemSale"],
+        stores: ["stores"]
+    };
+    const breadcrumbRootPages = ["shoppingGuide", "legal", "privacy", "contact", "newsletter", "cart", "sitemap", "rss"];
+    const breadcrumbAccountPages = ["account", "login", "register"];
+    const resolveBreadcrumbTrail = (key) => {
+        if (!key || key === "home") return ["home"];
+        if (breadcrumbAccountPages.includes(key)) {
+            return key === "account" ? ["home", "account"] : ["home", "account", key];
+        }
+        for (const parent of Object.keys(breadcrumbChildMap)) {
+            if (breadcrumbChildMap[parent].includes(key)) {
+                return key === parent ? ["home", parent] : ["home", parent, key];
+            }
+        }
+        if (breadcrumbRootPages.includes(key)) return ["home", key];
+        return ["home", key];
+    };
     const isCurrent = (key) => key === pageKey ? ' is-current' : '';
     const accountHref = (mode) => `${window.location.pathname}#${mode}`;
     const accountModalLink = (mode, label, className = '') => `<a class="${className}" href="${accountHref(mode)}" data-account-modal="${mode}">${label}</a>`;
@@ -205,6 +229,28 @@
                 current: false
             };
         });
+    };
+    const breadcrumbHref = (key) => {
+        if (key === 'home') return link('home');
+        if (key === 'login') return accountHref('login');
+        if (key === 'register') return accountHref('register');
+        if (key === 'account') return accountHref('account');
+        return pages[key] ? link(key) : '#';
+    };
+    const renderBreadcrumb = () => {
+        const trail = resolveBreadcrumbTrail(pageKey);
+        if (!trail.length || (trail.length === 1 && trail[0] === 'home')) return '';
+        return `
+        <nav class="page-breadcrumb" aria-label="breadcrumb">
+            <ol>
+                ${trail.map((key, index) => {
+                    const isLast = index === trail.length - 1;
+                    const label = pages[key]?.label || key;
+                    if (isLast) return `<li><span aria-current="page">${label}</span></li>`;
+                    return `<li><a href="${breadcrumbHref(key)}">${label}</a></li>`;
+                }).join("")}
+            </ol>
+        </nav>`;
     };
     const globalNavItems = [
         { key: 'home', label: 'Home', href: link('home'), current: pageKey === 'home', children: [] },
@@ -361,6 +407,7 @@
             </div>
         </div>
         ${renderGlobalNav()}
+        ${renderBreadcrumb()}
         <div class="news-strip">
             <span>Latest</span>
             <p>${currentPage.latest}</p>

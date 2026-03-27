@@ -198,6 +198,7 @@ button {
 .notice-bar,
 .utility-header,
 .category-nav,
+.page-breadcrumb,
 .news-strip,
 main,
 .site-footer {
@@ -208,9 +209,56 @@ main,
 .notice-bar,
 .utility-header,
 .category-nav,
+.page-breadcrumb,
 .news-strip {
     background: rgba(249, 248, 244, 0.92);
     border-bottom: 1px solid rgba(201, 197, 187, 0.6);
+}
+
+.page-breadcrumb {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    color: var(--color-muted);
+    font-size: 0.85rem;
+}
+
+.page-breadcrumb ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.page-breadcrumb li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.page-breadcrumb li + li::before {
+    content: ">";
+    color: rgba(102, 102, 102, 0.9);
+    font-size: 0.76rem;
+}
+
+.page-breadcrumb a {
+    color: var(--color-main);
+    text-decoration: none;
+}
+
+.page-breadcrumb a:hover,
+.page-breadcrumb a:focus-visible {
+    color: var(--color-accent);
+    text-decoration: underline;
+}
+
+.page-breadcrumb [aria-current="page"] {
+    color: var(--color-accent);
+    font-weight: 700;
 }
 
 .notice-bar {
@@ -1089,12 +1137,14 @@ main {
 
     .notice-bar,
     .utility-header,
+    .page-breadcrumb,
     .news-strip {
         padding-left: 78px;
     }
 
     body.public-nav--no-side .notice-bar,
     body.public-nav--no-side .utility-header,
+    body.public-nav--no-side .page-breadcrumb,
     body.public-nav--no-side .news-strip {
         padding-left: 22px;
     }

@@ -633,5 +633,8 @@
   3. Fixed message appears: `Demo mode is read-only. Login required to save.`
 
 ## 2026-03-27 Added Test (Admin JA Labels + Unified Button Style)
-- Target: js/admin-workshop-page.js, js/admin-enquiries-page.js, css/app-workshop-bookings.css, css/app-enquiries.css`r
+- Target: `js/admin-workshop-page.js`, `js/admin-enquiries-page.js`, `css/app-workshop-bookings.css`, `css/app-enquiries.css`
 - Check: action buttons in 04/06 are Japanese labels and same geometry/style (44px height, 10px radius).
+
+
+- Result (2026-03-27): Footer「サイトマップ」から subpages/sitemap.html へ遷移し、更新済みの公開/管理導線一覧（管理アクセス注記含む）を確認。
