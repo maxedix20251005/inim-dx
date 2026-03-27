@@ -590,3 +590,30 @@
   3. Hard-refresh browser cache.
   4. Verify logged-off access to admin pages redirects to `app/login.html`.
   5. Verify admin users can still view/update data after login.
+
+### 2026-03-27 (Planned Slice) / 本日予定スライス
+- JA: 本日の実装は公開予約 Step 1（`subpages/workshop-booking.html`）の文言/導線の微調整に限定する。
+- EN: Today’s implementation is limited to micro-tuning of wording/guidance in public booking Step 1 (`subpages/workshop-booking.html`).
+- JA: DB仕様、SQL、`bookings` 保存ロジック、管理画面機能は変更しない。
+- EN: No changes to DB spec, SQL, `bookings` save logic, or admin features.
+- JA: 受入条件は `docs/10_PROJECT/WIP.md` の `4B. Acceptance Criteria (Today)` を正本とする。
+- EN: Acceptance criteria source of truth is `4B. Acceptance Criteria (Today)` in `docs/10_PROJECT/WIP.md`.
+
+### 2026-03-27 (Step 1 UX Micro-tuning) / 公開予約 Step 1 微調整
+- JA: subpages/workshop-booking.html の Step 1 表示文言を整理し、文字化け表示が混在していた箇所を利用者向け文言へ統一しました（Hero/summary/availability/store/selected-date/legend/slot intro）。
+- EN: Standardised Step 1 user-facing copy in subpages/workshop-booking.html, replacing corrupted display fragments with clear booking wording (Hero/summary/availability/store/selected-date/legend/slot intro).
+- JA: css/workshop-booking.css の .booking-selected-date__cta.is-disabled を調整し、非活性状態の判別を明確化しました。
+- EN: Tuned .booking-selected-date__cta.is-disabled in css/workshop-booking.css for clearer disabled-state affordance.
+- JA: 変更範囲は公開予約 Step 1 の表示/視認性のみ。DB仕様、SQL、`bookings` 保存処理、管理画面機能は未変更です。
+- EN: Scope is limited to public booking Step 1 display/usability only; DB spec, SQL, `bookings` save logic, and admin features are unchanged.
+
+
+### 2026-03-27 (Admin UX Step4) / Enquiries 1クリック更新
+- JA: js/admin-enquiries-page.js の data-quick-status ボタン操作を、status選択のみから『status設定 + 即時submit』へ変更しました。
+- EN: Updated data-quick-status actions in js/admin-enquiries-page.js from status-only selection to set status + immediate submit.
+- JA: これにより Enquiries 詳細パネルで Mark In Progress / Mark Responded / Mark Closed が1クリックで更新完了します。
+- EN: This enables one-click completion for Mark In Progress / Mark Responded / Mark Closed in Enquiries detail panel.
+- JA: 変更範囲は管理画面 Enquiries の操作UXのみで、DB仕様・SQL・公開側UIには影響しません。
+- EN: Scope is limited to admin Enquiries operation UX; no DB spec, SQL, or public UI impact.
+- 2026-03-27: Enquiries quick-status compatibility fix applied. After setting status by quick button, submit is triggered via requestSubmit() or submit-event fallback (dispatchEvent) to avoid non-submit/revert behavior in some browsers.
+- 2026-03-27: Added admin save guard for anonymous demo sessions (read-only message) in enquiries/workshop pages, and added quick-status submit fallback for browser compatibility.

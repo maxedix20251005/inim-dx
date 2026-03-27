@@ -351,6 +351,13 @@
                 if (!msg) return;
                 msg.textContent = "Updating...";
 
+            const { data: liveSession } = await supabase.auth.getSession();
+            const liveUser = liveSession?.session?.user || null;
+            if (!liveUser || liveUser.is_anonymous) {
+                msg.textContent = "Update requires admin login. Demo anonymous mode is read-only.";
+                return;
+            }
+
                 const payload = { status: nextStatus, internal_note: internalNote || null };
                 if (nextStatus === "confirmed") payload.confirmed_at = new Date().toISOString();
 

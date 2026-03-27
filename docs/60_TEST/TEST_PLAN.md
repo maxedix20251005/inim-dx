@@ -1,4 +1,4 @@
-﻿# TEST PLAN / テスト計画
+# TEST PLAN / テスト計画
 
 ## Purpose / 目的
 - JA: 本プロジェクトのテスト方針・対象・完了条件を管理する。
@@ -577,3 +577,36 @@
   - デモ向けの公開読取状態が解除される
   - 管理画面はログイン必須の通常保護状態へ復帰する
   - EN: Security posture returns to admin-only with predictable rollback behavior.
+
+## 2026-03-27 追加テスト / Added Test (Step 1 Copy + Disabled CTA Clarity)
+- 対象:
+  - `subpages/workshop-booking.html`
+  - `css/workshop-booking.css`
+- 手順:
+  1. 予約ページを開き、Hero/summary/availability/store/selected-date/legend/slot intro の文言が文字化けなく表示されることを確認する
+  2. 日付未選択時、`この日程の予約枠を見る` が非活性表示（誤操作不能）であることを確認する
+  3. 日付選択後、同CTAから `#booking-slots-panel` へ遷移できることを確認する
+  4. Diagnostics、店舗選択、日付選択、予約枠表示が従来どおり動作することを確認する
+  5. Console エラーが発生しないことを確認する
+- 期待結果:
+  - Step 1 の次アクション理解が改善される
+  - 既存導線・機能に退行がない
+  - EN: Step 1 action intent is clearer with no regressions in existing booking flow.
+
+
+## 2026-03-27 追加テスト / Added Test (Enquiries Quick Status One-Click Save)
+- 対象:
+  - `js/admin-enquiries-page.js`
+  - `app/pages/enquiries.html`
+- 手順:
+  1. `app/pages/enquiries.html` で任意の問い合わせを選択する
+  2. `Mark In Progress` を押下し、`Update Enquiry` を押さずに status が更新されることを確認する
+  3. 同様に `Mark Responded` / `Mark Closed` でも1クリック更新されることを確認する
+  4. 更新後に一覧再取得され、選択中レコードが維持されることを確認する
+  5. Console エラーが発生しないことを確認する
+- 期待結果:
+  - quick status 操作が1クリックで保存完了する
+  - Enquiries triage のクリック数が削減される
+  - EN: Quick status actions persist in one click with no regressions.
+- Recheck note (2026-03-27): verify quick-status update persists on environments where requestSubmit is unsupported, using submit-event fallback path.
+- Recheck note (2026-03-27): in open_demo anonymous session, update actions must show read-only message; after admin login, updates must persist.

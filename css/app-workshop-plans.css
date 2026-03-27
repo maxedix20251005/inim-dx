@@ -212,3 +212,6 @@
     flex-wrap: wrap;
   }
 }
+
+/* overflow guard to prevent panel bleed across sidebar */
+[data-admin-page-host='workshop-plans'], .wp-grid, .wp-grid > *, .wp-panel, .wp-table-wrap { min-width: 0; max-width: 100%; }

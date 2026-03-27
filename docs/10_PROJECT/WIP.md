@@ -1,4 +1,4 @@
-﻿# WIP / 作業中サマリ
+# WIP / 作業中サマリ
 
 ## 1. Objective This Sprint / 現在スプリントの目的
 - JA: Workshop 予約導線と管理画面運用の整合を維持しつつ、次実装に即着手できる状態を保つ。
@@ -207,3 +207,43 @@
 - 2026-03-26: Rollback runbook added for `open_demo` -> `admin_only`.
   - JA: 実施順は `sql/14_revert_admin_demo_read_policies.sql` 実行 -> `js/site-config.js` の `adminAccessMode` を `admin_only` へ変更 -> ハードリロード -> 未ログイン時リダイレクト確認。
   - EN: Required order is: run `sql/14_revert_admin_demo_read_policies.sql` -> set `adminAccessMode` to `admin_only` in `js/site-config.js` -> hard refresh -> verify logged-off redirect to login.
+
+- 2026-03-27: Archived docs/90_WIP/WIP_TEST_WORKSHOP.md as non-canonical due to mojibake corruption and added explicit source-of-truth pointers.
+- 2026-03-27: docs/90_WIP/WIP_TEST_WORKSHOP.md は文字化けにより正本外（Archive）として扱う方針を明記し、正本参照先を追記。
+
+## 4A. Today Execution Slice (2026-03-27) / 本日の実行スライス
+- JA: 本日は「公開予約 Step 1 のUI文言/誘導の微調整」に限定し、DB仕様変更・SQL追加・管理画面機能追加は行わない。
+- EN: Today is limited to micro-improvements in public booking Step 1 copy/guidance only; no DB spec change, no SQL, and no admin feature expansion.
+- Scope In:
+  - JA: `subpages/workshop-booking.html` の見出し/補助文言/CTA文言の明確化
+  - EN: Clarify heading/supporting copy/CTA wording in `subpages/workshop-booking.html`
+  - JA: 必要最小限のスタイル調整（可読性・視認性）
+  - EN: Minimal style tuning for readability/visibility
+- Scope Out:
+  - JA: `plan_id` / `session_id` の実データ仕様変更
+  - EN: Any production contract change for `plan_id` / `session_id`
+  - JA: `bookings` insert payload や Supabase 認証/RLSロジック変更
+  - EN: Any `bookings` payload or Supabase auth/RLS logic change
+  - JA: 管理画面 (`app/pages/*`, `js/admin-*.js`) の機能追加
+  - EN: Any admin feature change (`app/pages/*`, `js/admin-*.js`)
+
+## 4B. Acceptance Criteria (Today) / 本日の受入条件
+1. JA: 予約ページ Step 1 で「次に何をするか」が文言で明確に理解できる。
+   EN: Step 1 clearly communicates the next action in wording.
+2. JA: 日付未選択時は予約枠確認CTAが誤解を生まない非活性/案内状態である。
+   EN: Before date selection, slot-check CTA remains non-confusing in disabled/guidance state.
+3. JA: 日付選択後、`この日程の予約枠を見る` で下段予約枠へ遷移できる。
+   EN: After date selection, `この日程の予約枠を見る` links correctly to slot section.
+4. JA: 既存機能退行なし（Diagnostics、store/date選択、Console errorなし）。
+   EN: No regression in existing behavior (Diagnostics, store/date selection, no console errors).
+5. JA: 同一タスク内で `PROJECT_STATUS.md` / `WIP.md` / `TEST_PLAN.md` を更新する。
+   EN: `PROJECT_STATUS.md` / `WIP.md` / `TEST_PLAN.md` must be updated in the same task.
+
+- 2026-03-27: Step 1 UX micro-tuning (public booking) applied. Updated subpages/workshop-booking.html copy/labels (hero, summary, availability, selected-date, legend, slot lead text) and improved disabled CTA clarity in css/workshop-booking.css without DB/SQL/admin logic changes.
+- 2026-03-27: 公開予約 Step 1 のUX微調整を実施。subpages/workshop-booking.html の文言・ラベル（ヒーロー、要約、予約可能日、選択日、凡例、予約枠説明）を更新し、css/workshop-booking.css で非活性CTAの視認性を改善。DB/SQL/管理画面ロジック変更はなし。
+
+- 2026-03-27: Step4 admin UX speed-up applied on Enquiries. In js/admin-enquiries-page.js, quick status buttons (Mark In Progress / Mark Responded / Mark Closed) now auto-submit via form.requestSubmit() after setting status (one-click update).
+- 2026-03-27: Step4 管理画面UX改善（Enquiries）を実施。js/admin-enquiries-page.js で quick status ボタン（Mark In Progress / Mark Responded / Mark Closed）押下時に status 設定後 form.requestSubmit() で即時保存する1クリック更新へ変更。
+- 2026-03-27: Step4 fix: quick status save in Enquiries now uses requestSubmit with submit-event fallback (dispatchEvent) for browser compatibility; status no longer reverts after click.
+- 2026-03-27: Step4 管理画面UX改善（Enquiries）を実施。js/admin-enquiries-page.js の quick status ボタン押下時に status 設定後の保存を submit 経由で確実化し、クリック後の戻り（revert）を防止。
+- 2026-03-27: Admin save fix applied. Enquiries and Workshop updates now require logged-in (non-anonymous) session and show explicit read-only message in open_demo anonymous mode; quick status buttons submit with compatibility fallback.

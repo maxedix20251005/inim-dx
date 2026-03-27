@@ -364,6 +364,11 @@
                 if (statusSelect instanceof HTMLSelectElement) {
                     statusSelect.value = String(button.getAttribute("data-quick-status") || statusSelect.value);
                 }
+                if (typeof form.requestSubmit === "function") {
+                    form.requestSubmit();
+                } else {
+                    form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+                }
             });
         });
         form?.addEventListener("submit", async (event) => {
@@ -376,6 +381,13 @@
             const msg = document.getElementById("eq-update-message");
             if (!msg) return;
             msg.textContent = "Updating...";
+
+            const { data: liveSession } = await supabase.auth.getSession();
+            const liveUser = liveSession?.session?.user || null;
+            if (!liveUser || liveUser.is_anonymous) {
+                msg.textContent = "Update requires admin login. Demo anonymous mode is read-only.";
+                return;
+            }
 
             const payload = { status: nextStatus, assigned_to: assignedTo || null };
             if (noteKey) payload[noteKey] = internalNote || null;

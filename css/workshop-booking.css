@@ -36,7 +36,7 @@
 .booking-selected-date__grid dt { font-size: .78rem; color: var(--color-muted); }
 .booking-selected-date__grid dd { margin: 2px 0 0; font-size: .95rem; color: var(--color-main); font-weight: 700; }
 .booking-selected-date__cta { width: 100%; text-align: center; }
-.booking-selected-date__cta.is-disabled { pointer-events: none; opacity: .5; }
+.booking-selected-date__cta.is-disabled { pointer-events: none; opacity: .46; cursor: not-allowed; box-shadow: none; }
 .booking-month table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 .booking-month th, .booking-month td { border: 1px solid rgba(228,222,211,.92); }
 .booking-month th { padding: 10px 0; background: #f8f2e9; font-size: .82rem; color: var(--color-muted); }
