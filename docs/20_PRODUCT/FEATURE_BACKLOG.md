@@ -113,7 +113,7 @@
   - EN: Switch footer “サイトマップ” link target to `sitemap.html`
 
 ### 2.12 Breadcrumb Navigation / パンくずナビゲーション整備
-- Status: `Proposed`
+- Status: `Accepted`
 - JA: 現在地と階層を可視化するパンくずを主要ページに追加し、目的ページの探索時間を短縮する。
 - EN: Add breadcrumb navigation to major pages so users can quickly understand hierarchy and find target pages.
 - Scope candidates:
@@ -127,7 +127,7 @@
 
 
 ### 2.13 Site Structure Review + IA Refinement / サイト構造レビューとIA再設計
-- Status: `Proposed`
+- Status: `Accepted`
 - JA: 現行サイト構造（公開/管理）の導線を棚卸しし、情報設計とナビゲーション階層を再整理する。
 - EN: Review current public/admin site structure and refine IA + navigation hierarchy.
 - Scope candidates:

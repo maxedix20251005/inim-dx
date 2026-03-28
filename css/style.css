@@ -2007,6 +2007,18 @@ body.account-modal-open {
     border: 1px solid #d7b2ab;
 }
 
+.sitemap-card h3 span.sitemap-admin-status--open-demo {
+    color: #8e6a20;
+    background: #fff8e9;
+    border-color: #dcc37d;
+}
+
+.sitemap-card h3 span.sitemap-admin-status--admin-only {
+    color: #2a6cd6;
+    background: #edf4ff;
+    border-color: #b7cff8;
+}
+
 .sitemap-list {
     margin: 14px 0 0;
     padding: 0;
@@ -2018,6 +2030,8 @@ body.account-modal-open {
 .sitemap-list li a {
     display: inline-flex;
     align-items: center;
+    justify-content: space-between;
+    gap: 10px;
     min-height: 36px;
     width: 100%;
     padding: 0 12px;
@@ -2029,12 +2043,41 @@ body.account-modal-open {
     transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.sitemap-list li a small {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 20px;
+    padding: 0 8px;
+    border-radius: 999px;
+    border: 1px solid #d7b2ab;
+    background: #fff1ee;
+    color: #b24531;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+}
+
 .sitemap-list li a:hover,
 .sitemap-list li a:focus-visible {
     border-color: #2c2c2c;
     background: #eae4d3;
     box-shadow: 0 0 0 3px rgba(44, 44, 44, 0.14);
     outline: none;
+}
+
+.sitemap-list li a.is-disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    color: #7c7569;
+    background: #f3f1eb;
+    border-color: #ddd6c8;
+    box-shadow: none;
+}
+
+.sitemap-list li a.is-disabled small {
+    opacity: 0.92;
 }
 
 .sitemap-card--admin {

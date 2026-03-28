@@ -417,3 +417,106 @@
 - 2026-03-28: Issue closure confirmed by user.
   - JA: Issue `2026-03-28-28` / `2026-03-28-29` はユーザー確認完了により `解消済み` へ更新。
   - EN: Issues `2026-03-28-28` and `2026-03-28-29` were closed after user verification.
+- 2026-03-28: Backlog status sync for breadcrumb item.
+  - JA: `2.12 Breadcrumb Navigation` は実装済み（public: `site-shell.js`, admin: `admin-app.js`）を確認し、`Accepted` へ更新。
+  - EN: Confirmed `2.12 Breadcrumb Navigation` is already implemented (public/admin) and updated backlog status to `Accepted`.
+- 2026-03-28: Started `2.13 Site Structure Review + IA Refinement` (slice-1).
+  - JA: runtime ナビとの整合を優先し、`Sale -> セール` 表記統一、breadcrumb の `sale/itemSale` 重複判定を整理、`sitemap.html` を導線別グルーピングへ再編。
+  - EN: Began IA refinement slice-1 by aligning runtime taxonomy, fixing breadcrumb overlap, and reorganizing sitemap into flow-oriented groups.
+- 2026-03-28: Continued `2.13` (slice-2: footer taxonomy + disabled policy).
+  - JA: `disabledPublicPageKeys` を導入し、Footer/Sidebar/Account の disabled リンク判定を共通化。初期描画と再描画で挙動差が出ないよう統一。
+  - EN: Added centralized `disabledPublicPageKeys` policy and unified disabled-link rendering across footer/sidebar/account in both initial and auth-updated states.
+- 2026-03-28: Continued `2.13` (slice-3: workshop page-key and breadcrumb consistency).
+  - JA: `workshop-plans.html` の `data-page-key` を `workshopPlans` へ修正し、`site-shell.js` に `workshopPlans` / `workshopBookingThanks` を正式登録。
+  - EN: Fixed `workshop-plans.html` page-key to `workshopPlans` and registered `workshopPlans` / `workshopBookingThanks` in `site-shell.js`.
+  - JA: Workshop導線ラベルを予約フロー表現へ整合し、breadcrumb/current判定へ Plans/Thanks を追加。
+  - EN: Aligned workshop-flow labels to booking terminology and added Plans/Thanks into breadcrumb/current-state resolution.
+- 2026-03-28: Booking floating reservation panel refinement.
+  - JA: `workshop-booking.html` の固定導線をミニパネル化し、`予約する` 見出しと2ボタン（`空き枠を確認する` / `プランを比較する`）のみへ簡素化。
+  - EN: Refined booking fixed CTA into a compact floating panel with only title + two actions (`Check Availability` / `Compare Plans`).
+  - JA: モバイルは下部ドック表示、日付選択時は第1ボタン文言を日付連動で更新。
+  - EN: Mobile now uses bottom dock behavior; primary button label updates with selected date context.
+- 2026-03-28: Floating CTA readability + Workshop page CTA relocation.
+  - JA: `workshop-booking` の floating ボタンを折返し対応に変更し、長い日付文言でも欠けないよう幅/行高を調整。
+  - EN: Updated booking floating buttons for multiline readability so long date labels do not clip.
+  - JA: `workshop.html` の下部予約ボタン群をフローティングCTAへ移設（`予約フォームへ進む` / `デジタル調香を試す`）。
+  - EN: Moved Workshop reservation actions from bottom panel into a persistent floating CTA.
+- 2026-03-28: Continued `2.13` (slice-4: sitemap label/status consistency).
+  - JA: `sitemap.html` のトップレベル先頭を `Home` 表記へ統一し、runtime グローバルナビとのラベル整合を強化。
+  - EN: Normalized sitemap top-level label to `Home` to match runtime global navigation.
+  - JA: 公開未準備ページに `準備中` マーカーを付与し、閲覧者が公開状態を判断しやすいよう改善。
+  - EN: Added `準備中` markers to not-ready public pages to make publish status explicit.
+- 2026-03-28: Continued `2.13` (slice-5: admin naming + access-mode visibility).
+  - JA: sitemap 管理カードの表記を `ワークショップ予約管理 / ワークショッププラン管理` に統一し、公開側表記と混在しないよう整理。
+  - EN: Unified admin sitemap labels to `ワークショップ予約管理 / ワークショッププラン管理` for cleaner IA naming.
+  - JA: `adminAccessMode` に応じてバッジ/注記が切替わる表示を追加し、`open_demo` と `admin_only` の現在設定をページ上で確認可能にした。
+  - EN: Added `adminAccessMode`-driven badge/note rendering so current admin access mode is visible on sitemap.
+- 2026-03-28: Continued `2.13` (slice-6: sitemap disabled-link behavior sync).
+  - JA: sitemap の `準備中` リンクに `aria-disabled` と非活性スタイルを適用し、クリック遷移を無効化。
+  - EN: Synced sitemap `coming-soon` links with disabled behavior (`aria-disabled` + non-clickable styling).
+  - JA: runtime の global/footer disabled ポリシーと同じ運用意図になるよう統一。
+  - EN: Aligned sitemap behavior with runtime global/footer disabled-link policy intent.
+- 2026-03-28: Continued `2.13` (slice-7: runtime policy-driven sitemap disabling).
+  - JA: `sitemap.html` のリンクを実行時に走査し、`disabledPageFiles` ポリシーで `is-disabled/aria-disabled/tabindex` を自動適用するよう変更。
+  - EN: Added runtime sitemap link scanning to auto-apply disabled state via `disabledPageFiles` policy.
+  - JA: 非対象リンクは属性を除去して有効状態を維持し、手動クラス管理への依存を低減。
+  - EN: Active links now have disabled attributes removed automatically, reducing manual maintenance drift.
+- 2026-03-28: Continued `2.13` (slice-8: centralized disabled policy source).
+  - JA: `site-config.js` に `disabledPublicPageKeys` を追加し、公開未準備ページ定義を設定値として一元化。
+  - EN: Added `disabledPublicPageKeys` into `site-config.js` as the single source of disabled public-page policy.
+  - JA: `site-shell.js` と `sitemap.html` の双方で同設定を参照するよう変更し、片側更新漏れを防止。
+  - EN: Updated both `site-shell.js` and `sitemap.html` to read the same policy config, preventing drift.
+- 2026-03-28: Continued `2.13` (slice-9: data-page-key based sitemap policy matching).
+  - JA: sitemap 公開リンクへ `data-page-key` を付与し、disabled 判定を URL 解析依存からキー一致判定へ移行。
+  - EN: Added `data-page-key` to sitemap links and moved disable logic from URL parsing to key-based matching.
+  - JA: 手動 `is-disabled/aria-disabled/tabindex` の埋め込みを除去し、実行時ポリシー適用へ統一。
+  - EN: Removed hardcoded disabled attributes from markup and unified behavior under runtime policy application.
+- 2026-03-28: Continued `2.13` (slice-10: coming-soon badge runtime sync).
+  - JA: sitemap スクリプトで `small(準備中)` の表示/非表示を disabled 判定と同時に制御するよう変更。
+  - EN: Updated sitemap runtime logic to toggle `coming-soon` badges in sync with disabled policy state.
+  - JA: ページ有効化時に `準備中` ラベルが自動で消えるようになり、手動修正を不要化。
+  - EN: Enabled pages now auto-hide the `coming-soon` label, removing manual cleanup work.
+- 2026-03-28: Continued `2.13` (slice-11: runtime-generated coming-soon badge).
+  - JA: disabled 対象リンクで `準備中` バッジが未存在でも自動追加されるようにし、表示文言をスクリプトで標準化。
+  - EN: Added runtime badge creation for disabled links and standardized `coming-soon` label text in script.
+  - JA: enabled 化されたリンクは `small` バッジを DOM から削除し、マークアップ残骸を残さない挙動へ変更。
+  - EN: Enabled links now remove stale `<small>` badges from DOM to avoid leftover markup artifacts.
+- 2026-03-28: Continued `2.13` (slice-12: static badge markup removal).
+  - JA: sitemap の policy 管理リンクから静的 `<small>準備中</small>` を削除し、実行時生成へ一本化。
+  - EN: Removed static `<small>準備中</small>` from policy-managed sitemap links and unified badge rendering at runtime.
+  - JA: 表示状態の管理責務を HTML からスクリプトへ移し、編集ミスによる表示差異を防止。
+  - EN: Shifted badge-state responsibility from HTML to script to reduce manual inconsistency risk.
+- 2026-03-28: Continued `2.13` (slice-13: coming-soon label config externalization).
+  - JA: `site-config.js` に `comingSoonBadgeLabel` を追加し、sitemap バッジ文言を設定値から参照するよう変更。
+  - EN: Added `comingSoonBadgeLabel` in `site-config.js` and switched sitemap badge text to config-driven rendering.
+  - JA: 文言の運用変更を HTML/JS 修正なしで実施できる構成へ更新。
+  - EN: Updated architecture so badge copy can be changed operationally without code edits in sitemap script/markup.
+- 2026-03-28: Continued `2.13` (slice-14: disabled policy sanitization).
+  - JA: `disabledPublicPageKeys` を適用前に正規化（trim/重複除去/未知キー除外）する処理を shell/sitemap 両方へ追加。
+  - EN: Added pre-apply sanitization for `disabledPublicPageKeys` (trim/dedupe/unknown-key filter) in both shell and sitemap.
+  - JA: 正規化後に有効キーがない場合は既定リストへフォールバックする挙動を統一。
+  - EN: Unified fallback behavior to default list when sanitized config becomes empty.
+- 2026-03-28: Continued `2.13` (slice-15: markup-driven sitemap fallback defaults).
+  - JA: sitemap の default disabled 判定を固定配列ではなく `data-default-disabled` 属性から生成する方式へ変更。
+  - EN: Replaced hardcoded sitemap fallback key list with defaults derived from `data-default-disabled` markup.
+  - JA: 設定適用は `data-page-key` が存在するリンクに限定し、sitemap 内未定義キーの影響を遮断。
+  - EN: Limited config application to links with known sitemap `data-page-key` values.
+- 2026-03-28: Continued `2.13` (slice-16: sitemap admin-copy externalization).
+  - JA: `site-config.js` に `sitemapAdminAccessCopy` を追加し、admin access バッジ/注記文言を設定化。
+  - EN: Added `sitemapAdminAccessCopy` in config for sitemap admin badge/note text management.
+  - JA: sitemap スクリプトは固定文言を廃止し、設定値（未設定時フォールバック）を参照するよう更新。
+  - EN: Updated sitemap script to consume config copy with safe fallback defaults instead of hardcoded strings.
+- 2026-03-28: Continued `2.13` (slice-17: admin mode rendering hardening).
+  - JA: `adminAccessMode` の未知値を `admin_only` へ正規化し、mode 判定を安定化。
+  - EN: Normalized unknown `adminAccessMode` values to `admin_only` for stable mode handling.
+  - JA: バッジクラスを描画前に初期化してから付与し、クラス残留による誤表示を防止。
+  - EN: Reset badge mode classes before re-applying the current one to avoid stale visual state.
+- 2026-03-28: Continued `2.13` (slice-18: sitemap script maintainability refactor).
+  - JA: `readText` / `unique` ヘルパーと `defaults` 集約を導入し、sitemap 実行時ロジックの重複を削減。
+  - EN: Introduced `readText`/`unique` helpers and consolidated defaults for cleaner sitemap runtime logic.
+- 2026-03-28: Continued `2.13` (slice-19: global-nav disable sync).
+  - JA: `disabledGlobalNavKeys` を固定定義から、`disabledPublicPageKeys` 由来の動的導出へ変更。
+  - EN: Switched global-nav disabled keys from static list to config-derived subset of `disabledPublicPageKeys`.
+- 2026-03-28: Closed `2.13` as accepted (slice-20 closure).
+  - JA: IA整合タスクの完了判定を反映し、`FEATURE_BACKLOG` の `2.13` を `Accepted` へ更新。
+  - EN: Marked `2.13` as `Accepted` in `FEATURE_BACKLOG` after final consistency pass.

@@ -35,12 +35,14 @@
         searchProjects: { path: 'subpages/search-projects.html', label: 'プロジェクト・読み物', title: 'Search / Projects', latest: '関連ページは現在作成準備中です。' },
         searchEvents: { path: 'subpages/search-events.html', label: 'イベント情報', title: 'Search / Events', latest: '関連ページは現在作成準備中です。' },
         workshop: { path: 'subpages/workshop.html', label: '香りと遊ぶ', title: 'Workshop', latest: '香りのワークショップ予約ページを公開しました。デジタル体験から店頭予約まで一続きで案内します。' },
-        workshopBooking: { path: 'subpages/workshop-booking.html', label: 'Workshop Booking', title: 'Workshop / Booking', latest: 'ワークショップ予約画面のドラフトを公開しました。空き状況を見ながら日付と時間帯を選べます。' },
-        workshopBookingEntry: { path: 'subpages/workshop-booking-entry.html', label: 'Workshop Booking Entry', title: 'Workshop / Booking Entry', latest: 'ワークショップ予約入力画面のドラフトを公開しました。選択した枠の内容を確認しながら申込情報を整理できます。' },
-        workshopBookingConfirm: { path: 'subpages/workshop-booking-confirm.html', label: 'Workshop Booking Confirm', title: 'Workshop / Booking Confirm', latest: 'ワークショップ予約確認画面のドラフトを公開しました。送信前に予約枠と申込情報をまとめて確認できます。' },
+        workshopPlans: { path: 'subpages/workshop-plans.html', label: 'プラン比較', title: 'Workshop / Plans', latest: 'ワークショッププラン比較ページを公開しました。目的や所要時間を比較しながら選べます。' },
+        workshopBooking: { path: 'subpages/workshop-booking.html', label: '予約枠選択', title: 'Workshop / Booking', latest: 'ワークショップ予約画面のドラフトを公開しました。空き状況を見ながら日付と時間帯を選べます。' },
+        workshopBookingEntry: { path: 'subpages/workshop-booking-entry.html', label: '申込情報入力', title: 'Workshop / Booking Entry', latest: 'ワークショップ予約入力画面のドラフトを公開しました。選択した枠の内容を確認しながら申込情報を整理できます。' },
+        workshopBookingConfirm: { path: 'subpages/workshop-booking-confirm.html', label: '予約内容確認', title: 'Workshop / Booking Confirm', latest: 'ワークショップ予約確認画面のドラフトを公開しました。送信前に予約枠と申込情報をまとめて確認できます。' },
+        workshopBookingThanks: { path: 'subpages/workshop-booking-thanks.html', label: '予約完了', title: 'Workshop / Booking Thanks', latest: 'ワークショップ予約完了画面を公開しました。次のアクションを選んで継続できます。' },
         smartScent: { path: 'subpages/smart-scent-design.html', label: 'Smart Scent Design', title: 'Smart Scent Design', latest: '色・粒子・サウンドを使って、自分の香りを視覚的に編集するデジタル調香ページです。' },
         article: { path: 'subpages/article.html', label: '記事', title: 'Article', latest: '記事一覧ページは現在作成準備中です。' },
-        sale: { path: 'subpages/sale.html', label: 'Sale', title: 'Sale', latest: 'セールページは現在作成準備中です。' },
+        sale: { path: 'subpages/sale.html', label: 'セール', title: 'Sale', latest: 'セールページは現在作成準備中です。' },
         sitemap: { path: 'subpages/sitemap.html', label: 'サイトマップ', title: 'Site Map', latest: 'サイト構造の見直しに向け、公開ページと管理ページの導線一覧を公開しました。' },
         stores: { path: 'subpages/stores.html', label: '実店舗', title: 'Stores', latest: '実店舗ページは現在作成準備中です。' },
         account: { path: 'subpages/account.html', label: 'マイアカウント', title: 'My Account', latest: 'アカウント関連ページは現在作成準備中です。' },
@@ -114,9 +116,9 @@
         brand: ["about", "brand", "brandGroundbreakers", "brandNezs", "brandAromaCrops", "brandKosaido", "brandWatoyo", "brandCocktailSoap", "brandEnjoyth", "brandAwaji", "brandOldAroma"],
         items: ["items", "itemHomeFragrance", "itemBodyCare", "itemDiy", "itemSale", "itemEcology", "itemRefillTools", "itemGiftSet"],
         scentSearch: ["scentSearch", "searchStoreInfo", "searchProjects", "searchEvents"],
-        workshop: ["workshop", "workshopBooking", "workshopBookingEntry", "workshopBookingConfirm", "smartScent"],
+        workshop: ["workshop", "workshopPlans", "workshopBooking", "workshopBookingEntry", "workshopBookingConfirm", "workshopBookingThanks", "smartScent"],
         article: ["article"],
-        sale: ["sale", "itemSale"],
+        sale: ["sale"],
         stores: ["stores"]
     };
     const breadcrumbRootPages = ["shoppingGuide", "legal", "privacy", "contact", "newsletter", "cart", "sitemap", "rss"];
@@ -135,7 +137,23 @@
         return ["home", key];
     };
     const isCurrent = (key) => key === pageKey ? ' is-current' : '';
-    const disabledGlobalNavKeys = new Set(['brand', 'items', 'scentSearch', 'article', 'sale', 'stores']);
+    const defaultDisabledPublicPageKeys = [
+        'brand', 'items', 'scentSearch', 'article', 'sale', 'stores',
+        'shoppingGuide', 'legal', 'privacy', 'contact', 'newsletter', 'rss', 'cart'
+    ];
+    const knownDisabledPolicyKeys = new Set(defaultDisabledPublicPageKeys);
+    const configDisabledKeys = Array.isArray(siteConfig.disabledPublicPageKeys)
+        ? siteConfig.disabledPublicPageKeys
+            .map((key) => String(key || '').trim())
+            .filter((key, index, arr) => key && arr.indexOf(key) === index && knownDisabledPolicyKeys.has(key))
+        : [];
+    const disabledPublicPageKeys = new Set(
+        configDisabledKeys.length ? configDisabledKeys : defaultDisabledPublicPageKeys
+    );
+    const globalNavToggleKeys = ['brand', 'items', 'scentSearch', 'article', 'sale', 'stores'];
+    const disabledGlobalNavKeys = new Set(
+        globalNavToggleKeys.filter((key) => disabledPublicPageKeys.has(key))
+    );
     const disabledLinkAttrs = `aria-disabled="true" tabindex="-1"`;
     const accountHref = (mode) => `${window.location.pathname}#${mode}`;
     const accountModalLink = (mode, label, className = '') => `<a class="${className}" href="${accountHref(mode)}" data-account-modal="${mode}">${label}</a>`;
@@ -163,6 +181,7 @@
             key: 'workshop',
             items: [
                 { label: '香游について', href: link('workshop') },
+                { label: 'プラン比較', href: link('workshopPlans') },
                 { label: '予約する', href: link('workshopBooking') },
                 { label: '体験の流れ', href: `${root}/index.html#journey` },
                 { label: '体験を始める', href: link('smartScent') }
@@ -174,7 +193,7 @@
             items: [{ label: '記事一覧', href: link('article') }]
         },
         {
-            title: 'Sale',
+            title: 'セール',
             key: 'sale',
             items: [{ label: 'セール一覧', href: link('sale') }]
         },
@@ -210,7 +229,16 @@
 
     const renderStandaloneLink = (item) => item.modal
         ? `<a class="${isCurrent(item.key).trim()}" href="${accountHref(item.modal)}" data-account-modal="${item.modal}">${item.label}</a>`
-        : `<a class="${isCurrent(item.key).trim()}" href="${link(item.key)}">${item.label}</a>`;
+        : (disabledPublicPageKeys.has(item.key)
+            ? `<a class="${isCurrent(item.key).trim()} is-disabled" href="#" ${disabledLinkAttrs}>${item.label}</a>`
+            : `<a class="${isCurrent(item.key).trim()}" href="${link(item.key)}">${item.label}</a>`);
+    const renderPublicPageLink = (key, label, className = '') => {
+        const cls = `${className} ${disabledPublicPageKeys.has(key) ? 'is-disabled' : ''}`.trim();
+        return disabledPublicPageKeys.has(key)
+            ? `<a class="${cls}" href="#" ${disabledLinkAttrs}>${label}</a>`
+            : `<a class="${cls}" href="${link(key)}">${label}</a>`;
+    };
+    const renderDisabledTextLink = (label) => `<a class="is-disabled" href="#" ${disabledLinkAttrs}>${label}</a>`;
     const sidebarGroupMap = Object.fromEntries(sidebarGroups.map((group) => [group.key, group]));
     const buildGlobalChildren = (groupKey) => {
         const group = sidebarGroupMap[groupKey];
@@ -281,7 +309,7 @@
             key: 'workshop',
             label: '香りと遊ぶ',
             href: link('workshop'),
-            current: ['workshop', 'workshopBooking', 'workshopBookingEntry', 'workshopBookingConfirm', 'smartScent'].includes(pageKey),
+            current: ['workshop', 'workshopPlans', 'workshopBooking', 'workshopBookingEntry', 'workshopBookingConfirm', 'workshopBookingThanks', 'smartScent'].includes(pageKey),
             children: buildGlobalChildren('workshop')
         },
         {
@@ -293,7 +321,7 @@
         },
         {
             key: 'sale',
-            label: 'Sale',
+            label: 'セール',
             href: link('sale'),
             current: ['sale', 'itemSale'].includes(pageKey),
             children: buildGlobalChildren('sale')
@@ -350,9 +378,11 @@
         searchProjects: 'scentSearch',
         searchEvents: 'scentSearch',
         workshop: 'workshop',
+        workshopPlans: 'workshop',
         workshopBooking: 'workshop',
         workshopBookingEntry: 'workshop',
         workshopBookingConfirm: 'workshop',
+        workshopBookingThanks: 'workshop',
         smartScent: 'workshop',
         article: 'article',
         sale: 'sale',
@@ -419,25 +449,25 @@
             </div>
             <div>
                 <p class="site-footer__title">Guide</p>
-                <a href="${link('sitemap')}">サイトマップ</a>
-                <a class="is-disabled" href="#" ${disabledLinkAttrs}>ショッピングガイド</a>
-                <a class="is-disabled" href="#" ${disabledLinkAttrs}>配送・送料について</a>
-                <a class="is-disabled" href="#" ${disabledLinkAttrs}>返品について</a>
-                <a class="is-disabled" href="#" ${disabledLinkAttrs}>お支払い方法について</a>
-                <a class="is-disabled" href="#" ${disabledLinkAttrs}>法的表示</a>
+                ${renderPublicPageLink('sitemap', 'サイトマップ')}
+                ${renderPublicPageLink('shoppingGuide', 'ショッピングガイド')}
+                ${renderDisabledTextLink('配送・送料について')}
+                ${renderDisabledTextLink('返品について')}
+                ${renderDisabledTextLink('お支払い方法について')}
+                ${renderPublicPageLink('legal', '法的表示')}
             </div>
             <div>
                 <p class="site-footer__title">Support</p>
-                <a class="is-disabled" href="#" ${disabledLinkAttrs}>プライバシーポリシー</a>
-                <a class="is-disabled" href="#" ${disabledLinkAttrs}>メルマガ登録・解除</a>
-                <a class="is-disabled" href="#" ${disabledLinkAttrs}>RSS / ATOM</a>
+                ${renderPublicPageLink('privacy', 'プライバシーポリシー')}
+                ${renderPublicPageLink('newsletter', 'メルマガ登録・解除')}
+                ${renderPublicPageLink('rss', 'RSS / ATOM')}
             </div>
             <div>
                 <p class="site-footer__title">Account</p>
                 ${accountModalLink('account', 'マイアカウント')}
                 ${accountModalLink('register', '会員登録')}
                 ${accountModalLink('login', 'ログイン')}
-                <a class="is-disabled" href="#" ${disabledLinkAttrs}>お問い合わせ</a>
+                ${renderPublicPageLink('contact', 'お問い合わせ')}
             </div>
         </div>
         <p class="site-footer__copy">inim-dx pages aligned to the sitemap, wireframe, and design guide.</p>
@@ -527,16 +557,16 @@
         const standalone = sidebar.querySelector('.sidebar__standalone');
         if (!standalone) { return; }
         standalone.innerHTML = currentUser
-            ? `<a class="${isCurrent('shoppingGuide').trim()}" href="${link('shoppingGuide')}">ショッピングガイド</a>${accountModalLink('account', 'マイアカウント')}${accountLogoutLink()}`
-            : `<a class="${isCurrent('shoppingGuide').trim()}" href="${link('shoppingGuide')}">ショッピングガイド</a>${accountModalLink('register', '会員登録')}${accountModalLink('login', 'ログイン')}`;
+            ? `${renderPublicPageLink('shoppingGuide', 'ショッピングガイド', isCurrent('shoppingGuide').trim())}${accountModalLink('account', 'マイアカウント')}${accountLogoutLink()}`
+            : `${renderPublicPageLink('shoppingGuide', 'ショッピングガイド', isCurrent('shoppingGuide').trim())}${accountModalLink('register', '会員登録')}${accountModalLink('login', 'ログイン')}`;
     };
 
     const renderFooterAccountLinks = () => {
         const accountColumn = footer.querySelector('.site-footer__grid > div:last-child');
         if (!accountColumn) { return; }
         accountColumn.innerHTML = currentUser
-            ? `<p class="site-footer__title">Account</p>${accountModalLink('account', 'マイアカウント')}${accountLogoutLink()}<a class="is-disabled" href="#" ${disabledLinkAttrs}>お問い合わせ</a>`
-            : `<p class="site-footer__title">Account</p>${accountModalLink('register', '会員登録')}${accountModalLink('login', 'ログイン')}<a class="is-disabled" href="#" ${disabledLinkAttrs}>お問い合わせ</a>`;
+            ? `<p class="site-footer__title">Account</p>${accountModalLink('account', 'マイアカウント')}${accountLogoutLink()}${renderPublicPageLink('contact', 'お問い合わせ')}`
+            : `<p class="site-footer__title">Account</p>${accountModalLink('register', '会員登録')}${accountModalLink('login', 'ログイン')}${renderPublicPageLink('contact', 'お問い合わせ')}`;
     };
 
     const renderAdminLinks = () => {

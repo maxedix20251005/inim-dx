@@ -5,5 +5,26 @@ window.INIM_SITE_CONFIG = {
     adminResetRedirectUrl: 'https://maxedix20251005.github.io/inim-dx/app/password/reset.html',
     enablePublicSideNav: false,
     adminAccessMode: 'open_demo',
-    showBookingDiagnostics: false
+    sitemapAdminAccessCopy: {
+        badgePrefix: 'アクセス設定: ',
+        openDemoNote: '現在はデモ運用（open_demo）のため、未ログインでも管理ページを閲覧できる設定です。本番運用時は admin_only に戻してください。',
+        adminOnlyNote: '現在は admin_only のため、管理ページは管理者ログイン時のみアクセス可能です。'
+    },
+    showBookingDiagnostics: false,
+    comingSoonBadgeLabel: '準備中',
+    disabledPublicPageKeys: [
+        'brand',
+        'items',
+        'scentSearch',
+        'article',
+        'sale',
+        'stores',
+        'shoppingGuide',
+        'legal',
+        'privacy',
+        'contact',
+        'newsletter',
+        'rss',
+        'cart'
+    ]
 };

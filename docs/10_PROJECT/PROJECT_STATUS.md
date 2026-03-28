@@ -979,3 +979,269 @@
 - 対象ファイル:
   - `docs/10_PROJECT/ISSUE_LIST.md`
 - EN: Reflected user verification and closed Issues `2026-03-28-28` and `2026-03-28-29` as resolved.
+### ドキュメント更新（2026-03-28 追加53）
+- `2.12 Breadcrumb Navigation` の実装有無を再確認し、状態を更新しました。
+- 確認結果:
+  - 公開側: `js/site-shell.js` で `page-breadcrumb` を共通描画（`aria-label="breadcrumb"`）
+  - 管理側: `js/admin-app.js` で `admin-breadcrumb` を描画（`aria-label="パンくず"`）
+  - スタイル: `css/style.css` / `css/admin-app.css` に対応スタイルあり
+- 更新内容:
+  - `docs/20_PRODUCT/FEATURE_BACKLOG.md` の `2.12` を `Proposed` -> `Accepted` へ変更
+- EN: Re-verified breadcrumb implementation on both public/admin shells and promoted backlog item `2.12` from `Proposed` to `Accepted`.
+### ドキュメント更新（2026-03-28 追加54）
+- `2.13 Site Structure Review + IA Refinement` に着手し、IA整合の第1スライス（taxonomy alignment）を適用しました。
+- 変更内容:
+  - `js/site-shell.js` のトップレベル表記を統一（`Sale` -> `セール`）
+  - breadcrumb 親子判定の `sale` グループから `itemSale` を除外し、カテゴリ重複を解消
+  - `subpages/sitemap.html` を runtime ナビ構造に合わせて再編
+    - `公開ナビ（トップレベル）`
+    - `ワークショップ予約導線`
+    - `公開ページ（カテゴリ詳細）`
+    - `サポート / アカウント`
+    - `管理画面`
+  - `docs/20_PRODUCT/FEATURE_BACKLOG.md` の `2.13` を `In Progress` に更新
+- 目的:
+  - 実際のナビ構造とサイトマップ分類のズレを縮小し、探索時の認知負荷を下げる
+- 対象ファイル:
+  - `js/site-shell.js`
+  - `subpages/sitemap.html`
+  - `docs/20_PRODUCT/FEATURE_BACKLOG.md`
+- EN: Started `2.13` and delivered slice-1 taxonomy alignment by normalizing top-level labels and restructuring sitemap groups to mirror runtime navigation.
+### ドキュメント更新（2026-03-28 追加55）
+- `2.13` 第2スライスとして、footer taxonomy と disabled-link 運用を共通ポリシー化しました。
+- 変更内容:
+  - `js/site-shell.js` に `disabledPublicPageKeys` を追加し、公開未準備ページの非活性判定を一元化
+  - `renderPublicPageLink()` / `renderDisabledTextLink()` を追加し、Footer/Sidebar/Account 再描画のリンク生成を統一
+  - Footer 内の `Guide` / `Support` / `Account` をページキー連動で描画し、disabled 表示ルールを統一
+  - Sidebar の standalone（`ショッピングガイド`）初期描画も同じ disabled ポリシーに統一
+- 目的:
+  - 画面やログイン状態によって disabled 表示がぶれる問題を防止し、IA運用ルールを実装へ固定化
+- 対象ファイル:
+  - `js/site-shell.js`
+- EN: Delivered `2.13` slice-2 by centralizing disabled-link policy and unifying footer/sidebar/account link rendering behavior.
+### ドキュメント更新（2026-03-28 追加56）
+- `2.13` 第3スライスとして、ワークショップ導線ページキーとパンくず階層の整合性を改善しました。
+- 変更内容:
+  - `subpages/workshop-plans.html` の `data-page-key` を `workshop` から `workshopPlans` へ修正
+  - `js/site-shell.js` の `pages` 定義に `workshopPlans` / `workshopBookingThanks` を追加
+  - Workshop系ラベルを予約導線に合わせて調整（`予約枠選択` / `申込情報入力` / `予約内容確認` / `予約完了`）
+  - breadcrumb / current-top-level 判定へ `workshopPlans` / `workshopBookingThanks` を追加
+  - `香りと遊ぶ` の子メニューへ `プラン比較` を追加
+- 目的:
+  - workshop フロー内で現在地（パンくず・ナビ current 状態）が実ページと一致するようにする
+- 対象ファイル:
+  - `js/site-shell.js`
+  - `subpages/workshop-plans.html`
+- EN: Delivered `2.13` slice-3 by fixing workshop flow page-key registration and breadcrumb/nav-state consistency across Plans/Booking/Thanks.
+### ドキュメント更新（2026-03-28 追加57）
+- `workshop-booking` に、最小構成の floating 予約ショートカットパネルを追加しました。
+- 変更内容:
+  - 既存の sticky CTA を再設計し、テキスト説明を廃止して `タイトル + 2ボタン` 構成へ変更
+  - 表示要素を `予約する` / `空き枠を確認する` / `プランを比較する` に統一
+  - デスクトップは右下固定のミニパネル、モバイルは下部ドック表示へ調整
+  - 日付選択時は第1ボタン文言のみ `◯◯ の予約枠を確認する` に更新
+- 目的:
+  - 画面占有を抑えながら、予約導線の次アクションを常時明示する
+- 対象ファイル:
+  - `subpages/workshop-booking.html`
+  - `css/workshop-booking.css`
+- EN: Added a compact floating reservation shortcut panel on `workshop-booking` with title + two action buttons, optimized for desktop and mobile.
+### ドキュメント更新（2026-03-28 追加58）
+- 浮動CTAの視認性改善と、`workshop.html` の予約導線配置を更新しました。
+- 変更内容:
+  - `workshop-booking` の floating パネル幅を拡張し、ボタン文言を折返し可能に調整（長い日付文言でも欠けない）
+  - `workshop.html` で下部予約ボタン群を廃止し、`予約する` ミニフローティングCTA（`予約フォームへ進む` / `デジタル調香を試す`）へ移行
+  - モバイルでは下部ドック表示を維持
+- 目的:
+  - CTAの可読性向上と、ページ下部までスクロールしなくても予約導線へアクセスできる構成にする
+- 対象ファイル:
+  - `css/workshop-booking.css`
+  - `subpages/workshop.html`
+  - `css/workshop.css`
+- EN: Improved floating CTA readability (wider, multiline-safe buttons) and moved Workshop reservation actions from bottom section to a persistent floating panel.
+### ドキュメント更新（2026-03-28 追加59）
+- `2.13` 第4スライスとして、サイトマップのラベル整合と公開準備状態の可視化を実施しました。
+- 変更内容:
+  - `subpages/sitemap.html` のトップレベル先頭ラベルを runtime ナビに合わせて `Home` へ統一
+  - 公開未準備ページに `準備中` マーカーを追記（ブランド/アイテム/香りから探す/記事/セール/実店舗、Support配下各種）
+  - `css/style.css` に sitemap 用 `small` マーカーの表示スタイルを追加
+- 目的:
+  - ナビ実装とサイトマップ表記の差異を減らし、利用者に公開状態を明示する
+- 対象ファイル:
+  - `subpages/sitemap.html`
+  - `css/style.css`
+- EN: Delivered `2.13` slice-4 by aligning sitemap labels with runtime navigation and surfacing coming-soon states via clear badges.
+### ドキュメント更新（2026-03-28 追加60）
+- `2.13` 第5スライスとして、管理画面導線の命名統一とアクセスモード可視化を実装しました。
+- 変更内容:
+  - `subpages/sitemap.html` 管理カード内の名称を `Workshop予約管理 / Workshopプラン管理` から `ワークショップ予約管理 / ワークショッププラン管理` へ統一
+  - 管理カード見出しに `adminAccessMode` 連動のステータスバッジを追加（`open_demo` / `admin_only`）
+  - 説明文も `adminAccessMode` に応じて切替表示し、現在のデモ公開状態を明示
+  - `css/style.css` に admin-access バッジのモード別スタイルを追加
+- 目的:
+  - サイトマップ上で管理導線の命名とアクセス制御状態を即時に理解できるようにする
+- 対象ファイル:
+  - `subpages/sitemap.html`
+  - `css/style.css`
+- EN: Delivered `2.13` slice-5 by normalizing admin naming in sitemap and adding live `adminAccessMode` visibility badges/notes.
+### ドキュメント更新（2026-03-28 追加61）
+- `2.13` 第6スライスとして、sitemap のリンク挙動を runtime の disabled ポリシーに合わせました。
+- 変更内容:
+  - `subpages/sitemap.html` の公開未準備リンク（トップレベル + Support群）に `is-disabled` / `aria-disabled="true"` / `tabindex="-1"` を付与
+  - `css/style.css` に sitemap 向け disabled 表示（非活性配色・ポインタ無効化）を追加
+- 目的:
+  - sitemap 上でも「準備中」ページは誤遷移を防ぎ、実運用のナビ挙動と一貫させる
+- 対象ファイル:
+  - `subpages/sitemap.html`
+  - `css/style.css`
+- EN: Delivered `2.13` slice-6 by making coming-soon sitemap links non-interactive and visually consistent with runtime disabled-link behavior.
+### ドキュメント更新（2026-03-28 追加62）
+- `2.13` 第7スライスとして、sitemap disabled 判定を実行時ポリシー化しました。
+- 変更内容:
+  - `subpages/sitemap.html` に `disabledPageFiles` 判定を追加し、対象リンクへ `is-disabled` / `aria-disabled` / `tabindex` を動的適用
+  - 非対象リンクは属性を除去し、有効リンクとして維持
+  - 既存の `adminAccessMode` バッジ切替ロジックと同じ初期化ブロック内で実行
+- 目的:
+  - sitemap 側の手動マーク漏れを減らし、runtime disabled 方針とのズレを抑制する
+- 対象ファイル:
+  - `subpages/sitemap.html`
+- EN: Delivered `2.13` slice-7 by making sitemap disabled-link state policy-driven at runtime to reduce drift.
+### ドキュメント更新（2026-03-28 追加63）
+- `2.13` 第8スライスとして、公開未準備ページポリシーの設定値を単一化しました。
+- 変更内容:
+  - `js/site-config.js` に `disabledPublicPageKeys` を追加し、公開未準備ページ定義を設定化
+  - `js/site-shell.js` の disabled 判定を設定参照へ変更（未設定時は既定値フォールバック）
+  - `subpages/sitemap.html` も同設定を参照し、キー -> ファイル変換で disabled 対象を判定
+- 目的:
+  - runtime ナビと sitemap の disabled 対象を同一ソースで管理し、運用中のズレを防止する
+- 対象ファイル:
+  - `js/site-config.js`
+  - `js/site-shell.js`
+  - `subpages/sitemap.html`
+- EN: Delivered `2.13` slice-8 by centralizing disabled public-page policy in `site-config.js` and wiring both runtime nav and sitemap to the same source.
+### ドキュメント更新（2026-03-28 追加64）
+- `2.13` 第9スライスとして、sitemap の disabled 判定を `data-page-key` 基準へ統一しました。
+- 変更内容:
+  - `subpages/sitemap.html` の公開リンクへ `data-page-key` を付与
+  - disabled 判定を `href(ファイル名)` ベースから `data-page-key` ベースへ変更
+  - 手動の disabled 属性ハードコードを除去し、実行時ポリシー適用へ一本化
+- 目的:
+  - リンクURL変更時でも disabled 判定が壊れにくい構成にし、`site-shell.js` のキー体系と整合させる
+- 対象ファイル:
+  - `subpages/sitemap.html`
+- EN: Delivered `2.13` slice-9 by switching sitemap disable logic to `data-page-key` matching, removing brittle filename-based coupling.
+### ドキュメント更新（2026-03-28 追加65）
+- `2.13` 第10スライスとして、sitemap の `準備中` マーカー表示も設定ポリシー連動へ統一しました。
+- 変更内容:
+  - `subpages/sitemap.html` の実行時判定で、disabled 対象のみ `small(準備中)` を表示
+  - enabled 対象へ切り替わったリンクは、`準備中` マーカーを自動非表示
+- 目的:
+  - `disabledPublicPageKeys` 変更時に、リンク状態と `準備中` 表示の不整合を防止する
+- 対象ファイル:
+  - `subpages/sitemap.html`
+- EN: Delivered `2.13` slice-10 by making `coming soon` badge visibility policy-driven alongside disabled-link state.
+### ドキュメント更新（2026-03-28 追加66）
+- `2.13` 第11スライスとして、sitemap の `準備中` マーカーを実行時生成へ移行しました。
+- 変更内容:
+  - disabled リンクでは `small(準備中)` を存在チェックして表示・未存在時は自動追加
+  - enabled リンクでは `small` マーカーを DOM から除去
+  - `準備中` 文言をスクリプト側で標準化
+- 目的:
+  - HTML 側の手動マーカー編集依存を減らし、設定変更時の表示ズレを防止する
+- 対象ファイル:
+  - `subpages/sitemap.html`
+- EN: Delivered `2.13` slice-11 by generating/removing `coming-soon` badges at runtime based on policy state.
+### ドキュメント更新（2026-03-28 追加67）
+- `2.13` 第12スライスとして、sitemap マークアップから静的 `準備中` バッジを除去しました。
+- 変更内容:
+  - `subpages/sitemap.html` の policy 対象リンクから手動 `<small>準備中</small>` を削除
+  - `準備中` 表示は slice-11 で導入済みの実行時ロジックに一本化
+- 目的:
+  - HTML の手動保守点を減らし、表示状態を設定ポリシー起点へ統一
+- 対象ファイル:
+  - `subpages/sitemap.html`
+- EN: Delivered `2.13` slice-12 by removing static coming-soon badge markup and relying fully on runtime policy rendering.
+### ドキュメント更新（2026-03-28 追加68）
+- `2.13` 第13スライスとして、`準備中` バッジ文言を設定値化しました。
+- 変更内容:
+  - `js/site-config.js` に `comingSoonBadgeLabel` を追加（既定値: `準備中`）
+  - `subpages/sitemap.html` のバッジ生成ロジックを設定参照へ変更
+- 目的:
+  - バッジ文言変更時にスクリプト改修を不要化し、運用設定で調整可能にする
+- 対象ファイル:
+  - `js/site-config.js`
+  - `subpages/sitemap.html`
+- EN: Delivered `2.13` slice-13 by externalizing the coming-soon badge label into site config.
+### ドキュメント更新（2026-03-28 追加69）
+- `2.13` 第14スライスとして、`disabledPublicPageKeys` の設定値解釈を堅牢化しました。
+- 変更内容:
+  - `js/site-shell.js` で設定配列を正規化（trim / 重複除去 / 未知キー除外）してから適用
+  - `subpages/sitemap.html` でも同様に正規化して policy 判定へ適用
+  - 有効な設定キーが空になる場合は既定リストへフォールバック
+- 目的:
+  - 設定ミス（空白混入・重複・typo）で disabled 判定が不安定になるリスクを低減する
+- 対象ファイル:
+  - `js/site-shell.js`
+  - `subpages/sitemap.html`
+- EN: Delivered `2.13` slice-14 by sanitizing/validating `disabledPublicPageKeys` before applying policy in shell and sitemap.
+### ドキュメント更新（2026-03-28 追加70）
+- `2.13` 第15スライスとして、sitemap 側の disabled fallback をマークアップ起点へ移行しました。
+- 変更内容:
+  - `subpages/sitemap.html` の対象リンクに `data-default-disabled="true"` を付与
+  - sitemap スクリプト内の固定 fallback 配列を廃止し、`data-default-disabled` 付きリンクから既定リストを生成
+  - 設定値（`disabledPublicPageKeys`）は sitemap 内で利用可能な `data-page-key` に対してのみ適用
+- 目的:
+  - sitemap 固有の重複定義を減らし、リンク追加/変更時のメンテナンス負荷を下げる
+- 対象ファイル:
+  - `subpages/sitemap.html`
+- EN: Delivered `2.13` slice-15 by replacing hardcoded sitemap fallback keys with markup-driven defaults (`data-default-disabled`).
+### ドキュメント更新（2026-03-28 追加71）
+- `2.13` 第16スライスとして、sitemap 管理アクセス表示文言を設定値化しました。
+- 変更内容:
+  - `js/site-config.js` に `sitemapAdminAccessCopy`（badgePrefix/openDemoNote/adminOnlyNote）を追加
+  - `subpages/sitemap.html` の admin モード表示で固定文言を廃止し、設定値（未設定時は既定値）を参照
+- 目的:
+  - デモ説明文や表記調整を設定変更のみで反映できるようにし、運用時の修正コストを削減
+- 対象ファイル:
+  - `js/site-config.js`
+  - `subpages/sitemap.html`
+- EN: Delivered `2.13` slice-16 by externalizing sitemap admin-access badge/note copy into site config.
+### ドキュメント更新（2026-03-28 追加72）
+- `2.13` 第17スライスとして、sitemap の admin access mode 表示ロジックを堅牢化しました。
+- 変更内容:
+  - `adminAccessMode` が想定外値の場合は `admin_only` へ正規化して扱う
+  - バッジ描画前に mode クラス（`open-demo/admin-only`）を初期化してから再付与
+- 目的:
+  - 設定値ゆらぎや将来的な切替順序変更があっても、表示クラスの残留や誤表示を防止する
+- 対象ファイル:
+  - `subpages/sitemap.html`
+- EN: Delivered `2.13` slice-17 by normalizing unknown admin mode values and resetting badge mode classes before rendering.
+### ドキュメント更新（2026-03-28 追加73）
+- `2.13` 第18スライスとして、sitemap ポリシースクリプトを整理・共通化しました。
+- 変更内容:
+  - `readText` / `unique` ヘルパーを追加し、文言/配列正規化処理の重複を削減
+  - fallback 既定文言を `defaults` オブジェクトへ集約
+  - disabled キーの集合生成を簡素化
+- 目的:
+  - sitemap スクリプトの保守性を上げ、設定追加時の実装ミスを減らす
+- 対象ファイル:
+  - `subpages/sitemap.html`
+- EN: Delivered `2.13` slice-18 by refactoring sitemap runtime policy script for maintainability.
+### ドキュメント更新（2026-03-28 追加74）
+- `2.13` 第19スライスとして、トップレベルナビの disabled 判定を設定ポリシーと同期しました。
+- 変更内容:
+  - `js/site-shell.js` の `disabledGlobalNavKeys` を固定配列から動的導出へ変更
+  - `disabledPublicPageKeys` のうちトップレベル対象キーのみを抽出して適用
+- 目的:
+  - 設定変更時に、トップナビと sitemap/footer の disabled 状態が乖離しないようにする
+- 対象ファイル:
+  - `js/site-shell.js`
+- EN: Delivered `2.13` slice-19 by deriving top-level nav disabled keys from the shared config policy.
+### ドキュメント更新（2026-03-28 追加75）
+- `2.13 Site Structure Review + IA Refinement` を完了と判断し、バックログ状態を `Accepted` へ更新しました。
+- 完了判定の要点:
+  - sitemap / runtime ナビ / disabled policy / admin mode 表示の整合が取れた
+  - 設定起点（`site-config.js`）で主要ポリシーが管理可能になった
+- 更新内容:
+  - `docs/20_PRODUCT/FEATURE_BACKLOG.md` の `2.13` を `In Progress` -> `Accepted` へ更新
+- EN: Closed `2.13` as `Accepted` after completing IA alignment and policy centralization across public sitemap/runtime navigation.

@@ -962,3 +962,301 @@
   - PROGRAMは静的文言ではなくDBの `workshop_plans` を正本として表示される
   - 最大3件表示と順序制御が一貫して機能する
   - EN: PROGRAM section is DB-driven from `workshop_plans` with deterministic top-3 ordering and consistent booking handoff.
+## 2026-03-28 追加テスト / Added Test (Breadcrumb Rendering: Public + Admin)
+- 対象:
+  - `js/site-shell.js`
+  - `js/admin-app.js`
+  - `css/style.css`
+  - `css/admin-app.css`
+- 手順:
+  1. 公開ページ（例: `subpages/workshop-booking.html`）を開き、`page-breadcrumb` が表示されることを確認する
+  2. 公開パンくずの末尾が `aria-current="page"` で現在ページを示すことを確認する
+  3. 管理ページ（例: `app/pages/workshop.html`）を開き、`admin-breadcrumb` が表示されることを確認する
+  4. 管理パンくずで `Dashboard` など上位階層へ遷移できることを確認する
+- 期待結果:
+  - 公開/管理の両方で現在地と階層が視覚的に理解できる
+  - 共通シェルで継続してパンくず描画される
+  - EN: Breadcrumbs render consistently on both public/admin shells with valid current-page semantics.
+## 2026-03-28 追加テスト / Added Test (IA Slice-1: Taxonomy + Sitemap Alignment)
+- 対象:
+  - `js/site-shell.js`
+  - `subpages/sitemap.html`
+- 手順:
+  1. 公開グローバルナビで `セール` 表記が表示されることを確認する
+  2. `item-sale.html` を開き、breadcrumb が `Home > アイテム > SALE` 系で解決され、`セール` 系の重複親判定が起きないことを確認する
+  3. `subpages/sitemap.html` を開き、以下の分類見出しが表示されることを確認する
+     - `公開ナビ（トップレベル）`
+     - `ワークショップ予約導線`
+     - `公開ページ（カテゴリ詳細）`
+     - `サポート / アカウント`
+     - `管理画面`
+  4. `公開ナビ（トップレベル）` の項目が runtime グローバルナビと同じ集合（Home/ブランド/アイテム/香りから探す/香りと遊ぶ/記事/セール/実店舗/Admin）であることを確認する
+- 期待結果:
+  - ラベル命名と情報分類が runtime ナビと sitemap で整合する
+  - ユーザーが探索時に階層を誤解しにくい構成になる
+  - EN: Runtime taxonomy and sitemap grouping stay consistent, reducing navigation ambiguity.
+## 2026-03-28 追加テスト / Added Test (IA Slice-2: Unified Disabled-Link Policy)
+- 対象:
+  - `js/site-shell.js`
+  - 公開ページの Header / Sidebar / Footer
+- 手順:
+  1. 未ログインで公開ページを開き、`ショッピングガイド`（Sidebar standalone / Footer Guide）がともに disabled 表示で遷移しないことを確認する
+  2. ログイン状態へ切替後、同リンクが再描画後も disabled のまま維持されることを確認する
+  3. Footer `Support`（プライバシーポリシー / メルマガ登録・解除 / RSS）が共通ルールで disabled 表示されることを確認する
+  4. Footer `Account` の `お問い合わせ` が未ログイン/ログインの両方で disabled 表示されることを確認する
+  5. `サイトマップ` は有効リンクとして遷移可能であることを確認する
+- 期待結果:
+  - disabled 判定が初期表示と認証後再描画で一致する
+  - Footer/Sidebar のリンク状態がページ単位ではなく共通ポリシーで管理される
+  - EN: Disabled-link behavior remains consistent across initial/auth-updated renders via a single shared policy.
+## 2026-03-28 追加テスト / Added Test (IA Slice-3: Workshop Page-Key + Breadcrumb Consistency)
+- 対象:
+  - `js/site-shell.js`
+  - `subpages/workshop-plans.html`
+  - `subpages/workshop-booking-thanks.html`
+- 手順:
+  1. `subpages/workshop-plans.html` を開き、breadcrumb が `Home > 香りと遊ぶ > プラン比較` で表示されることを確認する
+  2. `subpages/workshop-booking.html` / `subpages/workshop-booking-entry.html` / `subpages/workshop-booking-confirm.html` / `subpages/workshop-booking-thanks.html` を順に開き、末尾ラベルが `予約枠選択/申込情報入力/予約内容確認/予約完了` で一致することを確認する
+  3. 上記ページ群でグローバルナビの `香りと遊ぶ` が current 状態になることを確認する
+  4. `香りと遊ぶ` のサブメニューに `プラン比較` が表示され、`workshop-plans.html` へ遷移できることを確認する
+- 期待結果:
+  - workshop導線のページキーとラベルが runtime ナビ/パンくずで一貫する
+  - Plans/Booking/Thanks のどこにいても同じ階層として認知できる
+  - EN: Workshop flow pages keep consistent key/label mapping, breadcrumb hierarchy, and nav-current behavior.
+## 2026-03-28 追加テスト / Added Test (Booking Floating Reservation Panel)
+- 対象:
+  - `subpages/workshop-booking.html`
+  - `css/workshop-booking.css`
+- 手順:
+  1. `workshop-booking.html` を開き、右下に floating ミニパネルが表示されることを確認する
+  2. パネル構成が `予約する` タイトル + 2ボタン（`空き枠を確認する` / `プランを比較する`）のみであることを確認する
+  3. 日付未選択時に第1ボタン文言が `空き枠を確認する` であることを確認する
+  4. 任意の日付を選択し、第1ボタン文言が `◯◯ の予約枠を確認する` に変化することを確認する
+  5. モバイル幅で下部ドック表示に切り替わり、2ボタンが押下可能なことを確認する
+- 期待結果:
+  - 説明テキストなしでも、短い固定パネルだけで次アクションが理解できる
+  - desktop/mobile で視認性と操作性が維持される
+  - EN: Minimal floating panel keeps booking actions clear and usable across desktop and mobile.
+## 2026-03-28 追加テスト / Added Test (Floating CTA Width + Workshop Relocation)
+- 対象:
+  - `subpages/workshop-booking.html`
+  - `subpages/workshop.html`
+  - `css/workshop-booking.css`
+  - `css/workshop.css`
+- 手順:
+  1. `workshop-booking.html` で日付選択後、floating CTA 1stボタンの長文（`◯◯ の予約枠を確認する`）が欠けずに2行以内で表示されることを確認する
+  2. `workshop.html` を開き、画面右下に `予約する` フローティングCTA（`予約フォームへ進む` / `デジタル調香を試す`）が表示されることを確認する
+  3. `workshop.html#reserve` の下部セクション内に旧ボタン群が表示されないことを確認する
+  4. モバイル幅で両ページとも下部ドック表示になり、2ボタンが押下可能であることを確認する
+- 期待結果:
+  - 長文CTAでも視認性が落ちない
+  - Workshopページの予約導線が常時アクセス可能になる
+  - EN: CTA readability remains stable with long labels, and Workshop reservation access is persistent via floating panel.
+## 2026-03-28 追加テスト / Added Test (IA Slice-4: Sitemap Label + Readiness Markers)
+- 対象:
+  - `subpages/sitemap.html`
+  - `css/style.css`
+- 手順:
+  1. `subpages/sitemap.html` の `公開ナビ（トップレベル）` 先頭ラベルが `Home` であることを確認する
+  2. `ブランド/アイテム/香りから探す/記事/セール/実店舗` に `準備中` マーカーが表示されることを確認する
+  3. `サポート / アカウント` で未準備ページ（ショッピングガイド/お問い合わせ/カート/プライバシー/法的表示/RSS/メルマガ）に `準備中` マーカーが表示されることを確認する
+  4. `準備中` マーカーが pill スタイルで可読性を保って表示されることを確認する
+- 期待結果:
+  - sitemap ラベルが runtime ナビと一致する
+  - 公開可否の状態が視覚的に明確になる
+  - EN: Sitemap labels stay runtime-consistent and coming-soon states are clearly visible.
+## 2026-03-28 追加テスト / Added Test (IA Slice-5: Admin Naming + Access Mode Badge)
+- 対象:
+  - `subpages/sitemap.html`
+  - `js/site-config.js`
+  - `css/style.css`
+- 手順:
+  1. `subpages/sitemap.html` の管理カードで `ワークショップ予約管理 / ワークショッププラン管理` 表記になっていることを確認する
+  2. `adminAccessMode: "open_demo"` の状態で sitemap を開き、見出しバッジが `アクセス設定: open_demo`、注記がデモ閲覧可能内容になることを確認する
+  3. `adminAccessMode: "admin_only"` へ切替後に再読込し、見出しバッジが `アクセス設定: admin_only`、注記が管理者限定アクセス内容になることを確認する
+  4. モード別でバッジ色が異なる（open_demo: warning系 / admin_only: info系）ことを確認する
+- 期待結果:
+  - 管理導線の名称が一貫する
+  - 現在の admin 公開モードを sitemap 上で即時判別できる
+  - EN: Admin naming is consistent and current `adminAccessMode` is clearly visible with mode-specific styling.
+## 2026-03-28 追加テスト / Added Test (IA Slice-6: Sitemap Disabled-Link Behavior Sync)
+- 対象:
+  - `subpages/sitemap.html`
+  - `css/style.css`
+- 手順:
+  1. sitemap の `準備中` 表示リンク（例: ブランド / ショッピングガイド）に `is-disabled` 表示が適用されていることを確認する
+  2. マウスクリックで対象リンクが遷移しないことを確認する
+  3. キーボードタブ移動で `準備中` リンクがフォーカス対象にならない（`tabindex="-1"`）ことを確認する
+  4. `Home` / `香りと遊ぶ` / `サイトマップ` / `Admin` など有効リンクは従来どおり遷移可能であることを確認する
+- 期待結果:
+  - sitemap の `準備中` リンクが runtime disabled ルールと同様に非活性で動作する
+  - 有効リンクと非活性リンクの区別が視覚・操作の両面で明確になる
+  - EN: Coming-soon sitemap links are non-interactive, while active links remain fully navigable.
+## 2026-03-28 追加テスト / Added Test (IA Slice-7: Policy-Driven Sitemap Disable Runtime)
+- 対象:
+  - `subpages/sitemap.html`
+- 手順:
+  1. `sitemap.html` を開き、`ブランド` 等の準備中リンクに `is-disabled` クラスが動的付与されることを確認する（DevTools可）
+  2. `Home` や `香りと遊ぶ` など有効リンクには `aria-disabled` / `tabindex=-1` が付与されていないことを確認する
+  3. ページ再読込後も同じ disabled 判定が再適用されることを確認する
+  4. `adminAccessMode` バッジ表示（open_demo/admin_only）が従来どおり機能することを確認する
+- 期待結果:
+  - sitemap disabled 状態が静的ハードコードではなくポリシー判定で一貫適用される
+  - admin access-mode 表示ロジックとの共存で回帰がない
+  - EN: Sitemap disable states are applied consistently at runtime by policy without breaking admin-mode badge rendering.
+## 2026-03-28 追加テスト / Added Test (IA Slice-8: Single Source Disabled Policy)
+- 対象:
+  - `js/site-config.js`
+  - `js/site-shell.js`
+  - `subpages/sitemap.html`
+- 手順:
+  1. `js/site-config.js` の `disabledPublicPageKeys` に `sale` が含まれる状態で、公開グローバルナビの `セール` が disabled であることを確認する
+  2. 同状態で `sitemap.html` の `セール` も disabled であることを確認する
+  3. `disabledPublicPageKeys` から `sale` を一時的に外して再読込し、公開ナビと sitemap の `セール` がともに有効化されることを確認する
+  4. 元の設定へ戻し、再読込後に再び両方 disabled へ戻ることを確認する
+- 期待結果:
+  - disabled 対象変更が `site-config.js` だけで公開ナビと sitemap の両方に反映される
+  - 運用時の設定更新でリンク状態が乖離しない
+  - EN: A single config change updates disabled-link behavior consistently across runtime navigation and sitemap.
+## 2026-03-28 追加テスト / Added Test (IA Slice-9: data-page-key Matching on Sitemap)
+- 対象:
+  - `subpages/sitemap.html`
+  - `js/site-config.js`
+- 手順:
+  1. `sitemap.html` の公開リンクに `data-page-key` が付与されていることを確認する（DevTools可）
+  2. `disabledPublicPageKeys` に含まれるキー（例: `brand`）のリンクが disabled 表示になることを確認する
+  3. `disabledPublicPageKeys` に含まれないキー（例: `workshop` / `sitemap`）のリンクが有効であることを確認する
+  4. `brand.html` などの href を仮に変更しても、`data-page-key="brand"` が維持される限り disabled 判定が変わらないことを確認する
+- 期待結果:
+  - sitemap disabled 判定が URL 文字列ではなく `data-page-key` で安定動作する
+  - `site-shell.js` と同じページキー体系で運用できる
+  - EN: Sitemap disable behavior is robust to URL changes by relying on stable page keys.
+## 2026-03-28 追加テスト / Added Test (IA Slice-10: Coming-soon Badge Runtime Sync)
+- 対象:
+  - `subpages/sitemap.html`
+  - `js/site-config.js`
+- 手順:
+  1. `disabledPublicPageKeys` に含まれるキー（例: `sale`）のリンクで `準備中` マーカーが表示されることを確認する
+  2. 同キーを `disabledPublicPageKeys` から外して再読込し、リンクが有効化されると同時に `準備中` マーカーが非表示になることを確認する
+  3. キーを設定へ戻して再読込し、リンク非活性 + `準備中` マーカー表示が復帰することを確認する
+- 期待結果:
+  - `disabled` 状態と `準備中` 表示が常に同期する
+  - 設定変更時にリンク状態とバッジ表示の矛盾が発生しない
+  - EN: Coming-soon badge visibility stays consistent with disabled policy state.
+## 2026-03-28 追加テスト / Added Test (IA Slice-11: Runtime Badge Generation/Cleanup)
+- 対象:
+  - `subpages/sitemap.html`
+  - `js/site-config.js`
+- 手順:
+  1. DevTools で任意の disabled 対象リンク（例: `sale`）の `small` ノードを一時削除し、再読込後に `準備中` バッジが自動再生成されることを確認する
+  2. `disabledPublicPageKeys` から当該キーを外して再読込し、`small` バッジが DOM から削除されることを確認する
+  3. 設定を戻して再読込し、同リンクに再び `準備中` バッジが表示されることを確認する
+- 期待結果:
+  - `準備中` バッジはマークアップ依存ではなく、ポリシー状態から実行時に再構築される
+  - enabled/disabled の切替でバッジ残骸が残らない
+  - EN: Coming-soon badges are generated and cleaned up at runtime without manual HTML maintenance.
+## 2026-03-28 追加テスト / Added Test (IA Slice-12: Static Badge Markup Removal)
+- 対象:
+  - `subpages/sitemap.html`
+- 手順:
+  1. `sitemap.html` のソースを確認し、policy 管理リンクに静的 `<small>準備中</small>` が含まれていないことを確認する
+  2. ページ表示時に disabled 対象リンクへ `準備中` バッジが動的表示されることを確認する
+  3. enabled 対象リンクに `準備中` バッジが表示されないことを確認する
+- 期待結果:
+  - バッジ表示は HTML 静的記述ではなく runtime 判定でのみ制御される
+  - マークアップと実表示の責務分離が明確になる
+  - EN: Badge rendering is fully runtime-driven with no static badge dependency in markup.
+## 2026-03-28 追加テスト / Added Test (IA Slice-13: Config-Driven Badge Label)
+- 対象:
+  - `js/site-config.js`
+  - `subpages/sitemap.html`
+- 手順:
+  1. `comingSoonBadgeLabel` が `準備中` の状態で sitemap を開き、disabled リンクのバッジ文言が `準備中` であることを確認する
+  2. `comingSoonBadgeLabel` を一時的に別文言（例: `Coming Soon`）へ変更し再読込、disabled リンクのバッジが同文言へ切替わることを確認する
+  3. 設定を `準備中` に戻し、再読込後に表示が戻ることを確認する
+- 期待結果:
+  - `準備中` バッジ文言が設定値から反映される
+  - 文言変更で sitemap スクリプト修正が不要
+  - EN: Coming-soon badge copy is fully controlled by site config.
+## 2026-03-28 追加テスト / Added Test (IA Slice-14: Disabled Policy Sanitization)
+- 対象:
+  - `js/site-config.js`
+  - `js/site-shell.js`
+  - `subpages/sitemap.html`
+- 手順:
+  1. `disabledPublicPageKeys` に `[" brand ", "brand", "unknownKey", "sale"]` を設定して再読込する
+  2. 公開ナビと sitemap で `brand` と `sale` のみ disabled 適用されることを確認する
+  3. `unknownKey` があってもエラーなく表示継続することを確認する
+  4. `disabledPublicPageKeys` を空配列または無効値のみへ変更し、既定 disabled 対象へフォールバックすることを確認する
+- 期待結果:
+  - 設定値の空白・重複・未知キーが吸収され、disabled 判定が安定動作する
+  - shell と sitemap の適用結果が一致する
+  - EN: Disabled policy remains stable under malformed config and stays consistent across shell and sitemap.
+## 2026-03-28 追加テスト / Added Test (IA Slice-15: Markup-Driven Sitemap Fallback)
+- 対象:
+  - `subpages/sitemap.html`
+  - `js/site-config.js`
+- 手順:
+  1. `sitemap.html` の既定非活性対象リンクに `data-default-disabled="true"` が付与されていることを確認する
+  2. `disabledPublicPageKeys` を未設定（または空）にして再読込し、`data-default-disabled="true"` のリンクが disabled になることを確認する
+  3. `data-default-disabled` がないリンク（例: `workshop` / `sitemap`）は有効状態を維持することを確認する
+  4. `disabledPublicPageKeys` に sitemap 未定義キーを追加しても、表示に影響しないことを確認する
+- 期待結果:
+  - sitemap の fallback disabled 判定がマークアップ由来で動作する
+  - sitemap 未定義キーに対して安全に無視される
+  - EN: Sitemap fallback defaults are markup-driven and robust against unknown config keys.
+## 2026-03-28 追加テスト / Added Test (IA Slice-16: Config-Driven Admin Access Copy)
+- 対象:
+  - `js/site-config.js`
+  - `subpages/sitemap.html`
+- 手順:
+  1. `sitemapAdminAccessCopy.badgePrefix` を変更して再読込し、管理カードバッジの先頭文言が反映されることを確認する
+  2. `adminAccessMode: "open_demo"` で `openDemoNote` 文言が注記へ表示されることを確認する
+  3. `adminAccessMode: "admin_only"` で `adminOnlyNote` 文言が注記へ表示されることを確認する
+  4. `sitemapAdminAccessCopy` を一時削除して再読込し、既定文言へフォールバックすることを確認する
+- 期待結果:
+  - 管理アクセス表示文言が設定値で制御できる
+  - 設定未定義時も既定文言で安定表示される
+  - EN: Sitemap admin-access copy is configurable and safely falls back to defaults.
+## 2026-03-28 追加テスト / Added Test (IA Slice-17: Admin Mode Rendering Hardening)
+- 対象:
+  - `subpages/sitemap.html`
+  - `js/site-config.js`
+- 手順:
+  1. `adminAccessMode` を想定外値（例: `open-demo`, `foobar`）に設定して再読込し、`admin_only` 表示へ正規化されることを確認する
+  2. `adminAccessMode: "open_demo"` へ戻して再読込し、バッジクラスが `sitemap-admin-status--open-demo` のみになることを確認する
+  3. `adminAccessMode: "admin_only"` へ切替再読込し、バッジクラスが `sitemap-admin-status--admin-only` のみになることを確認する
+- 期待結果:
+  - 未知モードでも表示が破綻せず `admin_only` 扱いで安定する
+  - モード切替時に古いクラスが残らない
+  - EN: Admin mode rendering remains stable for unknown values and keeps badge classes clean across mode switches.
+## 2026-03-28 追加テスト / Added Test (IA Slice-18: Sitemap Script Refactor Safety)
+- 対象:
+  - `subpages/sitemap.html`
+  - `js/site-config.js`
+- 手順:
+  1. 既定設定で sitemap を開き、disabled リンク表示・`準備中` バッジ・admin access 表示が従来どおり機能することを確認する
+  2. `comingSoonBadgeLabel` / `sitemapAdminAccessCopy` を変更し、反映が維持されることを確認する
+- 期待結果:
+  - リファクタ後も挙動回帰がない
+  - EN: Refactor preserves existing runtime behavior and config-driven rendering.
+## 2026-03-28 追加テスト / Added Test (IA Slice-19: Top Nav Disabled Sync)
+- 対象:
+  - `js/site-config.js`
+  - `js/site-shell.js`
+  - 公開グローバルナビ
+- 手順:
+  1. `disabledPublicPageKeys` から `sale` を外して再読込し、トップナビ `セール` が有効化されることを確認する
+  2. 同キーを戻して再読込し、`セール` が disabled 表示へ戻ることを確認する
+  3. sitemap の `sale` とトップナビ `セール` の状態が一致することを確認する
+- 期待結果:
+  - トップナビ disabled 状態が共有ポリシーと同期する
+  - EN: Top-level nav disabled state stays synchronized with shared disabled policy.
+## 2026-03-28 追加テスト / Added Test (IA Slice-20: Backlog Closure)
+- 対象:
+  - `docs/20_PRODUCT/FEATURE_BACKLOG.md`
+- 手順:
+  1. `2.13 Site Structure Review + IA Refinement` の `Status` が `Accepted` であることを確認する
+- 期待結果:
+  - IA refinement の完了状態が backlog へ反映されている
+  - EN: Backlog closure status for 2.13 is correctly recorded as accepted.
