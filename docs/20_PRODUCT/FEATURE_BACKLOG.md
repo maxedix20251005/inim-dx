@@ -64,7 +64,7 @@
 - EN: Once approved for implementation, promote items to `PROJECT_STATUS.md` priorities and reflect final specs in `TECH_SPEC.md`.
 
 ### 2.6 Admin Access Restriction + Booking LED Governance / 管理者アクセス制御と予約LED運用
-- Status: `Proposed`
+- Status: `Accepted`
 - JA: 予約管理画面は `role_code = admin` ユーザーのみに表示制限し、公開予約画面の Supabase 接続LED を運用監視項目として明文化する。
 - EN: Restrict booking-management screen visibility to users with `role_code = admin`, and formalise booking-page Supabase LED as an operational monitoring item.
 - Scope candidates:
@@ -72,12 +72,12 @@
   - EN: enforced admin-role check, deny access for non-admin users, LED state monitoring runbook
 
 ### 2.7 Dashboard Link Exposure / ダッシュボード導線の明示
-- Status: `Proposed`
+- Status: `Accepted`
 - JA: 公開/関連ページから管理ダッシュボードへの導線を明示し、運用者が迷わず管理画面へ遷移できるようにする。
 - EN: Expose clear navigation links to admin dashboard from relevant pages for operator usability.
 
 ### 2.8 Workshop Plan Page Formalisation / ワークショッププラン専用ページ整備
-- Status: `In Progress`
+- Status: `Accepted`
 - JA: 「プランを見る」の遷移先として専用ページを設け、プラン比較から予約導線へ接続する。
 - EN: Provide a dedicated plan page for “View Plans”, bridging plan comparison to booking entry.
 
@@ -87,7 +87,7 @@
 - EN: Non-admin login verification is currently blocked by environment constraints; keep deny-access scenario as backlog test item.
 
 ### 2.10 Workshop Plan/Course Management IA Optimisation / ワークショッププラン管理導線の情報設計最適化
-- Status: `In Progress`
+- Status: `Accepted`
 - JA: 現状、ワークショップのプラン/コース管理画面への導線が見つけにくいため、管理者向けナビゲーション構造を再設計する。
 - EN: Current navigation to workshop plan/course management is hard to find; redesign admin IA and entry points.
 - Scope candidates:
@@ -101,7 +101,7 @@
 
 
 ### 2.11 Sitemap Page Creation + Footer Link Finalisation / サイトマップページ作成とフッター導線確定
-- Status: `In Progress`
+- Status: `Accepted`
 - JA: フッターの「サイトマップ」リンクに対応する `sitemap.html` を新規作成し、全ページ導線を一覧化する。
 - EN: Create a dedicated `sitemap.html` page for the footer sitemap link and list all site navigation paths.
 - Scope candidates:
@@ -133,3 +133,15 @@
 - Scope candidates:
   - JA: sitemap と実装ページの差分整理、階層ルールの再定義、命名/ラベル整合
   - EN: Diff sitemap vs implementation, redefine hierarchy rules, align naming/labels
+
+### 2.14 Create All Placeholder Pages / 未実装ページ一括作成
+- Status: `Proposed`
+- JA: 現在「準備中」の公開ページを、優先バックログ完了後に順次作成する。
+- EN: Create currently not-ready public pages one by one after prioritized backlog items are completed.
+- Scope candidates:
+  - JA: `brand/items/search/article/sale/stores/guide/support/cart/contact` 系ページの段階実装
+  - EN: Phased implementation of `brand/items/search/article/sale/stores/guide/support/cart/contact` page groups
+  - JA: 各ページの最小構成（情報設計・文言・CTA）を先に揃え、その後データ連携を実装
+  - EN: Deliver minimum viable page structures (IA/copy/CTA) first, then integrate data progressively
+  - JA: 公開準備完了時に disabled リンクを有効化
+  - EN: Re-enable currently disabled links as each page group becomes production-ready

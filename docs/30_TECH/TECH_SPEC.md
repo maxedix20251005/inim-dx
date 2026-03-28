@@ -42,6 +42,14 @@
 - JA: 仕様書上の管理機能群（カード/商品/店舗/記事/ユーザー/予約問い合わせ/アセット）は段階実装前提。
 - EN: Broader admin capabilities in the spec (cards/products/stores/articles/users/bookings-enquiries/assets) are phased.
 
+### 3.3 Navigation Governance / ナビゲーション運用規約
+- JA: 管理運用導線は `app/dashboard.html` のサイドナビを正本入口とし、`Workshop予約管理`（`app/pages/workshop.html`）および `Workshopプラン管理`（`app/pages/workshop-plans.html`）を固定配置する。
+- EN: Admin operation entry points are canonicalised in `app/dashboard.html` sidebar with fixed links to `Workshop Bookings` (`app/pages/workshop.html`) and `Workshop Plans` (`app/pages/workshop-plans.html`).
+- JA: 公開側ナビは一般利用者向け導線を優先し、管理詳細ページへの直接リンクは追加しない（`Admin` 入口のみ）。
+- EN: Public navigation prioritises user-facing paths and does not expose direct links to admin detail pages (only the `Admin` entry is exposed).
+- JA: 公開予約導線は `workshop-plans.html` と `workshop-booking.html` の相互遷移（plan handoff 含む）を保持し、比較から予約までの文脈を維持する。
+- EN: Public booking flow preserves bidirectional transition between `workshop-plans.html` and `workshop-booking.html` (including plan handoff) to maintain context from comparison to booking.
+
 ## 4. Functional Requirements (Priority) / 機能要件（優先）
 
 ### 4.1 F-001 Authentication and Authorisation / 認証・権限管理

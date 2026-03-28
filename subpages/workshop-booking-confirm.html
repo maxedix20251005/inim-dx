@@ -533,6 +533,9 @@
                         start_time: normaliseTimeText(snapshot.session.start_time) || selected.startTime || "",
                         end_time: normaliseTimeText(snapshot.session.end_time) || selected.endTime || "",
                         plan: snapshot.plan.plan_name || selected.plan || "",
+                        plan_id: snapshot.plan.id || selected.planId || "",
+                        store: selected.store || "",
+                        storeLabel: selected.storeLabel || "",
                         store_label: resolveStoreLabel() || "",
                         price: selected.price || ""
                     };

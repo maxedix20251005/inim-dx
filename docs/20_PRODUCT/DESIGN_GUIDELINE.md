@@ -126,6 +126,14 @@
 - EN: Header, side navigation, and footer must be shared components to ensure consistency across pages.
 - JA: 新規ページ作成時は、本ガイドの色・タイポ・余白規則を優先し、独自値は理由を記録する。
 - EN: For new pages, follow this guide’s colour, typography, and spacing tokens; document any exceptions with rationale.
+- JA: ナビゲーション配置ルール（Workshop 管理導線）は以下を標準とする。
+- EN: Navigation placement rules for workshop management links are standardised as follows.
+  - JA: `Workshop予約管理` と `Workshopプラン管理` は管理画面サイドナビ（Dashboard配下）を正本導線とする。
+  - EN: `Workshop Bookings` and `Workshop Plans` are canonical entry points in the admin sidebar under Dashboard.
+  - JA: 公開グローバルナビには管理用の詳細導線（Bookings/Plans）を増設しない。公開側は `Admin` 入口のみ保持する。
+  - EN: Do not expose admin detail links (Bookings/Plans) in public global nav; keep only the `Admin` entry on public pages.
+  - JA: 公開側の `workshop-booking.html` と `workshop-plans.html` は相互リンクで往復可能とし、比較→予約の文脈を維持する。
+  - EN: Keep bidirectional linking between `workshop-booking.html` and `workshop-plans.html` to preserve comparison-to-booking context.
 
 ## 10. Sources / 参照元
 - `references/design/05-wireframe.html`

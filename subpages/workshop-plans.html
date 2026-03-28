@@ -18,9 +18,32 @@
                 <p class="section-kicker">Workshop Plans</p>
                 <h2>プラン一覧</h2>
             </div>
+            <section class="workshop-plan-controls" aria-label="プラン比較フィルタ">
+                <div class="workshop-plan-controls__chips" id="plan-filter-chips">
+                    <button type="button" class="is-active" data-filter="all">すべて</button>
+                    <button type="button" data-filter="short">短時間で体験</button>
+                    <button type="button" data-filter="deep">じっくり体験</button>
+                    <button type="button" data-filter="pair">ペア・ギフト向け</button>
+                </div>
+                <label class="workshop-plan-controls__sort" for="plan-sort">
+                    並び順
+                    <select id="plan-sort">
+                        <option value="recommended">おすすめ順</option>
+                        <option value="price_asc">価格が低い順</option>
+                        <option value="duration_asc">所要時間が短い順</option>
+                    </select>
+                </label>
+            </section>
             <p id="plans-status" class="plans-status">Loading plans...</p>
             <div class="workshop-program-grid" id="plans-grid"></div>
+            <div class="workshop-plan-cta">
+                <a class="button button--primary" id="plans-next-cta" href="./workshop-booking.html">予約枠を確認して予約へ進む</a>
+            </div>
         </section>
+        <aside class="workshop-sticky-next" aria-label="次のアクション">
+            <p class="workshop-sticky-next__text">次の一歩: 予約枠を確認</p>
+            <a class="button button--primary" id="plans-sticky-next-cta" href="./workshop-booking.html">予約枠を確認する</a>
+        </aside>
     </main>
 
     <script src="../js/site-config.js"></script>
@@ -36,7 +59,12 @@
 
             const statusEl = document.getElementById("plans-status");
             const gridEl = document.getElementById("plans-grid");
-            if (!statusEl || !gridEl) return;
+            const filterHost = document.getElementById("plan-filter-chips");
+            const sortSelect = document.getElementById("plan-sort");
+            if (!statusEl || !gridEl || !filterHost || !sortSelect) return;
+            const search = new URLSearchParams(window.location.search);
+            const requestedStore = String(search.get("store") || "").trim();
+            const requestedStoreLabel = String(search.get("storeLabel") || "").trim();
 
             const defaultImage = "../images/Workshop/Workshop_ (6).png";
             const fallbackImages = [
@@ -44,6 +72,10 @@
                 "../images/Workshop/Workshop_ (2-1).png",
                 "../images/Workshop/Workshop_ (7).png"
             ];
+
+            let allPlans = [];
+            let currentFilter = "all";
+            let currentSort = "recommended";
 
             const toYen = (v) => `¥${Number(v || 0).toLocaleString("ja-JP")}`;
             const escapeHtml = (v) => String(v ?? "")
@@ -61,9 +93,52 @@
 
             const buildBookingHref = (plan) => {
                 const target = new URL("./workshop-booking.html", window.location.href);
+                target.searchParams.set("planId", plan.id || "");
                 target.searchParams.set("planCode", plan.plan_code || "");
                 target.searchParams.set("planName", plan.plan_name || "");
+                if (requestedStore) target.searchParams.set("store", requestedStore);
+                if (requestedStoreLabel) target.searchParams.set("storeLabel", requestedStoreLabel);
                 return target.toString();
+            };
+
+            const maxDuration = (plan) => Number(plan.duration_max_minutes || plan.duration_min_minutes || 0);
+            const minPrice = (plan) => Number(plan.base_price_jpy || 0);
+            const maxParty = (plan) => Number(plan.max_party_size || 1);
+            const isPairLike = (plan) => {
+                const text = `${plan.plan_code || ""} ${plan.plan_name || ""} ${plan.plan_summary || ""}`.toLowerCase();
+                return maxParty(plan) >= 2 || text.includes("gift") || text.includes("pair") || text.includes("ペア") || text.includes("ギフト");
+            };
+
+            const applyFilter = (plans) => {
+                if (currentFilter === "short") return plans.filter((p) => maxDuration(p) > 0 && maxDuration(p) <= 50);
+                if (currentFilter === "deep") return plans.filter((p) => maxDuration(p) >= 60);
+                if (currentFilter === "pair") return plans.filter((p) => isPairLike(p));
+                return plans;
+            };
+
+            const applySort = (plans) => {
+                const cloned = [...plans];
+                if (currentSort === "price_asc") {
+                    cloned.sort((a, b) => minPrice(a) - minPrice(b));
+                    return cloned;
+                }
+                if (currentSort === "duration_asc") {
+                    cloned.sort((a, b) => maxDuration(a) - maxDuration(b));
+                    return cloned;
+                }
+                cloned.sort((a, b) => Number(a.sort_order || 0) - Number(b.sort_order || 0));
+                return cloned;
+            };
+
+            const applyView = (inclusionsByPlan = {}) => {
+                const filtered = applyFilter(allPlans);
+                const sorted = applySort(filtered);
+                const hasSourceData = allPlans.length > 0;
+                const viewPlans = sorted.length ? sorted : (hasSourceData ? [] : fallbackPlans);
+                if (hasSourceData) {
+                    statusEl.textContent = `${filtered.length} / ${allPlans.length} plans (filter: ${currentFilter}, sort: ${currentSort})${requestedStoreLabel ? ` / store: ${requestedStoreLabel}` : ""}`;
+                }
+                renderCards(viewPlans, inclusionsByPlan);
             };
 
             const fallbackPlans = [
@@ -119,7 +194,7 @@
                     const eyebrowText = escapeHtml(plan.plan_code || "PLAN");
                     const titleText = escapeHtml(plan.plan_name || "Workshop Plan");
                     const actionHref = buildBookingHref(plan);
-                    const actionLabel = "このプランで予約する";
+                    const actionLabel = "このプランで予約に進む";
 
                     if (index % 3 === 1) {
                         return `
@@ -170,7 +245,17 @@
             const init = async () => {
                 if (!supabase) {
                     statusEl.textContent = "Supabase not configured. Showing fallback plans.";
-                    renderCards(fallbackPlans);
+                    allPlans = [...fallbackPlans];
+                    applyView({});
+                    const bottomCta = document.getElementById("plans-next-cta");
+                    const stickyCta = document.getElementById("plans-sticky-next-cta");
+                    if (bottomCta && requestedStore) {
+                        const target = new URL(bottomCta.getAttribute("href"), window.location.href);
+                        target.searchParams.set("store", requestedStore);
+                        if (requestedStoreLabel) target.searchParams.set("storeLabel", requestedStoreLabel);
+                        bottomCta.href = target.toString();
+                        if (stickyCta) stickyCta.href = target.toString();
+                    }
                     return;
                 }
 
@@ -187,7 +272,8 @@
                 }
 
                 const plans = planRows || [];
-                const planIds = plans.map((x) => x.id).filter(Boolean);
+                allPlans = [...plans];
+                const planIds = allPlans.map((x) => x.id).filter(Boolean);
                 const inclusionsByPlan = {};
 
                 if (planIds.length) {
@@ -203,8 +289,32 @@
                     });
                 }
 
-                statusEl.textContent = `${plans.length} plans loaded`;
-                renderCards(plans.length ? plans : fallbackPlans, inclusionsByPlan);
+                if (!allPlans.length) {
+                    statusEl.textContent = "No active plans found. Showing fallback plans.";
+                    allPlans = [...fallbackPlans];
+                }
+                applyView(inclusionsByPlan);
+                const bottomCta = document.getElementById("plans-next-cta");
+                const stickyCta = document.getElementById("plans-sticky-next-cta");
+                if (bottomCta && requestedStore) {
+                    const target = new URL(bottomCta.getAttribute("href"), window.location.href);
+                    target.searchParams.set("store", requestedStore);
+                    if (requestedStoreLabel) target.searchParams.set("storeLabel", requestedStoreLabel);
+                    bottomCta.href = target.toString();
+                    if (stickyCta) stickyCta.href = target.toString();
+                }
+
+                filterHost.querySelectorAll("[data-filter]").forEach((button) => {
+                    button.addEventListener("click", () => {
+                        currentFilter = String(button.getAttribute("data-filter") || "all");
+                        filterHost.querySelectorAll("[data-filter]").forEach((node) => node.classList.toggle("is-active", node === button));
+                        applyView(inclusionsByPlan);
+                    });
+                });
+                sortSelect.addEventListener("change", () => {
+                    currentSort = String(sortSelect.value || "recommended");
+                    applyView(inclusionsByPlan);
+                });
             };
 
             init();

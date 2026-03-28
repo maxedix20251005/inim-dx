@@ -272,3 +272,21 @@
 - 2026-03-27 follow-up: step5 text/style consistency pass applied on 04/05/06 (Japanese labels + read-only disabled visibility).
 - 2026-03-27 fix: update-revert issue mitigation extended to 04/06 by strict session-origin based read-only guard (same rule as 05).
 
+### Issue 2026-03-28-28
+- `発生日:` 2026-03-28
+- `発生箇所:` [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html), [`css/workshop-booking.css`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/css/workshop-booking.css)
+- `症状:` `選択中プラン` バーで `プランを変更する` ボタンを右寄せ調整後も、見た目上右端に揃わない。
+- `原因(推定):` 右側アクション群内で `全プランを表示` が右端に配置され、`button--ghost` の低コントラストにより見えづらく、`プランを変更する` が中央寄りに見える。
+- `対策:` アクション並びを `全プランを表示` -> `プランを変更する` の順へ変更し、`プランを変更する` を常に右端へ配置。
+- `再発防止:` 右寄せ要件は「アクション群右寄せ」だけでなく「対象ボタンを右端に置くDOM順」まで仕様化して確認する。
+- `状態:` Open（修正適用済み・ユーザー最終確認待ち）
+
+### Issue 2026-03-28-29
+- `発生日:` 2026-03-28
+- `発生箇所:` [`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html), [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html), [`sql/09_seed_workshop_booking_master_and_sessions.sql`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/sql/09_seed_workshop_booking_master_and_sessions.sql)
+- `症状:` `workshop.html` の PROGRAM パネルから遷移すると booking 側の `選択プラン` が未表示（`workshop-plans.html` 経由では表示される）。
+- `原因:` PROGRAM パネルが静的実装だったため、カード識別子と `workshop_plans.plan_code` の一致保証がなく、booking 側の plan 解決と乖離した。
+- `対策:` PROGRAM を DB連動化し、`workshop_plans`（`status=active`, `sort_order asc`, `limit 3`）からカードを生成するよう変更。CTA には `data-plan-code/name` を付与し、`syncBookingLinks()` で `planCode/planName` と `store/storeLabel` を同時引継ぎ。
+- `再発防止:` 予約導線で plan 文脈を渡す画面は、表示文言ではなく `plan_code` を正本キーとして単一運用する。
+- `状態:` Fix 適用済み（ユーザー最終確認待ち）
+

@@ -21,7 +21,7 @@
                     季節の香材やブランドの代表ノートを試しながら、自分の感覚で香りを組み立てる店頭ワークショップです。完成した香りは、その場の体験だけで終わらず、日常に持ち帰れる一本として仕上げます。</p>
                 <div class="experience-banner__actions">
                     <a class="button button--primary" href="./workshop-booking.html" data-booking-link="true">予約する</a>
-                    <a class="button button--secondary" href="./workshop-plans.html">プランを見る</a>
+                    <a class="button button--secondary" href="./workshop-plans.html" data-plan-link="true">プランを見る</a>
                     <a class="button button--secondary" href="./smart-scent-design.html">先にデジタル調香を試す</a>
                 </div>
                 <div class="workshop-proof" aria-label="ワークショップの概要">
@@ -45,7 +45,7 @@
                 <nav class="workshop-anchor-nav" aria-label="ページ内導線">
                     <a href="#story">魅力を知る</a>
                     <a href="#flow">流れを見る</a>
-                    <a href="./workshop-plans.html">プランを選ぶ</a>
+                    <a href="./workshop-plans.html" data-plan-link="true">プランを選ぶ</a>
                     <a href="#faq">よくある質問</a>
                     <a href="./workshop-booking.html" data-booking-link="true">予約する</a>
                 </nav>
@@ -129,6 +129,24 @@
             </div>
         </section>
 
+        <section class="workshop-decision" id="decision">
+            <div class="workshop-decision__copy">
+                <p class="section-kicker">Decision</p>
+                <h2>迷ったら、ここから次の一歩</h2>
+                <p>「まず比較したい」「空き枠を先に見たい」「店舗を決めてすぐ予約したい」の3パターンで、次アクションを短く選べます。</p>
+                <ul class="workshop-decision__list">
+                    <li>比較から入りたい: プラン詳細を見る</li>
+                    <li>日程優先で決めたい: 予約枠を確認する</li>
+                    <li>店舗優先で進めたい: 下の地図から店舗選択</li>
+                </ul>
+            </div>
+            <div class="workshop-decision__actions">
+                <a class="button button--secondary" href="./workshop-plans.html" data-plan-link="true">プランを比較する</a>
+                <a class="button button--primary" href="./workshop-booking.html" data-booking-link="true">予約枠を確認する</a>
+                <a class="button button--ghost" href="#location">店舗を選んで進む</a>
+            </div>
+        </section>
+
         <!-- <section class="workshop-cta-band" aria-label="プラン比較への導線">
             <div>
                 <p class="section-kicker">Decision</p>
@@ -144,80 +162,10 @@
         <section class="workshop-programs" id="program">
             <div class="workshop-program-heading">
                 <p class="section-kicker">Program</p>
-                <h2>目的に合わせて選べる、3つのコース</h2>
+                <h2>目的に合わせて選べる、おすすめプラン</h2>
             </div>
-            <div class="workshop-program-grid">
-                <article class="workshop-program-card workshop-program-card--image-last">
-                    <div class="workshop-program-card__body">
-                        <!-- <span class="workshop-program-card__eyebrow">Trial</span> -->
-                        <h3>Trial Session</h3>
-                        <p>まずは気軽に香りの方向性を掴みたい人向け。旅程の合間にも組み込みやすい入門プランです。</p>
-                        <div class="workshop-program-card__meta">
-                            <span>所要時間: 約45分</span>
-                            <span>向いている人: 初参加 / 一人旅 / 下見体験</span>
-                            <span>得られるもの: 香りの方向性と体験の輪郭</span>
-                        </div>
-                        <ul class="workshop-program-card__points">
-                            <li>短時間でブランドの世界観に触れられる</li>
-                            <li>スタッフと一緒に好みを整理しやすい</li>
-                            <li>Smart Scent Design との接続にも向く</li>
-                        </ul>
-                        <div class="workshop-program-card__actions">
-                            <a class="button button--primary" href="./workshop-booking.html"
-                                data-booking-link="true">このプランで予約する</a>
-                        </div>
-                    </div>
-                    <img src="../images/Workshop/Workshop_ (9-1).png" alt="短時間で調香の方向性を探るトライアルプラン">
-                </article>
-
-                <article class="workshop-program-card">
-                    <div class="workshop-program-card__intro">
-                        <span class="workshop-program-card__eyebrow">お客様満足度トップ</span>
-                        <h3>Signature Blend</h3>
-                        <p>自分用の一本を丁寧に仕上げたい人向け。香りの変化を比べながら、納得感のあるブレンドを目指します。</p>
-                    </div>
-                    <img src="../images/Workshop/Workshop_ (2-1).png" alt="自分だけの香りを丁寧に作るシグネチャープラン">
-                    <div class="workshop-program-card__details">
-                        <div class="workshop-program-card__meta">
-                            <span>所要時間: 約60分から75分</span>
-                            <span>向いている人: 自分用 / 記念の一本 / 深掘り体験</span>
-                            <span>得られるもの: 日常で使える完成した香り</span>
-                        </div>
-                        <ul class="workshop-program-card__points">
-                            <li>トップから余韻までバランスを調整できる</li>
-                            <li>完成イメージを相談しながら詰められる</li>
-                            <li>最も標準的で選びやすい中心プラン</li>
-                        </ul>
-                        <div class="workshop-program-card__actions">
-                            <a class="button button--primary" href="./workshop-booking.html"
-                                data-booking-link="true">一番人気で予約する</a>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="workshop-program-card workshop-program-card--image-last">
-                    <div class="workshop-program-card__body">
-                        <!-- <span class="workshop-program-card__eyebrow">Gift</span> -->
-                        <h3>Gift Workshop</h3>
-                        <p>記念日や贈り物の相談をしながら、二人で香りを作る体験。会話の時間まで含めて思い出に残したい人に向いています。</p>
-                        <div class="workshop-program-card__meta">
-                            <span>所要時間: 約75分から90分</span>
-                            <span>向いている人: ペア参加 / 記念日 / ギフト相談</span>
-                            <span>得られるもの: 贈る相手を意識した香り設計</span>
-                        </div>
-                        <ul class="workshop-program-card__points">
-                            <li>二人で好みをすり合わせる過程も楽しめる</li>
-                            <li>スタッフが用途に応じた提案を補助する</li>
-                            <li>記念撮影や会話体験との相性が高い</li>
-                        </ul>
-                        <div class="workshop-program-card__actions">
-                            <a class="button button--primary" href="./workshop-booking.html"
-                                data-booking-link="true">ペア体験を予約する</a>
-                        </div>
-                    </div>
-                    <img src="../images/Workshop/Workshop_ (7).png" alt="二人で記念に香りを作るギフトプラン">
-                </article>
-            </div>
+            <p class="plans-status" id="workshop-program-status">Loading plans...</p>
+            <div class="workshop-program-grid" id="workshop-program-grid"></div>
         </section>
 
         <section class="workshop-faq" id="faq">
@@ -308,23 +256,188 @@
     <script src="../js/site-shell.js"></script>
     <script>
         (() => {
+            const cfg = window.INIM_SITE_CONFIG || {};
+            const sbApi = window.supabase || null;
+            const supabase = (() => {
+                if (window.__INIM_SUPABASE_CLIENT) return window.__INIM_SUPABASE_CLIENT;
+                if (cfg.supabaseUrl && cfg.supabasePublishableKey && sbApi?.createClient) {
+                    const client = sbApi.createClient(cfg.supabaseUrl, cfg.supabasePublishableKey);
+                    window.__INIM_SUPABASE_CLIENT = client;
+                    return client;
+                }
+                return null;
+            })();
             const mapFrame = document.getElementById("workshop-store-map");
             const mapChips = Array.from(document.querySelectorAll(".workshop-map-chip"));
             const storeCards = Array.from(document.querySelectorAll(".workshop-store-card"));
-            const bookingLinks = Array.from(document.querySelectorAll('[data-booking-link="true"]'));
-            if (!mapFrame || mapChips.length === 0) return;
+            const programStatus = document.getElementById("workshop-program-status");
+            const programGrid = document.getElementById("workshop-program-grid");
+
+            const defaultImage = "../images/Workshop/Workshop_ (6).png";
+            const fallbackImages = [
+                "../images/Workshop/Workshop_ (9-1).png",
+                "../images/Workshop/Workshop_ (2-1).png",
+                "../images/Workshop/Workshop_ (7).png"
+            ];
+            const escapeHtml = (v) => String(v ?? "")
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#39;");
+            const toYen = (v) => `¥${Number(v || 0).toLocaleString("ja-JP")}`;
+            const resolveImage = (url, index) => {
+                const candidate = String(url || "").trim();
+                if (candidate) return candidate;
+                return fallbackImages[index % fallbackImages.length] || defaultImage;
+            };
+            const activeChip = () => mapChips.find((chip) => chip.classList.contains("is-active")) || mapChips[0] || null;
 
             const syncBookingLinks = (chip) => {
-                const store = chip.dataset.mapTarget;
-                const label = chip.dataset.mapLabel;
-                if (!store || !label) return;
+                const bookingLinks = Array.from(document.querySelectorAll('[data-booking-link="true"]'));
+                const store = String(chip?.dataset?.mapTarget || "").trim();
+                const label = String(chip?.dataset?.mapLabel || "").trim();
                 bookingLinks.forEach((link) => {
                     const target = new URL(link.getAttribute("href"), window.location.href);
-                    target.searchParams.set("store", store);
-                    target.searchParams.set("storeLabel", label);
+                    ["planId", "plan_id", "planCode", "plan_code", "planName", "plan_name"].forEach((key) => target.searchParams.delete(key));
+                    const planCode = String(link.dataset.planCode || "").trim();
+                    const planName = String(link.dataset.planName || "").trim();
+                    if (planCode) target.searchParams.set("planCode", planCode);
+                    if (planName) target.searchParams.set("planName", planName);
+                    if (store && label) {
+                        target.searchParams.set("store", store);
+                        target.searchParams.set("storeLabel", label);
+                    }
+                    link.href = target.toString();
+                });
+                const planLinks = Array.from(document.querySelectorAll('[data-plan-link="true"]'));
+                planLinks.forEach((link) => {
+                    const target = new URL(link.getAttribute("href"), window.location.href);
+                    if (store && label) {
+                        target.searchParams.set("store", store);
+                        target.searchParams.set("storeLabel", label);
+                    }
                     link.href = target.toString();
                 });
             };
+
+            const renderProgramCards = (plans, inclusionsByPlan = {}) => {
+                if (!programGrid) return;
+                if (!plans.length) {
+                    programGrid.innerHTML = `
+                        <article class="workshop-program-card">
+                            <div class="workshop-program-card__intro">
+                                <h3>Program data is not available</h3>
+                                <p>現在表示できるプランデータがありません。プラン一覧ページから予約導線をご利用ください。</p>
+                            </div>
+                            <div class="workshop-program-card__details">
+                                <div class="workshop-program-card__actions">
+                                    <a class="button button--secondary" href="./workshop-plans.html" data-plan-link="true">プラン一覧を見る</a>
+                                </div>
+                            </div>
+                        </article>
+                    `;
+                    return;
+                }
+                programGrid.innerHTML = plans.map((plan, index) => {
+                    const mins = Number(plan.duration_min_minutes || 0);
+                    const maxs = Number(plan.duration_max_minutes || mins);
+                    const durationText = `所要時間: 約${escapeHtml(String(mins))}分${maxs && maxs !== mins ? `から${escapeHtml(String(maxs))}分` : ""}`;
+                    const priceText = `料金: ${escapeHtml(toYen(plan.base_price_jpy))}`;
+                    const partyText = `人数: ${escapeHtml(String(plan.min_party_size || 1))}〜${escapeHtml(String(plan.max_party_size || 1))}名`;
+                    const summaryText = escapeHtml(plan.plan_summary || plan.plan_description || "説明準備中です。");
+                    const titleText = escapeHtml(plan.plan_name || "Workshop Plan");
+                    const eyebrowText = escapeHtml(plan.booking_label || plan.plan_code || "PLAN");
+                    const imageUrl = resolveImage(plan.plan_image_url, index);
+                    const imageAlt = `${titleText} のイメージ`;
+                    const actionLabel = index === 1 ? "一番人気で予約する" : "このプランで予約する";
+                    const points = (inclusionsByPlan[plan.id] || []).slice(0, 3);
+                    if (index % 3 === 1) {
+                        return `
+                            <article class="workshop-program-card">
+                                <div class="workshop-program-card__intro">
+                                    <span class="workshop-program-card__eyebrow">${eyebrowText}</span>
+                                    <h3>${titleText}</h3>
+                                    <p>${summaryText}</p>
+                                </div>
+                                <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(imageAlt)}" loading="lazy">
+                                <div class="workshop-program-card__details">
+                                    <div class="workshop-program-card__meta">
+                                        <span>${durationText}</span>
+                                        <span>${priceText}</span>
+                                        <span>${partyText}</span>
+                                    </div>
+                                    ${points.length ? `<ul class="workshop-program-card__points">${points.map((x) => `<li>${escapeHtml(x)}</li>`).join("")}</ul>` : ""}
+                                    <div class="workshop-program-card__actions">
+                                        <a class="button button--primary" href="./workshop-booking.html" data-booking-link="true"
+                                            data-plan-code="${escapeHtml(plan.plan_code || "")}" data-plan-name="${titleText}">${actionLabel}</a>
+                                    </div>
+                                </div>
+                            </article>
+                        `;
+                    }
+                    return `
+                        <article class="workshop-program-card workshop-program-card--image-last">
+                            <div class="workshop-program-card__body">
+                                <span class="workshop-program-card__eyebrow">${eyebrowText}</span>
+                                <h3>${titleText}</h3>
+                                <p>${summaryText}</p>
+                                <div class="workshop-program-card__meta">
+                                    <span>${durationText}</span>
+                                    <span>${priceText}</span>
+                                    <span>${partyText}</span>
+                                </div>
+                                ${points.length ? `<ul class="workshop-program-card__points">${points.map((x) => `<li>${escapeHtml(x)}</li>`).join("")}</ul>` : ""}
+                                <div class="workshop-program-card__actions">
+                                    <a class="button button--primary" href="./workshop-booking.html" data-booking-link="true"
+                                        data-plan-code="${escapeHtml(plan.plan_code || "")}" data-plan-name="${titleText}">${actionLabel}</a>
+                                </div>
+                            </div>
+                            <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(imageAlt)}" loading="lazy">
+                        </article>
+                    `;
+                }).join("");
+            };
+
+            const loadProgramPlans = async () => {
+                if (!programStatus || !programGrid) return;
+                if (!supabase) {
+                    programStatus.textContent = "Supabase not configured. Program uses fallback-free state.";
+                    renderProgramCards([], {});
+                    syncBookingLinks(activeChip());
+                    return;
+                }
+                const { data: plans, error } = await supabase
+                    .from("workshop_plans")
+                    .select("id,plan_code,plan_name,plan_summary,plan_description,plan_image_url,booking_label,duration_min_minutes,duration_max_minutes,base_price_jpy,min_party_size,max_party_size,status,sort_order")
+                    .eq("status", "active")
+                    .order("sort_order", { ascending: true })
+                    .limit(3);
+                if (error) {
+                    programStatus.textContent = `Failed to load plans: ${error.message}`;
+                    renderProgramCards([], {});
+                    syncBookingLinks(activeChip());
+                    return;
+                }
+                const rows = plans || [];
+                const ids = rows.map((x) => x.id).filter(Boolean);
+                const inclusionsByPlan = {};
+                if (ids.length) {
+                    const { data: inclusionRows } = await supabase
+                        .from("workshop_plan_inclusions")
+                        .select("plan_id,inclusion_text,display_order")
+                        .in("plan_id", ids)
+                        .order("display_order", { ascending: true });
+                    (inclusionRows || []).forEach((row) => {
+                        inclusionsByPlan[row.plan_id] = inclusionsByPlan[row.plan_id] || [];
+                        inclusionsByPlan[row.plan_id].push(row.inclusion_text);
+                    });
+                }
+                programStatus.textContent = `${rows.length} plans from DB`;
+                renderProgramCards(rows, inclusionsByPlan);
+                syncBookingLinks(activeChip());
+            };
+
             const setActiveMap = (chip) => {
                 const query = chip.dataset.mapQuery;
                 const label = chip.dataset.mapLabel;
@@ -345,16 +458,19 @@
                 syncBookingLinks(chip);
             };
 
-            mapChips.forEach((chip) => {
-                chip.addEventListener("click", () => {
-                    setActiveMap(chip);
+            if (mapFrame && mapChips.length > 0) {
+                mapChips.forEach((chip) => {
+                    chip.addEventListener("click", () => {
+                        setActiveMap(chip);
+                    });
                 });
-            });
-
-            const initialChip = mapChips.find((chip) => chip.classList.contains("is-active")) || mapChips[0];
-            if (initialChip) {
-                syncBookingLinks(initialChip);
+                const initialChip = activeChip();
+                if (initialChip) setActiveMap(initialChip);
+            } else {
+                syncBookingLinks(null);
             }
+
+            loadProgramPlans();
         })();
     </script>
 </body>

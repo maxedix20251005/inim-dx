@@ -4,5 +4,6 @@ window.INIM_SITE_CONFIG = {
     authRedirectUrl: 'https://maxedix20251005.github.io/inim-dx/subpages/account.html',
     adminResetRedirectUrl: 'https://maxedix20251005.github.io/inim-dx/app/password/reset.html',
     enablePublicSideNav: false,
-    adminAccessMode: 'open_demo'
+    adminAccessMode: 'open_demo',
+    showBookingDiagnostics: false
 };

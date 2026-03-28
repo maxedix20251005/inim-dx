@@ -638,3 +638,327 @@
 
 
 - Result (2026-03-27): Footer「サイトマップ」から subpages/sitemap.html へ遷移し、更新済みの公開/管理導線一覧（管理アクセス注記含む）を確認。
+## 2026-03-28 追加テスト / Added Test (Top -> Workshop Flow Reinforcement Slice-1)
+- 対象:
+  - `index.html`
+  - `css/style.css`
+- 手順:
+  1. トップ Hero の CTA に `ワークショップを予約する` が表示され、`subpages/workshop-booking.html` へ遷移できることを確認する
+  2. Experience Banner の CTA に `プランを比較する` (`subpages/workshop-plans.html`) と `予約枠を確認する` (`subpages/workshop-booking.html`) が表示されることを確認する
+  3. Journey セクション下に STEP1/2/3 導線ボタンが表示され、それぞれ
+     - STEP 1: `subpages/smart-scent-design.html`
+     - STEP 2: `subpages/workshop.html`
+     - STEP 3: `subpages/workshop-booking.html`
+     へ遷移することを確認する
+  4. 720px 以下でボタン群が縦積み表示され、レイアウト崩れがないことを確認する
+  5. Console エラーが発生しないことを確認する
+- 期待結果:
+  - Top から Workshop/Booking への遷移が短手順で明確になる
+  - モバイル/デスクトップ双方で CTA 群の可読性が維持される
+  - EN: Conversion path from Top to Workshop/Booking is clearer with no layout regression.
+## 2026-03-28 追加テスト / Added Test (Booking Diagnostics Visibility Toggle)
+- 対象:
+  - `js/site-config.js`
+  - `subpages/workshop-booking.html`
+- 手順:
+  1. `showBookingDiagnostics: false` で予約ページを開き、`Data Diagnostics` パネルが表示されないことを確認する
+  2. `showBookingDiagnostics: true` に変更して再読込し、`Data Diagnostics` パネルが表示されることを確認する
+  3. いずれの設定でもカレンダー/予約枠/店舗選択の挙動が変わらないことを確認する
+- 期待結果:
+  - 本番表示では診断情報が非表示になる
+  - 調査時のみ設定で再表示できる
+  - EN: Diagnostics panel visibility can be toggled without affecting booking behavior.
+## 2026-03-28 追加テスト / Added Test (Booking Top Strip Removal + LED Relocation)
+- 対象:
+  - `subpages/workshop-booking.html`
+  - `css/workshop-booking.css`
+- 手順:
+  1. 予約ページを開き、上部に独立した `WORKSHOP BOOKING` ストリップが表示されないことを確認する
+  2. LED が Hero 領域の kicker 行に表示されることを確認する
+  3. `showBookingDiagnostics: false` のまま Diagnostics パネルが表示されないことを確認する
+  4. カレンダー/予約枠/店舗選択に機能退行がないことを確認する
+- 期待結果:
+  - 上部ノイズ表示が除去され、Hero 内でLED表示が一貫する
+  - Diagnostics は既定で完全非表示を維持する
+  - EN: Top-strip artifacts are removed and LED placement is unified in hero without regression.
+## 2026-03-28 追加テスト / Added Test (Workshop Mid-Page Decision Block)
+- 対象:
+  - `subpages/workshop.html`
+  - `css/workshop.css`
+- 手順:
+  1. Workshop ページで `#flow` の下に `#decision` ブロックが表示されることを確認する
+  2. `プランを比較する` が `subpages/workshop-plans.html` へ遷移することを確認する
+  3. `空き枠を確認する` が `subpages/workshop-booking.html` へ遷移することを確認する
+  4. `店舗を選んで進む` が `#location` へスクロール遷移することを確認する
+  5. 720px 以下で `#decision` のボタン群が縦積み表示され、レイアウト崩れがないことを確認する
+- 期待結果:
+  - Workshop ページ中段で次アクション選択が明確になり、予約導線の迷いを減らせる
+  - 既存の店舗選択・予約リンク挙動に退行がない
+  - EN: Mid-page decision block improves action clarity without regression in existing flow.
+## 2026-03-28 追加テスト / Added Test (Decision Ghost CTA Contrast)
+- 対象:
+  - `css/workshop.css`
+  - `subpages/workshop.html`
+- 手順:
+  1. `#decision` の `店舗を選んで進む` ボタンが通常状態で明確に読めることを確認する
+  2. hover/focus 時に文字色・境界線・背景の変化が確認できることを確認する
+  3. `プランを比較する` / `空き枠を確認する` の表示優先度が維持されることを確認する
+- 期待結果:
+  - 第3CTAの視認性が改善される
+  - セクション外の `.button--ghost` には影響しない
+  - EN: Ghost CTA in decision block remains readable while global ghost-button behavior stays unchanged.
+## 2026-03-28 追加テスト / Added Test (Workshop Plans Comparison Controls + planId Handoff)
+- 対象:
+  - `subpages/workshop-plans.html`
+  - `css/workshop.css`
+- 手順:
+  1. プランページを開き、クイックフィルタ4種（すべて/短時間/じっくり/ペア・ギフト）が表示されることを確認する
+  2. 各フィルタ押下で表示件数表示（`x / y plans`）とカード一覧が連動することを確認する
+  3. 並び順セレクト（おすすめ順/価格が低い順/所要時間が短い順）でカード順が切替わることを確認する
+  4. カードの `このプランで予約する` 押下時、遷移先URLに `planId` / `planCode` / `planName` が含まれることを確認する
+  5. 下部CTA `空き枠を確認して予約へ進む` が `subpages/workshop-booking.html` へ遷移することを確認する
+  6. モバイル幅でフィルタ・並び順・CTAのレイアウトが崩れないことを確認する
+- 期待結果:
+  - プラン比較操作が画面内で完結し、予約導線への遷移判断がしやすくなる
+  - booking 画面への引継ぎ情報が増え、後続のプラン初期反映に利用可能になる
+  - EN: Plan-page comparison and booking handoff become more explicit and consistent.
+## 2026-03-28 追加テスト / Added Test (Workshop Booking Plan Handoff Consumption)
+- 対象:
+  - `subpages/workshop-plans.html`
+  - `subpages/workshop-booking.html`
+- 手順:
+  1. `workshop-plans.html` の `このプランで予約する` から遷移し、URLに `planId` / `planCode` / `planName` が含まれることを確認する
+  2. 遷移先 `workshop-booking.html` でサマリー `選択プラン` が対象プラン名になることを確認する
+  3. カレンダー/予約枠が対象プランのセッションのみに絞られて表示されることを確認する
+  4. `planId` を外し `planCode` のみで遷移した場合でも一致解決できることを確認する
+  5. 不一致値（存在しない `planId`）で遷移した場合、全体表示へフォールバックし、`選択プラン` が不一致表示になることを確認する
+  6. `store` / `storeLabel` クエリ併用時、店舗初期選択が維持されることを確認する
+- 期待結果:
+  - プラン選択から予約枠表示まで一貫した文脈が維持される
+  - 既存の店舗引継ぎ互換性を崩さない
+  - EN: Plan handoff context is consumed consistently while preserving store-handoff compatibility.
+## 2026-03-28 追加テスト / Added Test (Booking Plan Context Bar: Change/Clear)
+- 対象:
+  - `subpages/workshop-booking.html`
+  - `css/workshop-booking.css`
+- 手順:
+  1. `planId` 付きで booking ページを開き、`選択中プラン` バーが表示されることを確認する
+  2. `プランを変更する` で `subpages/workshop-plans.html` へ遷移できることを確認する
+  3. `全プランを表示` 押下で同ページ再表示され、URL から `planId/planCode/planName` が除去されることを確認する
+  4. 解除後、サマリー `選択プラン` が `未指定` となり、全体セッション表示へ戻ることを確認する
+  5. 不一致クエリ（存在しない planId）時は `選択中プラン` バーが表示されないことを確認する
+- 期待結果:
+  - 予約画面上でプラン変更と絞り込み解除が迷わず実行できる
+  - プラン不一致時はバー非表示となり、中間状態の誤解を避けられる
+  - `plan_name` が空/`-`/`未指定` のプレースホルダー状態でもバーは非表示になる
+  - EN: Booking page provides clear plan-context actions, and hides the context bar for invalid/mismatch plan queries to avoid ambiguous UI state.
+## 2026-03-28 追加テスト / Added Test (Workshop IA Navigation Governance)
+- 対象:
+  - `app/dashboard.html`（admin shell + side nav）
+  - `subpages/workshop-booking.html`
+  - `subpages/workshop-plans.html`
+  - `subpages/sitemap.html`
+- 手順:
+  1. 管理画面でサイドナビに `Workshop予約管理` / `Workshopプラン管理` が常時表示されることを確認する
+  2. 公開側グローバルナビで `Admin` は表示されるが、`Workshop予約管理` / `Workshopプラン管理` の直接リンクが露出しないことを確認する
+  3. `workshop-plans.html` -> `workshop-booking.html` 遷移で `planId` が引継がれることを確認する
+  4. `workshop-booking.html` の `プランを変更する` で `workshop-plans.html` へ戻れることを確認する
+  5. フッター `サイトマップ` から `subpages/sitemap.html` へ遷移し、公開/管理導線一覧が確認できることを確認する
+- 期待結果:
+  - Workshop 管理導線は admin サイドナビを正本入口として維持される
+  - 公開導線は一般利用者向けに保たれ、管理詳細リンクを混在させない
+  - 比較 -> 予約の文脈遷移とサイトマップ導線が継続して機能する
+  - EN: IA placement rule is consistently enforced across public/admin navigation and plan-to-booking flow.
+## 2026-03-28 追加テスト / Added Test (Booking Completion Next-Step CTAs)
+- 対象:
+  - `subpages/workshop-booking-thanks.html`
+  - `css/workshop-booking-thanks.css`
+- 手順:
+  1. 予約送信後に完了画面を開き、ステータス別案内文が表示されることを確認する（`pending/confirmed/cancelled`）
+  2. `同じ条件で別日程を探す` を押下し、`workshop-booking.html` へ遷移することを確認する
+  3. 上記遷移URLに `store` / `storeLabel` / `planName` が含まれることを確認する（値が存在する場合）
+  4. `プラン比較ページへ戻る` で `workshop-plans.html` に遷移できることを確認する
+  5. 既存の `ワークショップページへ戻る` / `トップへ戻る` が引き続き動作することを確認する
+- 期待結果:
+  - 予約完了後の次アクションが明確化され、再予約・比較へ短手順で戻れる
+  - 完了画面が離脱終点ではなく、次の導線起点として機能する
+  - EN: Completion page works as a conversion continuation point with clear rebook/compare actions.
+## 2026-03-28 追加テスト / Added Test (Top Booking Shortcut Block + Hero CTA Priority)
+- 対象:
+  - `index.html`
+  - `css/style.css`
+- 手順:
+  1. Top Hero の primary CTA が `予約枠を今すぐ確認する` になっていることを確認する
+  2. Hero 直下に `Booking Shortcut` ブロックが表示されることを確認する
+  3. `空き枠を確認する` で `subpages/workshop-booking.html` へ遷移することを確認する
+  4. `プラン比較から始める` で `subpages/workshop-plans.html` へ遷移することを確認する
+  5. `ワークショップ詳細を見る` で `subpages/workshop.html` へ遷移することを確認する
+  6. 720px 以下でボタンが縦積み表示され、レイアウト崩れがないことを確認する
+- 期待結果:
+  - Top ページ直下で予約起点が明確になり、予約導線への到達が早くなる
+  - Desktop/Mobile 両方でCTA視認性と操作性が維持される
+  - EN: Top-page booking intent is strengthened with a clear shortcut block and responsive CTA behavior.
+## 2026-03-28 追加テスト / Added Test (Top CTA Contrast Alignment with Workshop Decision)
+- 対象:
+  - `css/style.css`
+  - `index.html`
+- 手順:
+  1. Top の `#hero-banner` CTA で ghost ボタン（`予約枠を確認する`）が背景に埋もれず読めることを確認する
+  2. Journey の `STEP 1 を試す` ボタンが背景同化せず視認できることを確認する
+  3. Booking Shortcut の `ワークショップ詳細を見る` ボタンが同系統配色で視認できることを確認する
+  4. 各 ghost ボタン hover/focus 時に accent 強調へ変化することを確認する
+- 期待結果:
+  - Topページの ghost ボタンが light background 上でも判読可能である
+  - `workshop.html #decision` と同系統の視覚ルールが適用される
+  - EN: Ghost-button contrast on Top page matches workshop decision styling and remains accessible on light surfaces.
+## 2026-03-28 追加テスト / Added Test (Temporary Link Disable in Public Nav/Footer)
+- 対象:
+  - `js/site-shell.js`
+  - `css/style.css`
+- 手順:
+  1. Global Navi で `ブランド / アイテム / 香りから探す / 記事 / Sale / 実店舗` がクリック遷移しないことを確認する
+  2. `香りと遊ぶ` と `Home`、`Admin` は引き続き遷移可能であることを確認する
+  3. Footer `Guide` で `サイトマップ` のみ遷移可能、他リンクは無効であることを確認する
+  4. Footer `Support` の各リンクが無効であることを確認する
+  5. 無効リンクが視覚的に判別可能（disabled style）であることを確認する
+- 期待結果:
+  - 未準備ページへの誤遷移を防ぎつつ、公開導線として必要なリンクは維持される
+  - `aria-disabled` と非活性スタイルにより、無効状態が明確に伝わる
+  - EN: Non-ready destinations are safely blocked while keeping essential public navigation available.
+## 2026-03-28 追加テスト / Added Test (Header Notice Strip Removal + Footer Guide Adjustment)
+- 対象:
+  - `js/site-shell.js`
+- 手順:
+  1. 公開ページを開き、ヘッダー上部の `ショッピングガイド / お問い合わせ` ストリップが表示されないことを確認する
+  2. フッター `Guide` に `ショッピングガイド` が表示され、disabled で遷移しないことを確認する
+  3. フッター `Account` の `お問い合わせ` は後続方針に応じて有効/無効を確認する
+- 期待結果:
+  - ヘッダー上部の重複導線が整理される
+  - `ショッピングガイド` はフッターに移動して disabled 管理できる
+  - `お問い合わせ` は後続調整で disabled 管理へ移行可能な構成である
+  - EN: Header clutter is reduced while footer guide placement is consolidated and ready for contact-link lock if needed.
+## 2026-03-28 追加テスト / Added Test (Search + Cart + Contact Temporary Disable)
+- 対象:
+  - `js/site-shell.js`
+  - `css/style.css`
+- 手順:
+  1. Utility header の `検索` が disabled で遷移しないことを確認する
+  2. Utility header の `カート` が disabled で遷移しないことを確認する
+  3. Footer Account の `お問い合わせ` が disabled で遷移しないことを確認する
+  4. `サイトマップ` は引き続き有効遷移できることを確認する
+  5. disabled リンクが視覚的に判別可能（色/カーソル）であることを確認する
+- 期待結果:
+  - 未実装ページへの入口（検索/カート/お問い合わせ）が停止される
+  - 公開導線として必要な `サイトマップ` は維持される
+  - EN: Search/cart/contact placeholders are safely disabled while sitemap remains accessible.
+## 2026-03-28 追加テスト / Added Test (Booking Step-Progress Strip on Step1)
+- 対象:
+  - `subpages/workshop-booking.html`
+  - `css/workshop-booking.css`
+- 手順:
+  1. 予約ページを開き、`STEP 1/2/3` の進行表示が表示されることを確認する
+  2. `STEP 1` が current スタイルで強調表示されることを確認する
+  3. カレンダー・店舗選択・予約枠表示の既存機能に退行がないことを確認する
+  4. 1100px 以下でステップ表示が縦積みになり、テキスト欠けがないことを確認する
+- 期待結果:
+  - 予約開始時点で全体フローが明確に理解できる
+  - 既存予約機能を維持したまま視認性が向上する
+  - EN: Users can understand the full booking process from Step 1 without regressions.
+## 2026-03-28 追加テスト / Added Test (Store Context Handoff: Workshop -> Plans -> Booking)
+- 対象:
+  - `subpages/workshop.html`
+  - `subpages/workshop-plans.html`
+  - `subpages/workshop-booking.html`
+- 手順:
+  1. `workshop.html` で店舗チップを `浅草店/柴又店/ソラマチ店` のいずれかに切替える
+  2. `プランを見る` または `プランを比較する` へ遷移し、URLに `store` / `storeLabel` が含まれることを確認する
+  3. `workshop-plans.html` の各 `このプランで予約する` を押下し、遷移先URLに `planId` と `store/storeLabel` が同時に含まれることを確認する
+  4. `workshop-plans.html` 下部CTA `空き枠を確認して予約へ進む` でも `store/storeLabel` が引継がれることを確認する
+  5. `workshop-booking.html` で対象店舗が初期選択されていることを確認する
+- 期待結果:
+  - 店舗選択後の比較導線でコンテキストが維持される
+  - 比較ページ経由でも booking 画面の初期店舗選択が失われない
+  - EN: Store context remains intact across workshop, plans, and booking transitions.
+## 2026-03-28 追加テスト / Added Test (Top CTA Alignment + Journey Per-Step Actions)
+- 対象:
+  - `index.html`
+  - `css/style.css`
+- 手順:
+  1. Hero の3ボタンが同じ高さ・同じ幅で横並び表示されることを確認する
+  2. Booking Shortcut の2つの情報タグが横並び表示されることを確認する
+  3. Journey の各STEPカード直下に対応ボタン（STEP1/2/3）が配置され、カード幅いっぱいで表示されることを確認する
+  4. 720px 以下で Hero ボタンが縦積みになり、レイアウト崩れがないことを確認する
+- 期待結果:
+  - Hero CTA の視認性と整列性が改善される
+  - Booking Shortcut 情報のスキャン性が向上する
+  - Journey 導線が各ステップ直下で理解しやすくなる
+  - EN: CTA alignment and per-step action placement improve readability and conversion clarity on Top page.
+## 2026-03-28 追加テスト / Added Test (Hero Vertical CTA + Journey Ghost Contrast)
+- 対象:
+  - `css/style.css`
+  - `index.html`
+- 手順:
+  1. Hero の3ボタンが縦積み表示されることを確認する
+  2. Journey の STEP 1 ボタン（ghost）が背景に埋もれず表示されることを確認する
+  3. Journey の STEP 1 ghost が hover/focus 時に accent 強調へ変化することを確認する
+  4. Experience Banner のボタン系統と Journey ボタンの視認性ルールが一致していることを確認する
+- 期待結果:
+  - Hero CTA が縦方向に整列し、操作対象が認識しやすい
+  - Journey の ghost ボタンが明確に視認できる
+  - EN: Hero vertical CTA layout and journey ghost-button contrast are both clear and consistent.
+## 2026-03-28 追加テスト / Added Test (Confirm->Thanks plan_id Handoff for Rebooking)
+- 対象:
+  - `subpages/workshop-booking-confirm.html`
+  - `subpages/workshop-booking-thanks.html`
+- 手順:
+  1. 通常予約フローで confirm から送信し、thanks へ遷移する
+  2. thanks URL に `plan_id` / `store` / `storeLabel` が含まれることを確認する
+  3. `同じ条件で別日程を探す` を押下し、booking URL に `planId` が含まれることを確認する
+  4. booking 画面で `選択プラン` と店舗初期選択が一致することを確認する
+- 期待結果:
+  - 完了画面経由の再予約でもプラン・店舗の文脈が保持される
+  - `planName` のみ依存より高い一致精度で再検索できる
+  - EN: Rebooking from thanks preserves exact plan/store context via `plan_id` handoff.
+## 2026-03-28 追加テスト / Added Test (Sticky Next-Action CTA + Copy Consistency)
+- 対象:
+  - `subpages/workshop-plans.html`
+  - `subpages/workshop-booking.html`
+  - `subpages/workshop.html`
+  - `index.html`
+- 手順:
+  1. `workshop-plans.html` を開き、右下（mobileは下部）に `予約枠を確認する` fixed CTA が表示されることを確認する
+  2. `store/storeLabel` クエリ付き遷移時、fixed CTA のリンク先にも同クエリが引継がれることを確認する
+  3. `workshop-booking.html` を開き、初期状態では fixed CTA が非表示であることを確認する
+  4. 予約可能日を選択すると fixed CTA が表示され、文言が `◯◯ の予約枠へ進む` へ更新されることを確認する
+  5. Top/Workshop/Plans の主要CTA文言が `予約枠` 表現へ統一されていることを確認する
+- 期待結果:
+  - 比較ページと予約ページの双方で、次アクションが常時視認できる
+  - Booking 側は未選択時に誤操作を誘発せず、選択後にのみ導線を強調する
+  - EN: Sticky next-action CTAs guide progression without ambiguity, and CTA copy stays consistent across Top->Workshop->Plans->Booking flow.
+## 2026-03-28 追加テスト / Added Test (Workshop PROGRAM Plan Handoff to Booking)
+- 対象:
+  - `subpages/workshop.html`
+  - `subpages/workshop-booking.html`
+- 手順:
+  1. `workshop.html#program` で `このプランで予約する` / `一番人気で予約する` / `ペア体験を予約する` をそれぞれ押下する
+  2. 遷移先 URL に `planCode` と `planName` が含まれることを確認する
+  3. `workshop-booking.html` で `選択プラン` が `未指定` ではなく対象プラン名で表示されることを確認する
+  4. `選択中プラン` コンテキストバーが表示されることを確認する
+- 期待結果:
+  - PROGRAM パネル経由でも `workshop-plans.html` 経由と同じくプラン文脈が保持される
+  - booking 側のプラン一致解決に失敗しない
+  - EN: Plan context is preserved from Workshop PROGRAM cards to Booking, matching plans-page behavior.
+## 2026-03-28 追加テスト / Added Test (Workshop PROGRAM DB-Driven Top-3)
+- 対象:
+  - `subpages/workshop.html`
+  - `workshop_plans`, `workshop_plan_inclusions`（Supabase）
+- 手順:
+  1. `workshop.html#program` を開き、PROGRAMカードがDB由来で表示されることを確認する
+  2. `status=active` の plan が4件以上ある場合でも、表示が最大3件に制限されることを確認する
+  3. `sort_order` を変更し、PROGRAMの表示順が追従することを確認する
+  4. 各カードの `このプランで予約する` から booking へ遷移し、`選択プラン` が一致することを確認する
+  5. `workshop_plan_inclusions` がある場合、カード内に先頭3件が表示されることを確認する
+- 期待結果:
+  - PROGRAMは静的文言ではなくDBの `workshop_plans` を正本として表示される
+  - 最大3件表示と順序制御が一貫して機能する
+  - EN: PROGRAM section is DB-driven from `workshop_plans` with deterministic top-3 ordering and consistent booking handoff.

@@ -135,6 +135,8 @@
         return ["home", key];
     };
     const isCurrent = (key) => key === pageKey ? ' is-current' : '';
+    const disabledGlobalNavKeys = new Set(['brand', 'items', 'scentSearch', 'article', 'sale', 'stores']);
+    const disabledLinkAttrs = `aria-disabled="true" tabindex="-1"`;
     const accountHref = (mode) => `${window.location.pathname}#${mode}`;
     const accountModalLink = (mode, label, className = '') => `<a class="${className}" href="${accountHref(mode)}" data-account-modal="${mode}">${label}</a>`;
     const accountLogoutLink = (className = '') => `<a class="${className}" href="${window.location.pathname}#logout" data-account-logout="true">ログアウト</a>`;
@@ -307,10 +309,11 @@
     const renderGlobalNav = () => `
         <nav class="category-nav" aria-label="グローバルナビゲーション">
             ${globalNavItems.map((item) => {
-                const hasChildren = item.children.length > 0;
+                const isDisabled = disabledGlobalNavKeys.has(item.key);
+                const hasChildren = !isDisabled && item.children.length > 0;
                 return `
                     <div class="category-nav__item ${hasChildren ? 'has-children' : ''} ${item.current ? 'is-current' : ''}">
-                        <a class="${item.current ? 'is-current' : ''}" href="${item.href}">${item.label}</a>
+                        <a class="${item.current ? 'is-current' : ''} ${isDisabled ? 'is-disabled' : ''}" href="${isDisabled ? '#' : item.href}" ${isDisabled ? disabledLinkAttrs : ''}>${item.label}</a>
                         ${hasChildren ? `<button type="button" class="category-nav__toggle" aria-expanded="false" aria-label="${item.label} submenu"></button>
                         <div class="category-nav__dropdown" role="menu">
                             ${item.children.map((child) => `<a class="${child.current ? 'is-current' : ''}" href="${child.href}" role="menuitem">${child.label}</a>`).join('')}
@@ -390,20 +393,14 @@
     `;
 
     const headerHtml = `
-        <div class="notice-bar">
-            <div class="notice-bar__actions">
-                <a href="${link('shoppingGuide')}">ショッピングガイド</a>
-                <a href="${link('contact')}">お問い合わせ</a>
-            </div>
-        </div>
         <div class="utility-header">
             <a class="utility-header__brand-logo" href="${link('home')}" aria-label="inim-dx top">
                 <img src="${root}/images/logo/logo-inim-dx.jpg" alt="inim-dx logo">
             </a>
             <div class="utility-header__tools">
-                <a href="${link('scentSearch')}">検索</a>
+                <a class="is-disabled" href="#" ${disabledLinkAttrs}>検索</a>
                 ${accountModalLink('account', 'マイアカウント')}
-                <a href="${link('cart')}">カート</a>
+                <a class="is-disabled" href="#" ${disabledLinkAttrs}>カート</a>
             </div>
         </div>
         ${renderGlobalNav()}
@@ -423,23 +420,24 @@
             <div>
                 <p class="site-footer__title">Guide</p>
                 <a href="${link('sitemap')}">サイトマップ</a>
-                <a href="${link('shoppingGuide')}">配送・送料について</a>
-                <a href="${link('shoppingGuide')}">返品について</a>
-                <a href="${link('shoppingGuide')}">お支払い方法について</a>
-                <a href="${link('legal')}">法的表示</a>
+                <a class="is-disabled" href="#" ${disabledLinkAttrs}>ショッピングガイド</a>
+                <a class="is-disabled" href="#" ${disabledLinkAttrs}>配送・送料について</a>
+                <a class="is-disabled" href="#" ${disabledLinkAttrs}>返品について</a>
+                <a class="is-disabled" href="#" ${disabledLinkAttrs}>お支払い方法について</a>
+                <a class="is-disabled" href="#" ${disabledLinkAttrs}>法的表示</a>
             </div>
             <div>
                 <p class="site-footer__title">Support</p>
-                <a href="${link('privacy')}">プライバシーポリシー</a>
-                <a href="${link('newsletter')}">メルマガ登録・解除</a>
-                <a href="${link('rss')}">RSS / ATOM</a>
+                <a class="is-disabled" href="#" ${disabledLinkAttrs}>プライバシーポリシー</a>
+                <a class="is-disabled" href="#" ${disabledLinkAttrs}>メルマガ登録・解除</a>
+                <a class="is-disabled" href="#" ${disabledLinkAttrs}>RSS / ATOM</a>
             </div>
             <div>
                 <p class="site-footer__title">Account</p>
                 ${accountModalLink('account', 'マイアカウント')}
                 ${accountModalLink('register', '会員登録')}
                 ${accountModalLink('login', 'ログイン')}
-                <a href="${link('contact')}">お問い合わせ</a>
+                <a class="is-disabled" href="#" ${disabledLinkAttrs}>お問い合わせ</a>
             </div>
         </div>
         <p class="site-footer__copy">inim-dx pages aligned to the sitemap, wireframe, and design guide.</p>
@@ -520,8 +518,8 @@
         const tools = header.querySelector('.utility-header__tools');
         if (!tools) { return; }
         tools.innerHTML = currentUser
-            ? `<a href="${link('scentSearch')}">検索</a>${accountModalLink('account', 'マイアカウント')}${accountLogoutLink()}<a href="${link('cart')}">カート</a>`
-            : `<a href="${link('scentSearch')}">検索</a>${accountModalLink('login', 'ログイン')}${accountModalLink('register', '会員登録')}<a href="${link('cart')}">カート</a>`;
+            ? `<a class="is-disabled" href="#" ${disabledLinkAttrs}>検索</a>${accountModalLink('account', 'マイアカウント')}${accountLogoutLink()}<a class="is-disabled" href="#" ${disabledLinkAttrs}>カート</a>`
+            : `<a class="is-disabled" href="#" ${disabledLinkAttrs}>検索</a>${accountModalLink('login', 'ログイン')}${accountModalLink('register', '会員登録')}<a class="is-disabled" href="#" ${disabledLinkAttrs}>カート</a>`;
     };
 
     const renderSidebarAccountLinks = () => {
@@ -537,8 +535,8 @@
         const accountColumn = footer.querySelector('.site-footer__grid > div:last-child');
         if (!accountColumn) { return; }
         accountColumn.innerHTML = currentUser
-            ? `<p class="site-footer__title">Account</p>${accountModalLink('account', 'マイアカウント')}${accountLogoutLink()}<a href="${link('contact')}">お問い合わせ</a>`
-            : `<p class="site-footer__title">Account</p>${accountModalLink('register', '会員登録')}${accountModalLink('login', 'ログイン')}<a href="${link('contact')}">お問い合わせ</a>`;
+            ? `<p class="site-footer__title">Account</p>${accountModalLink('account', 'マイアカウント')}${accountLogoutLink()}<a class="is-disabled" href="#" ${disabledLinkAttrs}>お問い合わせ</a>`
+            : `<p class="site-footer__title">Account</p>${accountModalLink('register', '会員登録')}${accountModalLink('login', 'ログイン')}<a class="is-disabled" href="#" ${disabledLinkAttrs}>お問い合わせ</a>`;
     };
 
     const renderAdminLinks = () => {
@@ -1161,6 +1159,12 @@
     }
 
     body.addEventListener('click', (event) => {
+        const disabledLink = event.target.closest('a[aria-disabled="true"]');
+        if (disabledLink) {
+            event.preventDefault();
+            return;
+        }
+
         const logoutTrigger = event.target.closest('[data-account-logout]');
         if (logoutTrigger) {
             event.preventDefault();

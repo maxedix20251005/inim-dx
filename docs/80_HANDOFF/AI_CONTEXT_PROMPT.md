@@ -309,6 +309,30 @@
 - 今後、実装・調査・方針変更・既知課題の変化があったら、必ず更新してください。
 - 次回の AI がこのファイルだけ読んでも、途中から高い精度で再開できる状態を維持してください。
 
+## 15. 2026-03-28 Follow-up / 引継ぎ追記
+- JA: `subpages/workshop-booking.html` の `選択中プラン` バーで `プランを変更する` 右寄せ要望に対し、CSS調整に加えてアクションDOM順を `全プランを表示 -> プランを変更する` へ変更。
+- JA: 本件はユーザー要望により `docs/10_PROJECT/ISSUE_LIST.md` へ Issue `2026-03-28-28` として記録済み（修正適用済み・最終確認待ち）。
+- EN: For plan-context action alignment, actions were reordered (`Clear All Plans -> Change Plan`) to ensure `Change Plan` stays rightmost.
+- EN: Tracked in `ISSUE_LIST.md` as Issue `2026-03-28-28` per user request, even with fix applied.
+
+## 16. 2026-03-28 Slice-8 / 引継ぎ追記
+- JA: `2.2 Top -> Workshop Flow Reinforcement` の追加スライスとして、`workshop-plans` / `workshop-booking` に fixed 次アクションCTAを追加。
+- JA: Booking側 fixed CTA は日付選択時のみ表示される（未選択時は非表示）。
+- JA: Top/Workshop/Plans の主要CTA文言を `予約枠` 表現へ統一。
+- EN: Added sticky next-action CTA on plans/booking; booking CTA appears only after date selection.
+- EN: Unified core CTA copy to `予約枠` wording across Top/Workshop/Plans.
+
+## 17. 2026-03-28 PROGRAM Handoff Fix / 引継ぎ追記
+- JA: `workshop.html` PROGRAMカード経由で booking に遷移した際、`選択プラン` が未表示になる不整合を修正。
+- JA: PROGRAMカードCTAへ `data-plan-code/name` を追加し、`syncBookingLinks()` で `planCode/planName` を明示引継ぎ。
+- EN: Fixed missing selected-plan context from Workshop PROGRAM cards to Booking by passing `planCode/planName` in booking-link sync.
+
+## 18. 2026-03-28 PROGRAM DB Migration / 引継ぎ追記
+- JA: Issue `2026-03-28-29` の恒久対応として、`workshop.html` PROGRAMを静的3カードからDB連動表示へ移行。
+- JA: `workshop_plans`（active, sort_order asc, limit 3）を表示し、`workshop_plan_inclusions`（最大3件）をカード内反映。
+- JA: PROGRAMカードCTAは `data-plan-code/name` を保持し、store連動時に booking へ `planCode/planName + store/storeLabel` を引継ぎ。
+- EN: Permanent fix applied by migrating Workshop PROGRAM cards to DB-driven top-3 plans and preserving robust booking handoff parameters.
+
 
 
 

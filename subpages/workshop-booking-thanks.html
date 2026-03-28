@@ -24,7 +24,8 @@
         <section class="thanks-wrap">
             <section class="thanks-panel">
                 <h2>予約情報</h2>
-                <p class="thanks-panel__lead">ご入力いただいた内容で予約を受け付けました。ステータスが <strong>pending</strong> の場合は、店舗確認後に確定連絡があります。</p>
+                <p class="thanks-panel__lead">ご入力いただいた内容で予約を受け付けました。以下の控えをご確認ください。</p>
+                <p class="thanks-panel__status-note" id="thanks-status-note">ステータスに応じたご案内を表示します。</p>
                 <table class="thanks-table">
                     <tbody>
                         <tr><th>予約ID</th><td id="thanks-booking-id">-</td></tr>
@@ -40,8 +41,14 @@
                     </tbody>
                 </table>
 
+                <div class="thanks-next">
+                    <h3>次のアクション</h3>
+                    <p>同じ店舗・同じプラン条件で別日程を探す場合は、下のボタンからそのまま再検索できます。</p>
+                </div>
                 <div class="thanks-actions">
+                    <a class="button button--ghost" href="./workshop-booking.html" id="thanks-rebook-link">同じ条件で別日程を探す</a>
                     <a class="button button--primary" href="./workshop.html#reserve">ワークショップページへ戻る</a>
+                    <a class="button button--secondary" href="./workshop-plans.html">プラン比較ページへ戻る</a>
                     <a class="button button--secondary" href="../index.html">トップへ戻る</a>
                 </div>
             </section>
@@ -60,6 +67,11 @@
                 confirmed: "confirmed（予約確定）",
                 cancelled: "cancelled（キャンセル）"
             };
+            const statusNoteMap = {
+                pending: "現在は店舗確認待ちです。確定連絡までしばらくお待ちください。",
+                confirmed: "予約は確定しています。ご来店前に日時・店舗をご確認ください。",
+                cancelled: "この予約はキャンセル状態です。必要に応じて別日程で再予約してください。"
+            };
             const status = statusMap[String(rawStatus).toLowerCase()] || rawStatus;
             const label = params.get("label") || params.get("date") || "-";
             const gather = params.get("gather") || "-";
@@ -67,11 +79,15 @@
             const start = params.get("start_time") || "-";
             const end = params.get("end_time") || "-";
             const plan = params.get("plan") || "-";
+            const planId = params.get("plan_id") || "";
             const store = params.get("store_label") || params.get("storeLabel") || params.get("store") || "-";
             const price = params.get("price") || "-";
+            const storeKey = params.get("store") || "";
+            const storeLabel = params.get("store_label") || params.get("storeLabel") || "";
 
             byId("thanks-booking-id").textContent = bookingId;
             byId("thanks-booking-status").textContent = status;
+            byId("thanks-status-note").textContent = statusNoteMap[String(rawStatus).toLowerCase()] || "予約ステータスの詳細は店舗からのご連絡をご確認ください。";
             byId("thanks-plan").textContent = plan;
             byId("thanks-store").textContent = store;
             byId("thanks-booking-date").textContent = label;
@@ -80,6 +96,16 @@
             byId("thanks-booking-end").textContent = end;
             byId("thanks-booking-party").textContent = party === "-" ? party : `${party}名`;
             byId("thanks-booking-price").textContent = price;
+
+            const rebookLink = byId("thanks-rebook-link");
+            if (rebookLink) {
+                const target = new URL("./workshop-booking.html", window.location.href);
+                if (storeKey) target.searchParams.set("store", storeKey);
+                if (storeLabel) target.searchParams.set("storeLabel", storeLabel);
+                if (planId) target.searchParams.set("planId", planId);
+                if (plan && plan !== "-") target.searchParams.set("planName", plan);
+                rebookLink.href = target.toString();
+            }
         })();
     </script>
 </body>

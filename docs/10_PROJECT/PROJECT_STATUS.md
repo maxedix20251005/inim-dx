@@ -639,3 +639,335 @@
 - 2026-03-27 Step2: 04/06 に 05 と同じ厳格な書込判定を適用（未ログイン開始 or anonymous provider は保存不可/read-only）。asset: 20260327l
 
 - 2026-03-27: FEATURE_BACKLOG 2.13 added to review site structure and refine IA/navigation hierarchy.
+### ドキュメント更新（2026-03-28 追加21）
+- `docs/20_PRODUCT/FEATURE_BACKLOG.md` の状態見直しを実施し、以下を `Accepted` へ更新しました。
+  - `2.6 Admin Access Restriction + Booking LED Governance`
+  - `2.7 Dashboard Link Exposure`
+- 根拠:
+  - `app/dashboard.html` / `app/pages/workshop.html` の管理側アクセス制御実装
+  - `docs/50_OPERATIONS/CHECKLIST_SUPABASE.md` / `docs/60_TEST/TEST_PLAN.md` での LED 運用確認
+  - 公開導線から `app/dashboard.html` への遷移導線実装と検証記録
+- 併せて `2.2 Top -> Workshop Flow Reinforcement` の当日スライス（第1弾）を実装。
+  - `index.html` Hero に `ワークショップを予約する` CTA を追加
+  - `index.html` Experience Banner に `プランを比較する` / `予約枠を確認する` CTA を追加
+  - `index.html` Journey セクションに 3ステップ導線ショートカット（STEP1/2/3）を追加
+  - `css/style.css` に `.journey__actions` を追加し、モバイル縦積みへ対応
+- EN: Reclassified backlog items `2.6` and `2.7` to `Accepted` based on implemented controls and verification history.
+- EN: Started `2.2` in-progress work (slice-1) by strengthening Top-to-Workshop conversion CTAs on `index.html` and adding responsive styling in `css/style.css`.
+### ドキュメント更新（2026-03-28 追加22）
+- 公開予約ページの `Data Diagnostics` パネルを既定で非表示にしました（ユーザー表示から除外）。
+- 制御フラグを追加:
+  - `js/site-config.js` -> `showBookingDiagnostics: false`（既定）
+- `subpages/workshop-booking.html` では、診断値は内部更新しつつ、`showBookingDiagnostics !== true` の場合はパネルを表示しません。
+- 必要時は `showBookingDiagnostics: true` に変更すると診断パネルを再表示できます。
+- EN: Hid public booking `Data Diagnostics` panel by default for cleaner UI.
+- EN: Added config flag `showBookingDiagnostics` (default `false`) to toggle panel visibility when troubleshooting is needed.
+### ドキュメント更新（2026-03-28 追加23）
+- 公開予約ページ上部に残っていた `WORKSHOP BOOKING` ストリップを削除しました（診断UIの視覚露出を完全に抑制）。
+- Supabase 接続 LED は `booking-hero` 領域へ移動し、Hero の kicker 行で表示する構成へ変更しました。
+- 変更ファイル:
+  - `subpages/workshop-booking.html`
+  - `css/workshop-booking.css`
+- EN: Removed the remaining top strip and moved the Supabase LED into the `booking-hero` kicker area.
+- EN: Diagnostics panel remains hidden by default and no longer leaves visible header artifacts.
+### ドキュメント更新（2026-03-28 追加24）
+- `2.2 Top -> Workshop Flow Reinforcement` の第2スライスとして、`subpages/workshop.html` に中段意思決定ブロック（`#decision`）を追加しました。
+- 追加内容:
+  - 「迷ったら、ここから次の一歩」セクションを追加
+  - `プランを比較する` / `空き枠を確認する` / `店舗を選んで進む` の3アクション導線を明示
+  - `空き枠を確認する` は `data-booking-link="true"` で既存の店舗クエリ引継ぎロジックに接続
+- `css/workshop.css` に `workshop-decision` 系スタイルを追加し、Desktop/Mobile で崩れないレイアウトへ調整しました。
+- EN: Implemented `2.2` slice-2 by adding a mid-page decision block (`#decision`) on `subpages/workshop.html` with three clear next actions.
+- EN: Added responsive `workshop-decision` styling in `css/workshop.css`, and connected booking CTA to existing store-query handoff logic.
+### ドキュメント更新（2026-03-28 追加25）
+- Workshop 中段 `#decision` ブロックの第3ボタン（`店舗を選んで進む` / `button--ghost`）が背景同化して見えにくい問題を修正しました。
+- `css/workshop.css` に `workshop-decision` 専用の `button--ghost` コントラスト上書きを追加し、通常/hover/focus の視認性を改善しました。
+- 影響範囲は `workshop-decision` セクション内のみで、共通 `.button--ghost` 仕様は維持しています。
+- EN: Fixed low-contrast visibility issue of the third decision CTA (`button--ghost`) by adding a scoped override in `css/workshop.css`.
+- EN: Change is isolated to `workshop-decision` and does not alter global ghost-button behavior.
+### ドキュメント更新（2026-03-28 追加26）
+- `2.8 Workshop Plan Page Formalisation` の実装を継続し、`subpages/workshop-plans.html` に比較操作UIを追加しました。
+- 追加内容:
+  - クイックフィルタ（`すべて / 短時間で体験 / じっくり体験 / ペア・ギフト向け`）
+  - 並び順セレクト（`おすすめ順 / 価格が低い順 / 所要時間が短い順`）
+  - 下部CTA `空き枠を確認して予約へ進む`
+  - 各プラン予約リンクに `planId` クエリ引継ぎを追加（既存 `planCode` / `planName` に加えて受け渡し）
+- `css/workshop.css` へ `workshop-plan-controls` / `workshop-plan-cta` のレスポンシブスタイルを追加しました。
+- EN: Continued `2.8` by adding formal comparison controls to `subpages/workshop-plans.html` (quick filters, sort selector, bottom booking CTA) and passing `planId` in booking handoff query.
+- EN: Added responsive styles for plan controls/CTA in `css/workshop.css`.
+### ドキュメント更新（2026-03-28 追加27）
+- `2.8 Workshop Plan Page Formalisation` の次スライスとして、`subpages/workshop-booking.html` にプラン引継ぎ反映を実装しました。
+- 追加内容:
+  - URLクエリ `planId/plan_id`（優先）・`planCode/plan_code`・`planName/plan_name` を解析
+  - 一致プランがある場合、`workshop_sessions` を該当 `plan_id` で絞り込み表示
+  - 予約サマリーに `選択プラン` 行を追加し、選択状態を明示
+  - 価格目安は選択プラン基準で表示
+  - 既存互換として `store` / `storeLabel` クエリも維持
+- EN: Implemented plan-handoff consumption on `subpages/workshop-booking.html` by resolving `planId` (with code/name fallbacks), filtering sessions by selected plan, and surfacing selected-plan context in summary.
+- EN: Backward compatibility for store query handoff remains intact.
+### ドキュメント更新（2026-03-28 追加28）
+- `2.8 Workshop Plan Page Formalisation` の追加スライスとして、`subpages/workshop-booking.html` に「選択中プラン」コンテキストバーを追加しました。
+- 追加内容:
+  - `選択中プラン` の明示表示（一致時はプラン名、不一致時は `指定プラン不一致`）
+  - `プランを変更する`（`workshop-plans.html` へ戻る）
+  - `全プランを表示`（`planId/planCode/planName` 系クエリを除去して同ページ再表示）
+- 目的:
+  - プラン選択後の予約画面で、ユーザーが迷わず「変更/解除」できる戻り導線を提供し、離脱を減らす。
+- 変更ファイル:
+  - `subpages/workshop-booking.html`
+- `css/workshop-booking.css`
+- EN: Added a booking-page “selected plan” context bar as another `2.8` slice.
+- EN: Users can now change plan (back to plans page) or clear plan filters (reload booking without `plan*` query params), improving plan-to-booking continuity.
+### ドキュメント更新（2026-03-28 追加29）
+- `docs/20_PRODUCT/FEATURE_BACKLOG.md` の `In Progress` 項目を再点検し、実装反映済みの以下を `Accepted` に更新しました。
+  - `2.8 Workshop Plan Page Formalisation`
+  - `2.10 Workshop Plan/Course Management IA Optimisation`
+  - `2.11 Sitemap Page Creation + Footer Link Finalisation`
+- 根拠:
+  - 2.8: `subpages/workshop-plans.html` 比較UI + `planId` 引継ぎ + `subpages/workshop-booking.html` 側の受け取り/解除導線実装
+  - 2.10: 管理サイドナビの `Workshop予約管理` / `Workshopプラン管理` 常設、公開予約サマリーの動的表示化、導線配置方針の明文化
+  - 2.11: `subpages/sitemap.html` 作成済み、フッター `サイトマップ` が同ページへ接続済み
+- あわせて、導線配置ルールを以下へ追記し、運用正本を明確化しました。
+  - `docs/20_PRODUCT/DESIGN_GUIDELINE.md`
+- `docs/30_TECH/TECH_SPEC.md`
+- EN: Re-audited in-progress backlog items and promoted `2.8`, `2.10`, and `2.11` to `Accepted` based on delivered implementation and documented navigation governance.
+- EN: Added explicit placement/governance rules to `DESIGN_GUIDELINE.md` and `TECH_SPEC.md` to prevent future IA drift.
+### ドキュメント更新（2026-03-28 追加30）
+- `2.2 Top -> Workshop Flow Reinforcement` の第3スライスとして、`subpages/workshop-booking-thanks.html` の完了後導線を強化しました。
+- 追加内容:
+  - ステータス別案内文を追加（`pending / confirmed / cancelled`）
+  - 次アクションブロックを追加し、完了後の再行動を明示
+  - `同じ条件で別日程を探す` ボタンを追加し、`store/storeLabel/planName` を引継いで `workshop-booking.html` へ再遷移
+  - `プラン比較ページへ戻る` ボタンを追加
+- 変更ファイル:
+  - `subpages/workshop-booking-thanks.html`
+  - `css/workshop-booking-thanks.css`
+- EN: Implemented `2.2` slice-3 by improving post-booking completion guidance on `workshop-booking-thanks.html`.
+- EN: Added status-specific guidance plus next-step CTAs, including rebooking with carried `store/storeLabel/planName` context.
+### ドキュメント更新（2026-03-28 追加31）
+- `2.2 Top -> Workshop Flow Reinforcement` の第4スライスとして、`index.html` に予約ショートカットブロックを追加し、Top 直下から予約意図を強化しました。
+- 追加内容:
+  - Hero CTA 優先順位を予約中心に再構成（`予約枠を今すぐ確認する` を primary）
+  - Hero 直下に `Booking Shortcut` ブロックを追加
+  - `空き枠を確認する` / `プラン比較から始める` / `ワークショップ詳細を見る` の3導線を固定配置
+  - 店舗開催情報と「比較から予約へ遷移可能」の補助文言を追加
+- 変更ファイル:
+  - `index.html`
+  - `css/style.css`
+- EN: Implemented `2.2` slice-4 by adding a dedicated booking shortcut block under Top hero and reprioritising hero CTAs toward booking.
+- EN: Added three clear entry routes (check slots / compare plans / view workshop detail) to reduce decision friction from Top.
+### ドキュメント更新（2026-03-28 追加32）
+- Topページの CTA 視認性改善として、`#hero-banner` / `journey` / `booking-shortcut` の ghost ボタン配色を `workshop.html #decision` と同系統へ調整しました。
+- 変更内容:
+  - 薄背景 + 濃色テキスト + 明確な境界線へ変更
+  - hover/focus 時は accent 色で強調
+- 対象ファイル:
+  - `css/style.css`
+- 目的:
+  - 背景同化による「ボタンが見えにくい」問題を解消し、Top からの導線認知を改善
+- EN: Improved CTA visibility on Top page by aligning ghost-button color scheme in `#hero-banner`, `journey`, and `booking-shortcut` with the `workshop.html #decision` style.
+- EN: This resolves low-contrast/invisible button appearance on light backgrounds.
+### ドキュメント更新（2026-03-28 追加33）
+- 公開ナビの公開範囲調整として、未準備ページへのリンクを一時無効化しました。
+- 変更内容:
+  - Global Navi で以下を無効化: `ブランド` / `アイテム` / `香りから探す` / `記事` / `Sale` / `実店舗`
+  - Footer の `Guide` / `Support` で `サイトマップ` 以外を無効化
+  - 無効リンクは `aria-disabled="true"` と視覚スタイル（低コントラスト + 非活性カーソル）を適用
+- 対象ファイル:
+  - `js/site-shell.js`
+  - `css/style.css`
+- EN: Temporarily disabled links to not-ready pages in public navigation.
+- EN: Disabled top-level global nav categories (except Home / 香りと遊ぶ / Admin) and footer Guide/Support links except `サイトマップ`, with `aria-disabled` and disabled visual states.
+### ドキュメント更新（2026-03-28 追加34）
+- ヘッダー上部の `ショッピングガイド / お問い合わせ` ストリップ（notice bar）を削除しました。
+- フッター `Guide` に `ショッピングガイド` を追加し、他の準備中リンクと同様に disabled 表示へ統一しました。
+- フッター `Account` の `お問い合わせ` は運用導線として有効なまま維持しています。
+- 対象ファイル:
+- `js/site-shell.js`
+- EN: Removed the top notice strip (`ショッピングガイド / お問い合わせ`) for cleaner header structure.
+- EN: Added a disabled `ショッピングガイド` entry in footer `Guide` while keeping footer `お問い合わせ` active.
+### ドキュメント更新（2026-03-28 追加35）
+- 未準備ページリンクの追加調整として、`検索`（utility header）と `お問い合わせ`（footer Account）を disabled 化しました。
+- これにより、公開側の未実装導線は `サイトマップ` を除き一時停止状態となります。
+- 併せて、`docs/20_PRODUCT/FEATURE_BACKLOG.md` に `2.14 Create All Placeholder Pages` を追加しました。
+  - 優先バックログ完了後に、未実装ページを優先順で1ページずつ作成する方針です。
+- 対象ファイル:
+  - `js/site-shell.js`
+  - `css/style.css`
+  - `docs/20_PRODUCT/FEATURE_BACKLOG.md`
+- EN: Additionally disabled `Search` (utility header) and `Contact` (footer Account) until pages are ready.
+- EN: Added backlog item `2.14 Create All Placeholder Pages` to build non-ready pages one by one after prioritized backlog completion.
+### ドキュメント更新（2026-03-28 追加36）
+- 追加調整として、utility header 右上の `カート` を disabled 化しました（未実装ページ導線の停止）。
+- `FEATURE_BACKLOG` の `2.14 Create All Placeholder Pages` scope に `cart/contact` を明示追加しました。
+- 対象ファイル:
+  - `js/site-shell.js`
+  - `docs/20_PRODUCT/FEATURE_BACKLOG.md`
+- EN: Disabled top-right `Cart` link in utility header until page readiness.
+- EN: Explicitly added `cart/contact` into backlog item `2.14` scope for phased page creation later.
+### ドキュメント更新（2026-03-28 追加37）
+- `2.2 Top -> Workshop Flow Reinforcement` の第5スライスとして、`subpages/workshop-booking.html` に 3ステップ進行表示を追加しました。
+- 追加内容:
+  - `STEP 1 日付と時間帯を選ぶ`（current）
+  - `STEP 2 申込情報を入力する`
+  - `STEP 3 確認して送信する`
+- 目的:
+  - 予約開始画面（Step1）で全体の流れを先に提示し、途中離脱を減らす
+- 変更ファイル:
+  - `subpages/workshop-booking.html`
+  - `css/workshop-booking.css`
+- EN: Implemented `2.2` slice-5 by adding a clear 3-step progress strip to `subpages/workshop-booking.html` (Step 1 current, Step 2 input, Step 3 confirm).
+- EN: This improves user orientation at the start of booking and clarifies the path to completion.
+### ドキュメント更新（2026-03-28 追加38）
+- `2.2 Top -> Workshop Flow Reinforcement` の第6スライスとして、店舗コンテキスト引継ぎを強化しました。
+- 追加内容:
+  - `subpages/workshop.html` で店舗選択時、`プランを見る / プランを選ぶ / プランを比較する` へも `store/storeLabel` クエリを引継ぎ
+  - `subpages/workshop-plans.html` で `store/storeLabel` を受け取り、各 `このプランで予約する` と下部CTAの遷移先へ再引継ぎ
+  - プラン一覧ステータス行に `store: {storeLabel}` を併記して文脈を可視化
+- 変更ファイル:
+  - `subpages/workshop.html`
+  - `subpages/workshop-plans.html`
+- EN: Implemented `2.2` slice-6 by preserving selected-store context across `workshop -> plans -> booking`.
+- EN: Store query params are now passed through plan links and booking CTAs to reduce context loss during comparison flow.
+### ドキュメント更新（2026-03-28 追加39）
+- Topページの導線視認性改善として、CTA配置を再調整しました。
+- 変更内容:
+  - Hero の3ボタンを同幅グリッドへ変更し、縦位置を揃えて整列表示
+  - `Booking Shortcut` の補足情報を横並びレイアウトへ変更
+  - `Journey` の導線ボタンをカード外共通帯から各STEPカード直下へ移設し、カード幅いっぱいで表示
+- 変更ファイル:
+  - `index.html`
+  - `css/style.css`
+- EN: Improved Top-page CTA readability by aligning hero buttons in equal-width grid, switching booking-shortcut meta to horizontal layout, and moving journey actions under each step card with full card width.
+### ドキュメント更新（2026-03-28 追加40）
+- TopページUIの追加調整として、以下を修正しました。
+- 変更内容:
+  - Hero CTA を横並びから縦積み配置へ変更（`予約枠を今すぐ確認する / プランを比較する / 先にデジタル調香を試す`）
+  - Experience Flow（Journey）の `STEP 1` ボタン（ghost）が背景に埋もれる問題を修正し、Experience Banner と同系統の視認性ルールへ統一
+- 対象ファイル:
+  - `css/style.css`
+- EN: Applied follow-up Top-page UI refinements: hero CTAs are now vertically aligned, and Journey Step-1 ghost button contrast is aligned with Experience Banner style for consistent visibility.
+### ドキュメント更新（2026-03-28 追加41）
+- `2.2 Top -> Workshop Flow Reinforcement` の第7スライスとして、完了画面からの再予約導線で `plan_id` を保持するよう改善しました。
+- 変更内容:
+  - `subpages/workshop-booking-confirm.html` から Thanks 遷移時に `plan_id` / `store` / `storeLabel` を追加引継ぎ
+  - `subpages/workshop-booking-thanks.html` の `同じ条件で別日程を探す` で `planId` を優先付与し、プラン一致精度を向上
+- 対象ファイル:
+  - `subpages/workshop-booking-confirm.html`
+  - `subpages/workshop-booking-thanks.html`
+- EN: Implemented `2.2` slice-7 by preserving `plan_id` through confirm -> thanks and reusing it in rebook CTA (`planId`), improving exact plan preselection.
+### ドキュメント更新（2026-03-28 追加42）
+- `subpages/workshop-booking.html` の `選択中プラン` コンテキストバー表示条件を見直しました。
+- 変更内容:
+  - 有効な `selectedPlan` が存在する場合のみ表示
+  - 不一致/未解決時はバー自体を非表示（`-` や不一致文言を表示しない）
+- 目的:
+  - ユーザーに不要な疑問を与える中間状態表示を避け、表示意味を明確化
+- 対象ファイル:
+  - `subpages/workshop-booking.html`
+- EN: Refined plan-context bar visibility on booking page: show only when a valid selected plan exists; hide it for unresolved/mismatch states to avoid confusing UI.
+### ドキュメント更新（2026-03-28 追加43）
+- `subpages/workshop-booking.html` のサマリー `選択プラン` 表示を、上記バー表示方針と整合させました。
+- 変更内容:
+  - 不一致クエリ時の `指定プラン不一致（全体表示）` 文言を廃止
+  - `selectedPlan` 解決不可時は常に `未指定` を表示
+- 目的:
+  - バー非表示時にサマリーだけ不一致表示になるズレをなくし、解釈負荷を削減
+- 対象ファイル:
+  - `subpages/workshop-booking.html`
+  - `docs/60_TEST/TEST_PLAN.md`
+- EN: Aligned summary behavior with the plan-context-bar rule: removed mismatch wording and now show `Unspecified` when no valid selected plan is resolved.
+### ドキュメント更新（2026-03-28 追加44）
+- `subpages/workshop-booking.html` の `選択中プラン` 表示条件を追加調整しました。
+- 変更内容:
+  - `selectedPlan` が存在しても `plan_name` が空 / `-` / `未指定` の場合は、コンテキストバーを非表示に統一
+  - サマリー `選択プラン` も同条件で `未指定` 表示へ統一
+- 目的:
+  - `選択中プラン: -` のような見かけ上の表示漏れを防止し、意図しない可視状態を解消
+- 対象ファイル:
+  - `subpages/workshop-booking.html`
+- EN: Added a stricter visibility guard for selected-plan UI: hide context bar when plan name is empty/`-`/`Unspecified`, and keep summary as `Unspecified` for those placeholder states.
+### ドキュメント更新（2026-03-28 追加45）
+- `選択中プラン` バーが残存表示する事象に対して、非表示制御を二重化しました。
+- 変更内容:
+  - JS: `plan_name` 判定を拡張（`-` だけでなく `ー/－/–/—` などダッシュ系プレースホルダーも非表示対象）
+  - JS: 非表示時に `hidden=true` に加え `style.display='none'` と `aria-hidden='true'` を明示
+  - CSS: `.booking-plan-context[hidden] { display: none !important; }` を追加
+- 目的:
+  - ブラウザ差分・スタイル競合があっても `選択中プラン` バーが確実に消えるようにする
+- 対象ファイル:
+  - `subpages/workshop-booking.html`
+  - `css/workshop-booking.css`
+- EN: Added a defensive double-lock for selected-plan context bar hiding (stronger placeholder detection + explicit JS/CSS hidden enforcement) to prevent residual visibility.
+### ドキュメント更新（2026-03-28 追加46）
+- `選択中プラン` バー内の `プランを変更する` ボタン位置を右寄せに調整しました。
+- 変更内容:
+  - `.booking-plan-context__actions` に `margin-left: auto; justify-content: flex-end;` を追加
+- 目的:
+  - ボタンをバー右端へ揃え、視線誘導と操作位置の一貫性を改善
+- 対象ファイル:
+  - `css/workshop-booking.css`
+- EN: Right-aligned the `Change Plan` button inside the selected-plan context bar for cleaner action placement.
+### ドキュメント更新（2026-03-28 追加47）
+- `選択中プラン` バーの右寄せをさらに安定化しました。
+- 変更内容:
+  - `.booking-plan-context` を `grid`（`1fr + auto`）へ変更し、操作領域の配置を明示
+  - `.booking-plan-context__actions` に `justify-self: end` を追加
+  - モバイル時（`max-width: 720px`）は `1カラム` へ戻し、既存の全幅ボタン挙動を維持
+- 目的:
+  - 画面幅やテキスト長によって右寄せが崩れるケースを防止
+- 対象ファイル:
+  - `css/workshop-booking.css`
+- EN: Stabilized right alignment by converting plan-context layout to explicit grid placement while preserving full-width mobile actions.
+### ドキュメント更新（2026-03-28 追加48）
+- `選択中プラン` バーで、`プランを変更する` を最右端に固定するため、アクションDOM順を見直しました。
+- 変更内容:
+  - `subpages/workshop-booking.html` のアクション順を `全プランを表示` -> `プランを変更する` に変更
+  - 併せて本件を `docs/10_PROJECT/ISSUE_LIST.md` に記録（Issue `2026-03-28-28`）
+- 目的:
+  - `button--ghost` が見えにくい環境でも、`プランを変更する` の右端配置を視覚的に保証
+- 対象ファイル:
+  - `subpages/workshop-booking.html`
+  - `docs/10_PROJECT/ISSUE_LIST.md`
+- EN: Reordered plan-context actions so `Change Plan` is always the rightmost control, and recorded this as Issue `2026-03-28-28` for traceability.
+### ドキュメント更新（2026-03-28 追加49）
+- `2.2 Top -> Workshop Flow Reinforcement` の第8スライスとして、Plans/Booking に共通の「次アクション」固定CTAを追加しました。
+- 変更内容:
+  - `subpages/workshop-plans.html` に fixed `workshop-sticky-next` を追加（`予約枠を確認する`）
+  - `subpages/workshop-booking.html` に fixed `booking-sticky-next` を追加（有効日付選択時のみ表示）
+  - `css/workshop.css` / `css/workshop-booking.css` に Desktop/Mobile 用固定CTAスタイルを追加
+  - 主要導線文言を `空き枠` から `予約枠` へ統一（Top/Workshop/Plans）
+- 目的:
+  - 比較中・日付選択中のどちらの状態でも、次アクションを常時視認できるようにして離脱を減らす
+- 対象ファイル:
+  - `subpages/workshop-plans.html`
+  - `subpages/workshop-booking.html`
+  - `subpages/workshop.html`
+  - `index.html`
+  - `css/workshop.css`
+  - `css/workshop-booking.css`
+- EN: Implemented `2.2` slice-8 by adding sticky “next action” CTAs on Plans/Booking and normalizing key copy to `予約枠` wording for consistency.
+### ドキュメント更新（2026-03-28 追加50）
+- `workshop.html` の PROGRAM パネルから booking へ遷移した際に `選択プラン` が反映されない問題を修正しました。
+- 変更内容:
+  - PROGRAMカードの予約ボタンに `data-plan-code` / `data-plan-name` を付与
+  - `syncBookingLinks()` で `planCode/planName` クエリを明示引継ぎ（store/storeLabel と同時に付与）
+  - 既存クエリ汚染を避けるため、plan系クエリを毎回再生成
+- 目的:
+  - `workshop-plans.html` 経由と同等に、PROGRAMパネル経由でも booking の `選択プラン` を安定表示する
+- 対象ファイル:
+  - `subpages/workshop.html`
+- EN: Fixed missing selected-plan context when navigating from `workshop.html` PROGRAM cards to booking by explicitly passing `planCode/planName` in booking-link sync.
+### ドキュメント更新（2026-03-28 追加51）
+- Issue `2026-03-28-29` の恒久対策として、`workshop.html` PROGRAM セクションを DB連動へ移行しました。
+- 変更内容:
+  - 静的3カードを廃止し、`workshop_plans` から `status=active` を `sort_order` 昇順で最大3件表示
+  - `workshop_plan_inclusions` を先頭3件までカード内表示
+  - CTA は `data-plan-code/name` を持ち、store選択連動時に `planCode/planName + store/storeLabel` を同時引継ぎ
+  - 見出しを「3つのコース」固定文言から、DB件数に追従しやすい文言へ調整
+- 目的:
+  - PROGRAM経由と plans経由の予約導線を同一データソース化し、`選択プラン` 反映不整合を防止
+- 対象ファイル:
+  - `subpages/workshop.html`
+  - `docs/10_PROJECT/ISSUE_LIST.md`
+- EN: Implemented the permanent fix for Issue `2026-03-28-29` by making `workshop.html` PROGRAM cards DB-driven (up to 3 active plans), aligning plan handoff behavior with `workshop-plans.html`.

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,31 +9,19 @@
   <link rel="stylesheet" href="../css/workshop-booking.css">
   <link rel="icon" href="../images/logo/logo-inim-dx.jpg">
 </head>
+
 <body data-root=".." data-page-key="workshopBooking">
   <main id="page-main" class="booking-page">
-    <div class="booking-wrap">
-      <p class="section-kicker booking-kicker">Workshop Booking <span class="supabase-led" id="connection-led"></span></p>
-      <div class="booking-diagnostics" id="booking-diagnostics" hidden>
-        <p class="booking-diagnostics__title">Data Diagnostics</p>
-        <dl class="booking-diagnostics__grid">
-          <div><dt>Source</dt><dd id="diag-source">-</dd></div>
-          <div><dt>Plans</dt><dd id="diag-plans">-</dd></div>
-          <div><dt>Stores</dt><dd id="diag-stores">-</dd></div>
-          <div><dt>Sessions</dt><dd id="diag-sessions">-</dd></div>
-          <div><dt>Range</dt><dd id="diag-range">-</dd></div>
-          <div><dt>Error</dt><dd id="diag-error">-</dd></div>
-        </dl>
-      </div>
-    </div>
-
     <section class="booking-hero">
       <div class="booking-wrap booking-hero__grid">
         <div>
-          <p class="section-kicker">Workshop Booking</p>
+          <p class="section-kicker booking-hero__kicker"><span>Workshop Booking</span><span class="supabase-led"
+              id="connection-led"></span></p>
           <h1 class="booking-hero__title">予約日を選んで体験枠を確保する</h1>
           <p class="booking-hero__lead">まず店舗を選び、カレンダーから予約可能日を選択してください。選択後は下部の予約枠からそのまま申込へ進めます。</p>
         </div>
         <aside class="booking-summary">
+          <div class="booking-summary__row"><span>選択プラン</span><strong id="summary-plan">未指定</strong></div>
           <div class="booking-summary__row"><span>開催期間</span><strong id="summary-period">読み込み中...</strong></div>
           <div class="booking-summary__row"><span>対象店舗</span><strong id="summary-stores">読み込み中...</strong></div>
           <div class="booking-summary__row"><span>予約方式</span><strong id="summary-methods">読み込み中...</strong></div>
@@ -40,16 +29,89 @@
         </aside>
       </div>
     </section>
+    <div class="booking-wrap">
+      <div class="booking-diagnostics" id="booking-diagnostics" hidden>
+        <p class="booking-diagnostics__title">Data Diagnostics</p>
+        <dl class="booking-diagnostics__grid">
+          <div>
+            <dt>Source</dt>
+            <dd id="diag-source">-</dd>
+          </div>
+          <div>
+            <dt>Plans</dt>
+            <dd id="diag-plans">-</dd>
+          </div>
+          <div>
+            <dt>Stores</dt>
+            <dd id="diag-stores">-</dd>
+          </div>
+          <div>
+            <dt>Sessions</dt>
+            <dd id="diag-sessions">-</dd>
+          </div>
+          <div>
+            <dt>Range</dt>
+            <dd id="diag-range">-</dd>
+          </div>
+          <div>
+            <dt>Error</dt>
+            <dd id="diag-error">-</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <section class="booking-wrap">
+      <section class="booking-plan-context" id="booking-plan-context" hidden>
+        <p class="booking-plan-context__text">選択中プラン: <strong id="booking-plan-context-name">-</strong></p>
+        <div class="booking-plan-context__actions">
+          <button class="button button--ghost" type="button" id="booking-plan-clear">全プランを表示</button>
+          <a class="button button--secondary" href="./workshop-plans.html">プランを変更する</a>
+        </div>
+      </section>
+    </section>
+
+    <section class="booking-wrap">
+      <div class="booking-steps" aria-label="予約ステップ">
+        <article class="booking-step is-current">
+          <p class="section-kicker">STEP 1</p>
+          <h3>日付と時間帯を選ぶ</h3>
+          <p>店舗を選択し、予約可能日から枠を決めます。</p>
+        </article>
+        <article class="booking-step">
+          <p class="section-kicker">STEP 2</p>
+          <h3>申込情報を入力する</h3>
+          <p>代表者情報、連絡先、参加人数を入力します。</p>
+        </article>
+        <article class="booking-step">
+          <p class="section-kicker">STEP 3</p>
+          <h3>確認して送信する</h3>
+          <p>入力内容を確認して予約を送信します。</p>
+        </article>
+      </div>
+    </section>
+
+    <aside class="booking-sticky-next" id="booking-sticky-next" hidden aria-label="次のアクション">
+      <p class="booking-sticky-next__text" id="booking-sticky-next-text">日付を選択すると予約枠へ進めます</p>
+      <a class="button button--primary booking-sticky-next__button" id="booking-sticky-next-cta" href="#booking-slots-panel"
+        aria-disabled="true">予約枠を確認する</a>
+    </aside>
 
     <section class="booking-wrap">
       <section class="booking-panel">
         <div class="booking-panel__head">
-          <div><p class="section-kicker">Availability</p><h2>予約可能日</h2></div>
+          <div>
+            <p class="section-kicker">Availability</p>
+            <h2>予約可能日</h2>
+          </div>
           <p>店舗を選ぶと、その店舗の開催日だけを表示します。</p>
         </div>
         <div class="booking-store-bar">
           <div class="booking-store-bar__head">
-            <div><p class="section-kicker">Store</p><h3>選択店舗</h3></div>
+            <div>
+              <p class="section-kicker">Store</p>
+              <h3>選択店舗</h3>
+            </div>
             <p class="booking-store-bar__meta" id="booking-store-meta">店舗を選択してください。</p>
           </div>
           <div class="booking-store-picker" id="booking-store-picker"></div>
@@ -57,9 +119,11 @@
         <div class="booking-calendar-layout">
           <div class="booking-calendar-main">
             <div class="booking-calendar-nav">
-              <button class="button button--secondary booking-calendar-nav__button" type="button" id="booking-cal-prev" aria-label="前の月">&lt;</button>
+              <button class="button button--secondary booking-calendar-nav__button" type="button" id="booking-cal-prev"
+                aria-label="前の月">&lt;</button>
               <strong class="booking-calendar-nav__label" id="booking-cal-label">-</strong>
-              <button class="button button--secondary booking-calendar-nav__button" type="button" id="booking-cal-next" aria-label="次の月">&gt;</button>
+              <button class="button button--secondary booking-calendar-nav__button" type="button" id="booking-cal-next"
+                aria-label="次の月">&gt;</button>
             </div>
             <div class="booking-calendar-grid" id="booking-calendar"></div>
           </div>
@@ -67,11 +131,21 @@
             <p class="section-kicker">Selected Date</p>
             <h3 id="booking-selected-date-title">日付未選択</h3>
             <dl class="booking-selected-date__grid">
-              <div><dt>店舗</dt><dd id="booking-selected-date-store">-</dd></div>
-              <div><dt>状態</dt><dd id="booking-selected-date-status">-</dd></div>
-              <div><dt>料金目安</dt><dd id="booking-selected-date-price">-</dd></div>
+              <div>
+                <dt>店舗</dt>
+                <dd id="booking-selected-date-store">-</dd>
+              </div>
+              <div>
+                <dt>状態</dt>
+                <dd id="booking-selected-date-status">-</dd>
+              </div>
+              <div>
+                <dt>料金目安</dt>
+                <dd id="booking-selected-date-price">-</dd>
+              </div>
             </dl>
-            <a class="button button--primary booking-selected-date__cta" href="#booking-slots-panel" id="booking-selected-date-cta" aria-disabled="true">この日程の予約枠を見る</a>
+            <a class="button button--primary booking-selected-date__cta" href="#booking-slots-panel"
+              id="booking-selected-date-cta" aria-disabled="true">この日程の予約枠を見る</a>
           </aside>
         </div>
         <div class="booking-legend">
@@ -87,7 +161,10 @@
     <section class="booking-wrap">
       <section class="booking-panel" id="booking-slots-panel">
         <div class="booking-panel__head">
-          <div><p class="section-kicker">Available Slots</p><h2>予約枠一覧</h2></div>
+          <div>
+            <p class="section-kicker">Available Slots</p>
+            <h2>予約枠一覧</h2>
+          </div>
           <p>希望の時間帯を選んで予約へ進んでください。</p>
         </div>
         <div class="booking-slots">
@@ -103,181 +180,273 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/site-shell.js"></script>
   <script>
-  (() => {
-    const cfg = window.INIM_SITE_CONFIG || {};
-    const api = window.supabase || null;
-    const supabase = (() => {
-      if (window.__INIM_SUPABASE_CLIENT) return window.__INIM_SUPABASE_CLIENT;
-      if (cfg.supabaseUrl && cfg.supabasePublishableKey && api?.createClient) {
-        const client = api.createClient(cfg.supabaseUrl, cfg.supabasePublishableKey);
-        window.__INIM_SUPABASE_CLIENT = client;
-        return client;
-      }
-      return null;
-    })();
-
-    const el = (id) => document.getElementById(id);
-    const led = el("connection-led");
-    const cal = el("booking-calendar");
-    const slots = el("booking-slot-list");
-    const calPrev = el("booking-cal-prev");
-    const calNext = el("booking-cal-next");
-    const calLabel = el("booking-cal-label");
-    const selectedDateTitle = el("booking-selected-date-title");
-    const selectedDateStore = el("booking-selected-date-store");
-    const selectedDateStatus = el("booking-selected-date-status");
-    const selectedDatePrice = el("booking-selected-date-price");
-    const selectedDateCta = el("booking-selected-date-cta");
-    const picker = el("booking-store-picker");
-    const storeMeta = el("booking-store-meta");
-    const summaryPeriod = el("summary-period");
-    const summaryStores = el("summary-stores");
-    const summaryMethods = el("summary-methods");
-    const summaryPrice = el("summary-price");
-    const dHost = el("booking-diagnostics");
-    const diag = { src: el("diag-source"), plans: el("diag-plans"), stores: el("diag-stores"), sessions: el("diag-sessions"), range: el("diag-range"), err: el("diag-error") };
-
-    const marks = { instant: "○", request: "□", few: "△", full: "×", closed: "-" };
-    const days = ["月", "火", "水", "木", "金", "土", "日"];
-    const fallbackStores = { asakusa: { label: "浅草店", caption: "Fri - Sun" }, shibamata: { label: "柴又店", caption: "Sat - Mon" }, solamachi: { label: "ソラマチ店", caption: "Daily" } };
-    let stores = { ...fallbackStores }, schedule = {}, months = [], selectedStore = "asakusa", selectedKey = "", currentMonthIndex = 0;
-
-    const setDiag = (v) => { dHost.hidden = false; diag.src.textContent = v.source; diag.plans.textContent = v.plans; diag.stores.textContent = v.stores; diag.sessions.textContent = v.sessions; diag.range.textContent = v.range; diag.err.textContent = v.error; };
-    const setLed = (ok) => { led.classList.remove("is-ok", "is-bad"); led.classList.add(ok ? "is-ok" : "is-bad"); };
-    const jpy = (n) => `¥${Number(n || 0).toLocaleString("ja-JP")}`;
-    const normStore = (v) => { const t = String(v || "").toLowerCase(); if (t.includes("asakusa") || t.includes("浅草")) return "asakusa"; if (t.includes("shibamata") || t.includes("柴又")) return "shibamata"; if (t.includes("solamachi") || t.includes("ソラマチ")) return "solamachi"; return t || "asakusa"; };
-
-    const buildCells = (map, start, end) => {
-      const out = []; const cur = new Date(start); cur.setDate(1);
-      while (cur <= end) {
-        const y = cur.getFullYear(), m = cur.getMonth();
-        const label = `${y}年${m + 1}月`; const first = new Date(y, m, 1).getDay(); const dim = new Date(y, m + 1, 0).getDate();
-        const cells = []; for (let i = 0; i < ((first + 6) % 7); i++) cells.push(null);
-        for (let d = 1; d <= dim; d++) {
-          const iso = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`; const ss = map[iso] || [];
-          if (!ss.length) cells.push({ d, s: "closed", k: iso }); else { const p = ss[0]; cells.push({ d, s: p.status, p: { display: p.price.display }, k: iso, store: p.storeKey }); }
+    (() => {
+      const cfg = window.INIM_SITE_CONFIG || {};
+      const showBookingDiagnostics = cfg.showBookingDiagnostics === true;
+      const params = new URLSearchParams(window.location.search);
+      const param = (...keys) => {
+        for (const key of keys) {
+          const value = String(params.get(key) || "").trim();
+          if (value) return value;
         }
-        while (cells.length % 7 !== 0) cells.push(null); out.push({ label, year: y, month: m + 1, cells }); cur.setMonth(m + 1);
-      } return out;
-    };
+        return "";
+      };
+      const requestedPlanId = param("planId", "plan_id");
+      const requestedPlanCode = param("planCode", "plan_code");
+      const requestedPlanName = param("planName", "plan_name");
+      const requestedStore = param("store");
+      const requestedStoreLabel = param("storeLabel");
+      const api = window.supabase || null;
+      const supabase = (() => {
+        if (window.__INIM_SUPABASE_CLIENT) return window.__INIM_SUPABASE_CLIENT;
+        if (cfg.supabaseUrl && cfg.supabasePublishableKey && api?.createClient) {
+          const client = api.createClient(cfg.supabaseUrl, cfg.supabasePublishableKey);
+          window.__INIM_SUPABASE_CLIENT = client;
+          return client;
+        }
+        return null;
+      })();
 
-    const monthIndexFromDateKey = (key) => {
-      if (!key || !months.length) return 0;
-      const m = String(key).match(/^(\d{4})-(\d{2})-/);
-      if (!m) return 0;
-      const y = Number(m[1]); const mm = Number(m[2]);
-      const idx = months.findIndex((item) => item.year === y && item.month === mm);
-      return idx >= 0 ? idx : 0;
-    };
+      const el = (id) => document.getElementById(id);
+      const led = el("connection-led");
+      const cal = el("booking-calendar");
+      const slots = el("booking-slot-list");
+      const calPrev = el("booking-cal-prev");
+      const calNext = el("booking-cal-next");
+      const calLabel = el("booking-cal-label");
+      const selectedDateTitle = el("booking-selected-date-title");
+      const selectedDateStore = el("booking-selected-date-store");
+      const selectedDateStatus = el("booking-selected-date-status");
+      const selectedDatePrice = el("booking-selected-date-price");
+      const selectedDateCta = el("booking-selected-date-cta");
+      const stickyNext = el("booking-sticky-next");
+      const stickyNextText = el("booking-sticky-next-text");
+      const stickyNextCta = el("booking-sticky-next-cta");
+      const picker = el("booking-store-picker");
+      const storeMeta = el("booking-store-meta");
+      const summaryPeriod = el("summary-period");
+      const summaryPlan = el("summary-plan");
+      const summaryStores = el("summary-stores");
+      const summaryMethods = el("summary-methods");
+      const summaryPrice = el("summary-price");
+      const planContext = el("booking-plan-context");
+      const planContextName = el("booking-plan-context-name");
+      const planClearBtn = el("booking-plan-clear");
+      const dHost = el("booking-diagnostics");
+      const diag = { src: el("diag-source"), plans: el("diag-plans"), stores: el("diag-stores"), sessions: el("diag-sessions"), range: el("diag-range"), err: el("diag-error") };
 
-    const renderPicker = () => {
-      picker.innerHTML = Object.entries(stores).map(([k, v]) => `<button class="booking-store-chip${k === selectedStore ? " is-active" : ""}" type="button" data-store="${k}">${v.label} / ${v.caption}</button>`).join("");
-      storeMeta.textContent = `${stores[selectedStore].label} の開催日を表示しています。`;
-      picker.querySelectorAll("[data-store]").forEach((b) => b.onclick = () => {
-        selectedStore = b.dataset.store;
-        const first = Object.keys(schedule).find((k) => schedule[k].store === selectedStore);
-        selectedKey = first || "";
-        currentMonthIndex = monthIndexFromDateKey(selectedKey);
-        renderPicker(); renderCal(); renderSlots();
-      });
-    };
+      const marks = { instant: "○", request: "□", few: "△", full: "×", closed: "-" };
+      const days = ["月", "火", "水", "木", "金", "土", "日"];
+      const fallbackStores = { asakusa: { label: "浅草店", caption: "Fri - Sun" }, shibamata: { label: "柴又店", caption: "Sat - Mon" }, solamachi: { label: "ソラマチ店", caption: "Daily" } };
+      const norm = (v) => String(v || "").trim().toLowerCase();
+      let stores = { ...fallbackStores }, schedule = {}, months = [], selectedStore = "asakusa", selectedKey = "", currentMonthIndex = 0;
+      let selectedPlan = null;
 
-    const href = (cur, s) => {
-      const u = new URL("./workshop-booking-entry.html", window.location.href);
-      [["date_key", selectedKey], ["date", cur.label], ["label", cur.label], ["gather", s.g], ["start_time", s.start], ["end_time", s.end], ["price_display", s.price.display], ["price_jpy", String(s.price.jpy || "")], ["booking_method", s.method], ["note", s.n], ["store", cur.store], ["storeLabel", cur.storeLabel], ["plan_id", cur.planId || ""], ["session_id", s.sessionId || ""]].forEach(([k, v]) => u.searchParams.set(k, v));
-      return u.toString();
-    };
+      const setDiag = (v) => {
+        diag.src.textContent = v.source;
+        diag.plans.textContent = v.plans;
+        diag.stores.textContent = v.stores;
+        diag.sessions.textContent = v.sessions;
+        diag.range.textContent = v.range;
+        diag.err.textContent = v.error;
+        dHost.hidden = !showBookingDiagnostics;
+      };
+      const setLed = (ok) => { led.classList.remove("is-ok", "is-bad"); led.classList.add(ok ? "is-ok" : "is-bad"); };
+      const jpy = (n) => `¥${Number(n || 0).toLocaleString("ja-JP")}`;
+      const normStore = (v) => { const t = String(v || "").toLowerCase(); if (t.includes("asakusa") || t.includes("浅草")) return "asakusa"; if (t.includes("shibamata") || t.includes("柴又")) return "shibamata"; if (t.includes("solamachi") || t.includes("ソラマチ")) return "solamachi"; return t || "asakusa"; };
+      const buildUrlWithoutPlanParams = () => {
+        const target = new URL(window.location.href);
+        ["planId", "plan_id", "planCode", "plan_code", "planName", "plan_name"].forEach((key) => target.searchParams.delete(key));
+        return target.toString();
+      };
+      const hasMeaningfulPlanName = (name) => {
+        const text = String(name || "").trim();
+        if (!text || text === "未指定") return false;
+        if (/^[-ー－–—\s]+$/u.test(text)) return false;
+        return true;
+      };
 
-    const renderSlots = () => {
-      const cur = schedule[selectedKey];
-      selectedDateTitle.textContent = cur?.label || "日付未選択";
-      selectedDateStore.textContent = cur?.storeLabel || "-";
-      selectedDateStatus.textContent = cur?.status || "-";
-      selectedDatePrice.textContent = cur?.slots?.[0]?.price?.display || "-";
-      selectedDateCta.setAttribute("aria-disabled", cur ? "false" : "true");
-      selectedDateCta.classList.toggle("is-disabled", !cur);
-      if (!cur) {
-        slots.innerHTML = `<p class="booking-slot-empty">予約可能な日付を選択すると、ここに予約枠が表示されます。</p>`;
-        return;
-      }
-      slots.innerHTML = (cur.slots || []).map((s) => `<article class="booking-slot"><div><strong>${cur.label}</strong><div class="booking-slot__time"><span>集合 ${s.g}</span><span>体験 ${s.start} - ${s.end}</span></div><p class="booking-slot__price">${s.price.display}</p></div><div class="booking-slot__actions"><span class="booking-slot__note">${s.n}</span><a class="button button--primary booking-slot__button" href="${href(cur, s)}">予約へ進む</a></div></article>`).join("");
-    };
+      const updatePlanContextBar = () => {
+        if (!planContext || !planContextName) return;
+        if (hasMeaningfulPlanName(selectedPlan?.plan_name)) {
+          planContext.hidden = false;
+          planContext.setAttribute("aria-hidden", "false");
+          planContext.style.display = "";
+          planContextName.textContent = selectedPlan.plan_name;
+          return;
+        }
+        planContext.hidden = true;
+        planContext.setAttribute("aria-hidden", "true");
+        planContext.style.display = "none";
+      };
 
-    const renderCal = () => {
-      if (!months.length) {
-        calLabel.textContent = "-";
-        cal.innerHTML = `<section class="booking-month booking-month--empty"><div class="booking-month__empty">表示できる開催日がありません。</div></section>`;
-        if (calPrev) calPrev.disabled = true;
-        if (calNext) calNext.disabled = true;
-        return;
-      }
-      currentMonthIndex = Math.max(0, Math.min(currentMonthIndex, months.length - 1));
-      const m = months[currentMonthIndex];
-      calLabel.textContent = m.label;
-      cal.innerHTML = `<section class="booking-month"><div class="booking-month__header"><h3>${m.label}</h3><span>${stores[selectedStore].label} の開催日</span></div><table><thead><tr>${days.map((d) => `<th>${d}</th>`).join("")}</tr></thead><tbody>${Array.from({ length: Math.ceil(m.cells.length / 7) }, (_, i) => `<tr>${m.cells.slice(i * 7, i * 7 + 7).map((c) => { if (!c) return "<td class='is-outside'></td>"; const f = c.store && c.store !== selectedStore ? { ...c, s: "closed", p: null, k: null } : c; const selectable = ["instant", "request", "few"].includes(f.s); return `<td><button class="booking-day${selectable ? " is-selectable" : ""}${f.k === selectedKey ? " is-selected" : ""}" type="button" ${f.k ? `data-key="${f.k}"` : ""} ${!selectable ? "disabled" : ""}><span class="booking-day__date">${f.d}</span><span class="booking-day__status"><i class="booking-mark" data-status="${f.s}">${marks[f.s]}</i></span>${f.p ? `<div class="booking-day__price">${f.p.display}</div>` : ""}</button></td>`; }).join("")}</tr>`).join("")}</tbody></table></section>`;
-      if (calPrev) calPrev.disabled = currentMonthIndex <= 0;
-      if (calNext) calNext.disabled = currentMonthIndex >= months.length - 1;
-      cal.querySelectorAll("[data-key]").forEach((b) => b.onclick = () => { selectedKey = b.dataset.key; currentMonthIndex = monthIndexFromDateKey(selectedKey); renderCal(); renderSlots(); });
-    };
+      const buildCells = (map, start, end) => {
+        const out = []; const cur = new Date(start); cur.setDate(1);
+        while (cur <= end) {
+          const y = cur.getFullYear(), m = cur.getMonth();
+          const label = `${y}年${m + 1}月`; const first = new Date(y, m, 1).getDay(); const dim = new Date(y, m + 1, 0).getDate();
+          const cells = []; for (let i = 0; i < ((first + 6) % 7); i++) cells.push(null);
+          for (let d = 1; d <= dim; d++) {
+            const iso = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`; const ss = map[iso] || [];
+            if (!ss.length) cells.push({ d, s: "closed", k: iso }); else { const p = ss[0]; cells.push({ d, s: p.status, p: { display: p.price.display }, k: iso, store: p.storeKey }); }
+          }
+          while (cells.length % 7 !== 0) cells.push(null); out.push({ label, year: y, month: m + 1, cells }); cur.setMonth(m + 1);
+        } return out;
+      };
 
-    const toStatus = (r) => {
-      const rem = (r.capacity_total ?? 0) - (r.capacity_reserved ?? 0);
-      if (r.session_status === "limited" || rem <= 2) return "few";
-      if (r.session_status === "full" || rem <= 0) return "full";
-      if (r.session_status !== "open") return "closed";
-      return r.booking_method === "request" ? "request" : "instant";
-    };
+      const monthIndexFromDateKey = (key) => {
+        if (!key || !months.length) return 0;
+        const m = String(key).match(/^(\d{4})-(\d{2})-/);
+        if (!m) return 0;
+        const y = Number(m[1]); const mm = Number(m[2]);
+        const idx = months.findIndex((item) => item.year === y && item.month === mm);
+        return idx >= 0 ? idx : 0;
+      };
 
-    const updateSummary = (plans, storeRows, sessions) => {
-      const dates = (sessions || []).map((s) => s.session_date).filter(Boolean).sort();
-      if (!dates.length) summaryPeriod.textContent = "公開期間未設定"; else {
-        const a = new Date(dates[0]), z = new Date(dates[dates.length - 1]);
-        const s = `${a.getFullYear()}年${a.getMonth() + 1}月`, e = `${z.getFullYear()}年${z.getMonth() + 1}月`;
-        summaryPeriod.textContent = s === e ? s : `${s}〜${e}`;
-      }
-      const ss = (storeRows || []).filter((x) => x.deleted_at == null && x.is_active !== false).map((x) => x.store_name).filter(Boolean);
-      summaryStores.textContent = ss.length ? ss.join(" / ") : "対象店舗未設定";
-      const ms = new Set((sessions || []).map((x) => x.booking_method).filter(Boolean)); const labels = []; if (ms.has("instant")) labels.push("即時予約"); if (ms.has("request")) labels.push("リクエスト予約");
-      summaryMethods.textContent = labels.length ? labels.join(" / ") : "予約方式未設定";
-      const prices = (plans || []).map((x) => Number(x.base_price_jpy || 0)).filter((x) => x > 0);
-      summaryPrice.textContent = prices.length ? `おひとりさま ${Math.min(...prices).toLocaleString("ja-JP")}円〜` : "料金未設定";
-    };
-
-    const init = async () => {
-      const range = "all sessions (ordered by session_date, limit 500)";
-      if (!supabase) { setLed(false); setDiag({ source: "Supabase", plans: 0, stores: 0, sessions: 0, range, error: "client unavailable" }); return; }
-      try {
-        const [p, s, w] = await Promise.all([
-          supabase.from("workshop_plans").select("id,plan_name,base_price_jpy,currency_code,min_party_size,max_party_size,status"),
-          supabase.from("stores").select("id,store_name,is_active,deleted_at"),
-          supabase.from("workshop_sessions").select("id,plan_id,store_id,session_date,gather_time,start_time,end_time,booking_method,capacity_total,capacity_reserved,price_override_jpy,currency_code,min_party_size,max_party_size,session_status,public_note,published_at").order("session_date", { ascending: true }).limit(500)
-        ]);
-        if (p.error || s.error || w.error) throw (p.error || s.error || w.error);
-        const plans = p.data || [], storeRows = s.data || [], sessions = w.data || [];
-        setLed(true); setDiag({ source: "Supabase", plans: plans.length, stores: storeRows.length, sessions: sessions.length, range, error: "-" }); updateSummary(plans, storeRows, sessions);
-        stores = storeRows.length ? storeRows.reduce((a, x) => { const k = normStore(x.store_name || x.id); a[k] = { label: x.store_name || k, caption: "" }; return a; }, {}) : { ...fallbackStores };
-        const byPlan = Object.fromEntries(plans.map((x) => [x.id, x]));
-        const byStore = Object.fromEntries((storeRows || []).map((x) => [x.id, { label: x.store_name || "", key: normStore(x.store_name || x.id) }]));
-        const map = {}, list = {};
-        sessions.forEach((r) => {
-          const p0 = byPlan[r.plan_id] || {}, st = byStore[r.store_id] || { label: "", key: "asakusa" };
-          const price = r.price_override_jpy ?? p0.base_price_jpy ?? 0;
-          const payload = { sessionId: r.id, planId: r.plan_id, g: (r.gather_time || "").slice(0, 5), start: (r.start_time || "").slice(0, 5), end: (r.end_time || "").slice(0, 5), price: { display: jpy(price), jpy: Number(price || 0) }, n: r.public_note || (r.booking_method === "request" ? "リクエスト回答待ち" : "即時予約可"), method: r.booking_method || "instant", status: toStatus(r), storeKey: st.key, storeLabel: st.label };
-          map[r.session_date] = map[r.session_date] || []; map[r.session_date].push(payload);
+      const renderPicker = () => {
+        picker.innerHTML = Object.entries(stores).map(([k, v]) => `<button class="booking-store-chip${k === selectedStore ? " is-active" : ""}" type="button" data-store="${k}">${v.label} / ${v.caption}</button>`).join("");
+        storeMeta.textContent = `${stores[selectedStore].label} の開催日を表示しています。`;
+        picker.querySelectorAll("[data-store]").forEach((b) => b.onclick = () => {
+          selectedStore = b.dataset.store;
+          const first = Object.keys(schedule).find((k) => schedule[k].store === selectedStore);
+          selectedKey = first || "";
+          currentMonthIndex = monthIndexFromDateKey(selectedKey);
+          renderPicker(); renderCal(); renderSlots();
         });
-        Object.entries(map).forEach(([k, arr]) => { const e = arr[0]; list[k] = { label: new Date(k).toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric", weekday: "short" }), store: e.storeKey, storeLabel: e.storeLabel, planId: e.planId, status: e.status === "request" ? "リクエスト予約" : e.status === "few" ? "残席わずか" : e.status === "full" ? "満席" : "即時予約可", slots: arr }; });
-        schedule = list;
-        const dates = Object.keys(map).sort(); if (dates.length) { months = buildCells(map, new Date(dates[0]), new Date(dates[dates.length - 1])); selectedStore = Object.keys(stores)[0]; selectedKey = dates.find((d) => map[d][0].storeKey === selectedStore) || dates[0]; currentMonthIndex = monthIndexFromDateKey(selectedKey); }
-      } catch (e) {
-        setLed(false); setDiag({ source: "Supabase", plans: 0, stores: 0, sessions: 0, range, error: e.message || String(e) }); updateSummary([], [], []);
-      }
-      if (calPrev) calPrev.onclick = () => { if (currentMonthIndex > 0) { currentMonthIndex -= 1; renderCal(); } };
-      if (calNext) calNext.onclick = () => { if (currentMonthIndex < months.length - 1) { currentMonthIndex += 1; renderCal(); } };
-      renderPicker(); renderCal(); renderSlots();
-    };
-    init();
-  })();
+      };
+
+      const href = (cur, s) => {
+        const u = new URL("./workshop-booking-entry.html", window.location.href);
+        [["date_key", selectedKey], ["date", cur.label], ["label", cur.label], ["gather", s.g], ["start_time", s.start], ["end_time", s.end], ["price_display", s.price.display], ["price_jpy", String(s.price.jpy || "")], ["booking_method", s.method], ["note", s.n], ["store", cur.store], ["storeLabel", cur.storeLabel], ["plan_id", cur.planId || ""], ["session_id", s.sessionId || ""]].forEach(([k, v]) => u.searchParams.set(k, v));
+        return u.toString();
+      };
+
+      const renderSlots = () => {
+        const cur = schedule[selectedKey];
+        selectedDateTitle.textContent = cur?.label || "日付未選択";
+        selectedDateStore.textContent = cur?.storeLabel || "-";
+        selectedDateStatus.textContent = cur?.status || "-";
+        selectedDatePrice.textContent = cur?.slots?.[0]?.price?.display || "-";
+        selectedDateCta.setAttribute("aria-disabled", cur ? "false" : "true");
+        selectedDateCta.classList.toggle("is-disabled", !cur);
+        if (stickyNext && stickyNextText && stickyNextCta) {
+          stickyNext.hidden = !cur;
+          stickyNextText.textContent = cur ? `${cur.label} の予約枠へ進む` : "日付を選択すると予約枠へ進めます";
+          stickyNextCta.setAttribute("aria-disabled", cur ? "false" : "true");
+          stickyNextCta.classList.toggle("is-disabled", !cur);
+        }
+        if (!cur) {
+          slots.innerHTML = `<p class="booking-slot-empty">予約可能な日付を選択すると、ここに予約枠が表示されます。</p>`;
+          return;
+        }
+        slots.innerHTML = (cur.slots || []).map((s) => `<article class="booking-slot"><div><strong>${cur.label}</strong><div class="booking-slot__time"><span>集合 ${s.g}</span><span>体験 ${s.start} - ${s.end}</span></div><p class="booking-slot__price">${s.price.display}</p></div><div class="booking-slot__actions"><span class="booking-slot__note">${s.n}</span><a class="button button--primary booking-slot__button" href="${href(cur, s)}">予約へ進む</a></div></article>`).join("");
+      };
+
+      const renderCal = () => {
+        if (!months.length) {
+          calLabel.textContent = "-";
+          cal.innerHTML = `<section class="booking-month booking-month--empty"><div class="booking-month__empty">表示できる開催日がありません。</div></section>`;
+          if (calPrev) calPrev.disabled = true;
+          if (calNext) calNext.disabled = true;
+          return;
+        }
+        currentMonthIndex = Math.max(0, Math.min(currentMonthIndex, months.length - 1));
+        const m = months[currentMonthIndex];
+        calLabel.textContent = m.label;
+        cal.innerHTML = `<section class="booking-month"><div class="booking-month__header"><h3>${m.label}</h3><span>${stores[selectedStore].label} の開催日</span></div><table><thead><tr>${days.map((d) => `<th>${d}</th>`).join("")}</tr></thead><tbody>${Array.from({ length: Math.ceil(m.cells.length / 7) }, (_, i) => `<tr>${m.cells.slice(i * 7, i * 7 + 7).map((c) => { if (!c) return "<td class='is-outside'></td>"; const f = c.store && c.store !== selectedStore ? { ...c, s: "closed", p: null, k: null } : c; const selectable = ["instant", "request", "few"].includes(f.s); return `<td><button class="booking-day${selectable ? " is-selectable" : ""}${f.k === selectedKey ? " is-selected" : ""}" type="button" ${f.k ? `data-key="${f.k}"` : ""} ${!selectable ? "disabled" : ""}><span class="booking-day__date">${f.d}</span><span class="booking-day__status"><i class="booking-mark" data-status="${f.s}">${marks[f.s]}</i></span>${f.p ? `<div class="booking-day__price">${f.p.display}</div>` : ""}</button></td>`; }).join("")}</tr>`).join("")}</tbody></table></section>`;
+        if (calPrev) calPrev.disabled = currentMonthIndex <= 0;
+        if (calNext) calNext.disabled = currentMonthIndex >= months.length - 1;
+        cal.querySelectorAll("[data-key]").forEach((b) => b.onclick = () => { selectedKey = b.dataset.key; currentMonthIndex = monthIndexFromDateKey(selectedKey); renderCal(); renderSlots(); });
+      };
+
+      const toStatus = (r) => {
+        const rem = (r.capacity_total ?? 0) - (r.capacity_reserved ?? 0);
+        if (r.session_status === "limited" || rem <= 2) return "few";
+        if (r.session_status === "full" || rem <= 0) return "full";
+        if (r.session_status !== "open") return "closed";
+        return r.booking_method === "request" ? "request" : "instant";
+      };
+
+      const updateSummary = (plans, storeRows, sessions) => {
+        if (summaryPlan) {
+          if (hasMeaningfulPlanName(selectedPlan?.plan_name)) summaryPlan.textContent = selectedPlan.plan_name;
+          else summaryPlan.textContent = "未指定";
+        }
+        updatePlanContextBar();
+        const dates = (sessions || []).map((s) => s.session_date).filter(Boolean).sort();
+        if (!dates.length) summaryPeriod.textContent = "公開期間未設定"; else {
+          const a = new Date(dates[0]), z = new Date(dates[dates.length - 1]);
+          const s = `${a.getFullYear()}年${a.getMonth() + 1}月`, e = `${z.getFullYear()}年${z.getMonth() + 1}月`;
+          summaryPeriod.textContent = s === e ? s : `${s}〜${e}`;
+        }
+        const availableStoreIds = new Set((sessions || []).map((x) => x.store_id).filter(Boolean));
+        const ss = (storeRows || [])
+          .filter((x) => x.deleted_at == null && x.is_active !== false)
+          .filter((x) => !availableStoreIds.size || availableStoreIds.has(x.id))
+          .map((x) => x.store_name)
+          .filter(Boolean);
+        summaryStores.textContent = ss.length ? ss.join(" / ") : "対象店舗未設定";
+        const ms = new Set((sessions || []).map((x) => x.booking_method).filter(Boolean)); const labels = []; if (ms.has("instant")) labels.push("即時予約"); if (ms.has("request")) labels.push("リクエスト予約");
+        summaryMethods.textContent = labels.length ? labels.join(" / ") : "予約方式未設定";
+        const prices = (selectedPlan ? [selectedPlan] : (plans || []))
+          .map((x) => Number(x.base_price_jpy || 0))
+          .filter((x) => x > 0);
+        summaryPrice.textContent = prices.length ? `おひとりさま ${Math.min(...prices).toLocaleString("ja-JP")}円〜` : "料金未設定";
+      };
+
+      const init = async () => {
+        const range = `all sessions (ordered by session_date, limit 500)${requestedPlanId || requestedPlanCode || requestedPlanName ? " / with plan preselect" : ""}`;
+        if (!supabase) { setLed(false); setDiag({ source: "Supabase", plans: 0, stores: 0, sessions: 0, range, error: "client unavailable" }); return; }
+        try {
+          const [p, s, w] = await Promise.all([
+            supabase.from("workshop_plans").select("id,plan_code,plan_name,base_price_jpy,currency_code,min_party_size,max_party_size,status"),
+            supabase.from("stores").select("id,store_name,is_active,deleted_at"),
+            supabase.from("workshop_sessions").select("id,plan_id,store_id,session_date,gather_time,start_time,end_time,booking_method,capacity_total,capacity_reserved,price_override_jpy,currency_code,min_party_size,max_party_size,session_status,public_note,published_at").order("session_date", { ascending: true }).limit(500)
+          ]);
+          if (p.error || s.error || w.error) throw (p.error || s.error || w.error);
+          const plans = p.data || [], storeRows = s.data || [];
+          const allSessions = w.data || [];
+          selectedPlan = plans.find((x) => requestedPlanId && String(x.id) === requestedPlanId)
+            || plans.find((x) => requestedPlanCode && norm(x.plan_code) === norm(requestedPlanCode))
+            || plans.find((x) => requestedPlanName && norm(x.plan_name) === norm(requestedPlanName))
+            || null;
+          const sessions = selectedPlan
+            ? allSessions.filter((row) => String(row.plan_id) === String(selectedPlan.id))
+            : allSessions;
+          setLed(true); setDiag({ source: "Supabase", plans: selectedPlan ? 1 : plans.length, stores: storeRows.length, sessions: sessions.length, range, error: "-" }); updateSummary(plans, storeRows, sessions);
+          stores = storeRows.length ? storeRows.reduce((a, x) => { const k = normStore(x.store_name || x.id); a[k] = { label: x.store_name || k, caption: "" }; return a; }, {}) : { ...fallbackStores };
+          if (requestedStore) {
+            const normalizedRequestedStore = normStore(requestedStore);
+            if (stores[normalizedRequestedStore]) {
+              selectedStore = normalizedRequestedStore;
+              if (requestedStoreLabel) stores[normalizedRequestedStore].label = requestedStoreLabel;
+            }
+          }
+          const byPlan = Object.fromEntries(plans.map((x) => [x.id, x]));
+          const byStore = Object.fromEntries((storeRows || []).map((x) => [x.id, { label: x.store_name || "", key: normStore(x.store_name || x.id) }]));
+          const map = {}, list = {};
+          sessions.forEach((r) => {
+            const p0 = byPlan[r.plan_id] || {}, st = byStore[r.store_id] || { label: "", key: "asakusa" };
+            const price = r.price_override_jpy ?? p0.base_price_jpy ?? 0;
+            const payload = { sessionId: r.id, planId: r.plan_id, g: (r.gather_time || "").slice(0, 5), start: (r.start_time || "").slice(0, 5), end: (r.end_time || "").slice(0, 5), price: { display: jpy(price), jpy: Number(price || 0) }, n: r.public_note || (r.booking_method === "request" ? "リクエスト回答待ち" : "即時予約可"), method: r.booking_method || "instant", status: toStatus(r), storeKey: st.key, storeLabel: st.label };
+            map[r.session_date] = map[r.session_date] || []; map[r.session_date].push(payload);
+          });
+          Object.entries(map).forEach(([k, arr]) => { const e = arr[0]; list[k] = { label: new Date(k).toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric", weekday: "short" }), store: e.storeKey, storeLabel: e.storeLabel, planId: e.planId, status: e.status === "request" ? "リクエスト予約" : e.status === "few" ? "残席わずか" : e.status === "full" ? "満席" : "即時予約可", slots: arr }; });
+          schedule = list;
+          const dates = Object.keys(map).sort(); if (dates.length) { months = buildCells(map, new Date(dates[0]), new Date(dates[dates.length - 1])); selectedStore = stores[selectedStore] ? selectedStore : Object.keys(stores)[0]; selectedKey = dates.find((d) => map[d][0].storeKey === selectedStore) || dates[0]; currentMonthIndex = monthIndexFromDateKey(selectedKey); }
+        } catch (e) {
+          setLed(false); setDiag({ source: "Supabase", plans: 0, stores: 0, sessions: 0, range, error: e.message || String(e) }); updateSummary([], [], []);
+        }
+        if (calPrev) calPrev.onclick = () => { if (currentMonthIndex > 0) { currentMonthIndex -= 1; renderCal(); } };
+        if (calNext) calNext.onclick = () => { if (currentMonthIndex < months.length - 1) { currentMonthIndex += 1; renderCal(); } };
+        if (planClearBtn) {
+          planClearBtn.onclick = () => { window.location.href = buildUrlWithoutPlanParams(); };
+        }
+        renderPicker(); renderCal(); renderSlots();
+      };
+      init();
+    })();
   </script>
 </body>
-</html>
 
+</html>
