@@ -414,3 +414,6 @@
 - 2026-03-28: PROGRAM section DB-driven migration (Issue 2026-03-28-29 permanent fix).
   - JA: `workshop.html` のPROGRAMを静的カードから `workshop_plans` 読み込み（active最大3件）へ移行し、`workshop_plan_inclusions` 表示と booking クエリ引継ぎを統合。
   - EN: Migrated Workshop PROGRAM from static cards to DB-driven cards (up to 3 active plans), including inclusion-point rendering and unified booking handoff.
+- 2026-03-28: Issue closure confirmed by user.
+  - JA: Issue `2026-03-28-28` / `2026-03-28-29` はユーザー確認完了により `解消済み` へ更新。
+  - EN: Issues `2026-03-28-28` and `2026-03-28-29` were closed after user verification.

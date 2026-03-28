@@ -971,3 +971,11 @@
   - `subpages/workshop.html`
   - `docs/10_PROJECT/ISSUE_LIST.md`
 - EN: Implemented the permanent fix for Issue `2026-03-28-29` by making `workshop.html` PROGRAM cards DB-driven (up to 3 active plans), aligning plan handoff behavior with `workshop-plans.html`.
+### ドキュメント更新（2026-03-28 追加52）
+- ユーザー確認結果を反映し、Issue の状態を更新しました。
+- 更新内容:
+  - Issue `2026-03-28-28`: `解消済み（ユーザー確認済み）` へ変更
+  - Issue `2026-03-28-29`: `解消済み（ユーザー確認済み）` へ変更
+- 対象ファイル:
+  - `docs/10_PROJECT/ISSUE_LIST.md`
+- EN: Reflected user verification and closed Issues `2026-03-28-28` and `2026-03-28-29` as resolved.

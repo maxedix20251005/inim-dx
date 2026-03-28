@@ -333,6 +333,10 @@
 - JA: PROGRAMカードCTAは `data-plan-code/name` を保持し、store連動時に booking へ `planCode/planName + store/storeLabel` を引継ぎ。
 - EN: Permanent fix applied by migrating Workshop PROGRAM cards to DB-driven top-3 plans and preserving robust booking handoff parameters.
 
+## 19. 2026-03-28 Issue Status Update / 引継ぎ追記
+- JA: ユーザー確認により Issue `2026-03-28-28` と `2026-03-28-29` は `解消済み` へ更新済み。
+- EN: Issues `2026-03-28-28` and `2026-03-28-29` are now closed after user verification.
+
 
 
 
