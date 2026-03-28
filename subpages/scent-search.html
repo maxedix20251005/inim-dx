@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 
 <head>
@@ -10,10 +10,163 @@
 </head>
 
 <body data-root=".." data-page-key="scentSearch">
-    <main id="page-main"></main>
+    <main id="page-main">
+        <section class="section scent-search-page">
+            <div class="section-heading">
+                <p class="section-kicker">Search by Scent</p>
+                <h2>香りから探す <small>Search</small></h2>
+            </div>
+            <p class="scent-search-lead">気になる香りワードや体験目的から、関連ページをすばやく見つけられます。まずはキーワードで絞り込み、必要に応じてカテゴリを選んでください。</p>
+
+            <section class="scent-search-panel" aria-label="香り検索">
+                <div class="scent-search-panel__controls">
+                    <label class="scent-search-panel__field" for="scent-search-input">
+                        <span>キーワード <small>Keyword</small></span>
+                        <input id="scent-search-input" type="search" placeholder="例: 店舗, 予約, ワークショップ, デジタル, 記事" autocomplete="off">
+                    </label>
+                    <div class="scent-search-panel__chips" role="group" aria-label="カテゴリ">
+                        <button type="button" class="is-active" data-filter="all">すべて</button>
+                        <button type="button" data-filter="store">店舗</button>
+                        <button type="button" data-filter="content">読み物</button>
+                        <button type="button" data-filter="event">イベント</button>
+                        <button type="button" data-filter="experience">体験・予約</button>
+                        <button type="button" data-filter="guide">導線・案内</button>
+                    </div>
+                </div>
+                <p class="scent-search-panel__meta" id="scent-search-meta">0件 / 0件</p>
+            </section>
+
+            <div class="scent-search-results" id="scent-search-results" aria-live="polite"></div>
+            <p class="scent-search-empty" id="scent-search-empty" hidden>一致するページが見つかりません。キーワードを短くするか、カテゴリを「すべて」に戻してください。</p>
+        </section>
+    </main>
     <script src="../js/site-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/site-shell.js"></script>
+    <script>
+        (() => {
+            const input = document.getElementById("scent-search-input");
+            const meta = document.getElementById("scent-search-meta");
+            const results = document.getElementById("scent-search-results");
+            const empty = document.getElementById("scent-search-empty");
+            const chips = Array.from(document.querySelectorAll(".scent-search-panel__chips button"));
+
+            const pages = [
+                {
+                    key: "store-info",
+                    category: "store",
+                    titleJa: "実店舗情報",
+                    titleEn: "Store Info",
+                    summary: "浅草店・柴又店・ソラマチ店の導線や特徴を確認できます。",
+                    href: "./search-shop-info.html",
+                    tags: ["店舗", "実店舗", "アクセス", "地図", "浅草", "柴又", "ソラマチ", "store"]
+                },
+                {
+                    key: "projects",
+                    category: "content",
+                    titleJa: "プロジェクト・読み物",
+                    titleEn: "Projects / Stories",
+                    summary: "香りの背景や取り組み、読み物コンテンツの入口です。",
+                    href: "./search-projects.html",
+                    tags: ["記事", "読み物", "ストーリー", "プロジェクト", "project", "content"]
+                },
+                {
+                    key: "events",
+                    category: "event",
+                    titleJa: "イベント情報",
+                    titleEn: "Events",
+                    summary: "期間限定の体験や開催スケジュールを確認できます。",
+                    href: "./search-events.html",
+                    tags: ["イベント", "開催", "日程", "event", "schedule"]
+                },
+                {
+                    key: "workshop",
+                    category: "experience",
+                    titleJa: "香りと遊ぶ（ワークショップ）",
+                    titleEn: "Workshop Top",
+                    summary: "体験の流れ、導線、FAQ をまとめたワークショップ総合ページです。",
+                    href: "./workshop.html",
+                    tags: ["ワークショップ", "体験", "予約", "flow", "faq", "workshop"]
+                },
+                {
+                    key: "booking",
+                    category: "experience",
+                    titleJa: "予約枠選択",
+                    titleEn: "Booking",
+                    summary: "日付・店舗・時間帯から予約枠を選択できます。",
+                    href: "./workshop-booking.html",
+                    tags: ["予約", "空き枠", "calendar", "booking", "日付", "店舗"]
+                },
+                {
+                    key: "plans",
+                    category: "experience",
+                    titleJa: "プラン比較",
+                    titleEn: "Plans",
+                    summary: "各ワークショッププランを比較して予約へ進めます。",
+                    href: "./workshop-plans.html",
+                    tags: ["プラン", "比較", "価格", "所要時間", "plan", "course"]
+                },
+                {
+                    key: "smart",
+                    category: "experience",
+                    titleJa: "デジタル調香",
+                    titleEn: "Smart Scent Design",
+                    summary: "画面上で香りの印象を試すデジタル体験ページです。",
+                    href: "./smart-scent-design.html",
+                    tags: ["デジタル", "調香", "smart", "scent", "design"]
+                },
+                {
+                    key: "sitemap",
+                    category: "guide",
+                    titleJa: "サイトマップ",
+                    titleEn: "Site Map",
+                    summary: "公開/管理の導線構造を一覧で確認できます。",
+                    href: "./sitemap.html",
+                    tags: ["導線", "構造", "サイトマップ", "navigation", "guide"]
+                }
+            ];
+
+            let activeFilter = "all";
+            const total = pages.length;
+
+            const normalize = (value) => String(value || "").trim().toLowerCase();
+
+            const render = () => {
+                const q = normalize(input?.value || "");
+                const filtered = pages.filter((item) => {
+                    const filterMatch = activeFilter === "all" || item.category === activeFilter;
+                    if (!filterMatch) return false;
+                    if (!q) return true;
+                    const haystack = normalize(`${item.titleJa} ${item.titleEn} ${item.summary} ${(item.tags || []).join(" ")}`);
+                    return haystack.includes(q);
+                });
+
+                if (meta) meta.textContent = `${filtered.length}件 / ${total}件`;
+                if (empty) empty.hidden = filtered.length !== 0;
+                if (!results) return;
+
+                results.innerHTML = filtered.map((item) => `
+                    <article class="scent-search-card">
+                        <p class="scent-search-card__eyebrow">${item.category}</p>
+                        <h3>${item.titleJa} <small>${item.titleEn}</small></h3>
+                        <p>${item.summary}</p>
+                        <a class="button button--secondary" href="${item.href}">このページを見る</a>
+                    </article>
+                `).join("");
+            };
+
+            chips.forEach((chip) => {
+                chip.addEventListener("click", () => {
+                    activeFilter = chip.dataset.filter || "all";
+                    chips.forEach((x) => x.classList.toggle("is-active", x === chip));
+                    render();
+                });
+            });
+
+            input?.addEventListener("input", render);
+            render();
+        })();
+    </script>
 </body>
 
 </html>

@@ -1,4 +1,4 @@
-﻿# TEST PLAN / テスト計画
+# TEST PLAN / テスト計画
 
 ## Purpose / 目的
 - JA: 本プロジェクトのテスト方針・対象・完了条件を管理する。
@@ -1260,3 +1260,468 @@
 - 期待結果:
   - IA refinement の完了状態が backlog へ反映されている
   - EN: Backlog closure status for 2.13 is correctly recorded as accepted.
+## 2026-03-28 追加テスト / Added Test (2.14 Slice-1: Scent Search Hub MVP)
+- 対象:
+  - `subpages/scent-search.html`
+  - `css/style.css`
+  - `js/site-config.js`
+  - `js/site-shell.js`
+  - `subpages/sitemap.html`
+- 手順:
+  1. `subpages/scent-search.html` を開き、検索入力、カテゴリチップ、結果件数、結果カードが表示されることを確認する
+  2. キーワード `予約` を入力し、`予約枠選択` / `プラン比較` / `香りと遊ぶ` など関連カードに絞り込まれることを確認する
+  3. カテゴリ `店舗` を選択し、`実店舗情報` のみ表示されることを確認する
+  4. `js/site-config.js` で `disabledPublicPageKeys` に `scentSearch` が含まれていないことを確認する
+  5. 公開グローバルナビの `香りから探す` が有効リンクで遷移可能であることを確認する
+  6. `subpages/sitemap.html` の `香りから探す` に `data-default-disabled="true"` が付いていないことを確認する
+- 期待結果:
+  - `香りから探す` が placeholder ではなく、実用的な検索起点として機能する
+  - shared policy 上でも `scentSearch` が有効状態へ同期される
+  - EN: `scentSearch` works as a functional search hub and is enabled consistently across shared policy/nav/sitemap.
+## 2026-03-28 追加テスト / Added Test (2.14 Slice-2: Search Store Info MVP-B)
+- 対象:
+  - `subpages/search-shop-info.html`
+  - `js/site-shell.js`
+- 手順:
+  1. `subpages/search-shop-info.html` を開き、`浅草店/柴又店/ソラマチ店` の店舗チップが表示されることを確認する
+  2. 店舗チップを切替えたとき、`営業時間/住所/アクセス/予約枠/おすすめ` が店舗ごとに更新されることを確認する
+  3. ストーリー文と地図タイトルが店舗ごとに更新されることを確認する
+  4. `store-map-frame` の `src` が店舗切替に応じて変更されることを確認する（埋め込み地図が切替わる）
+  5. `この店舗で予約枠を確認する` CTA の遷移先に `store` と `storeLabel` が含まれることを確認する
+  6. `js/site-shell.js` の `searchStoreInfo.latest` が「公開済み」文言へ更新されていることを確認する
+- 期待結果:
+  - 実店舗情報ページが placeholder ではなく、比較可能な導線ページとして機能する
+  - 店舗選択と地図/予約CTAの整合が維持される
+  - EN: `search-shop-info` works as a practical store-selection page with synced map + booking handoff behavior.
+
+## 2026-03-28 クイック確認チェックリスト / Quick QA Checklist (Search Flow)
+- 対象:
+  - `index.html`
+  - `subpages/scent-search.html`
+  - `subpages/search-shop-info.html`
+- 手順:
+  1. `index.html` のグローバルナビから `香りから探す` を開けることを確認する
+  2. `香りから探す` でキーワード `予約` を入力し、予約関連カードが表示されることを確認する
+  3. カテゴリ `店舗` を選び、店舗関連カードに絞り込まれることを確認する
+  4. `実店舗情報` カードから `search-shop-info.html` へ遷移できることを確認する
+  5. `浅草店/柴又店/ソラマチ店` の切替で、情報ブロックと地図が連動して更新されることを確認する
+  6. `この店舗で予約枠を確認する` で `workshop-booking.html` へ遷移し、URLに `store/storeLabel` が含まれることを確認する
+- 期待結果:
+  - トップページから検索ハブ、店舗比較、予約ページまでの導線が途切れず機能する
+  - EN: End-to-end search flow works from top page to search hub, store compare, and booking handoff.
+## 2026-03-28 追加テスト / Added Test (2.14 Slice-3: Search Projects Story Hub)
+- 対象:
+  - `subpages/search-projects.html`
+  - `css/style.css`
+  - `js/site-shell.js`
+- 手順:
+  1. `subpages/search-projects.html` を開き、検索入力・カテゴリチップ・結果件数・カード一覧が表示されることを確認する
+  2. キーワード `デジタル` で絞り込み、Smart Scent関連カードが表示されることを確認する
+  3. カテゴリ `店舗背景` を選択し、店舗比較関連カードへ絞り込まれることを確認する
+  4. `公開中` 相当カード（導線を見る / 体験を始める / 店舗比較を見る）が遷移可能であることを確認する
+  5. `準備中` カードはリンクCTAではなく、`準備中` ラベル表示のみであることを確認する
+  6. `js/site-shell.js` の `searchProjects.latest` が公開済み文言へ更新されていることを確認する
+- 期待結果:
+  - 読み物ハブとして、検索・カテゴリ・公開状態表示が一体で機能する
+  - 公開済み導線のみ遷移可能で、準備中導線の誤遷移が防止される
+  - EN: Story hub supports filtering and clearly separates live links from coming-soon content.
+## 2026-03-28 追加テスト / Added Test (2.14 Slice-4: Search Events Listing)
+- 対象:
+  - `subpages/search-events.html`
+  - `css/style.css`
+  - `js/site-shell.js`
+- 手順:
+  1. `subpages/search-events.html` を開き、検索入力・ステータスチップ・結果件数・イベントカード一覧が表示されることを確認する
+  2. ステータス `受付中` を選択し、`受付中` イベントのみ表示されることを確認する
+  3. ステータス `準備中` を選択し、`準備中` イベントのみ表示されることを確認する
+  4. キーワード `浅草` で絞り込み、該当イベントに絞られることを確認する
+  5. `受付中` カードはCTAで遷移可能、`準備中` カードは `準備中` ラベル表示のみであることを確認する
+  6. `js/site-shell.js` の `searchEvents.latest` が公開済み文言へ更新されていることを確認する
+- 期待結果:
+  - イベント一覧が検索・ステータスフィルタで実用的に機能する
+  - 公開状態に応じて遷移可否が明確に分離される
+  - EN: Event page supports practical filtering and clearly separates clickable live events from coming-soon entries.
+## 2026-03-28 追加テスト / Added Test (Global Nav IA Restructure)
+- 対象:
+  - `js/site-shell.js`
+  - `index.html`（公開グローバルナビ）
+- 手順:
+  1. 公開ページでグローバルナビ順序が `Home -> 香りと遊ぶ -> ブランド -> アイテム -> 記事 -> イベント -> 実店舗 -> Admin` であることを確認する
+  2. `記事` をクリックし、`subpages/search-projects.html` へ遷移することを確認する
+  3. `イベント` をクリックし、`subpages/search-events.html` へ遷移することを確認する
+  4. `実店舗` をクリックし、`subpages/search-shop-info.html` へ遷移することを確認する
+  5. `Admin` が従来どおりナビ右端に表示されることを確認する
+- 期待結果:
+  - 指定順序・指定リンク先どおりにグローバルナビが動作する
+  - EN: Global nav order and destinations match the requested IA, with Admin preserved at the right edge.
+## 2026-03-28 追加テスト / Added Test (Brand WATOYO-only Activation)
+- 対象:
+  - `js/site-config.js`
+  - `js/site-shell.js`
+  - `subpages/sitemap.html`
+- 手順:
+  1. 公開グローバルナビの `ブランド` が disabled ではなく遷移可能であることを確認する
+  2. `ブランド` のサブメニュー（hover展開）に `WATOYO` のみ表示されることを確認する
+  3. `WATOYO` をクリックして `subpages/brand-watoyo.html` へ遷移できることを確認する
+  4. `subpages/sitemap.html` の「公開ナビ（トップレベル）」で `ブランド` に `準備中` 表示がないことを確認する
+  5. sitemap の「公開ページ（カテゴリ詳細）」でブランド項目が `ブランド: WATOYO` のみであることを確認する
+- 期待結果:
+  - ブランド導線は `WATOYO` のみ公開状態として一貫表示される
+  - EN: Brand navigation is consistently active with WATOYO as the only exposed brand detail entry.
+## 2026-03-28 追加テスト / Added Test (Items 2-group Activation: Aroma / Hand Cream)
+- 対象:
+  - `js/site-config.js`
+  - `js/site-shell.js`
+  - `subpages/sitemap.html`
+- 手順:
+  1. 公開グローバルナビの `アイテム` が disabled ではなく遷移可能であることを確認する
+  2. `アイテム` のサブメニュー（hover展開）に `アロマ` と `ハンドクリーム` の2件のみ表示されることを確認する
+  3. `アロマ` をクリックし `subpages/item-home-fragrance.html` へ遷移できることを確認する
+  4. `ハンドクリーム` をクリックし `subpages/item-body-care.html` へ遷移できることを確認する
+  5. `subpages/sitemap.html` の「公開ナビ（トップレベル）」で `アイテム` に `準備中` 表示がないことを確認する
+  6. sitemap の「公開ページ（カテゴリ詳細）」でアイテム項目が `アイテム: アロマ` と `アイテム: ハンドクリーム` のみであることを確認する
+- 期待結果:
+  - アイテム導線は `アロマ / ハンドクリーム` の2グループ公開方針として一貫表示される
+  - EN: Items navigation is consistently active with only two exposed groups (Aroma and Hand Cream).
+## 2026-03-28 追加テスト / Added Test (Draft Pages: WATOYO / Aroma / Hand Cream)
+- 対象:
+  - `subpages/brand-watoyo.html`
+  - `subpages/item-home-fragrance.html`
+  - `subpages/item-body-care.html`
+  - `css/style.css`
+- 手順:
+  1. `subpages/brand-watoyo.html` を開き、ヒーロー画像と3つのWATOYOカード画像が表示されることを確認する
+  2. `subpages/item-home-fragrance.html` を開き、`aroma_neroli / aroma_vanilla / aroma_musk` の3画像が表示されることを確認する
+  3. `subpages/item-body-care.html` を開き、`handcream_rose / handcream_daphne / handcream_seablue` の3画像が表示されることを確認する
+  4. 3ページとも `catalog` レイアウト（hero + grid + cards）が崩れず表示されることを確認する
+  5. モバイル幅で表示し、カードが1カラムへ切り替わることを確認する
+- 期待結果:
+  - 指定画像を使った3ページが参照可能で、共通UIスタイルで一貫表示される
+  - EN: All three requested pages render with the provided images and consistent shared catalog styling.
+## 2026-03-28 追加テスト / Added Test (Product Hero Simplification: No CTA / No Right Hero Image)
+- 対象:
+  - `subpages/brand-watoyo.html`
+  - `subpages/item-home-fragrance.html`
+  - `subpages/item-body-care.html`
+  - `css/style.css`
+- 手順:
+  1. 3ページそれぞれでヒーロー領域にCTAボタンが表示されていないことを確認する
+  2. 3ページそれぞれでヒーロー右側の大画像が表示されていないことを確認する
+  3. 3ページそれぞれで下段3商品カード（画像 + 説明）が従来どおり表示されることを確認する
+  4. レイアウトが1カラムで不自然な余白なく表示されることを確認する
+- 期待結果:
+  - 3ページのヒーローが商品紹介向けの簡素レイアウトになり、下段商品一覧は維持される
+  - EN: Hero sections are simplified (no CTA, no right image) while the bottom three product cards remain intact.
+## 2026-03-28 追加テスト / Added Test (Parent-only Nav + Top Spacing Tightening)
+- 対象:
+  - `js/site-shell.js`
+  - `css/style.css`
+  - `subpages/brand-watoyo.html`
+  - `subpages/item-home-fragrance.html`
+  - `subpages/item-body-care.html`
+  - `subpages/search-projects.html`
+  - `subpages/search-events.html`
+  - `subpages/search-shop-info.html`
+- 手順:
+  1. 公開グローバルナビで `ブランド` をクリックしても親ページ遷移しないことを確認する
+  2. 公開グローバルナビで `アイテム` をクリックしても親ページ遷移しないことを確認する
+  3. `ブランド` / `アイテム` は hover でサブメニューが開き、子ページ遷移できることを確認する
+  4. 上記6ページで、ヘッダー直下から主要コンテンツ（見出し/カード）が従来より上に表示されることを確認する
+- 期待結果:
+  - `ブランド` / `アイテム` は親メニュー専用として動作し、遷移はサブメニュー経由に統一される
+  - 対象ページの上部余白が縮小され、コンテンツの初期視認性が向上する
+  - EN: Brand/Items become parent-only submenu entries and top spacing is visibly tighter on the targeted pages.
+## 2026-03-28 追加テスト / Added Test (Top-space Correction + Shop Wording)
+- 対象:
+  - `css/style.css`
+  - `subpages/search-shop-info.html`
+  - `subpages/workshop.html`
+  - `js/site-shell.js`
+- 手順:
+  1. `brand-watoyo` / `item-home-fragrance` / `item-body-care` / `search-projects` / `search-events` / `search-shop-info` を開き、`news-strip` 直下の空白が以前より縮小していることを確認する
+  2. `search-shop-info.html` の英語表記が `Shop Info / Shop Guide / Select Shop` になっていることを確認する
+  3. フッター英語見出しが `Shop Info` になっていることを確認する
+  4. `workshop.html` の `Store` ラベルが `Shop` になっていることを確認する
+- 期待結果:
+  - 上部余白の修正が対象ページすべてに反映される
+  - 可視英語表記が `Shop` に統一される
+  - EN: Top-space fix is visibly applied to all target pages and visible English wording is unified to `Shop`.
+## 2026-03-28 追加テスト / Added Test (Shop-info Route Rename)
+- 対象:
+  - `subpages/search-shop-info.html`
+  - `js/site-shell.js`
+  - `subpages/sitemap.html`
+  - `subpages/scent-search.html`
+- 手順:
+  1. `subpages/search-shop-info.html` が直接開けることを確認する
+  2. `subpages/search-shop-info.html` は存在しない（404相当）ことを確認する
+  3. グローバルナビ `実店舗` から `search-shop-info.html` へ遷移することを確認する
+  4. `香りから探す` の `実店舗情報` カードから `search-shop-info.html` へ遷移することを確認する
+  5. `sitemap` の `検索: 実店舗情報` が `search-shop-info.html` を指していることを確認する
+- 期待結果:
+  - 実店舗情報ページの新URL (`search-shop-info.html`) へ導線が一本化される
+  - EN: All references resolve to the new shop-info route and no stale store-info path remains.
+## 2026-03-28 追加テスト / Added Test (Top Utility + Home About Submenu + Product Block Swap)
+- 対象:
+  - `js/site-shell.js`
+  - `index.html`
+  - `css/style.css`
+- 手順:
+  1. 任意の公開ページで右上ユーティリティに `検索` / `カート` が表示されないことを確認する
+  2. グローバルナビ `Home` のホバーで `About` サブメニューが表示されることを確認する
+  3. `Home > About` をクリックし、トップページ `#about` セクションへスクロール遷移することを確認する
+  4. トップページ `Pick Up` に `WATOYO_WA / WATOYO_YO / WATOYO_WAYO` の3カードが表示されることを確認する
+  5. トップページ `New Arrivals` に `アロマ3点 + ハンドクリーム3点` の計6カードが表示されることを確認する
+  6. `ABOUT` セクション右側に `images/others/about.png` が表示され、補足説明文が読めることを確認する
+- 期待結果:
+  - ヘッダー導線が簡素化され、`Home > About` から `ABOUT` へ直接到達できる
+  - 商品訴求ブロックが指定された構成（Pick Up=WATOYO3 / New Arrivals=Aroma3+HandCream3）で表示される
+  - EN: Utility links are simplified, Home-About jump works, and top-page product blocks reflect the requested lineup.
+## 2026-03-28 追加テスト / Added Test (Top-page Card Image Height Increase)
+- 対象:
+  - `css/style.css`
+  - `index.html`
+- 手順:
+  1. トップページ `Pick Up` の3カード（WATOYO）画像が、以前より縦長（4:5）で表示されることを確認する
+  2. トップページ `New Arrivals` の6カード（アロマ3 + ハンドクリーム3）画像が、以前より縦長（4:5）で表示されることを確認する
+  3. 他ページの共通カードが極端に縦長化していないことを確認する
+- 期待結果:
+  - WAYO / AROMA / HAND CREAM を含むトップページ商品画像の高さが改善される
+  - 変更はトップページ対象セクションに限定され、他ページへの副作用がない
+  - EN: Card images in `Pick Up` and `New Arrivals` appear taller (4:5) while non-target pages keep their existing image proportions.
+## 2026-03-28 追加テスト / Added Test (Catalog Pages Image Height Increase)
+- 対象:
+  - `css/style.css`
+  - `subpages/brand-watoyo.html`
+  - `subpages/item-home-fragrance.html`
+  - `subpages/item-body-care.html`
+- 手順:
+  1. `brand-watoyo.html` を開き、3つの商品カード画像が従来より高く表示されることを確認する
+  2. `item-home-fragrance.html` を開き、3つの商品カード画像が従来より高く表示されることを確認する
+  3. `item-body-care.html` を開き、3つの商品カード画像が従来より高く表示されることを確認する
+  4. 商品カード画像が縦方向に伸びても、カード枠・テキストとの重なり崩れがないことを確認する
+- 期待結果:
+  - 3ページすべてで `.catalog-card img` が `280px` 高さとして表示され、見え量が改善される
+  - EN: Catalog card images on WATOYO/Aroma/Hand Cream pages render at the increased `280px` height without layout breakage.
+## 2026-03-28 追加テスト / Added Test (Catalog Image Ratio Match with Index)
+- 対象:
+  - `css/style.css`
+  - `index.html`
+  - `subpages/brand-watoyo.html`
+  - `subpages/item-home-fragrance.html`
+  - `subpages/item-body-care.html`
+- 手順:
+  1. `index.html` の `Pick Up` または `New Arrivals` カード画像比率（4:5）を確認する
+  2. `brand-watoyo.html` のカード画像が同等の縦比率で表示されることを確認する
+  3. `item-home-fragrance.html` のカード画像が同等の縦比率で表示されることを確認する
+  4. `item-body-care.html` のカード画像が同等の縦比率で表示されることを確認する
+- 期待結果:
+  - 3ページの `.catalog-card img` が固定px高ではなく、`index.html` と同じ比率ベース（`aspect-ratio: 4 / 5`）で表示される
+  - EN: Catalog cards on WATOYO/Aroma/Hand Cream pages match index card image ratio behavior (`4:5`) rather than fixed pixel height.
+## 2026-03-28 追加テスト / Added Test (2.14 Slice-5: Article/Sale/Shops Pages)
+- 対象:
+  - `subpages/article.html`
+  - `subpages/sale.html`
+  - `subpages/stores.html`
+  - `css/style.css`
+  - `js/site-shell.js`
+- 手順:
+  1. `article.html` を開き、3つの記事カードと各CTAが表示されることを確認する
+  2. `sale.html` を開き、WATOYO/アロマ/ハンドクリームの3カードと各CTAが表示されることを確認する
+  3. `stores.html` を開き、浅草/柴又/ソラマチの3カードが表示され、`予約枠を確認する` CTAが押下可能であることを確認する
+  4. 3ページともモバイル幅でカードが1カラム表示に切り替わることを確認する
+  5. 各ページの news-strip 文言が「公開済み」内容に更新されていることを確認する
+- 期待結果:
+  - `article` / `sale` / `stores` が placeholder ではなく実ページとして表示される
+  - 3ページが共通 `content-hub-*` スタイルで整合表示される
+  - EN: `article/sale/stores` render as implemented draft pages (not placeholders), with consistent hub styling and published latest-copy status.
+## 2026-03-28 追加テスト / Added Test (2.14 Slice-6: Shopping Guide / Contact / Account)
+- 対象:
+  - `subpages/shopping-guide.html`
+  - `subpages/contact.html`
+  - `subpages/account.html`
+  - `js/site-shell.js`
+- 手順:
+  1. `shopping-guide.html` を開き、配送・支払い・返品の3カードが表示されることを確認する
+  2. `contact.html` を開き、予約・商品・法人の3窓口カードとCTAが表示されることを確認する
+  3. `account.html` を開き、ログイン/会員登録/設定の3カードが表示されることを確認する
+  4. `account.html` の各CTA（`#login` / `#register` / `#account`）で対応モーダルが開くことを確認する
+  5. 各ページの news-strip 文言が公開済み内容になっていることを確認する
+- 期待結果:
+  - `shopping-guide` / `contact` / `account` が placeholder ではなく実ページとして利用できる
+  - アカウント入口ページから既存モーダル導線へ遷移できる
+  - EN: `shopping-guide/contact/account` render as implemented draft pages and account CTAs open existing modal flows.
+## 2026-03-28 追加テスト / Added Test (2.14 Slice-7: Legal/Privacy/Newsletter/RSS/Cart)
+- 対象:
+  - `subpages/legal.html`
+  - `subpages/privacy.html`
+  - `subpages/newsletter.html`
+  - `subpages/rss.html`
+  - `subpages/cart.html`
+  - `css/style.css`
+  - `js/site-shell.js`
+- 手順:
+  1. `legal.html` を開き、法的表示の6カードが表示されることを確認する
+  2. `privacy.html` を開き、プライバシーポリシーの6カードとお問い合わせ導線が表示されることを確認する
+  3. `newsletter.html` を開き、登録/解除案内が表示され、`設定を開く` でアカウントモーダル導線に遷移できることを確認する
+  4. `rss.html` を開き、記事・イベント導線が表示されることを確認する
+  5. `cart.html` を開き、準備中案内と商品/予約CTAが表示されることを確認する
+  6. モバイル幅で `policy-grid` が1カラムに切り替わることを確認する
+  7. 対象5ページの news-strip 文言が公開済み内容へ更新されていることを確認する
+- 期待結果:
+  - `legal/privacy/newsletter/rss/cart` が placeholder ではなく実ページとして表示される
+  - 共通 `policy-*` / `cart-*` スタイルで整合表示される
+  - EN: `legal/privacy/newsletter/rss/cart` render as implemented draft pages with consistent policy/cart styling and updated latest-copy status.
+## 2026-03-28 追加テスト / Added Test (2.14 Slice-8: About Page + Home Submenu Reroute)
+- 対象:
+  - `subpages/about.html`
+  - `js/site-shell.js`
+- 手順:
+  1. `subpages/about.html` を開き、説明文・画像・CTAが表示されることを確認する
+  2. グローバルナビ `Home` のサブメニュー `About` をクリックし、`subpages/about.html` へ遷移することを確認する
+  3. `about` ページで breadcrumb が `Home > About` 表示になることを確認する
+  4. `about` 表示時に `Brand` が current 強調にならないことを確認する
+- 期待結果:
+  - `About` は専用ページとして閲覧でき、`Home` サブメニューから安定遷移できる
+  - breadcrumb/current-state が独立ページ扱いとして正しく表示される
+  - EN: About works as a standalone page routed from `Home` submenu, with corrected breadcrumb/current behavior.
+## 2026-03-28 追加テスト / Added Test (2.14 Slice-9: Remove Top About + Professional Policy Layout)
+- 対象:
+  - `index.html`
+  - `subpages/privacy.html`
+  - `subpages/legal.html`
+  - `css/style.css`
+- 手順:
+  1. `index.html` を開き、下部に旧 `ABOUT` セクションが表示されないことを確認する
+  2. `Home > About` から `subpages/about.html` へ遷移できることを確認する
+  3. `privacy.html` を開き、章立てのポリシー構成（番号付き見出し + 箇条書き/本文）が表示されることを確認する
+  4. `legal.html` を開き、法的表示が表形式（項目/内容）で表示されることを確認する
+  5. モバイル幅で `legal` の表が1カラム表示に崩れず変換されることを確認する
+- 期待結果:
+  - トップページの About 表示は撤去され、About は専用ページ導線のみになる
+  - privacy/legal は従来カード羅列より構造化され、可読性が向上する
+  - EN: Top-page About block is removed, and privacy/legal render in professional structured layouts with responsive behavior.
+## 2026-03-28 追加テスト / Added Test (2.14 Slice-10: About Alignment + Footer Legal/Privacy + Brand/Items Hub)
+- 対象:
+  - `subpages/about.html`
+  - `subpages/brand.html`
+  - `subpages/items.html`
+  - `js/site-config.js`
+  - `js/site-shell.js`
+  - `css/style.css`
+- 手順:
+  1. `about.html` を開き、左テキスト列と右画像カード列の上端が揃って見えることを確認する
+  2. フッターの `プライバシーポリシー` / `法的表示` をクリックし、各ページへ遷移できることを確認する
+  3. `brand.html` を開き、WATOYO導線を含む3カード構成が表示されることを確認する
+  4. `items.html` を開き、アロマ/ハンドクリーム導線を含む3カード構成が表示されることを確認する
+  5. `brand/items` の news-strip 文言が公開済み内容になっていることを確認する
+- 期待結果:
+  - Aboutレイアウトの上端揃えが改善される
+  - legal/privacy リンクがフッターから有効遷移できる
+  - brand/items 親ページが placeholder ではなく professional hub として表示される
+  - EN: About alignment is corrected, footer legal/privacy links are active, and brand/items parent pages render as professional hubs.
+## 2026-03-28 追加テスト / Added Test (2.14 Slice-11: Requested Image Swap + Compact Top Spacing)
+- 対象:
+  - `subpages/brand.html`
+  - `subpages/items.html`
+  - `subpages/about.html`
+  - `css/style.css`
+- 手順:
+  1. `brand.html` の `Brand Policy` 画像が `Lineup image_ (5).png` に変更されていることを確認する
+  2. `brand.html` の `Next Action` 画像が `Workshop_ (10).png` に変更されていることを確認する
+  3. `items.html` の `Next Action` 画像が `Workshop_ (10).png` に変更されていることを確認する
+  4. recently filled pages（about/brand/items/article/sale/stores/shoppingGuide/contact/account/legal/privacy/newsletter/rss/cart）で、`search-shop-info` と同水準まで上部余白が縮小されていることを確認する
+  5. `about.html` で左テキスト開始位置と右カード上端の視覚位置が揃っていることを確認する
+- 期待結果:
+  - 指定画像の差し替えが反映される
+  - recently filled pages の上部余白が圧縮され、初期視認領域が改善される
+  - About のカラム上端ズレが軽減される
+  - EN: Requested image swaps are applied, top spacing is compacted across recently implemented pages, and About top-edge alignment is visually corrected.
+## 2026-03-28 追加テスト / Added Test (2.14 Slice-12: About Structural Fix + Link Activation + Login/Register)
+- 対象:
+  - `subpages/about.html`
+  - `docs/10_PROJECT/ISSUE_LIST.md`
+  - `js/site-config.js`
+  - `js/site-shell.js`
+  - `subpages/login.html`
+  - `subpages/register.html`
+- 手順:
+  1. `ISSUE_LIST.md` に `Issue 2026-03-28-30` が記録されていることを確認する
+  2. `about.html` を開き、左カラム見出し/本文と右カードが同一行開始で上端整列して見えることを確認する
+  3. フッター/ナビで previously-disabled 公開リンク（article/sale/stores/shopping-guide/contact/newsletter/rss/cart など）へ遷移可能であることを確認する
+  4. `login.html` / `register.html` を開き、ページ内容が表示されることを確認する
+  5. `login.html` の `#login`、`register.html` の `#register` でモーダル導線が起動することを確認する
+- 期待結果:
+  - About整列不具合が構造修正で解消される
+  - 実装済みページリンクが有効化される
+  - login/register が placeholder ではなく実ページとして利用可能になる
+  - EN: About alignment issue is structurally resolved, implemented-page links are active, and login/register render as usable standalone draft pages with modal flow.
+## 2026-03-28 追加テスト / Added Test (2.14 Slice-13: Brand/Items Hub Links + Footer Copy + Contact CTA Fix)
+- 対象:
+  - `js/site-shell.js`
+  - `subpages/contact.html`
+  - `css/style.css`
+- 手順:
+  1. グローバルナビ `ブランド` / `アイテム` をクリックし、`brand.html` / `items.html` へ直接遷移できることを確認する
+  2. `item-diy.html` / `item-sale.html` / `item-ecology.html` / `item-refill-tools.html` / `item-gift-set.html` を開いた際、`アイテム` が current 強調されることを確認する
+  3. フッター最下部コピーが `© 2026 inim-dx. All rights reserved.` で表示されることを確認する
+  4. `contact.html` の Products CTA が `items.html`、Business CTA が `about.html` へ遷移することを確認する
+  5. `contact` / `about` / `privacy` / `legal` / `account` で ghost/secondary ボタンの文字が十分可読であることを確認する
+- 期待結果:
+  - Brand/Items 親リンクが有効に機能し、子ページ閲覧中のナビ強調も整合する
+  - フッターコピーが著作権表記へ置換される
+  - 問い合わせ導線のリンク先が適切化され、ボタン可読性が担保される
+  - EN: Brand/Items hubs are directly reachable from global nav, footer copy shows copyright text, contact CTAs route to appropriate pages, and button contrast remains readable on light backgrounds.
+## 2026-03-28 追加テスト / Added Test (2.14 Slice-14: Contact/Shopping Guide Image Swap)
+- 対象:
+  - `subpages/contact.html`
+  - `subpages/shopping-guide.html`
+- 手順:
+  1. `contact.html` を開き、3カード画像が以下に差し替わっていることを確認する
+  - WORKSHOP: `../images/Workshop/Workshop_ (1).png`
+  - PRODUCTS: `../images/The image used/Lineup image_ (2).png`
+  - BUSINESS: `../images/others/others_ (5).png`
+  2. `shopping-guide.html` を開き、3カード画像が以下に差し替わっていることを確認する
+  - DELIVERY: `../images/others/others_ (7).png`
+  - PAYMENT: `../images/others/others_ (10).png`
+  - RETURN: `../images/others/others_ (14).png`
+- 期待結果:
+  - 指定した6枚の画像差し替えが反映される
+  - カード内容と画像文脈が一致し、視認性が向上する
+  - EN: All six requested image replacements are applied, with improved visual relevance for each card.
+## 2026-03-28 追加テスト / Added Test (2.14 Slice-15: Contact Products/Business Text + CTA State)
+- 対象:
+  - `subpages/contact.html`
+- 手順:
+  1. Productsカード本文が以下3行表示になることを確認する
+  - `Phone: 000-0000-0000`
+  - `Address: 東京都台東区浅草1-1-1`
+  - `Email: inim-dx@XXXXX.com`
+  2. ProductsカードにCTAボタンが表示されないことを確認する
+  3. Businessカード本文が維持されていることを確認する
+  4. BusinessカードのCTAが `準備中` 表示で非活性（遷移不可）であることを確認する
+- 期待結果:
+  - Products は連絡先提示専用カードとして表示される
+  - Business は文言維持のまま、準備中状態を明示する
+  - EN: Products renders as a direct-contact card with no CTA, while Business keeps its copy and shows a non-interactive `準備中` state.
+## 2026-03-28 追加テスト / Added Test (2.14 Slice-16: Footer Guide Deduplication)
+- 対象:
+  - `js/site-shell.js`
+- 手順:
+  1. 任意の公開ページでフッター `Guide` を表示する
+  2. `配送・送料について` / `返品について` / `お支払い方法について` が表示されないことを確認する
+  3. `ショッピングガイド` リンクは表示され、遷移できることを確認する
+- 期待結果:
+  - フッターGuideは重複項目なしで表示される
+  - 配送・返品・支払い情報はショッピングガイド導線へ一本化される
+  - EN: Footer Guide no longer shows duplicate delivery/returns/payment entries, while `Shopping Guide` remains active as the single route.
+## 2026-03-28 追加テスト / Added Test (Governance: Issue List Integrity)
+- 対象:
+  - `docs/10_PROJECT/ISSUE_LIST.md`
+- 手順:
+  1. `Issue 2026-03-27-26` に `Symptom/Root cause/Action/Status` が揃っていることを確認する
+  2. `Issue 2026-03-28-30` の本文に 27-26 由来の英語 `Action/Status` 行が混入していないことを確認する
+- 期待結果:
+  - Issue境界が正しく保たれ、状態判定（確認待ち/解消済み）が誤読されない
+  - EN: Issue boundaries are clean, and pending vs resolved status can be read without ambiguity.
+

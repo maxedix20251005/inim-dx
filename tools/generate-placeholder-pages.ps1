@@ -19,7 +19,7 @@ $pages = @(
     @{ File = 'subpages/item-refill-tools.html'; Key = 'itemRefillTools'; Title = 'Refill Tools | inim-dx' },
     @{ File = 'subpages/item-gift-set.html'; Key = 'itemGiftSet'; Title = 'Gift Set | inim-dx' },
     @{ File = 'subpages/scent-search.html'; Key = 'scentSearch'; Title = 'Search by Scent | inim-dx' },
-    @{ File = 'subpages/search-store-info.html'; Key = 'searchStoreInfo'; Title = 'Store Info | inim-dx' },
+    @{ File = 'subpages/search-shop-info.html'; Key = 'searchStoreInfo'; Title = 'Store Info | inim-dx' },
     @{ File = 'subpages/search-projects.html'; Key = 'searchProjects'; Title = 'Projects | inim-dx' },
     @{ File = 'subpages/search-events.html'; Key = 'searchEvents'; Title = 'Events | inim-dx' },
     @{ File = 'subpages/article.html'; Key = 'article'; Title = 'Article | inim-dx' },
@@ -74,3 +74,4 @@ foreach ($page in $pages) {
 
     Set-Content -Path $page.File -Value $html -Encoding UTF8
 }
+

@@ -10,7 +10,39 @@
 </head>
 
 <body data-root=".." data-page-key="account">
-    <main id="page-main"></main>
+    <main id="page-main">
+        <section class="section content-hub-page">
+            <div class="section-heading">
+                <p class="section-kicker">Account</p>
+                <h2>マイアカウント</h2>
+                <p class="content-hub-lead">ログイン、会員登録、プロフィール編集への入口を1画面に集約しています。</p>
+            </div>
+
+            <div class="content-hub-grid content-hub-grid--account">
+                <article class="content-hub-card">
+                    <img src="../images/others/others_ (11).png" alt="ログイン案内">
+                    <p class="content-hub-card__meta">Login</p>
+                    <h3>ログイン</h3>
+                    <p>予約履歴やアカウント設定を確認する場合は、ログインしてから操作してください。</p>
+                    <a class="button button--secondary" href="#login" data-account-modal="login">ログインする</a>
+                </article>
+                <article class="content-hub-card">
+                    <img src="../images/others/others_ (12).png" alt="会員登録案内">
+                    <p class="content-hub-card__meta">Register</p>
+                    <h3>新規会員登録</h3>
+                    <p>初めて利用する方は会員登録から開始できます。登録後に予約・お気に入り管理が可能です。</p>
+                    <a class="button button--secondary" href="#register" data-account-modal="register">会員登録する</a>
+                </article>
+                <article class="content-hub-card">
+                    <img src="../images/others/others_ (14).png" alt="プロフィール設定案内">
+                    <p class="content-hub-card__meta">Profile</p>
+                    <h3>プロフィール設定</h3>
+                    <p>香りの好みや連絡先を登録しておくと、予約時の入力を短縮できます。</p>
+                    <a class="button button--ghost" href="#account" data-account-modal="account">設定を開く</a>
+                </article>
+            </div>
+        </section>
+    </main>
     <script src="../js/site-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/site-shell.js"></script>

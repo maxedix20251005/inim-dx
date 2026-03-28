@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 
 <head>
@@ -10,10 +10,148 @@
 </head>
 
 <body data-root=".." data-page-key="searchEvents">
-    <main id="page-main"></main>
+    <main id="page-main">
+        <section class="section events-search-page">
+            <div class="section-heading">
+                <p class="section-kicker">Events</p>
+                <h2>イベント情報 <small>Event Schedule</small></h2>
+            </div>
+            <p class="events-search-lead">ワークショップ連動イベントや季節企画を、開催ステータスと対象店舗で確認できます。公開中イベントはそのまま予約導線へ進めます。</p>
+
+            <section class="events-search-panel" aria-label="イベント検索">
+                <div class="events-search-panel__controls">
+                    <label class="events-search-panel__field" for="events-search-input">
+                        <span>キーワード <small>Keyword</small></span>
+                        <input id="events-search-input" type="search" placeholder="例: 春, 浅草, ペア, 夜, ギフト" autocomplete="off">
+                    </label>
+                    <div class="events-search-panel__chips" role="group" aria-label="開催ステータス">
+                        <button type="button" class="is-active" data-filter="all">すべて</button>
+                        <button type="button" data-filter="open">受付中</button>
+                        <button type="button" data-filter="coming">準備中</button>
+                    </div>
+                </div>
+                <p class="events-search-panel__meta" id="events-search-meta">0件 / 0件</p>
+            </section>
+
+            <div class="events-search-results" id="events-search-results" aria-live="polite"></div>
+            <p class="events-search-empty" id="events-search-empty" hidden>一致するイベントが見つかりません。キーワードを短くするか、ステータスを「すべて」に戻してください。</p>
+        </section>
+    </main>
     <script src="../js/site-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/site-shell.js"></script>
+    <script>
+        (() => {
+            const input = document.getElementById("events-search-input");
+            const meta = document.getElementById("events-search-meta");
+            const results = document.getElementById("events-search-results");
+            const empty = document.getElementById("events-search-empty");
+            const chips = Array.from(document.querySelectorAll(".events-search-panel__chips button"));
+
+            const events = [
+                {
+                    status: "open",
+                    titleJa: "春のノート体験会",
+                    titleEn: "Spring Notes Session",
+                    period: "2026/04/05 - 2026/05/12",
+                    stores: "浅草店 / 柴又店",
+                    summary: "春らしい軽やかなノートを比較し、初回参加でも選びやすい体験会です。",
+                    href: "./workshop-booking.html",
+                    cta: "予約枠を見る",
+                    tags: ["春", "浅草", "柴又", "初回", "ノート"]
+                },
+                {
+                    status: "open",
+                    titleJa: "ペア調香ナイト",
+                    titleEn: "Pair Blending Night",
+                    period: "毎週金曜 18:30 - 20:00",
+                    stores: "ソラマチ店",
+                    summary: "ペア参加向けに、会話しながら香りを組み立てる夜開催プログラムです。",
+                    href: "./workshop-booking.html",
+                    cta: "予約枠を見る",
+                    tags: ["ペア", "夜", "ソラマチ", "記念日"]
+                },
+                {
+                    status: "open",
+                    titleJa: "ギフト相談ウィーク",
+                    titleEn: "Gift Week",
+                    period: "2026/05/20 - 2026/05/31",
+                    stores: "3店舗共通",
+                    summary: "贈る相手の印象から香りを提案する、ギフト目的の相談強化週間です。",
+                    href: "./search-shop-info.html",
+                    cta: "店舗情報を見る",
+                    tags: ["ギフト", "相談", "3店舗", "イベント"]
+                },
+                {
+                    status: "coming",
+                    titleJa: "夏のミスト先行体験",
+                    titleEn: "Summer Mist Preview",
+                    period: "公開準備中",
+                    stores: "浅草店",
+                    summary: "季節限定ミストの香材比較イベントを準備しています。",
+                    href: "./sale.html",
+                    cta: "準備中",
+                    tags: ["夏", "浅草", "限定", "ミスト"]
+                },
+                {
+                    status: "coming",
+                    titleJa: "親子ワークショップデー",
+                    titleEn: "Family Workshop Day",
+                    period: "公開準備中",
+                    stores: "柴又店",
+                    summary: "親子向けの短時間体験イベントを準備しています。",
+                    href: "./workshop.html",
+                    cta: "準備中",
+                    tags: ["親子", "柴又", "短時間", "体験"]
+                }
+            ];
+
+            let activeFilter = "all";
+            const total = events.length;
+            const normalize = (value) => String(value || "").trim().toLowerCase();
+
+            const render = () => {
+                const q = normalize(input?.value || "");
+                const filtered = events.filter((item) => {
+                    const filterMatch = activeFilter === "all" || item.status === activeFilter;
+                    if (!filterMatch) return false;
+                    if (!q) return true;
+                    const haystack = normalize(`${item.titleJa} ${item.titleEn} ${item.period} ${item.stores} ${item.summary} ${(item.tags || []).join(" ")}`);
+                    return haystack.includes(q);
+                });
+
+                if (meta) meta.textContent = `${filtered.length}件 / ${total}件`;
+                if (empty) empty.hidden = filtered.length !== 0;
+                if (!results) return;
+
+                results.innerHTML = filtered.map((item) => `
+                    <article class="events-search-card">
+                        <div class="events-search-card__head">
+                            <p class="events-search-card__status ${item.status === "open" ? "is-open" : "is-coming"}">${item.status === "open" ? "受付中" : "準備中"}</p>
+                            <p class="events-search-card__stores">${item.stores}</p>
+                        </div>
+                        <h3>${item.titleJa} <small>${item.titleEn}</small></h3>
+                        <p class="events-search-card__period">${item.period}</p>
+                        <p>${item.summary}</p>
+                        ${item.status === "open"
+                        ? `<a class="button button--secondary" href="${item.href}">${item.cta}</a>`
+                        : `<span class="events-search-card__soon" aria-label="準備中">${item.cta}</span>`}
+                    </article>
+                `).join("");
+            };
+
+            chips.forEach((chip) => {
+                chip.addEventListener("click", () => {
+                    activeFilter = chip.dataset.filter || "all";
+                    chips.forEach((x) => x.classList.toggle("is-active", x === chip));
+                    render();
+                });
+            });
+
+            input?.addEventListener("input", render);
+            render();
+        })();
+    </script>
 </body>
 
 </html>

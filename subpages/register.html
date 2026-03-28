@@ -10,7 +10,34 @@
 </head>
 
 <body data-root=".." data-page-key="register">
-    <main id="page-main"></main>
+    <main id="page-main">
+        <section class="section auth-page">
+            <div class="section-heading">
+                <p class="section-kicker">Register</p>
+                <h2>新規会員登録</h2>
+                <p class="content-hub-lead">会員登録すると、予約履歴確認・設定保存・メルマガ管理が利用できます。</p>
+            </div>
+            <div class="auth-panel">
+                <label class="auth-field">
+                    <span>メールアドレス</span>
+                    <input type="email" placeholder="you@example.com" disabled>
+                </label>
+                <label class="auth-field">
+                    <span>パスワード</span>
+                    <input type="password" placeholder="8文字以上" disabled>
+                </label>
+                <label class="auth-field">
+                    <span>パスワード確認</span>
+                    <input type="password" placeholder="再入力" disabled>
+                </label>
+                <p class="auth-note">登録処理は既存認証モーダルに統合されています。下のボタンから登録モーダルを開いてください。</p>
+                <div class="content-hub-actions">
+                    <a class="button button--primary" href="#register" data-account-modal="register">登録モーダルを開く</a>
+                    <a class="button button--secondary" href="./login.html">ログインへ</a>
+                </div>
+            </div>
+        </section>
+    </main>
     <script src="../js/site-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/site-shell.js"></script>

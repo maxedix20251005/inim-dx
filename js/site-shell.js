@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
     const body = document.body;
     const main = document.getElementById('page-main');
     if (!main) {
@@ -11,29 +11,29 @@
 
     const pages = {
         home: { path: 'index.html', label: 'Home', title: 'inim-dx top page', latest: 'デジタル調香体験からワークショップ予約までをつなぐ新しいトップページ構成を公開しました。' },
-        about: { path: 'subpages/about.html', label: 'About', title: 'About inim-dx', latest: 'ブランド概要ページは現在作成準備中です。' },
-        brand: { path: 'subpages/brand.html', label: 'ブランド', title: 'Brand', latest: 'ブランドカテゴリページは現在作成準備中です。' },
-        brandGroundbreakers: { path: 'subpages/brand-groundbreakers.html', label: 'GROUNDBREAKERS', title: 'Brand / GROUNDBREAKERS', latest: 'ブランド詳細ページは現在作成準備中です。' },
-        brandNezs: { path: 'subpages/brand-nezs.html', label: "NEZ's", title: "Brand / NEZ's", latest: 'ブランド詳細ページは現在作成準備中です。' },
-        brandAromaCrops: { path: 'subpages/brand-aroma-crops.html', label: 'AROMA CROPS', title: 'Brand / AROMA CROPS', latest: 'ブランド詳細ページは現在作成準備中です。' },
-        brandKosaido: { path: 'subpages/brand-kosaido.html', label: '香彩堂', title: 'Brand / 香彩堂', latest: 'ブランド詳細ページは現在作成準備中です。' },
-        brandWatoyo: { path: 'subpages/brand-watoyo.html', label: 'WATOYO', title: 'Brand / WATOYO', latest: 'ブランド詳細ページは現在作成準備中です。' },
-        brandCocktailSoap: { path: 'subpages/brand-cocktail-soap.html', label: 'COCKTAIL SOAP', title: 'Brand / COCKTAIL SOAP', latest: 'ブランド詳細ページは現在作成準備中です。' },
-        brandEnjoyth: { path: 'subpages/brand-enjoyth.html', label: 'ENJOYNTH', title: 'Brand / ENJOYNTH', latest: 'ブランド詳細ページは現在作成準備中です。' },
-        brandAwaji: { path: 'subpages/brand-awaji.html', label: 'AWAJI', title: 'Brand / AWAJI', latest: 'ブランド詳細ページは現在作成準備中です。' },
-        brandOldAroma: { path: 'subpages/brand-old-aroma.html', label: '旧アロマシリーズ', title: 'Brand / 旧アロマシリーズ', latest: 'ブランド詳細ページは現在作成準備中です。' },
-        items: { path: 'subpages/items.html', label: 'アイテム', title: 'Items', latest: 'アイテムカテゴリページは現在作成準備中です。' },
-        itemHomeFragrance: { path: 'subpages/item-home-fragrance.html', label: 'ホームフレグランス', title: 'Item / Home Fragrance', latest: 'アイテム詳細ページは現在作成準備中です。' },
-        itemBodyCare: { path: 'subpages/item-body-care.html', label: 'ボディケア', title: 'Item / Body Care', latest: 'アイテム詳細ページは現在作成準備中です。' },
-        itemDiy: { path: 'subpages/item-diy.html', label: 'DIY', title: 'Item / DIY', latest: 'アイテム詳細ページは現在作成準備中です。' },
-        itemSale: { path: 'subpages/item-sale.html', label: 'SALE', title: 'Item / Sale', latest: 'アイテム詳細ページは現在作成準備中です。' },
-        itemEcology: { path: 'subpages/item-ecology.html', label: 'エコロジー', title: 'Item / Ecology', latest: 'アイテム詳細ページは現在作成準備中です。' },
-        itemRefillTools: { path: 'subpages/item-refill-tools.html', label: '詰め替えツール', title: 'Item / Refill Tools', latest: 'アイテム詳細ページは現在作成準備中です。' },
-        itemGiftSet: { path: 'subpages/item-gift-set.html', label: 'ギフトセット', title: 'Item / Gift Set', latest: 'アイテム詳細ページは現在作成準備中です。' },
-        scentSearch: { path: 'subpages/scent-search.html', label: '香りから探す', title: 'Search by Scent', latest: '香りから探すページは現在作成準備中です。' },
-        searchStoreInfo: { path: 'subpages/search-store-info.html', label: '実店舗情報', title: 'Search / Store Info', latest: '関連ページは現在作成準備中です。' },
-        searchProjects: { path: 'subpages/search-projects.html', label: 'プロジェクト・読み物', title: 'Search / Projects', latest: '関連ページは現在作成準備中です。' },
-        searchEvents: { path: 'subpages/search-events.html', label: 'イベント情報', title: 'Search / Events', latest: '関連ページは現在作成準備中です。' },
+        about: { path: 'subpages/about.html', label: 'About', title: 'About inim-dx', latest: 'inim-dx の考え方と体験設計方針をまとめた About ページを公開しました。' },
+        brand: { path: 'subpages/brand.html', label: 'ブランド', title: 'Brand', latest: 'ブランド方針と公開ブランド導線を整理したブランドハブページを公開しました。' },
+        brandGroundbreakers: { path: 'subpages/brand-groundbreakers.html', label: 'GROUNDBREAKERS', title: 'Brand / GROUNDBREAKERS', latest: 'ブランド詳細ページ（GROUNDBREAKERS）を公開しました。' },
+        brandNezs: { path: 'subpages/brand-nezs.html', label: "NEZ's", title: "Brand / NEZ's", latest: 'ブランド詳細ページ（NEZ\'s）を公開しました。' },
+        brandAromaCrops: { path: 'subpages/brand-aroma-crops.html', label: 'AROMA CROPS', title: 'Brand / AROMA CROPS', latest: 'ブランド詳細ページ（AROMA CROPS）を公開しました。' },
+        brandKosaido: { path: 'subpages/brand-kosaido.html', label: '香彩堂', title: 'Brand / 香彩堂', latest: 'ブランド詳細ページ（香彩堂）を公開しました。' },
+        brandWatoyo: { path: 'subpages/brand-watoyo.html', label: 'WATOYO', title: 'Brand / WATOYO', latest: 'WATOYO ブランドページを公開中です。' },
+        brandCocktailSoap: { path: 'subpages/brand-cocktail-soap.html', label: 'COCKTAIL SOAP', title: 'Brand / COCKTAIL SOAP', latest: 'ブランド詳細ページ（COCKTAIL SOAP）を公開しました。' },
+        brandEnjoyth: { path: 'subpages/brand-enjoyth.html', label: 'ENJOYNTH', title: 'Brand / ENJOYNTH', latest: 'ブランド詳細ページ（ENJOYNTH）を公開しました。' },
+        brandAwaji: { path: 'subpages/brand-awaji.html', label: 'AWAJI', title: 'Brand / AWAJI', latest: 'ブランド詳細ページ（AWAJI）を公開しました。' },
+        brandOldAroma: { path: 'subpages/brand-old-aroma.html', label: '旧アロマシリーズ', title: 'Brand / 旧アロマシリーズ', latest: 'ブランド詳細ページ（旧アロマシリーズ）を公開しました。' },
+        items: { path: 'subpages/items.html', label: 'アイテム', title: 'Items', latest: 'アロマ/ハンドクリームの公開導線を中心に整理したアイテムハブページを公開しました。' },
+        itemHomeFragrance: { path: 'subpages/item-home-fragrance.html', label: 'アロマ', title: 'Item / Aroma', latest: 'アロマグループページを公開中です。' },
+        itemBodyCare: { path: 'subpages/item-body-care.html', label: 'ハンドクリーム', title: 'Item / Hand Cream', latest: 'ハンドクリームグループページを公開中です。' },
+        itemDiy: { path: 'subpages/item-diy.html', label: 'DIY', title: 'Item / DIY', latest: 'アイテム詳細ページ（DIY）を公開しました。' },
+        itemSale: { path: 'subpages/item-sale.html', label: 'SALE', title: 'Item / Sale', latest: 'アイテム詳細ページ（SALE）を公開しました。' },
+        itemEcology: { path: 'subpages/item-ecology.html', label: 'エコロジー', title: 'Item / Ecology', latest: 'アイテム詳細ページ（エコロジー）を公開しました。' },
+        itemRefillTools: { path: 'subpages/item-refill-tools.html', label: '詰め替えツール', title: 'Item / Refill Tools', latest: 'アイテム詳細ページ（詰め替えツール）を公開しました。' },
+        itemGiftSet: { path: 'subpages/item-gift-set.html', label: 'ギフトセット', title: 'Item / Gift Set', latest: 'アイテム詳細ページ（ギフトセット）を公開しました。' },
+        scentSearch: { path: 'subpages/scent-search.html', label: '香りから探す', title: 'Search by Scent', latest: '香りキーワードとカテゴリから関連ページを探せる検索ハブを公開しました。' },
+        searchStoreInfo: { path: 'subpages/search-shop-info.html', label: '実店舗情報', title: 'Search / Shop Info', latest: '浅草・柴又・ソラマチの店舗情報を比較し、地図確認から予約導線へ進めるページを公開しました。' },
+        searchProjects: { path: 'subpages/search-projects.html', label: 'プロジェクト・読み物', title: 'Search / Projects', latest: '体験導線・デジタル調香・店舗背景の読み物を目的別に探せるストーリーハブを公開しました。' },
+        searchEvents: { path: 'subpages/search-events.html', label: 'イベント情報', title: 'Search / Events', latest: '開催ステータスと対象店舗で絞り込めるイベント一覧ページを公開しました。' },
         workshop: { path: 'subpages/workshop.html', label: '香りと遊ぶ', title: 'Workshop', latest: '香りのワークショップ予約ページを公開しました。デジタル体験から店頭予約まで一続きで案内します。' },
         workshopPlans: { path: 'subpages/workshop-plans.html', label: 'プラン比較', title: 'Workshop / Plans', latest: 'ワークショッププラン比較ページを公開しました。目的や所要時間を比較しながら選べます。' },
         workshopBooking: { path: 'subpages/workshop-booking.html', label: '予約枠選択', title: 'Workshop / Booking', latest: 'ワークショップ予約画面のドラフトを公開しました。空き状況を見ながら日付と時間帯を選べます。' },
@@ -41,20 +41,20 @@
         workshopBookingConfirm: { path: 'subpages/workshop-booking-confirm.html', label: '予約内容確認', title: 'Workshop / Booking Confirm', latest: 'ワークショップ予約確認画面のドラフトを公開しました。送信前に予約枠と申込情報をまとめて確認できます。' },
         workshopBookingThanks: { path: 'subpages/workshop-booking-thanks.html', label: '予約完了', title: 'Workshop / Booking Thanks', latest: 'ワークショップ予約完了画面を公開しました。次のアクションを選んで継続できます。' },
         smartScent: { path: 'subpages/smart-scent-design.html', label: 'Smart Scent Design', title: 'Smart Scent Design', latest: '色・粒子・サウンドを使って、自分の香りを視覚的に編集するデジタル調香ページです。' },
-        article: { path: 'subpages/article.html', label: '記事', title: 'Article', latest: '記事一覧ページは現在作成準備中です。' },
-        sale: { path: 'subpages/sale.html', label: 'セール', title: 'Sale', latest: 'セールページは現在作成準備中です。' },
+        article: { path: 'subpages/article.html', label: '記事', title: 'Article', latest: '体験設計・予約導線・店舗背景を短く読める記事ページを公開しました。' },
+        sale: { path: 'subpages/sale.html', label: 'セール', title: 'Sale', latest: 'WATOYO / アロマ / ハンドクリームの限定オファーを確認できるセールページを公開しました。' },
         sitemap: { path: 'subpages/sitemap.html', label: 'サイトマップ', title: 'Site Map', latest: 'サイト構造の見直しに向け、公開ページと管理ページの導線一覧を公開しました。' },
-        stores: { path: 'subpages/stores.html', label: '実店舗', title: 'Stores', latest: '実店舗ページは現在作成準備中です。' },
-        account: { path: 'subpages/account.html', label: 'マイアカウント', title: 'My Account', latest: 'アカウント関連ページは現在作成準備中です。' },
-        shoppingGuide: { path: 'subpages/shopping-guide.html', label: 'ショッピングガイド', title: 'Shopping Guide', latest: 'ショッピングガイドページは現在作成準備中です。' },
-        legal: { path: 'subpages/legal.html', label: '法的表示', title: 'Legal', latest: '法的表示ページは現在作成準備中です。' },
-        contact: { path: 'subpages/contact.html', label: 'お問い合わせ', title: 'Contact', latest: 'お問い合わせページは現在作成準備中です。' },
-        newsletter: { path: 'subpages/newsletter.html', label: 'メルマガ登録・解除', title: 'Newsletter', latest: 'メルマガ関連ページは現在作成準備中です。' },
-        register: { path: 'subpages/register.html', label: '会員登録', title: 'Register', latest: '会員登録ページは現在作成準備中です。' },
-        login: { path: 'subpages/login.html', label: 'ログイン', title: 'Login', latest: 'ログインページは現在作成準備中です。' },
-        cart: { path: 'subpages/cart.html', label: 'カート', title: 'Cart', latest: 'カートページは現在作成準備中です。' },
-        privacy: { path: 'subpages/privacy.html', label: 'プライバシーポリシー', title: 'Privacy Policy', latest: 'プライバシーポリシーページは現在作成準備中です。' },
-        rss: { path: 'subpages/rss.html', label: 'RSS / ATOM', title: 'RSS / ATOM', latest: 'RSS / ATOM ページは現在作成準備中です。' }
+        stores: { path: 'subpages/stores.html', label: '実店舗', title: 'Shops', latest: '浅草・柴又・ソラマチの比較導線を備えた実店舗案内ページを公開しました。' },
+        account: { path: 'subpages/account.html', label: 'マイアカウント', title: 'My Account', latest: 'ログイン・会員登録・プロフィール設定への入口をまとめたアカウントページを公開しました。' },
+        shoppingGuide: { path: 'subpages/shopping-guide.html', label: 'ショッピングガイド', title: 'Shopping Guide', latest: '配送・お支払い・返品ポリシーの要点をまとめたショッピングガイドを公開しました。' },
+        legal: { path: 'subpages/legal.html', label: '法的表示', title: 'Legal', latest: '特定商取引法に基づく法的表示ドラフトページを公開しました。' },
+        contact: { path: 'subpages/contact.html', label: 'お問い合わせ', title: 'Contact', latest: '予約・商品・法人相談の窓口を整理したお問い合わせページを公開しました。' },
+        newsletter: { path: 'subpages/newsletter.html', label: 'メルマガ登録・解除', title: 'Newsletter', latest: 'メルマガ登録・解除の設定案内ページを公開しました。' },
+        register: { path: 'subpages/register.html', label: '会員登録', title: 'Register', latest: '会員登録ページを公開しました。モーダル認証導線と連携して利用できます。' },
+        login: { path: 'subpages/login.html', label: 'ログイン', title: 'Login', latest: 'ログインページを公開しました。モーダル認証導線と連携して利用できます。' },
+        cart: { path: 'subpages/cart.html', label: 'カート', title: 'Cart', latest: 'カート機能の準備状況と商品導線を確認できる案内ページを公開しました。' },
+        privacy: { path: 'subpages/privacy.html', label: 'プライバシーポリシー', title: 'Privacy Policy', latest: '個人情報の取扱方針をまとめたプライバシーポリシードラフトを公開しました。' },
+        rss: { path: 'subpages/rss.html', label: 'RSS / ATOM', title: 'RSS / ATOM', latest: 'RSS / ATOM 配信方針と公開予定フィードの案内ページを公開しました。' }
         ,
         appLogin: { path: 'app/login.html', label: 'App Login', title: 'App / Login', latest: '管理アプリ画面は現在作成準備中です。' },
         appPasswordForgot: { path: 'app/password/forgot.html', label: 'Forgot Password', title: 'App / Password Forgot', latest: '管理アプリ画面は現在作成準備中です。' },
@@ -113,15 +113,15 @@
 
     const link = (key, hash = '') => `${root}/${pages[key].path}${hash}`;
     const breadcrumbChildMap = {
-        brand: ["about", "brand", "brandGroundbreakers", "brandNezs", "brandAromaCrops", "brandKosaido", "brandWatoyo", "brandCocktailSoap", "brandEnjoyth", "brandAwaji", "brandOldAroma"],
-        items: ["items", "itemHomeFragrance", "itemBodyCare", "itemDiy", "itemSale", "itemEcology", "itemRefillTools", "itemGiftSet"],
+        brand: ["brand", "brandGroundbreakers", "brandNezs", "brandAromaCrops", "brandKosaido", "brandWatoyo", "brandCocktailSoap", "brandEnjoyth", "brandAwaji", "brandOldAroma"],
+        items: ["items", "itemHomeFragrance", "itemBodyCare"],
         scentSearch: ["scentSearch", "searchStoreInfo", "searchProjects", "searchEvents"],
         workshop: ["workshop", "workshopPlans", "workshopBooking", "workshopBookingEntry", "workshopBookingConfirm", "workshopBookingThanks", "smartScent"],
         article: ["article"],
         sale: ["sale"],
         stores: ["stores"]
     };
-    const breadcrumbRootPages = ["shoppingGuide", "legal", "privacy", "contact", "newsletter", "cart", "sitemap", "rss"];
+    const breadcrumbRootPages = ["about", "shoppingGuide", "legal", "privacy", "contact", "newsletter", "cart", "sitemap", "rss"];
     const breadcrumbAccountPages = ["account", "login", "register"];
     const resolveBreadcrumbTrail = (key) => {
         if (!key || key === "home") return ["home"];
@@ -137,20 +137,20 @@
         return ["home", key];
     };
     const isCurrent = (key) => key === pageKey ? ' is-current' : '';
-    const defaultDisabledPublicPageKeys = [
-        'brand', 'items', 'scentSearch', 'article', 'sale', 'stores',
-        'shoppingGuide', 'legal', 'privacy', 'contact', 'newsletter', 'rss', 'cart'
-    ];
-    const knownDisabledPolicyKeys = new Set(defaultDisabledPublicPageKeys);
-    const configDisabledKeys = Array.isArray(siteConfig.disabledPublicPageKeys)
+    const defaultDisabledPublicPageKeys = [];
+    const knownDisabledPolicyKeys = new Set([
+        'article', 'sale', 'stores',
+        'shoppingGuide', 'legal', 'privacy', 'contact', 'newsletter', 'rss', 'cart',
+        'brand', 'items', 'scentSearch'
+    ]);
+    const hasDisabledConfig = Array.isArray(siteConfig.disabledPublicPageKeys);
+    const configDisabledKeys = hasDisabledConfig
         ? siteConfig.disabledPublicPageKeys
             .map((key) => String(key || '').trim())
             .filter((key, index, arr) => key && arr.indexOf(key) === index && knownDisabledPolicyKeys.has(key))
         : [];
-    const disabledPublicPageKeys = new Set(
-        configDisabledKeys.length ? configDisabledKeys : defaultDisabledPublicPageKeys
-    );
-    const globalNavToggleKeys = ['brand', 'items', 'scentSearch', 'article', 'sale', 'stores'];
+    const disabledPublicPageKeys = new Set(hasDisabledConfig ? configDisabledKeys : defaultDisabledPublicPageKeys);
+    const globalNavToggleKeys = ['brand', 'items'];
     const disabledGlobalNavKeys = new Set(
         globalNavToggleKeys.filter((key) => disabledPublicPageKeys.has(key))
     );
@@ -164,12 +164,12 @@
         {
             title: 'ブランド',
             key: 'brand',
-            items: ['brandGroundbreakers', 'brandNezs', 'brandAromaCrops', 'brandKosaido', 'brandWatoyo', 'brandCocktailSoap', 'brandEnjoyth', 'brandAwaji', 'brandOldAroma']
+            items: ['brandWatoyo']
         },
         {
             title: 'アイテム',
             key: 'items',
-            items: ['itemHomeFragrance', 'itemBodyCare', 'itemDiy', 'itemSale', 'itemEcology', 'itemRefillTools', 'itemGiftSet']
+            items: ['itemHomeFragrance', 'itemBodyCare']
         },
         {
             title: '香りから探す',
@@ -283,12 +283,27 @@
         </nav>`;
     };
     const globalNavItems = [
-        { key: 'home', label: 'Home', href: link('home'), current: pageKey === 'home', children: [] },
+        {
+            key: 'home',
+            label: 'Home',
+            href: link('home'),
+            current: pageKey === 'home',
+            children: [
+                { key: 'home-about', label: 'About', href: link('about'), current: pageKey === 'about' }
+            ]
+        },
+        {
+            key: 'workshop',
+            label: '香りと遊ぶ',
+            href: link('workshop'),
+            current: ['workshop', 'workshopPlans', 'workshopBooking', 'workshopBookingEntry', 'workshopBookingConfirm', 'workshopBookingThanks', 'smartScent'].includes(pageKey),
+            children: buildGlobalChildren('workshop')
+        },
         {
             key: 'brand',
             label: 'ブランド',
             href: link('brand'),
-            current: ['about', 'brand', 'brandGroundbreakers', 'brandNezs', 'brandAromaCrops', 'brandKosaido', 'brandWatoyo', 'brandCocktailSoap', 'brandEnjoyth', 'brandAwaji', 'brandOldAroma'].includes(pageKey),
+            current: ['brand', 'brandGroundbreakers', 'brandNezs', 'brandAromaCrops', 'brandKosaido', 'brandWatoyo', 'brandCocktailSoap', 'brandEnjoyth', 'brandAwaji', 'brandOldAroma'].includes(pageKey),
             children: buildGlobalChildren('brand')
         },
         {
@@ -299,39 +314,25 @@
             children: buildGlobalChildren('items')
         },
         {
-            key: 'scentSearch',
-            label: '香りから探す',
-            href: link('scentSearch'),
-            current: ['scentSearch', 'searchStoreInfo', 'searchProjects', 'searchEvents'].includes(pageKey),
-            children: buildGlobalChildren('scentSearch')
-        },
-        {
-            key: 'workshop',
-            label: '香りと遊ぶ',
-            href: link('workshop'),
-            current: ['workshop', 'workshopPlans', 'workshopBooking', 'workshopBookingEntry', 'workshopBookingConfirm', 'workshopBookingThanks', 'smartScent'].includes(pageKey),
-            children: buildGlobalChildren('workshop')
-        },
-        {
-            key: 'article',
+            key: 'searchProjects',
             label: '記事',
-            href: link('article'),
-            current: pageKey === 'article',
-            children: buildGlobalChildren('article')
+            href: link('searchProjects'),
+            current: ['searchProjects', 'article'].includes(pageKey),
+            children: []
         },
         {
-            key: 'sale',
-            label: 'セール',
-            href: link('sale'),
-            current: ['sale', 'itemSale'].includes(pageKey),
-            children: buildGlobalChildren('sale')
+            key: 'searchEvents',
+            label: 'イベント',
+            href: link('searchEvents'),
+            current: pageKey === 'searchEvents',
+            children: []
         },
         {
-            key: 'stores',
+            key: 'searchStoreInfo',
             label: '実店舗',
-            href: link('stores'),
-            current: pageKey === 'stores',
-            children: buildGlobalChildren('stores')
+            href: link('searchStoreInfo'),
+            current: ['searchStoreInfo', 'stores'].includes(pageKey),
+            children: []
         }
     ];
     const renderGlobalNav = () => `
@@ -339,9 +340,14 @@
             ${globalNavItems.map((item) => {
                 const isDisabled = disabledGlobalNavKeys.has(item.key);
                 const hasChildren = !isDisabled && item.children.length > 0;
+                const parentOnly = item.parentOnly === true;
+                const linkClass = `${item.current ? 'is-current' : ''} ${isDisabled ? 'is-disabled' : ''}`.trim();
+                const linkOrLabel = parentOnly
+                    ? `<span class="category-nav__label ${linkClass}">${item.label}</span>`
+                    : `<a class="${linkClass}" href="${isDisabled ? '#' : item.href}" ${isDisabled ? disabledLinkAttrs : ''}>${item.label}</a>`;
                 return `
                     <div class="category-nav__item ${hasChildren ? 'has-children' : ''} ${item.current ? 'is-current' : ''}">
-                        <a class="${item.current ? 'is-current' : ''} ${isDisabled ? 'is-disabled' : ''}" href="${isDisabled ? '#' : item.href}" ${isDisabled ? disabledLinkAttrs : ''}>${item.label}</a>
+                        ${linkOrLabel}
                         ${hasChildren ? `<button type="button" class="category-nav__toggle" aria-expanded="false" aria-label="${item.label} submenu"></button>
                         <div class="category-nav__dropdown" role="menu">
                             ${item.children.map((child) => `<a class="${child.current ? 'is-current' : ''}" href="${child.href}" role="menuitem">${child.label}</a>`).join('')}
@@ -354,7 +360,7 @@
 
     const openGroups = new Set();
     const currentTopLevel = {
-        about: 'brand',
+        about: null,
         brand: 'brand',
         brandGroundbreakers: 'brand',
         brandNezs: 'brand',
@@ -428,9 +434,8 @@
                 <img src="${root}/images/logo/logo-inim-dx.jpg" alt="inim-dx logo">
             </a>
             <div class="utility-header__tools">
-                <a class="is-disabled" href="#" ${disabledLinkAttrs}>検索</a>
-                ${accountModalLink('account', 'マイアカウント')}
-                <a class="is-disabled" href="#" ${disabledLinkAttrs}>カート</a>
+                ${accountModalLink('login', 'ログイン')}
+                ${accountModalLink('register', '会員登録')}
             </div>
         </div>
         ${renderGlobalNav()}
@@ -444,16 +449,13 @@
     const footerHtml = `
         <div class="site-footer__grid" id="footer-links">
             <div>
-                <p class="site-footer__title">Store Info</p>
+                <p class="site-footer__title">Shop Info</p>
                 <p>inim-dx flagship atelier<br>Fragrance workshop and consultation by reservation.</p>
             </div>
             <div>
                 <p class="site-footer__title">Guide</p>
                 ${renderPublicPageLink('sitemap', 'サイトマップ')}
                 ${renderPublicPageLink('shoppingGuide', 'ショッピングガイド')}
-                ${renderDisabledTextLink('配送・送料について')}
-                ${renderDisabledTextLink('返品について')}
-                ${renderDisabledTextLink('お支払い方法について')}
                 ${renderPublicPageLink('legal', '法的表示')}
             </div>
             <div>
@@ -470,7 +472,7 @@
                 ${renderPublicPageLink('contact', 'お問い合わせ')}
             </div>
         </div>
-        <p class="site-footer__copy">inim-dx pages aligned to the sitemap, wireframe, and design guide.</p>
+        <p class="site-footer__copy">&copy; 2026 inim-dx. All rights reserved.</p>
     `;
 
     const accountGatewayHtml = `
@@ -548,8 +550,8 @@
         const tools = header.querySelector('.utility-header__tools');
         if (!tools) { return; }
         tools.innerHTML = currentUser
-            ? `<a class="is-disabled" href="#" ${disabledLinkAttrs}>検索</a>${accountModalLink('account', 'マイアカウント')}${accountLogoutLink()}<a class="is-disabled" href="#" ${disabledLinkAttrs}>カート</a>`
-            : `<a class="is-disabled" href="#" ${disabledLinkAttrs}>検索</a>${accountModalLink('login', 'ログイン')}${accountModalLink('register', '会員登録')}<a class="is-disabled" href="#" ${disabledLinkAttrs}>カート</a>`;
+            ? `${accountModalLink('account', 'マイアカウント')}${accountLogoutLink()}`
+            : `${accountModalLink('login', 'ログイン')}${accountModalLink('register', '会員登録')}`;
     };
 
     const renderSidebarAccountLinks = () => {

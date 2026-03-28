@@ -66,7 +66,8 @@
 - `原因:` GitHub Pages 上で `admin-app.js` / `site-config.js` / `admin-app.css` のキャッシュが残っていた
 - `対策:` 管理画面 HTML の参照にバージョン文字列を付与した
 - `再発防止:` 管理画面に動作差分を入れた場合は、必要に応じて参照バージョンを更新する。あわせてサイドバー下部に `Admin build` を表示し、目視確認できるようにした
-- `状態:` 継続監視
+- `ユーザー確認結果:` 2026-03-28 時点で同症状の再発なし（OK to close）。
+- `状態:` 解消済み（ユーザー確認済み）
 
 ### Issue 2026-03-21-07
 - `発生日:` 2026-03-21
@@ -175,7 +176,8 @@
 - `原因:` 文字コード非固定の一括置換により、UTF-8テキストが誤ったエンコーディングで再保存された。
 - `対策:` 対象2ファイルを `HEAD` の正常UTF-8版へ復元し、必要差分（確認画面の必須値再検証、`internal_note` ラベル修正）のみ再適用した。
 - `再発防止:` 日本語を含むHTML編集では UTF-8 を明示し、保存前後で文字化けパターン（`繝/譛ｪ/蜈･蜉` 等）とタグ破損（`/h1>` 等）を必ず grep 確認する。
-- `状態:` 解消済み（再確認待ち）
+- `ユーザー確認結果:` 2026-03-28 時点で再確認完了（OK）。
+- `状態:` 解消済み（ユーザー確認済み）
 ## 3. 今後の運用ルール / Operational Rules
 - 新しい Issue が発生したら、このファイルに必ず追記する
 - 追記時は、同じ作業内で `docs/10_PROJECT/PROJECT_STATUS.md` と `docs/80_HANDOFF/AI_CONTEXT_PROMPT.md` も更新する
@@ -187,7 +189,8 @@
 - `原因:` 予約送信時の認証確認が `getUser()` 依存で、未ログイン時エラーメッセージがそのまま表示され、ログイン不足として扱いきれていなかった。
 - `対策:` 認証確認を `supabase.auth.getSession()` ベースへ変更し、セッション未検出時は「ログインが必要」の明示メッセージとログイン導線を表示するよう修正した。
 - `再発防止:` 予約送信前の認証チェックは `getSession()` を標準とし、`Auth session missing` 系メッセージは必ずログイン導線へ正規化する。
-- `状態:` Fix 適用済み（ユーザー再確認待ち）
+- `ユーザー確認結果:` 2026-03-28 時点で再確認完了（OK）。
+- `状態:` 解消済み（ユーザー確認済み）
 ### Issue 2026-03-26-19
 - `発生日:` 2026-03-26
 - `発生箇所:` [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html)
@@ -195,7 +198,8 @@
 - `原因:` `workshop_sessions` 取得件数が 0 の場合に、UI がモック（4/5固定）へフォールバックする実装だったため、空データ/権限不足/RLS の切り分けが困難だった。
 - `対策:` 0件時のモックフォールバックを廃止し、空状態メッセージを表示するよう修正。LEDタイトルに「date range / RLS / seed data確認」を明示。あわせてセッション取得範囲を当月初日〜12か月先へ拡大。
 - `再発防止:` 公開予約画面は「接続成功」と「データ取得成功」を分離表示し、空データをモックで隠さない。
-- `状態:` Fix 適用済み（ユーザー再確認待ち）
+- `ユーザー確認結果:` 2026-03-28 時点で再確認完了（OK）。
+- `状態:` 解消済み（ユーザー確認済み）
 
 
 ### Issue 2026-03-26-20
@@ -205,7 +209,8 @@
 - `原因:` 公開予約ページが参照する seed データ未投入、または read policy 未整備で対象行が見えていない。
 - `対策:` `sql/09_seed_workshop_booking_master_and_sessions.sql` を追加し idempotent seed を標準化。あわせて `sql/10_workshop_public_read_policies.sql` と `sql/11_verify_workshop_public_data.sql` を追加。
 - `再発防止:` 新環境では `05 -> 07 -> 09 -> 11` を初期投入手順に固定し、`Plans/Sessions` が 0 の場合は `10 -> 11` で policy を確認する。
-- `状態:` Fix 実装済み（SQL適用待ち）
+- `ユーザー確認結果:` 2026-03-28 時点で SQL 実行完了および表示確認完了（OK）。
+- `状態:` 解消済み（ユーザー確認済み）
 
 ### Issue 2026-03-26-21
 - `発生日:` 2026-03-26
@@ -257,9 +262,20 @@
 ### Issue 2026-03-27-26
 - Date: 2026-03-27
 - Area: `js/admin-enquiries-page.js`, `js/admin-workshop-page.js`
-- Context: Save persistence is deferred in `open_demo` anonymous mode.
+- Symptom: In anonymous `open_demo` mode, update actions looked available and could be misunderstood as writable operations.
+- Root cause: Anonymous sessions are intentionally read-only by backend policy, but UX feedback was not explicit enough.
 - Action: Added explicit read-only UX. `Update` and quick-status buttons are disabled for anonymous session, with fixed message: `Demo mode is read-only. Login required to save.`
 - Status: Fixed (user verified)
+
+### Issue 2026-03-28-30
+- `発生日:` 2026-03-28
+- `発生箇所:` [`subpages/about.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/about.html), [`css/style.css`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/css/style.css)
+- `症状:` Aboutページで左テキスト列と右画像カード列の上端が揃わず、視覚的に段差が残った。
+- `原因:` 見出しブロックを2カラムレイアウト外に置いていたため、テキスト開始位置とカード開始位置の認知基準がズレた。余白調整のみでは差分が解消しにくかった。
+- `対策:` Aboutページを構造修正し、見出し・リード・本文を左カラム内へ統合。右カードと同一グリッド行の先頭に配置して上端を揃えた。
+- `再発防止:` 2カラムレイアウトの上端整列要件は、margin調整より先にDOM構造（同一行開始）で満たす。
+- `ユーザー確認結果:` 2026-03-28 時点で確認完了（OK to close）。
+- `状態:` 解消済み（ユーザー確認済み）
 
 ### Issue 2026-03-27-27
 - Date: 2026-03-27

@@ -1,4 +1,4 @@
-﻿# WIP / 作業中サマリ
+# WIP / 作業中サマリ
 
 ## 1. Objective This Sprint / 現在スプリントの目的
 - JA: Workshop 予約導線と管理画面運用の整合を維持しつつ、次実装に即着手できる状態を保つ。
@@ -520,3 +520,205 @@
 - 2026-03-28: Closed `2.13` as accepted (slice-20 closure).
   - JA: IA整合タスクの完了判定を反映し、`FEATURE_BACKLOG` の `2.13` を `Accepted` へ更新。
   - EN: Marked `2.13` as `Accepted` in `FEATURE_BACKLOG` after final consistency pass.
+- 2026-03-28: Started `2.14 Create All Placeholder Pages` (slice-1: scent-search hub).
+  - JA: `subpages/scent-search.html` を検索ハブとして実装（キーワード検索 + カテゴリフィルタ + 関連ページリスト）。
+  - EN: Implemented `subpages/scent-search.html` as a search hub with keyword search, category filters, and relevant-page listing.
+  - JA: `scentSearch` を shared disabled policy から除外し、公開グローバルナビ/サイトマップ上で有効化。
+  - EN: Enabled `scentSearch` in shared policy by removing it from disabled keys across config/default/sitemap fallback.
+- 2026-03-28: Continued `2.14 Create All Placeholder Pages` (slice-2: search-shop-info).
+  - JA: `subpages/search-shop-info.html` を Japanese-first で整備し、浅草/柴又/ソラマチの店舗比較UIを実装。
+  - EN: Upgraded `subpages/search-shop-info.html` with a Japanese-first store comparison UI for Asakusa/Shibamata/Solamachi.
+  - JA: 各店舗で `営業時間/住所/アクセス/予約枠/おすすめ` を切替表示し、短いストーリー文を添えて判断しやすくした。
+  - EN: Added switchable concise ops fields (`Hours/Address/Access/Booking/Best For`) plus short story copy per store.
+  - JA: 地図埋め込みは店舗選択に連動し、`workshop-booking` へのCTAは `store/storeLabel` パラメータを引き継ぐ。
+  - EN: Embedded map and booking CTA now stay in sync with selected store while preserving `store/storeLabel` handoff.
+- 2026-03-28: Continued `2.14 Create All Placeholder Pages` (slice-3: search-projects).
+  - JA: `subpages/search-projects.html` を Japanese-first で実装し、読み物ハブ（検索 + カテゴリフィルタ + カード一覧）を追加。
+  - EN: Implemented `subpages/search-projects.html` as a Japanese-first story hub with keyword search, category filters, and card listing.
+  - JA: `公開中` と `準備中` を同一画面で判別できる状態にし、準備中カードは非遷移表示へ整理。
+  - EN: Added clear `available` vs `coming soon` states; coming-soon cards are displayed without active CTA links.
+  - JA: `workshop` / `smart-scent-design` / `search-shop-info` への回遊導線を整備し、`searchProjects.latest` を公開済み文言へ更新。
+  - EN: Added direct journey links to active pages and updated `searchProjects.latest` to published status copy.
+- 2026-03-28: Continued `2.14 Create All Placeholder Pages` (slice-4: search-events).
+  - JA: `subpages/search-events.html` を Japanese-first で実装し、イベント一覧（検索 + ステータス絞り込み + カード表示）を追加。
+  - EN: Implemented `subpages/search-events.html` as a Japanese-first event listing page with keyword search, status filter, and cards.
+  - JA: 各イベントで `受付中/準備中`、開催期間、対象店舗、概要を表示し、受付中のみ遷移可能に整理。
+  - EN: Added status (`open/coming`), period, stores, and summary per event; only open events have active CTAs.
+  - JA: `css/style.css` に `events-search-*` を追加し、`searchEvents.latest` を公開済み文言へ更新。
+  - EN: Added `events-search-*` styles and updated `searchEvents.latest` to published status copy.
+- 2026-03-28: Global navigation IA restructure applied.
+  - JA: トップナビ順序を `Home -> 香りと遊ぶ -> ブランド -> アイテム -> 記事 -> イベント -> 実店舗 -> Admin` へ変更。
+  - EN: Reordered top navigation to `Home -> Workshop -> Brand -> Items -> Articles -> Events -> Stores -> Admin`.
+  - JA: `記事` は `search-projects`、`イベント` は `search-events`、`実店舗` は `search-shop-info` へ遷移するよう再設定。
+  - EN: Retargeted links so `Articles` -> `search-projects`, `Events` -> `search-events`, `Stores` -> `search-shop-info`.
+- 2026-03-28: Brand activation policy switched to WATOYO-only.
+  - JA: `disabledPublicPageKeys` から `brand` を除外し、トップレベル `ブランド` を有効化。
+  - EN: Enabled top-level `Brand` by removing `brand` from `disabledPublicPageKeys`.
+  - JA: `ブランド` サブメニューは `WATOYO` のみ表示に変更。
+  - EN: Limited Brand submenu exposure to `WATOYO` only.
+  - JA: sitemap のブランド詳細一覧も `ブランド: WATOYO` のみに整理。
+  - EN: Reduced sitemap brand-detail listing to `Brand: WATOYO` only.
+- 2026-03-28: Items activation policy switched to 2 groups.
+  - JA: `disabledPublicPageKeys` から `items` を除外し、トップレベル `アイテム` を有効化。
+  - EN: Enabled top-level `Items` by removing `items` from `disabledPublicPageKeys`.
+  - JA: `アイテム` サブメニューは `アロマ` / `ハンドクリーム` の2件のみに変更。
+  - EN: Limited Items submenu to two entries: `Aroma` and `Hand Cream`.
+  - JA: sitemap のアイテム詳細一覧も `アイテム: アロマ` / `アイテム: ハンドクリーム` のみに整理。
+  - EN: Reduced sitemap item-detail listing to `Item: Aroma` and `Item: Hand Cream` only.
+- 2026-03-28: Draft pages created for WATOYO/Aroma/Hand Cream.
+  - JA: `brand-watoyo.html` に3画像（`WATOYO_WA/YO/WAYO`）を使ったブランド紹介ページを実装。
+  - EN: Implemented `brand-watoyo.html` with a 3-image brand showcase (`WATOYO_WA/YO/WAYO`).
+  - JA: `item-home-fragrance.html`（アロマ）と `item-body-care.html`（ハンドクリーム）を、各3商品画像で実装。
+  - EN: Implemented `item-home-fragrance.html` (Aroma) and `item-body-care.html` (Hand Cream) with 3 product images each.
+  - JA: `style.css` に共通 `catalog-*` スタイルを追加し、3ページのUIを統一。
+  - EN: Added shared `catalog-*` styles in `style.css` to keep all three pages visually consistent.
+- 2026-03-28: Product-page hero simplification applied.
+  - JA: `brand-watoyo` / `item-home-fragrance` / `item-body-care` のヒーローからCTAボタン2件を削除。
+  - EN: Removed the two hero CTA buttons from all three product pages.
+  - JA: ヒーロー右側の大画像を削除し、`catalog-hero--single` で1カラム表示へ変更。
+  - EN: Removed the right-side hero image and switched hero layout to single-column via `catalog-hero--single`.
+  - JA: 下段の3商品カードは変更せず維持。
+  - EN: Kept the bottom three product cards unchanged.
+- 2026-03-28: Nav parent-only + compact top spacing adjustment.
+  - JA: グローバルナビの `ブランド` / `アイテム` を親メニュー専用（非リンク）へ変更し、サブメニュー遷移のみへ統一。
+  - EN: Converted global-nav `Brand`/`Items` to parent-only non-link labels that expose submenu navigation only.
+  - JA: `brandWatoyo` / `itemHomeFragrance` / `itemBodyCare` / `searchProjects` / `searchEvents` / `searchStoreInfo` の `main` 上部余白を縮小。
+  - EN: Tightened `main` top spacing for Brand/Items/Article/Event/Shops-related pages to show content earlier.
+- 2026-03-28: Top-space correction + Store->Shop wording update.
+  - JA: 対象ページの `.section` 上部余白も縮小し、余白が残る問題を修正。
+  - EN: Also tightened `.section` top padding on target pages to resolve remaining visual gap.
+  - JA: 可視英語ラベルを `Store` から `Shop` へ更新（Search/Footer/Workshop label）。
+  - EN: Updated visible English labels from `Store` to `Shop` in search/footer/workshop surfaces.
+- 2026-03-28: Shop-info route rename applied.
+  - JA: `subpages/search-shop-info.html` を `subpages/search-shop-info.html` へリネームし、関連リンク参照を一括更新。
+  - EN: Renamed `subpages/search-shop-info.html` to `subpages/search-shop-info.html` and updated all related references.
+- 2026-03-28: Home utility/nav/product placement refinement.
+  - JA: 右上ユーティリティの `検索` / `カート` を削除し、アカウント導線のみ表示へ変更。
+  - EN: Removed `Search` and `Cart` from top-right utility links, leaving account-related actions only.
+  - JA: `Pick Up` を WATOYO 3商品、`New Arrivals` を アロマ3商品 + ハンドクリーム3商品に再構成。
+  - EN: Swapped content blocks to `Pick Up = 3 WATOYO` and `New Arrivals = 3 Aroma + 3 Hand Cream`.
+  - JA: グローバルナビの `Home` 配下に `About` サブメニューを追加し、`#about` へ直接遷移可能にした。
+  - EN: Added an `About` submenu under `Home` in global nav, linking directly to `index.html#about`.
+  - JA: `ABOUT` セクションに `images/others/about.png` を配置して情報量を補強。
+  - EN: Enriched the `ABOUT` section with `images/others/about.png` plus supporting copy.
+- 2026-03-28: Top-page card image height adjustment.
+  - JA: `Pick Up` / `New Arrivals` のカード画像を `aspect-ratio: 4 / 5` に変更し、縦方向の見え量を増加。
+  - EN: Increased top-page card image height by setting `Pick Up`/`New Arrivals` card images to `aspect-ratio: 4 / 5`.
+  - JA: 影響範囲は `pickup-grid` / `product-grid` のみで、共通カード比率は維持。
+  - EN: Scope is limited to `pickup-grid`/`product-grid`; shared card ratio remains unchanged globally.
+- 2026-03-28: Catalog page image height adjustment.
+  - JA: `WATOYO / アロマ / ハンドクリーム` ページの `.catalog-card img` を `240px` から `280px` へ変更。
+  - EN: Raised `.catalog-card img` height from `240px` to `280px` on WATOYO/Aroma/Hand Cream pages.
+  - JA: 商品画像の縦方向の情報量を増やし、見切れ感を軽減。
+  - EN: Improves vertical visual presence and reduces the “too short” impression on product images.
+- 2026-03-28: Catalog image sizing aligned to index ratio behavior.
+  - JA: 固定高さ指定をやめ、`.catalog-card img` を `aspect-ratio: 4 / 5` + `height: auto` へ修正。
+  - EN: Replaced fixed-height sizing with `aspect-ratio: 4 / 5` + `height: auto` for `.catalog-card img`.
+  - JA: `index.html` のカード画像と同じ比率ルールで統一。
+  - EN: Now matches the same ratio-based image behavior used on `index.html` cards.
+- 2026-03-28: Continued `2.14` (slice-5: article/sale/stores page implementation).
+  - JA: `subpages/article.html` を記事ハブとして実装（3カード + 関連導線）。
+  - EN: Implemented `subpages/article.html` as a compact article hub with 3 cards and related links.
+  - JA: `subpages/sale.html` を限定オファーページとして実装（WATOYO/アロマ/ハンドクリーム導線）。
+  - EN: Implemented `subpages/sale.html` as a limited-offer page connected to WATOYO/Aroma/Hand Cream.
+  - JA: `subpages/stores.html` を実店舗案内ページとして実装（浅草/柴又/ソラマチ比較 + 予約導線）。
+  - EN: Implemented `subpages/stores.html` as a shop-guide page for Asakusa/Shibamata/Solamachi with booking handoff.
+  - JA: `content-hub-*` 共通スタイルを追加し、3ページの見た目を統一。
+  - EN: Added shared `content-hub-*` styles for consistent UI across all three pages.
+  - JA: `site-shell` の `article` / `sale` / `stores` latest 文言を公開済みコピーへ更新。
+  - EN: Updated `site-shell` latest copy for `article`, `sale`, and `stores` to published status text.
+- 2026-03-28: Continued `2.14` (slice-6: shopping-guide/contact/account page implementation).
+  - JA: `subpages/shopping-guide.html` をガイド実ページ化（配送・支払い・返品の3ブロック）。
+  - EN: Implemented `subpages/shopping-guide.html` as a practical guide page (delivery/payment/return blocks).
+  - JA: `subpages/contact.html` を問い合わせ導線ページ化（予約・商品・法人の3窓口）。
+  - EN: Implemented `subpages/contact.html` with three inquiry paths (booking/products/business).
+  - JA: `subpages/account.html` をアカウント入口ページ化（ログイン/会員登録/設定モーダル導線）。
+  - EN: Implemented `subpages/account.html` as an account gateway page (login/register/account modal links).
+  - JA: `site-shell` の `shoppingGuide` / `contact` / `account` latest 文言を公開済みに更新。
+  - EN: Updated `shoppingGuide`/`contact`/`account` latest copy in `site-shell` to published status.
+- 2026-03-28: Continued `2.14` (slice-7: legal/privacy/newsletter/rss/cart implementation).
+  - JA: `legal` / `privacy` をポリシー参照用の実ページとして実装。
+  - EN: Implemented `legal` and `privacy` as policy reference draft pages.
+  - JA: `newsletter` / `rss` を配信案内ページとして実装。
+  - EN: Implemented `newsletter` and `rss` as communication/feed guidance pages.
+  - JA: `cart` を機能準備中の案内ページとして実装し、商品/予約導線を追加。
+  - EN: Implemented `cart` as a ready-for-future cart guide page with item/booking handoff links.
+  - JA: `policy-*` / `cart-*` スタイルを追加し、共通UIを整備。
+  - EN: Added shared `policy-*` and `cart-*` styles for consistent rendering.
+  - JA: `site-shell` の対象5ページ latest 文言を公開済みコピーへ更新。
+  - EN: Updated latest copy in `site-shell` for the five implemented pages.
+- 2026-03-28: Continued `2.14` (slice-8: dedicated about page + Home submenu reroute).
+  - JA: `subpages/about.html` を実ページ化し、方針説明 + 画像 + CTA を追加。
+  - EN: Implemented `subpages/about.html` as a dedicated page with policy narrative, image, and CTA set.
+  - JA: `Home > About` を `index.html#about` から `subpages/about.html` へ変更。
+  - EN: Changed `Home > About` navigation target from `index.html#about` to `subpages/about.html`.
+  - JA: `about` を `Brand` 子階層扱いから独立扱いへ変更（breadcrumb/current-state補正）。
+  - EN: Detached `about` from Brand hierarchy and corrected breadcrumb/current-state behavior.
+- 2026-03-28: Continued `2.14` (slice-9: top-page about removal + policy page upgrade).
+  - JA: `index.html` から `ABOUT` セクションを削除し、`About` 導線を専用ページへ統一。
+  - EN: Removed top-page `ABOUT` section and unified About navigation to the dedicated page.
+  - JA: `privacy.html` を章立ての構造化ページへ刷新（取得/利用/第三者提供/保管/開示）。
+  - EN: Refactored `privacy.html` into a structured policy page with clear sections.
+  - JA: `legal.html` を法的表示テーブル形式へ刷新し、項目参照性を向上。
+  - EN: Refactored `legal.html` into a table-style legal notice page for better readability.
+  - JA: `css/style.css` に `policy-*` 強化スタイルを追加し、モバイル表示も補正。
+  - EN: Added enhanced `policy-*` styles with responsive behavior for mobile readability.
+- 2026-03-28: Continued `2.14` (slice-10: about alignment + footer legal/privacy activation + parent hubs).
+  - JA: Aboutページで左右カラム上端を揃える補正を追加（`about-page`）。
+  - EN: Added About-page alignment adjustments so text and image-card columns start at the same top edge.
+  - JA: フッターの `privacy` / `legal` を disabled policy から除外し、遷移を有効化。
+  - EN: Activated footer `privacy` and `legal` links by removing both keys from disabled-link policy.
+  - JA: `brand.html` / `items.html` を professional hub として実装し、公開済み子ページへの導線を強化。
+  - EN: Implemented professional hub pages for `brand.html` and `items.html` with stronger routes to published child pages.
+- 2026-03-28: Continued `2.14` (slice-11: image swap + compact spacing normalization).
+  - JA: `brand.html` の Brand Policy 画像を `Lineup image_ (5).png`、Next Action 画像を `Workshop_ (10).png` へ変更。
+  - EN: Updated `brand.html` images to `Lineup image_ (5).png` (Brand Policy) and `Workshop_ (10).png` (Next Action).
+  - JA: `items.html` の Next Action 画像を `Workshop_ (10).png` へ変更。
+  - EN: Updated `items.html` Next Action image to `Workshop_ (10).png`.
+  - JA: recently filled pagesの `main` / `.section` 上部余白を `search-shop-info` 相当まで圧縮。
+  - EN: Normalized top spacing on recently implemented pages by applying the same compact level as `search-shop-info`.
+  - JA: Aboutページの上端揃えを追加補正し、視覚差を縮小。
+  - EN: Added stronger About top-edge alignment correction to reduce visible offset.
+- 2026-03-28: Continued `2.14` (slice-12: About issue resolution + link activation + login/register).
+  - JA: Aboutの上端ズレを `Issue 2026-03-28-30` として記録し、構造修正で対応。
+  - EN: Logged About top-edge mismatch as `Issue 2026-03-28-30` and fixed it with structural layout changes.
+  - JA: `disabledPublicPageKeys` を空配列化し、実装済み公開ページリンクを有効化。
+  - EN: Cleared `disabledPublicPageKeys` to activate links for implemented public pages.
+  - JA: `login.html` / `register.html` を実ページ化し、既存モーダル認証導線と接続。
+  - EN: Implemented `login.html` and `register.html` as standalone draft pages connected to existing modal auth flow.
+- 2026-03-28: Continued `2.14` (slice-13: nav/footer/contact visibility polish).
+  - JA: グローバルナビの `ブランド` / `アイテム` を親リンクとして有効化（サブメニューは維持）。
+  - EN: Activated top-level `Brand` / `Items` links in global nav while keeping submenu drilldown.
+  - JA: フッター下部コピーを `© 2026 inim-dx. All rights reserved.` に更新。
+  - EN: Replaced footer bottom copy with `© 2026 inim-dx. All rights reserved.`.
+  - JA: `content-hub/policy/auth` 系画面の `button--ghost` 可視性を改善（背景/境界/hover）。
+  - EN: Improved ghost-button visibility on content-hub/policy/auth surfaces (base + hover contrast).
+  - JA: `contact.html` の Products/Business 導線を再設計し、リンク先とボタン可読性を修正。
+  - EN: Restructured Contact page Products/Business paths with corrected destinations and readable button styling.
+  - JA: `items` の current 判定に詳細ページキーを追加し、ナビ強調の整合性を補正。
+  - EN: Added item-detail keys to `items` current-state logic for consistent nav highlighting.
+- 2026-03-28: Continued `2.14` (slice-14: contact/shopping-guide image swap).
+  - JA: `contact.html` の3カード画像を指定素材（Workshop_1 / Lineup image_2 / others_5）へ差し替え。
+  - EN: Swapped the three `contact.html` card images to requested assets (Workshop_1 / Lineup image_2 / others_5).
+  - JA: `shopping-guide.html` の3カード画像を指定素材（others_7 / others_10 / others_14）へ差し替え。
+  - EN: Swapped the three `shopping-guide.html` card images to requested assets (others_7 / others_10 / others_14).
+- 2026-03-28: Continued `2.14` (slice-15: contact copy/button adjustment).
+  - JA: Productsカードの本文を連絡先表記（Phone / Address / Email）へ差し替え、CTAボタンを撤去。
+  - EN: Replaced Products card body text with direct contact details (Phone / Address / Email) and removed its CTA.
+  - JA: Businessカードは本文を維持し、CTAを無効化して `準備中` 表示へ変更。
+  - EN: Kept Business card body text, disabled the CTA, and changed button label to `準備中`.
+- 2026-03-28: Continued `2.14` (slice-16: footer guide deduplication).
+  - JA: フッター `Guide` から `配送・送料について` / `返品について` / `お支払い方法について` を削除。
+  - EN: Removed `Delivery`, `Returns`, and `Payment` text entries from footer `Guide`.
+  - JA: 該当情報は `ショッピングガイド` へ導線集約。
+  - EN: Consolidated those topics under the `Shopping Guide` route.
+- 2026-03-28: Governance cleanup (issue-list normalization).
+  - JA: `ISSUE_LIST.md` の `Issue 2026-03-27-26` を補完し、`Issue 2026-03-28-30` への混入行を分離修正。
+  - EN: Normalized `ISSUE_LIST.md` by completing Issue `2026-03-27-26` and removing misplaced lines from Issue `2026-03-28-30`.
+- 2026-03-28: Issue closure sync (user-verified).
+  - JA: ユーザー確認結果に基づき `2026-03-25-17 / 26-18 / 26-19 / 26-20 / 28-30` を `解消済み（ユーザー確認済み）` へ更新。
+  - EN: Updated `2026-03-25-17 / 26-18 / 26-19 / 26-20 / 28-30` to `resolved (user verified)` based on user confirmations and SQL execution confirmation.
+- 2026-03-28: Final issue closure for today.
+  - JA: `Issue 2026-03-21-06` を「再発なし」のユーザー確認によりクローズ（`解消済み（ユーザー確認済み）`）。
+  - EN: Closed `Issue 2026-03-21-06` as resolved (user verified) after confirmation of no recurrence.
+

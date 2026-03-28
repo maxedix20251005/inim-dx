@@ -135,7 +135,7 @@
   - EN: Diff sitemap vs implementation, redefine hierarchy rules, align naming/labels
 
 ### 2.14 Create All Placeholder Pages / 未実装ページ一括作成
-- Status: `Proposed`
+- Status: `In Progress`
 - JA: 現在「準備中」の公開ページを、優先バックログ完了後に順次作成する。
 - EN: Create currently not-ready public pages one by one after prioritized backlog items are completed.
 - Scope candidates:

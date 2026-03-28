@@ -12,19 +12,5 @@ window.INIM_SITE_CONFIG = {
     },
     showBookingDiagnostics: false,
     comingSoonBadgeLabel: '準備中',
-    disabledPublicPageKeys: [
-        'brand',
-        'items',
-        'scentSearch',
-        'article',
-        'sale',
-        'stores',
-        'shoppingGuide',
-        'legal',
-        'privacy',
-        'contact',
-        'newsletter',
-        'rss',
-        'cart'
-    ]
+    disabledPublicPageKeys: []
 };

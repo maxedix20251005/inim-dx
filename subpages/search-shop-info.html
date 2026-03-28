@@ -1,0 +1,168 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Info | inim-dx</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body data-root=".." data-page-key="searchStoreInfo">
+    <main id="page-main">
+        <section class="section store-search-page">
+            <div class="section-heading">
+                <p class="section-kicker">Shop Info</p>
+                <h2>実店舗情報 <small>Shop Guide</small></h2>
+            </div>
+            <p class="store-search-lead">運営情報を短く確認しながら、各店舗のストーリーを比較できます。店舗を選んだらそのまま予約枠確認へ進めます。</p>
+
+            <section class="store-search-layout">
+                <article class="store-search-panel">
+                    <div class="store-search-panel__head">
+                        <p class="section-kicker">Select Shop</p>
+                        <h3>店舗を選ぶ</h3>
+                    </div>
+                    <div class="store-search-chips" role="group" aria-label="店舗選択">
+                        <button type="button" class="is-active" data-store-key="asakusa">浅草店</button>
+                        <button type="button" data-store-key="shibamata">柴又店</button>
+                        <button type="button" data-store-key="solamachi">ソラマチ店</button>
+                    </div>
+
+                    <div class="store-search-card">
+                        <p class="store-search-card__eyebrow" id="store-eyebrow">Asakusa</p>
+                        <h3 id="store-title">浅草店</h3>
+                        <p id="store-story">観光の動線上で立ち寄りやすく、旅の気分を香りに落とし込みやすい店舗です。</p>
+                        <dl class="store-search-meta">
+                            <div>
+                                <dt>営業時間 <small>Hours</small></dt>
+                                <dd id="store-hours">11:00 - 19:00</dd>
+                            </div>
+                            <div>
+                                <dt>住所 <small>Address</small></dt>
+                                <dd id="store-address">東京都台東区浅草1-1-1</dd>
+                            </div>
+                            <div>
+                                <dt>アクセス <small>Access</small></dt>
+                                <dd id="store-access">東武浅草駅 徒歩2分</dd>
+                            </div>
+                            <div>
+                                <dt>予約枠 <small>Booking</small></dt>
+                                <dd id="store-slot">Fri - Sun</dd>
+                            </div>
+                            <div>
+                                <dt>おすすめ <small>Best For</small></dt>
+                                <dd id="store-best">観光ついでの体験 / 初回参加</dd>
+                            </div>
+                        </dl>
+                        <div class="store-search-actions">
+                            <a class="button button--primary" id="store-booking-cta" href="./workshop-booking.html?store=asakusa&storeLabel=浅草店">この店舗で予約枠を確認する</a>
+                            <a class="button button--secondary" href="./workshop.html#location">ワークショップ詳細へ</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="store-search-map">
+                    <p class="section-kicker">Map</p>
+                    <h3 id="store-map-title">浅草店の地図</h3>
+                    <iframe id="store-map-frame" title="浅草店の地図" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        src="https://www.google.com/maps?q=%E6%9D%B1%E6%AD%A6%E6%B5%85%E8%8D%89%E9%A7%85&output=embed"></iframe>
+                </article>
+            </section>
+        </section>
+    </main>
+    <script src="../js/site-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/site-shell.js"></script>
+    <script>
+        (() => {
+            const stores = {
+                asakusa: {
+                    keyEn: "Asakusa",
+                    label: "浅草店",
+                    story: "観光の動線上で立ち寄りやすく、旅の気分を香りに落とし込みやすい店舗です。",
+                    hours: "11:00 - 19:00",
+                    address: "東京都台東区浅草1-1-1",
+                    access: "東武浅草駅 徒歩2分",
+                    slot: "Fri - Sun",
+                    best: "観光ついでの体験 / 初回参加",
+                    mapTitle: "浅草店の地図",
+                    mapQuery: "東武浅草駅"
+                },
+                shibamata: {
+                    keyEn: "Shibamata",
+                    label: "柴又店",
+                    story: "落ち着いた街並みの中で、会話をしながらじっくり香りを整えたい方に向いています。",
+                    hours: "11:00 - 18:30",
+                    address: "東京都葛飾区柴又7-7-7",
+                    access: "京成柴又駅 徒歩4分",
+                    slot: "Sat - Mon",
+                    best: "ペア体験 / ギフト相談",
+                    mapTitle: "柴又店の地図",
+                    mapQuery: "葛飾区柴又 帝釈天"
+                },
+                solamachi: {
+                    keyEn: "Solamachi",
+                    label: "ソラマチ店",
+                    story: "アクセスしやすく、買い物や予定の前後に組み込みやすい都市型店舗です。",
+                    hours: "10:30 - 20:00",
+                    address: "東京都墨田区押上1-1-2",
+                    access: "とうきょうスカイツリー駅 直結",
+                    slot: "Daily",
+                    best: "短時間体験 / 仕事帰り",
+                    mapTitle: "ソラマチ店の地図",
+                    mapQuery: "東京ソラマチ"
+                }
+            };
+
+            const chips = Array.from(document.querySelectorAll(".store-search-chips button"));
+            const eyebrow = document.getElementById("store-eyebrow");
+            const title = document.getElementById("store-title");
+            const story = document.getElementById("store-story");
+            const hours = document.getElementById("store-hours");
+            const address = document.getElementById("store-address");
+            const access = document.getElementById("store-access");
+            const slot = document.getElementById("store-slot");
+            const best = document.getElementById("store-best");
+            const mapTitle = document.getElementById("store-map-title");
+            const mapFrame = document.getElementById("store-map-frame");
+            const bookingCta = document.getElementById("store-booking-cta");
+
+            const applyStore = (key) => {
+                const item = stores[key] || stores.asakusa;
+                chips.forEach((chip) => chip.classList.toggle("is-active", chip.dataset.storeKey === key));
+                if (eyebrow) eyebrow.textContent = item.keyEn;
+                if (title) title.textContent = item.label;
+                if (story) story.textContent = item.story;
+                if (hours) hours.textContent = item.hours;
+                if (address) address.textContent = item.address;
+                if (access) access.textContent = item.access;
+                if (slot) slot.textContent = item.slot;
+                if (best) best.textContent = item.best;
+                if (mapTitle) mapTitle.textContent = item.mapTitle;
+                if (mapFrame) {
+                    mapFrame.title = item.mapTitle;
+                    mapFrame.src = `https://www.google.com/maps?q=${encodeURIComponent(item.mapQuery)}&output=embed`;
+                }
+                if (bookingCta) {
+                    const target = new URL("./workshop-booking.html", window.location.href);
+                    target.searchParams.set("store", key);
+                    target.searchParams.set("storeLabel", item.label);
+                    bookingCta.href = target.toString();
+                }
+            };
+
+            chips.forEach((chip) => {
+                chip.addEventListener("click", () => applyStore(chip.dataset.storeKey || "asakusa"));
+            });
+
+            applyStore("asakusa");
+        })();
+    </script>
+</body>
+
+</html>
+
+

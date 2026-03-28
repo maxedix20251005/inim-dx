@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
     const body = document.body;
     const root = body.dataset.root || '.';
     const pageKey = body.dataset.pageKey || 'home';
@@ -25,7 +25,7 @@
         itemRefillTools: { path: 'subpages/item-refill-tools.html', label: '詰め替えツール', title: 'Item / Refill Tools', latest: 'アイテム詳細ページは現在作成準備中です。' },
         itemGiftSet: { path: 'subpages/item-gift-set.html', label: 'ギフトセット', title: 'Item / Gift Set', latest: 'アイテム詳細ページは現在作成準備中です。' },
         scentSearch: { path: 'subpages/scent-search.html', label: '香りから探す', title: 'Search by Scent', latest: '香りから探すページは現在作成準備中です。' },
-        searchStoreInfo: { path: 'subpages/search-store-info.html', label: '実店舗情報', title: 'Search / Store Info', latest: '関連ページは現在作成準備中です。' },
+        searchStoreInfo: { path: 'subpages/search-shop-info.html', label: '実店舗情報', title: 'Search / Store Info', latest: '関連ページは現在作成準備中です。' },
         searchProjects: { path: 'subpages/search-projects.html', label: 'プロジェクト・読み物', title: 'Search / Projects', latest: '関連ページは現在作成準備中です。' },
         searchEvents: { path: 'subpages/search-events.html', label: 'イベント情報', title: 'Search / Events', latest: '関連ページは現在作成準備中です。' },
         workshop: { path: 'subpages/workshop.html', label: '香りと遊ぶ', title: 'Workshop', latest: '香りのワークショップ予約ページを公開しました。デジタル体験から店頭予約まで一続きで案内します。' },

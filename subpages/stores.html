@@ -10,7 +10,44 @@
 </head>
 
 <body data-root=".." data-page-key="stores">
-    <main id="page-main"></main>
+    <main id="page-main">
+        <section class="section content-hub-page">
+            <div class="section-heading">
+                <p class="section-kicker">Shops</p>
+                <h2>実店舗案内</h2>
+                <p class="content-hub-lead">浅草店・柴又店・ソラマチ店の特徴を一覧で比較し、予約導線へつなげるための案内ページです。</p>
+            </div>
+
+            <div class="content-hub-grid">
+                <article class="content-hub-card" id="asakusa">
+                    <img src="../images/others/others_ (7).png" alt="浅草店イメージ">
+                    <p class="content-hub-card__meta">Asakusa Shop</p>
+                    <h3>浅草店</h3>
+                    <p>初回体験ユーザー向けの標準導線を整備。ワークショップ参加前の相談にも対応します。</p>
+                    <a class="button button--secondary" href="./search-shop-info.html#asakusa">詳細を確認する</a>
+                </article>
+                <article class="content-hub-card" id="shibamata">
+                    <img src="../images/others/others_ (8).png" alt="柴又店イメージ">
+                    <p class="content-hub-card__meta">Shibamata Shop</p>
+                    <h3>柴又店</h3>
+                    <p>落ち着いた空間で比較体験しやすい店舗。ゆっくり選びたい方向けの接客を重視しています。</p>
+                    <a class="button button--secondary" href="./search-shop-info.html#shibamata">詳細を確認する</a>
+                </article>
+                <article class="content-hub-card" id="solamachi">
+                    <img src="../images/others/others_ (9).png" alt="ソラマチ店イメージ">
+                    <p class="content-hub-card__meta">Solamachi Shop</p>
+                    <h3>ソラマチ店</h3>
+                    <p>短時間で体験を完了したい方向け。予約枠確認から当日案内までを簡潔に提供します。</p>
+                    <a class="button button--secondary" href="./search-shop-info.html#solamachi">詳細を確認する</a>
+                </article>
+            </div>
+
+            <div class="content-hub-actions">
+                <a class="button button--primary" href="./workshop-booking.html">予約枠を確認する</a>
+                <a class="button button--ghost" href="./search-shop-info.html">店舗比較ページを見る</a>
+            </div>
+        </section>
+    </main>
     <script src="../js/site-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/site-shell.js"></script>

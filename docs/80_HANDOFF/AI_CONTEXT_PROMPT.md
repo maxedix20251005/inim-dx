@@ -1,4 +1,4 @@
-﻿# AI CONTEXT PROMPT / inim-dx 完全復元用
+# AI CONTEXT PROMPT / inim-dx 完全復元用
 
 このファイルは、作業途中からでも `inim-dx` の現状を正確に復元し、同じ前提で開発を再開するための AI 向けコンテキストです。新しい AI に渡す場合は、このファイルをそのまま読ませたうえで、必要に応じて `PROJECT_STATUS.md` と `WIP.md` を続けて参照させてください。
 
@@ -457,6 +457,85 @@
 ## 42. 2026-03-28 IA Refinement Slice-20 / 引継ぎ追記
 - JA: `FEATURE_BACKLOG` の `2.13` を `Accepted` へ更新し、IA refinement フェーズをクローズ。
 - EN: Closed backlog item `2.13` as accepted after completing IA consistency and policy centralization work.
+
+## 43. 2026-03-28 Placeholder Build Slice-1 / 引継ぎ追記
+- JA: `2.14` を開始し、`subpages/scent-search.html` を MVP 実装（キーワード検索 + カテゴリフィルタ + 関連ページリスト）。
+- JA: `scentSearch` を shared disabled policy から除外し、公開ナビ/サイトマップで有効化。
+- JA: `FEATURE_BACKLOG` の `2.14` を `In Progress` へ更新済み。
+- EN: Started `2.14` with the first implemented page (`scent-search`) and enabled `scentSearch` in shared navigation policy.
+
+## 44. 2026-03-28 Placeholder Build Slice-2 / 引継ぎ追記
+- JA: `subpages/search-shop-info.html` を MVP-B（運営情報 + 短いストーリー + 地図埋め込み）方針で更新。
+- JA: 店舗選択チップ（浅草/柴又/ソラマチ）に連動して、`営業時間/住所/アクセス/予約枠/おすすめ` と地図表示が切替わる。
+- JA: `この店舗で予約枠を確認する` は `store/storeLabel` を維持して `workshop-booking` へ遷移。
+- JA: `js/site-shell.js` の `searchStoreInfo.latest` を公開済み案内へ更新。
+- EN: Delivered `2.14` slice-2 by implementing a store info page with concise operations, short story copy, embedded map switching, and booking handoff continuity.
+
+## 45. 2026-03-28 Placeholder Build Slice-3 / 引継ぎ追記
+- JA: `subpages/search-projects.html` を実装し、読み物ハブ（キーワード検索 + カテゴリフィルタ + カード一覧）を追加。
+- JA: 体験導線/デジタル調香/店舗背景は公開導線として遷移可能、記事系後続コンテンツは `準備中` 表示で区別。
+- JA: `css/style.css` に `projects-search-*` を追加し、レスポンシブ表示を含めて整備。
+- JA: `js/site-shell.js` の `searchProjects.latest` を公開済み文言へ更新。
+- EN: Delivered `2.14` slice-3 by creating a filterable projects/story hub with clear live-vs-coming-soon states and updated published status copy.
+
+## 46. 2026-03-28 Placeholder Build Slice-4 / 引継ぎ追記
+- JA: `subpages/search-events.html` を実装し、イベント一覧（キーワード検索 + 開催ステータス絞り込み + カード表示）を追加。
+- JA: カードに `受付中/準備中`、開催期間、対象店舗、概要を表示し、受付中のみ遷移CTAを有効化。
+- JA: `css/style.css` に `events-search-*` を追加し、モバイル1カラム表示へ対応。
+- JA: `js/site-shell.js` の `searchEvents.latest` を公開済み文言へ更新。
+- EN: Delivered `2.14` slice-4 by adding a searchable/filterable events listing with explicit open-vs-coming states and responsive UI.
+
+## 47. 2026-03-28 Global Nav IA Restructure / 引継ぎ追記
+- JA: 公開グローバルナビを指定順序へ再編（`Home -> 香りと遊ぶ -> ブランド -> アイテム -> 記事 -> イベント -> 実店舗 -> Admin`）。
+- JA: `記事` は `search-projects`、`イベント` は `search-events`、`実店舗` は `search-shop-info` へ遷移先を変更。
+- JA: `Admin` は既存ロジックのままグローバルナビ右端表示を維持。
+- EN: Reworked top-level public nav to the requested order and remapped Article/Event/Store links to implemented search pages while keeping Admin at the right edge.
+
+## 48. 2026-03-28 Brand WATOYO-only Activation / 引継ぎ追記
+- JA: ブランド公開方針を `WATOYOのみ有効` へ切替（top-level Brand は有効化、Brand詳細露出は WATOYO のみに制限）。
+- JA: `site-config.js` の `disabledPublicPageKeys` から `brand` を除外。
+- JA: `site-shell.js` の Brandサブメニューを `brandWatoyo` 単独へ変更し、`latest` 文言を公開状態へ更新。
+- JA: `sitemap.html` で top-level `ブランド` の default-disabled を解除し、ブランド詳細一覧を `ブランド: WATOYO` のみに整理。
+- EN: Switched Brand policy to WATOYO-only exposure by enabling top-level Brand and limiting submenu/sitemap detail entries to WATOYO.
+
+## 49. 2026-03-28 Items 2-group Activation / 引継ぎ追記
+- JA: アイテム公開方針を `アロマ / ハンドクリーム` の2グループ有効へ切替（top-level Items を有効化）。
+- JA: `site-config.js` の `disabledPublicPageKeys` から `items` を除外。
+- JA: `site-shell.js` の Itemsサブメニューを `itemHomeFragrance` / `itemBodyCare` の2件に限定し、表示ラベルを `アロマ` / `ハンドクリーム` へ更新。
+- JA: `sitemap.html` で top-level `アイテム` の default-disabled を解除し、カテゴリ詳細のアイテム一覧を2件のみに整理。
+- EN: Switched Items policy to two active groups (Aroma/Hand Cream) by enabling top-level Items and limiting submenu/sitemap detail entries accordingly.
+
+## 50. 2026-03-28 Draft Page Build (WATOYO/Aroma/Hand Cream) / 引継ぎ追記
+- JA: `brand-watoyo.html` / `item-home-fragrance.html` / `item-body-care.html` を画像資産ベースでドラフト実装。
+- JA: 使用画像:
+  - WATOYO: `images/inim-dx_watoyo/WATOYO_WA.png`, `WATOYO_YO.png`, `WATOYO_WAYO.png`
+  - Aroma: `images/inim-dx_items/aroma_neroli.png`, `aroma_vanilla.png`, `aroma_musk.png`
+  - Hand Cream: `images/inim-dx_items/handcream_rose.png`, `handcream_daphne.png`, `handcream_seablue.png`
+- JA: `css/style.css` に共通 `catalog-*` スタイルを追加し、3ページ共通UI（hero/grid/card）を適用。
+- EN: Drafted the three requested pages with provided assets and introduced shared `catalog-*` styles for consistent UI across Brand/Item pages.
+
+## 51. 2026-03-28 Product Hero Simplification / 引継ぎ追記
+- JA: 3ページ（WATOYO/Aroma/Hand Cream）のヒーローからCTAボタン2件を削除。
+- JA: ヒーロー右側の大画像を削除し、`catalog-hero--single` で1カラム表示へ変更。
+- JA: 下段の3商品カード（画像 + 説明）はそのまま維持。
+- EN: Simplified all three product-page heroes by removing CTA buttons and right hero image, while keeping the bottom three product cards unchanged.
+
+## 52. 2026-03-28 Parent-only Nav + Top Spacing Tightening / 引継ぎ追記
+- JA: グローバルナビの `ブランド` / `アイテム` を親メニュー専用（非リンク）へ変更し、サブメニュー遷移のみへ統一。
+- JA: `css/style.css` に対象ページキー別の `main` 上部余白縮小ルール（`padding-top: 12px`）を追加。
+- JA: 対象キー: `brandWatoyo`, `itemHomeFragrance`, `itemBodyCare`, `searchProjects`, `searchEvents`, `searchStoreInfo`。
+- EN: Converted Brand/Items top-nav entries to parent-only submenu labels and tightened top spacing on requested pages by key-based `main` padding override.
+
+## 53. 2026-03-28 Top-space Correction + Shop Wording / 引継ぎ追記
+- JA: 上部余白の未調整箇所を補正するため、対象ページキーの `.section` にも `padding-top` 縮小を適用。
+- JA: `Store` 表記を `Shop` 表記へ更新（`search-shop-info` 見出し、footer title、workshopラベル、shell title）。
+- EN: Applied section-level top-padding tightening to fully remove remaining top gap and standardized visible English wording from `Store` to `Shop`.
+
+## 54. 2026-03-28 Route Rename (search-shop-info) / 引継ぎ追記
+- JA: `subpages/search-shop-info.html` を `subpages/search-shop-info.html` へリネーム。
+- JA: runtime/sitemap/search-hub/docs 内の参照パスを新URLへ更新し、旧パスは非存在を確認。
+- EN: Renamed the route file to `search-shop-info.html` and updated all references across runtime navigation, sitemap, search hub, and docs.
+
 
 
 

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 
 <head>
@@ -10,10 +10,151 @@
 </head>
 
 <body data-root=".." data-page-key="searchProjects">
-    <main id="page-main"></main>
+    <main id="page-main">
+        <section class="section projects-search-page">
+            <div class="section-heading">
+                <p class="section-kicker">Projects / Stories</p>
+                <h2>プロジェクト・読み物 <small>Story Hub</small></h2>
+            </div>
+            <p class="projects-search-lead">ワークショップ体験、デジタル調香、店舗背景に関する読み物を目的別に整理しています。公開済みコンテンツはすぐに確認でき、準備中コンテンツは順次公開予定です。</p>
+
+            <section class="projects-search-panel" aria-label="読み物フィルタ">
+                <div class="projects-search-panel__controls">
+                    <label class="projects-search-panel__field" for="projects-search-input">
+                        <span>キーワード <small>Keyword</small></span>
+                        <input id="projects-search-input" type="search" placeholder="例: ワークショップ, デジタル, 店舗, 初心者, ギフト" autocomplete="off">
+                    </label>
+                    <div class="projects-search-panel__chips" role="group" aria-label="カテゴリ">
+                        <button type="button" class="is-active" data-filter="all">すべて</button>
+                        <button type="button" data-filter="flow">体験導線</button>
+                        <button type="button" data-filter="digital">デジタル調香</button>
+                        <button type="button" data-filter="store">店舗背景</button>
+                        <button type="button" data-filter="guide">ノウハウ</button>
+                    </div>
+                </div>
+                <p class="projects-search-panel__meta" id="projects-search-meta">0件 / 0件</p>
+            </section>
+
+            <div class="projects-search-results" id="projects-search-results" aria-live="polite"></div>
+            <p class="projects-search-empty" id="projects-search-empty" hidden>一致する読み物が見つかりません。キーワードを短くするか、カテゴリを「すべて」に戻してください。</p>
+        </section>
+    </main>
     <script src="../js/site-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/site-shell.js"></script>
+    <script>
+        (() => {
+            const input = document.getElementById("projects-search-input");
+            const meta = document.getElementById("projects-search-meta");
+            const results = document.getElementById("projects-search-results");
+            const empty = document.getElementById("projects-search-empty");
+            const chips = Array.from(document.querySelectorAll(".projects-search-panel__chips button"));
+
+            const stories = [
+                {
+                    category: "flow",
+                    titleJa: "香りと遊ぶ 体験導線ガイド",
+                    titleEn: "Workshop Journey Guide",
+                    summary: "初回参加でも迷わないように、体験の流れと予約までの動線を整理したガイドです。",
+                    href: "./workshop.html",
+                    cta: "導線を見る",
+                    available: true,
+                    tags: ["ワークショップ", "体験", "導線", "予約", "初心者"]
+                },
+                {
+                    category: "digital",
+                    titleJa: "デジタル調香のはじめ方",
+                    titleEn: "Smart Scent Basics",
+                    summary: "色・粒子・サウンドを使って香りイメージを作る、Smart Scent Design の入口ガイドです。",
+                    href: "./smart-scent-design.html",
+                    cta: "体験を始める",
+                    available: true,
+                    tags: ["デジタル", "調香", "smart scent", "操作", "入門"]
+                },
+                {
+                    category: "store",
+                    titleJa: "3店舗の選び方",
+                    titleEn: "How to Choose a Store",
+                    summary: "浅草・柴又・ソラマチの違いを比較し、目的に合う店舗を選ぶための案内です。",
+                    href: "./search-shop-info.html",
+                    cta: "店舗比較を見る",
+                    available: true,
+                    tags: ["店舗", "浅草", "柴又", "ソラマチ", "アクセス"]
+                },
+                {
+                    category: "guide",
+                    titleJa: "ギフト相談の進め方",
+                    titleEn: "Gift Consultation Notes",
+                    summary: "贈る相手の印象から香りを組み立てるための、事前準備メモを公開予定です。",
+                    href: "./article.html",
+                    cta: "準備中",
+                    available: false,
+                    tags: ["ギフト", "相談", "準備", "記事"]
+                },
+                {
+                    category: "guide",
+                    titleJa: "季節の香りセレクション",
+                    titleEn: "Seasonal Scent Selection",
+                    summary: "季節テーマ別におすすめノートを紹介する記事シリーズを準備しています。",
+                    href: "./article.html",
+                    cta: "準備中",
+                    available: false,
+                    tags: ["季節", "香り", "セレクション", "記事"]
+                },
+                {
+                    category: "flow",
+                    titleJa: "予約前チェックリスト",
+                    titleEn: "Before Booking Checklist",
+                    summary: "参加人数・希望時間・目的を整理して予約入力を短縮するチェック項目を掲載予定です。",
+                    href: "./workshop-booking.html",
+                    cta: "準備中",
+                    available: false,
+                    tags: ["予約", "チェックリスト", "事前準備", "ワークショップ"]
+                }
+            ];
+
+            let activeFilter = "all";
+            const total = stories.length;
+            const normalize = (value) => String(value || "").trim().toLowerCase();
+
+            const render = () => {
+                const q = normalize(input?.value || "");
+                const filtered = stories.filter((item) => {
+                    const filterMatch = activeFilter === "all" || item.category === activeFilter;
+                    if (!filterMatch) return false;
+                    if (!q) return true;
+                    const haystack = normalize(`${item.titleJa} ${item.titleEn} ${item.summary} ${(item.tags || []).join(" ")}`);
+                    return haystack.includes(q);
+                });
+
+                if (meta) meta.textContent = `${filtered.length}件 / ${total}件`;
+                if (empty) empty.hidden = filtered.length !== 0;
+                if (!results) return;
+
+                results.innerHTML = filtered.map((item) => `
+                    <article class="projects-search-card">
+                        <p class="projects-search-card__eyebrow">${item.category}</p>
+                        <h3>${item.titleJa} <small>${item.titleEn}</small></h3>
+                        <p>${item.summary}</p>
+                        ${item.available
+                        ? `<a class="button button--secondary" href="${item.href}">${item.cta}</a>`
+                        : `<span class="projects-search-card__soon" aria-label="準備中">${item.cta}</span>`}
+                    </article>
+                `).join("");
+            };
+
+            chips.forEach((chip) => {
+                chip.addEventListener("click", () => {
+                    activeFilter = chip.dataset.filter || "all";
+                    chips.forEach((x) => x.classList.toggle("is-active", x === chip));
+                    render();
+                });
+            });
+
+            input?.addEventListener("input", render);
+            render();
+        })();
+    </script>
 </body>
 
 </html>

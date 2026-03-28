@@ -1,4 +1,4 @@
-﻿# PROJECT STATUS / inim-dx
+# PROJECT STATUS / inim-dx
 
 ## 1. このドキュメントの目的 / Purpose
 - このファイルは、`inim-dx` プロジェクトの現在地を第三者でも短時間で把握できるように整理する常設ステータス資料です。
@@ -1245,3 +1245,534 @@
 - 更新内容:
   - `docs/20_PRODUCT/FEATURE_BACKLOG.md` の `2.13` を `In Progress` -> `Accepted` へ更新
 - EN: Closed `2.13` as `Accepted` after completing IA alignment and policy centralization across public sitemap/runtime navigation.
+### ドキュメント更新（2026-03-28 追加76）
+- `2.14 Create All Placeholder Pages` に着手し、優先順の第1実装として `香りから探す` ハブページを実装しました。
+- 変更内容:
+  - `subpages/scent-search.html` に Japanese-first の検索UI（キーワード + カテゴリフィルタ + 結果リスト）を追加
+  - 結果リストは現行導線ページ（店舗情報/読み物/イベント/ワークショップ/予約/プラン/デジタル調香/サイトマップ）への遷移を提供
+  - `css/style.css` に `scent-search-*` スタイル群を追加（レスポンシブ含む）
+  - `js/site-config.js` の `disabledPublicPageKeys` から `scentSearch` を除外し、公開ナビ導線を有効化
+  - `js/site-shell.js` の default disabled リストからも `scentSearch` を除外
+  - `subpages/sitemap.html` の `scentSearch` から `data-default-disabled` を除外
+  - `docs/20_PRODUCT/FEATURE_BACKLOG.md` の `2.14` を `Proposed` -> `In Progress` に更新
+- 目的:
+  - 「香りから探す」導線を placeholder 状態から最小実装へ進め、検索起点で関連ページへ移動できる状態を作る
+- 対象ファイル:
+  - `subpages/scent-search.html`
+  - `css/style.css`
+  - `js/site-config.js`
+  - `js/site-shell.js`
+  - `subpages/sitemap.html`
+  - `docs/20_PRODUCT/FEATURE_BACKLOG.md`
+- EN: Started `2.14` and delivered the first page (`scent-search`) with a keyword/filter/list search hub, while enabling `scentSearch` in shared navigation policy.
+### ドキュメント更新（2026-03-28 追加77）
+- `2.14 Create All Placeholder Pages` の第2実装として、`実店舗情報` ページを公開可能レベルへ更新しました。
+- 変更内容:
+  - `subpages/search-shop-info.html` を Japanese-first で整備（店舗選択チップ + 店舗ごとの短いストーリー + 運営情報）
+  - 運営情報は `営業時間 / 住所 / アクセス / 予約枠 / おすすめ` を表示し、店舗切替で内容が同期更新
+  - Google Map 埋め込みを維持し、選択店舗に応じて地図タイトルと埋め込みクエリを切替
+  - 予約導線CTAは店舗パラメータ（`store` / `storeLabel`）を維持して `workshop-booking` へ遷移
+  - `js/site-shell.js` の `searchStoreInfo.latest` を公開済み文言へ更新
+- 目的:
+  - `search` グループの2ページ目として、店舗比較から予約への最短導線を整備する
+- 対象ファイル:
+  - `subpages/search-shop-info.html`
+  - `js/site-shell.js`
+- EN: Delivered `2.14` slice-2 by upgrading `search-shop-info` with concise store operations, short story copy, embedded maps, and booking handoff continuity.
+### ドキュメント更新（2026-03-28 追加78）
+- `2.14 Create All Placeholder Pages` の第3実装として、`プロジェクト・読み物` ページを公開可能レベルへ更新しました。
+- 変更内容:
+  - `subpages/search-projects.html` を Japanese-first で実装（キーワード検索 + カテゴリフィルタ + 読み物カード一覧）
+  - 体験導線/デジタル調香/店舗背景を「公開中」、記事系の後続コンテンツを「準備中」表示で明確化
+  - 主要導線（`workshop` / `smart-scent-design` / `search-shop-info`）へ直接遷移できるCTAを配置
+  - `css/style.css` に `projects-search-*` スタイル群を追加（レスポンシブ含む）
+  - `js/site-shell.js` の `searchProjects.latest` を公開済み文言へ更新
+- 目的:
+  - `search` グループの3ページ目として、読み物起点の回遊導線を先行実装し、公開済み/準備中を判別しやすくする
+- 対象ファイル:
+  - `subpages/search-projects.html`
+  - `css/style.css`
+  - `js/site-shell.js`
+- EN: Delivered `2.14` slice-3 by implementing a filterable projects/stories hub with clear available-vs-coming-soon states and direct links to active journey pages.
+### ドキュメント更新（2026-03-28 追加79）
+- `2.14 Create All Placeholder Pages` の第4実装として、`イベント情報` ページを公開可能レベルへ更新しました。
+- 変更内容:
+  - `subpages/search-events.html` を Japanese-first で実装（キーワード検索 + 開催ステータスフィルタ + イベントカード一覧）
+  - イベントカードに `受付中/準備中` ステータス、開催期間、対象店舗、概要を表示
+  - `受付中` イベントは予約/導線ページへ遷移可能、`準備中` は非遷移ラベルで誤操作を防止
+  - `css/style.css` に `events-search-*` スタイル群を追加（レスポンシブ含む）
+  - `js/site-shell.js` の `searchEvents.latest` を公開済み文言へ更新
+- 目的:
+  - `search` グループの4ページ目として、イベント起点の回遊導線と公開状態の視認性を確保する
+- 対象ファイル:
+  - `subpages/search-events.html`
+  - `css/style.css`
+  - `js/site-shell.js`
+- EN: Delivered `2.14` slice-4 by implementing a searchable/filterable events page with clear open-vs-coming states and active booking/navigation handoff for live events.
+### ドキュメント更新（2026-03-28 追加80）
+- 公開グローバルナビの構成を、指定順序・指定リンク先へ再編しました。
+- 変更内容:
+  - 並び順を `Home -> 香りと遊ぶ -> ブランド -> アイテム -> 記事 -> イベント -> 実店舗 -> Admin` に変更
+  - `記事` の遷移先を `search-projects.html` へ変更
+  - `イベント` のトップレベル項目を追加し、遷移先を `search-events.html` へ設定
+  - `実店舗` の遷移先を `search-shop-info.html` へ変更
+  - `Admin` は既存どおりグローバルナビ右端表示を維持
+  - グローバルナビの disabled 対象キーを `brand/items` のみに調整（実装済み search pages は常時有効）
+- 目的:
+  - 公開導線の主目的（体験・記事・イベント・店舗）を上位表示し、クリック意図と遷移先を一致させる
+- 対象ファイル:
+  - `js/site-shell.js`
+- EN: Reordered and retargeted the global navigation to the requested IA, mapping Article/Event/Stores to implemented search pages and keeping Admin as the rightmost item.
+### ドキュメント更新（2026-03-28 追加81）
+- ブランド導線を `WATOYO` のみ公開する運用へ切り替えました。
+- 変更内容:
+  - `js/site-config.js` の `disabledPublicPageKeys` から `brand` を除外し、トップレベル `ブランド` を有効化
+  - `js/site-shell.js` の `ブランド` サブメニューを `WATOYO` 単独表示へ変更
+  - `subpages/sitemap.html` でトップレベル `ブランド` の default-disabled 指定を解除
+  - `subpages/sitemap.html` のブランド詳細一覧を `ブランド: WATOYO` のみに整理
+  - `js/site-shell.js` の `brand` / `brandWatoyo` の latest 文言を公開状態に更新
+- 目的:
+  - 現時点の公開方針（BrandはWATOYOのみ有効）をナビとサイトマップへ一貫反映する
+- 対象ファイル:
+  - `js/site-config.js`
+  - `js/site-shell.js`
+  - `subpages/sitemap.html`
+- EN: Activated Brand with WATOYO-only exposure by enabling top-level brand and limiting Brand submenu/sitemap detail links to WATOYO.
+### ドキュメント更新（2026-03-28 追加82）
+- アイテム導線を `アロマ / ハンドクリーム` の2グループ公開へ切り替えました。
+- 変更内容:
+  - `js/site-config.js` の `disabledPublicPageKeys` から `items` を除外し、トップレベル `アイテム` を有効化
+  - `js/site-shell.js` の `アイテム` サブメニューを `itemHomeFragrance` / `itemBodyCare` の2件に限定
+  - `js/site-shell.js` の表示ラベルを `ホームフレグランス -> アロマ`、`ボディケア -> ハンドクリーム` へ更新
+  - `subpages/sitemap.html` でトップレベル `アイテム` の default-disabled 指定を解除
+  - `subpages/sitemap.html` のアイテム詳細一覧を `アイテム: アロマ` / `アイテム: ハンドクリーム` のみに整理
+  - `js/site-shell.js` の `items` / 対象2グループの latest 文言を公開状態に更新
+- 目的:
+  - 現在の公開方針（Itemsは2グループのみ有効）をグローバルナビ・サイドナビ・サイトマップへ一貫反映する
+- 対象ファイル:
+  - `js/site-config.js`
+  - `js/site-shell.js`
+  - `subpages/sitemap.html`
+- EN: Activated Items with a two-group policy (Aroma/Hand Cream) and synchronized nav/sitemap exposure to those two item groups only.
+### ドキュメント更新（2026-03-28 追加83）
+- `WATOYO / アロマ / ハンドクリーム` の3ページを、提供画像を用いてドラフト実装しました。
+- 変更内容:
+  - `subpages/brand-watoyo.html` にブランド紹介ヒーロー + 3ビジュアルカード（`WATOYO_WA/WATOYO_YO/WATOYO_WAYO`）を追加
+  - `subpages/item-home-fragrance.html` にアロマページを実装（`aroma_neroli / aroma_vanilla / aroma_musk`）
+  - `subpages/item-body-care.html` にハンドクリームページを実装（`handcream_rose / handcream_daphne / handcream_seablue`）
+  - `css/style.css` に3ページ共通の `catalog-*` スタイル群を追加（hero/grid/card + responsive）
+- 目的:
+  - 画像資産を利用して、公開導線で参照可能な最小ページ群を先行整備する
+- 対象ファイル:
+  - `subpages/brand-watoyo.html`
+  - `subpages/item-home-fragrance.html`
+  - `subpages/item-body-care.html`
+  - `css/style.css`
+- EN: Delivered draft implementations for the three requested pages (WATOYO, Aroma, Hand Cream) using the provided image assets and shared catalog UI styles.
+### ドキュメント更新（2026-03-28 追加84）
+- `WATOYO / アロマ / ハンドクリーム` ページのヒーロー構成を、商品ページ向けに簡素化しました。
+- 変更内容:
+  - 3ページ共通でヒーロー内のCTAボタン2件を削除
+  - 3ページ共通でヒーロー右側の大画像を削除
+  - 下段の3商品カード（画像 + 商品説明）は維持
+  - `css/style.css` に `catalog-hero--single` を追加し、1カラム表示へ調整
+- 目的:
+  - CTA主導ページではなく商品紹介ページとして、情報密度と視線誘導を適正化する
+- 対象ファイル:
+  - `subpages/brand-watoyo.html`
+  - `subpages/item-home-fragrance.html`
+  - `subpages/item-body-care.html`
+  - `css/style.css`
+- EN: Simplified the three product pages by removing hero CTA buttons and right-side hero image while preserving the bottom three product cards.
+### ドキュメント更新（2026-03-28 追加85）
+- ブランド/アイテム/記事/イベント/実店舗（検索系）ページの上部余白を縮小し、一覧導線を早く視認できるように調整しました。
+- 変更内容:
+  - `css/style.css` に対象ページキー別の `main { padding-top: 12px; }` を追加
+  - 対象キー: `brandWatoyo / itemHomeFragrance / itemBodyCare / searchProjects / searchEvents / searchStoreInfo`
+  - グローバルナビの `ブランド` と `アイテム` を親メニュー専用（非リンク）へ変更
+  - `ブランド` / `アイテム` は hover 展開でサブメニュー遷移のみを提供（親ページ遷移を廃止）
+  - モバイル用ナビセレクタも `category-nav__label` を含むよう補正し、表示崩れを防止
+- 目的:
+  - 商品・一覧ページでのファーストビュー情報量を増やし、親メニュークリックによる不要遷移をなくす
+- 対象ファイル:
+  - `css/style.css`
+  - `js/site-shell.js`
+- EN: Tightened top spacing on the requested listing/product pages and converted `Brand/Items` top-nav entries to parent-only submenu triggers (no direct parent-page links).
+### ドキュメント更新（2026-03-28 追加86）
+- 上部余白調整の未反映を補正し、`Store` 表記を `Shop` 表記へ統一しました。
+- 変更内容:
+  - 対象ページ（Brand/Items/Articles/Events/Shops）で `main` だけでなく `.section` の `padding-top` も縮小
+  - `search-shop-info.html` の英語見出しを `Store` から `Shop` へ変更（title/kicker/subtitle/select）
+  - `site-shell.js` の `Search / Store Info` を `Search / Shop Info`、`Stores` を `Shops` に変更
+  - フッター英語見出しを `Store Info` から `Shop Info` へ変更
+  - `workshop.html` のラベル `Store` を `Shop` へ変更
+- 目的:
+  - 余白調整の体感差を確実に出し、英語表記を `Shop` へ統一する
+- 対象ファイル:
+  - `css/style.css`
+  - `subpages/search-shop-info.html`
+  - `subpages/workshop.html`
+  - `js/site-shell.js`
+- EN: Fixed remaining top-space gap by tightening section padding as well, and standardized visible English wording from `Store` to `Shop`.
+### ドキュメント更新（2026-03-28 追加87）
+- 実店舗情報ページのURLを `search-shop-info.html` から `search-shop-info.html` へ変更しました。
+- 変更内容:
+  - ファイル名を `subpages/search-shop-info.html` へリネーム
+  - `site-shell` / `sitemap` / `scent-search` / テスト計画 / 引継ぎ文書の参照URLを新パスへ更新
+  - 旧パス `subpages/search-shop-info.html` は削除状態（非存在）を確認
+- 目的:
+  - `Shop` 表記方針に合わせ、URL命名も `shop` に統一する
+- 対象ファイル:
+  - `subpages/search-shop-info.html`
+  - `js/site-shell.js`
+  - `subpages/sitemap.html`
+  - `subpages/scent-search.html`
+  - `docs/10_PROJECT/PROJECT_STATUS.md`
+  - `docs/60_TEST/TEST_PLAN.md`
+  - `docs/80_HANDOFF/AI_CONTEXT_PROMPT.md`
+- EN: Renamed the shop-info page path from `search-shop-info.html` to `search-shop-info.html` and updated all runtime/doc references.
+### ドキュメント更新（2026-03-28 追加88）
+- トップページのヘッダー導線と商品掲載順を調整し、`About` への直接導線を追加しました。
+- 変更内容:
+  - 右上ユーティリティから `検索` / `カート` を削除（アカウント導線のみ表示）
+  - `Pick Up` を `WATOYO` 3点構成へ差し替え（`WA / YO / WAYO`）
+  - `New Arrivals` を `アロマ3点 + ハンドクリーム3点` 構成へ差し替え
+  - グローバルナビ `Home` 配下に `About` サブメニューを追加し、`index.html#about` へジャンプ可能に変更
+  - `ABOUT` セクションへ `images/others/about.png` を追加し、説明文を補強
+- 目的:
+  - 初期導線を整理し、現在公開中カテゴリに合わせた商品訴求へ統一する
+  - トップページ下部 `ABOUT` への到達性を高める
+- 対象ファイル:
+  - `js/site-shell.js`
+  - `index.html`
+  - `css/style.css`
+- EN: Refined top-page navigation/content by removing Search/Cart utility links, swapping Pick Up/New Arrivals to the requested WATOYO/Aroma/Hand Cream lineup, and adding a `Home > About` submenu jump with enriched About section imagery.
+### ドキュメント更新（2026-03-28 追加89）
+- トップページの `Pick Up` / `New Arrivals` 画像の縦寸を拡張し、商品ビジュアルの見え方を改善しました。
+- 変更内容:
+  - `css/style.css` にセクション限定の画像比率上書きを追加
+  - `pickup-grid` と `product-grid` のカード画像を `aspect-ratio: 4 / 5` に変更
+  - 他ページ共通カードスタイル（`1 / 1`）は維持し、影響範囲をトップページ2セクションのみに限定
+- 目的:
+  - WAYO / AROMA / HAND CREAM 画像の高さ不足を解消し、視認性を向上させる
+- 対象ファイル:
+  - `css/style.css`
+- EN: Increased image height for top-page `Pick Up` and `New Arrivals` cards by overriding their aspect ratio to `4/5`, while keeping global card behavior unchanged elsewhere.
+### ドキュメント更新（2026-03-28 追加90）
+- `WATOYO / アロマ / ハンドクリーム` の各ページで、商品画像の縦寸を拡張しました。
+- 変更内容:
+  - `css/style.css` の `.catalog-card img` 高さを `240px -> 280px` に変更
+  - 対象は `catalog-card` を利用する3ページ（`brand-watoyo` / `item-home-fragrance` / `item-body-care`）
+- 目的:
+  - 3ページの商品画像表示が低く見える状態を改善し、視認性を向上
+- 対象ファイル:
+  - `css/style.css`
+- EN: Increased product image height on WATOYO/Aroma/Hand Cream catalog cards by updating `.catalog-card img` from `240px` to `280px`.
+### ドキュメント更新（2026-03-28 追加91）
+- `WATOYO / アロマ / ハンドクリーム` の画像高さ指定を、`index.html` と同じ比率制御へ修正しました。
+- 変更内容:
+  - `.catalog-card img` の固定高 (`280px`) を廃止
+  - `index.html` と同じ `aspect-ratio: 4 / 5` + `height: auto` へ変更
+- 目的:
+  - トップページカードと同等の見え方（縦比率）に統一し、固定px指定による差異を解消
+- 対象ファイル:
+  - `css/style.css`
+- EN: Corrected catalog card image sizing to match `index.html` by replacing fixed pixel height with `aspect-ratio: 4/5` and `height: auto`.
+### ドキュメント更新（2026-03-28 追加93）
+- `2.14` の次スライスとして、`shopping-guide` / `contact` / `account` を placeholder から実ページ化しました。
+- 変更内容:
+  - `subpages/shopping-guide.html` を Japanese-first のガイドページとして実装（配送・支払い・返品の3ブロック）
+  - `subpages/contact.html` を Japanese-first の問い合わせ導線ページとして実装（予約・商品・法人の3窓口）
+  - `subpages/account.html` を Japanese-first のアカウント入口ページとして実装（ログイン・会員登録・設定）
+  - `css/style.css` の `content-hub-*` スタイルを再利用し、3ページを統一レイアウトで表示
+  - `js/site-shell.js` の `shoppingGuide` / `contact` / `account` latest 文言を公開済みステータスへ更新
+- 目的:
+  - `guide/support/account` 系ページ群の未実装領域を縮小し、実導線として利用可能な状態へ引き上げる
+- 対象ファイル:
+  - `subpages/shopping-guide.html`
+  - `subpages/contact.html`
+  - `subpages/account.html`
+  - `css/style.css`
+  - `js/site-shell.js`
+- EN: Completed the next `2.14` slice by replacing placeholders for `shopping-guide`, `contact`, and `account` with Japanese-first draft pages and published-status latest copy.
+### ドキュメント更新（2026-03-28 追加94）
+- `2.14` の次スライスとして、`legal` / `privacy` / `newsletter` / `rss` / `cart` を placeholder から実ページ化しました。
+- 変更内容:
+  - `subpages/legal.html` を法的表示ドラフトページとして実装
+  - `subpages/privacy.html` をプライバシーポリシードラフトページとして実装
+  - `subpages/newsletter.html` をメルマガ設定案内ページとして実装
+  - `subpages/rss.html` をRSS/ATOM配信案内ページとして実装
+  - `subpages/cart.html` をカート機能準備中の案内ページとして実装（商品/予約導線付き）
+  - `css/style.css` に `policy-*` / `cart-*` スタイルを追加
+  - `js/site-shell.js` の `legal/privacy/newsletter/rss/cart` latest 文言を公開済みステータスへ更新
+- 目的:
+  - `guide/support/cart/legal` 系の未実装領域を縮小し、ユーザーが参照できる最低限の情報ページ群を確保する
+- 対象ファイル:
+  - `subpages/legal.html`
+  - `subpages/privacy.html`
+  - `subpages/newsletter.html`
+  - `subpages/rss.html`
+  - `subpages/cart.html`
+  - `css/style.css`
+  - `js/site-shell.js`
+- EN: Completed another `2.14` slice by implementing draft pages for `legal/privacy/newsletter/rss/cart`, adding shared policy/cart styles, and updating latest-copy status.
+### ドキュメント更新（2026-03-28 追加95）
+- `about` ページを新規ドラフト実装し、`Home > About` の遷移先をトップ内アンカーから専用ページへ変更しました。
+- 変更内容:
+  - `subpages/about.html` を Japanese-first で実装（ブランド方針説明 + 画像 + 2CTA）
+  - `js/site-shell.js` の `Home` サブメニュー `About` を `subpages/about.html` へリンク変更
+  - `about` の breadcrumb/current-state を `Brand` 配下から独立ページ扱いへ修正
+  - `about.latest` 文言を公開済みステータスへ更新
+- 目的:
+  - トップ下部ジャンプ導線を、独立した説明ページ導線へ置き換えて情報の見通しを改善する
+- 対象ファイル:
+  - `subpages/about.html`
+  - `js/site-shell.js`
+- EN: Implemented a dedicated Japanese-first `about` page and switched `Home > About` from in-page anchor jump to standalone page navigation, including breadcrumb/state cleanup.
+### ドキュメント更新（2026-03-28 追加96）
+- `index.html` から `ABOUT` セクションを削除し、`About` 導線を専用ページへ一本化しました。
+- 変更内容:
+  - トップページ下部の `ABOUT` セクション（`#about`）を削除
+  - `Home > About` は `subpages/about.html` への遷移導線として維持
+- 目的:
+  - トップページ情報量を整理し、`About` の閲覧先を明確化する
+- 対象ファイル:
+  - `index.html`
+  - `js/site-shell.js`
+- EN: Removed the `ABOUT` block from top page and kept `Home > About` as a dedicated-page route for cleaner information architecture.
+
+### ドキュメント更新（2026-03-28 追加97）
+- `privacy` / `legal` を、より運用向けの構造化レイアウトへ刷新しました。
+- 変更内容:
+  - `subpages/privacy.html` を章立て構成（取得情報・利用目的・第三者提供・保管・開示）へ再設計
+  - `subpages/legal.html` を項目表形式（法的表示テーブル）へ再設計
+  - `css/style.css` に `policy-hero` / `policy-sections` / `policy-table` / `policy-footer` を追加
+  - モバイル時は法的表示テーブルを1カラム化して可読性を確保
+- 目的:
+  - ポリシーページの可読性・信頼感を高め、実運用に近い見せ方へ整える
+- 対象ファイル:
+  - `subpages/privacy.html`
+  - `subpages/legal.html`
+  - `css/style.css`
+- EN: Upgraded `privacy` and `legal` into professional structured policy pages (sectioned privacy clauses + legal notice table) with responsive policy styling.
+### ドキュメント更新（2026-03-28 追加98）
+- Aboutページの2カラムで、テキスト側と画像カード側の上端位置を揃える微調整を行いました。
+- 変更内容:
+  - `subpages/about.html` に `about-page` クラスを追加
+  - `css/style.css` に `.about-page .split-layout*` の上端揃え補正を追加
+- 目的:
+  - About ページの視線開始位置を整え、左右カラムの読み始めを一致させる
+- 対象ファイル:
+  - `subpages/about.html`
+  - `css/style.css`
+- EN: Fine-tuned About page alignment so text and image-card columns start from the same top edge.
+
+### ドキュメント更新（2026-03-28 追加99）
+- フッターの `プライバシーポリシー` / `法的表示` リンクを有効化しました。
+- 変更内容:
+  - `js/site-config.js` の `disabledPublicPageKeys` から `legal` / `privacy` を除外
+  - `js/site-shell.js` の default disabled list から `legal` / `privacy` を除外
+- 目的:
+  - 実装済みの法務ページへフッターから直接遷移できる状態にする
+- 対象ファイル:
+  - `js/site-config.js`
+  - `js/site-shell.js`
+- EN: Activated footer links for `Privacy Policy` and `Legal` by removing those keys from disabled-link policy lists.
+
+### ドキュメント更新（2026-03-28 追加100）
+- `brand` / `items` 親ページを placeholder から professional hub へ刷新しました。
+- 変更内容:
+  - `subpages/brand.html` をブランドハブ化（WATOYO導線 + 方針 + 次アクション）
+  - `subpages/items.html` をアイテムハブ化（アロマ/ハンドクリーム導線 + 次アクション）
+  - `css/style.css` に `content-hub-card--primary` を追加して主導線カードを強調
+  - `js/site-shell.js` の `brand/items` latest 文言を公開済みステータスへ更新
+- 目的:
+  - 親ページの情報価値を高め、公開済み子ページへの遷移判断をしやすくする
+- 対象ファイル:
+  - `subpages/brand.html`
+  - `subpages/items.html`
+  - `css/style.css`
+  - `js/site-shell.js`
+- EN: Upgraded `brand` and `items` parent pages into professional hub pages with clearer child-page routing and stronger primary-card emphasis.
+### ドキュメント更新（2026-03-28 追加101）
+- About ページの左右カラム上端揃えについて、追加の位置補正を適用しました。
+- 変更内容:
+  - `.about-page .split-layout` の gap / margin を再調整
+  - `.split-layout__panel` に微調整オフセットを追加し、左テキスト開始位置との見た目を一致
+  - `split-layout__copy` の先頭段落余白を明示的にリセット
+- 目的:
+  - About ページで「テキスト開始位置」と「画像カード開始位置」の上端をより視覚的に揃える
+- 対象ファイル:
+  - `css/style.css`
+- EN: Applied stronger alignment adjustments on About page so text-start and image-card top edge visually line up.
+
+### ドキュメント更新（2026-03-28 追加102）
+- `brand/items` ハブで指定画像へ差し替え、あわせて最近実装ページ群の上部余白を圧縮しました。
+- 変更内容:
+  - `subpages/brand.html`
+  - `Brand Policy` 画像を `Lineup image_ (5).png` へ変更
+  - `Next Action` 画像を `Workshop_ (10).png` へ変更
+  - `subpages/items.html`
+  - `Next Action` 画像を `Workshop_ (10).png` へ変更
+  - `css/style.css`
+  - recently filled pages（about/brand/items/article/sale/stores/shoppingGuide/contact/account/legal/privacy/newsletter/rss/cart）の `main` と `.section` 上部余白を `search-shop-info` と同水準へ縮小
+- 目的:
+  - 指定ビジュアル反映と、最近実装ページのファーストビュー密度を揃える
+- 対象ファイル:
+  - `subpages/brand.html`
+  - `subpages/items.html`
+  - `css/style.css`
+- EN: Swapped Brand/Items hub images per request and tightened top spacing across recently implemented pages to match the compact level used on `search-shop-info`.
+### ドキュメント更新（2026-03-28 追加103）
+- Aboutレイアウト不整合を Issue 化し、構造修正で解消しました。
+- 変更内容:
+  - `ISSUE_LIST` に `Issue 2026-03-28-30` を追加
+  - `about.html` の見出し/リードを左カラム内へ統合し、右カードと同一行開始へ変更
+  - margin 調整依存ではなく、DOM構造で上端整列を実現
+- 目的:
+  - Aboutページの上端ズレを恒久的に解消する
+- 対象ファイル:
+  - `subpages/about.html`
+  - `css/style.css`
+  - `docs/10_PROJECT/ISSUE_LIST.md`
+- EN: Logged and fixed the About alignment issue via structural layout correction (same-row start), not margin-only tweaks.
+
+### ドキュメント更新（2026-03-28 追加104）
+- 実装確認済みページのリンクを有効化し、次ページ（login/register）を実装しました。
+- 変更内容:
+  - `disabledPublicPageKeys` を空配列化し、公開導線リンクを有効化
+  - `site-shell` 側 disabled policy を empty-config 運用で解釈できるよう補正
+  - `subpages/login.html` / `subpages/register.html` を実ページ化（モーダル導線連携）
+  - `css/style.css` に `auth-*` スタイルを追加
+  - `site-shell` の `login/register` latest 文言を公開済みステータスへ更新
+- 目的:
+  - placeholder 完了済みページを導線上で有効化し、次実装ページを段階的に閉じる
+- 対象ファイル:
+  - `js/site-config.js`
+  - `js/site-shell.js`
+  - `subpages/login.html`
+  - `subpages/register.html`
+  - `css/style.css`
+- EN: Activated links for implemented pages and completed the next pages (`login/register`) with modal-compatible standalone layouts.
+### ドキュメント更新（2026-03-28 追加92）
+- `2.14` の次スライスとして、`article` / `sale` / `stores` の3ページを placeholder から実ページ化しました。
+- 変更内容:
+  - `subpages/article.html` を Japanese-first の記事ハブとして実装（3カード + 関連導線）
+  - `subpages/sale.html` を Japanese-first の限定オファーページとして実装（WATOYO/アロマ/ハンドクリーム導線）
+  - `subpages/stores.html` を Japanese-first の実店舗案内として実装（浅草/柴又/ソラマチ比較 + 予約導線）
+  - `css/style.css` に `content-hub-*` 共通スタイルを追加（カード/グリッド/モバイル対応）
+  - `js/site-shell.js` の `article` / `sale` / `stores` latest 文言を公開済みステータスへ更新
+- 目的:
+  - `2.14 Create All Placeholder Pages` の優先対象（article/sale/stores）を先行で実装し、閲覧可能な最小導線を確保する
+- 対象ファイル:
+  - `subpages/article.html`
+  - `subpages/sale.html`
+  - `subpages/stores.html`
+  - `css/style.css`
+  - `js/site-shell.js`
+- EN: Completed the next `2.14` slice by replacing placeholders with Japanese-first draft pages for `article`, `sale`, and `stores`, including shared hub styles and published latest-copy updates.
+
+### ドキュメント更新（2026-03-28 追加105）
+- 公開導線最終調整として、`brand/items` 親リンク有効化・フッターコピー更新・可視性改善・問い合わせ導線修正を実施しました。
+- 変更内容:
+  - `js/site-shell.js`
+  - グローバルナビの `ブランド` / `アイテム` を親リンクとして有効化（サブメニュー併用）
+  - フッター下部コピーを `© 2026 inim-dx. All rights reserved.` へ更新
+  - `items` current-state 判定に詳細ページキー（DIY/Sale/Ecology/RefillTools/GiftSet）を追加
+  - `subpages/contact.html`
+  - Products導線を `items.html`、Business導線を `about.html` に変更
+  - Business/Products ボタンを可読性の高い `button--secondary` に統一
+  - `css/style.css`
+  - `content-hub` / `policy-footer` / `auth-panel` 上の `button--ghost` コントラストを強化
+- 目的:
+  - 親ハブページへの直接遷移を有効にし、フッター表記とボタン視認性、問い合わせ先導線の整合性を改善する
+- 対象ファイル:
+  - `js/site-shell.js`
+  - `subpages/contact.html`
+  - `css/style.css`
+- EN: Finalized public-routing polish by activating clickable Brand/Items parent links, replacing footer copyright text, improving ghost-button contrast on light surfaces, and correcting Contact page product/business destinations.
+
+### ドキュメント更新（2026-03-28 追加106）
+- `contact` と `shopping-guide` のカード画像を指定アセットへ差し替えました。
+- 変更内容:
+  - `subpages/contact.html`
+  - WORKSHOP: `Workshop_ (1).png`
+  - PRODUCTS: `Lineup image_ (2).png`
+  - BUSINESS: `others_ (5).png`
+  - `subpages/shopping-guide.html`
+  - DELIVERY: `others_ (7).png`
+  - PAYMENT: `others_ (10).png`
+  - RETURN: `others_ (14).png`
+- 目的:
+  - ページ内容とビジュアル文脈を合わせ、各窓口カードの意味を即時認識しやすくする
+- 対象ファイル:
+  - `subpages/contact.html`
+  - `subpages/shopping-guide.html`
+- EN: Swapped `contact` and `shopping-guide` card images to the specified assets so each card’s visual context better matches its role.
+
+### ドキュメント更新（2026-03-28 追加107）
+- `contact` ページの Products/Business ブロック文言とCTA状態を調整しました。
+- 変更内容:
+  - `subpages/contact.html`
+  - Products:
+    - 説明文を削除し、連絡先（Phone / Address / Email）へ差し替え
+    - 既存CTAボタンを撤去
+  - Business:
+    - 既存本文は維持
+    - CTAを非活性化し、ボタン表示文言を `準備中` へ変更
+- 目的:
+  - 連絡先情報の即時提示を優先し、Business導線は準備状態を明確化する
+- 対象ファイル:
+  - `subpages/contact.html`
+- EN: Updated `contact` page copy and CTA state: Products now shows direct contact details with no CTA, and Business keeps its description but shows a disabled `準備中` button.
+
+### ドキュメント更新（2026-03-28 追加108）
+- フッター `Guide` から重複情報リンクを削除しました（ショッピングガイドへ集約）。
+- 変更内容:
+  - `js/site-shell.js`
+  - `配送・送料について` / `返品について` / `お支払い方法について` を footer 表示から削除
+  - `ショッピングガイド` をガイド情報の単一導線として維持
+- 目的:
+  - フッター情報の重複を減らし、導線をシンプルに保つ
+- 対象ファイル:
+  - `js/site-shell.js`
+- EN: Removed duplicated footer Guide entries (`Delivery/Returns/Payment`) and kept `Shopping Guide` as the single route for those topics.
+
+### ドキュメント更新（2026-03-28 追加109）
+- `ISSUE_LIST.md` の記載崩れを修正し、Issue節の整合性を回復しました。
+- 変更内容:
+  - `docs/10_PROJECT/ISSUE_LIST.md`
+  - `Issue 2026-03-27-26` に症状/原因/対策/状態を補完
+  - `Issue 2026-03-28-30` に混入していた 27-26 の英語行（Action/Status）を除去
+- 目的:
+  - Issue単位での履歴追跡性を維持し、確認待ち/解消済み判定を誤読させない
+- 対象ファイル:
+  - `docs/10_PROJECT/ISSUE_LIST.md`
+- EN: Normalized `ISSUE_LIST.md` by restoring complete fields for Issue `2026-03-27-26` and removing misplaced lines accidentally mixed into Issue `2026-03-28-30`.
+
+### ドキュメント更新（2026-03-28 追加110）
+- ユーザー確認完了に基づき、以下 Issue を `解消済み（ユーザー確認済み）` へ更新しました。
+- 更新対象:
+  - `Issue 2026-03-25-17`
+  - `Issue 2026-03-26-18`
+  - `Issue 2026-03-26-19`
+  - `Issue 2026-03-26-20`
+  - `Issue 2026-03-28-30`
+- 目的:
+  - 再確認待ち・SQL適用待ちの状態を解消し、実運用上の未解決項目を正確化する
+- 対象ファイル:
+  - `docs/10_PROJECT/ISSUE_LIST.md`
+- EN: Based on user re-verification, closed five pending issues as `resolved (user verified)` including the former recheck/SQL-pending items.
+
+### ドキュメント更新（2026-03-28 追加111）
+- `Issue 2026-03-21-06`（GitHub Pagesキャッシュ残留の監視項目）をクローズしました。
+- 変更内容:
+  - `docs/10_PROJECT/ISSUE_LIST.md`
+  - 状態を `継続監視` から `解消済み（ユーザー確認済み）` へ更新
+  - 2026-03-28 時点で「再発なし」のユーザー確認結果を追記
+- 目的:
+  - 本日終了時点の未解決 Issue を正確化し、運用ステータスを最新化する
+- 対象ファイル:
+  - `docs/10_PROJECT/ISSUE_LIST.md`
+- EN: Closed `Issue 2026-03-21-06` after user confirmation of no recurrence and updated status from monitoring to resolved (user verified).
+
