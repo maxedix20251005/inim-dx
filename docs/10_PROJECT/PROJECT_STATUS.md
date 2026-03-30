@@ -182,19 +182,19 @@
 - 2026-03-22 の追加実装で、STEP 2 の入力 validity check として `contact_name` 必須、`contact_email` 必須 + 形式、`contact_phone` 必須 + 電話番号形式、`party_size` 1〜4名必須選択を実装しました。
 - 2026-03-22 の追加調整で、STEP 2 の必須ラベルには赤 `*` を付与し、blur 時に各フィールド下へエラー表示を出すようにしました。電話番号は固定電話 / 携帯電話・IP 電話を判定して桁数を確認し、入力中に `-` を自動整形するようにしました。
 - 2026-03-22 の追加調整で、電話番号の局番判定を詳細化し、`03 / 06`、主要な 3 桁市外局番、その他固定電話、`050 / 070 / 080 / 090`、`0120`、`0800`、`0570` を認識して `-` パターンと桁数を出し分けるようにしました。
-- 2026-03-22 の追加実装で、STEP 1 → STEP 2 → STEP 3 の遷移時に `date_key`, `store`, `storeLabel`, `plan_id`, `session_id` をクエリ引き継ぎするようにしました。
+- 2026-03-22 の追加実装で、STEP 1 → STEP 2 → STEP 3 の遷移時に `date_key`, `Shop`, `storeLabel`, `plan_id`, `session_id` をクエリ引き継ぎするようにしました。
 - 2026-03-22 の追加実装で、[`subpages/workshop-booking-confirm.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking-confirm.html) の送信ボタンを Supabase `bookings` 保存へ接続しました。
-- 保存時は `user_profiles` を `auth_user_id` で解決して `customer_profile_id` を設定し、`stores` から店舗名で `store_id` を解決して insert します。
+- 保存時は `user_profiles` を `auth_user_id` で解決して `customer_profile_id` を設定し、`Shops` から店舗名で `store_id` を解決して insert します。
 - 保存 payload は `booking_type`, `booked_at`, `participant_count`, `status`, `note` に加え、拡張列 `session_id`, `plan_id`, `quoted_price_jpy`, `booking_method`, `contact_name`, `contact_email`, `contact_phone`, `party_size`, `special_requests`, `internal_note`, `confirmed_at` を設定します（値がない項目は `null`）。
 - ログイン未実施やプロフィール不整合時は、確認画面でエラーメッセージを表示し、`account.html#login` への導線を表示します。
 - 2026-03-22 の追加調整で、予約導線のキャッシュ判別用に `build=20260322b` をクエリ引き継ぎし、確認画面に `Booking build` 表示を追加しました。
-- 2026-03-23 の追加調整で、`store_id` 解決は `stores` 一覧に対する表記ゆれ吸収マッチ（日本語/英語ヒント、正規化比較）へ変更し、`浅草店が見つからない` エラーの再発を防ぐようにしました。
+- 2026-03-23 の追加調整で、`store_id` 解決は `Shops` 一覧に対する表記ゆれ吸収マッチ（日本語/英語ヒント、正規化比較）へ変更し、`浅草店が見つからない` エラーの再発を防ぐようにしました。
 - 2026-03-23 の追加調整で、`Multiple GoTrueClient instances` 警告を解消するため、`window.__INIM_SUPABASE_CLIENT` による singleton 化を `js/site-shell.js` と確認画面側の両方に適用しました。
 - 2026-03-23 のユーザー再確認で、`Booking build: 20260322b`、予約送信成功、予約ID表示あり、Console エラーなしを確認しました。
 - 別端末再開時の混乱防止として、`docs/10_PROJECT/WIP.md` に「必須ルール」と「再開ショート手順」を追記済みです。
 - `app/` 配下も確認しましたが、2026-03-22 時点では電話番号入力フィールド自体が存在しないため、同ロジックの適用対象はまだありません。今後 `app` 側に電話番号入力を追加する際は、同等の validity と整形を適用する前提とします。
 - 2026-03-22 の導線整理で、[`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html) の `予約する` と 3 コースの各予約ボタンは、いったんすべて [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html) へ統一しました。
-- 同日の追加調整で、`workshop.html` の `行き先を選ぶ` で選択した店舗 (`浅草店 / 柴又店 / ソラマチ店`) を `store` クエリとして [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html) へ引き継ぎ、予約画面側でも選択状態を維持するようにしました。
+- 同日の追加調整で、`workshop.html` の `行き先を選ぶ` で選択した店舗 (`浅草店 / 柴又店 / ソラマチ店`) を `Shop` クエリとして [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html) へ引き継ぎ、予約画面側でも選択状態を維持するようにしました。
 - DB 追加は不要でした。`workshop_sessions.store_id` と既存 `bookings.store_id` がすでに存在するため、今回は SQL `07_` の新規追加は行っていません。
 - 2026-03-22 のユーザー確認で、店舗引き継ぎ、予約画面の店舗選択表示、選択店舗の開催日のみ表示はすべて正常、Console エラーなしを確認しました。
 - Reminder: `workshop_plans` / `workshop_sessions` を正本化した後で、予約画面に各プランをどう表示し、どのコースから来たかをどう初期反映するかを再設計すること。
@@ -360,7 +360,7 @@
   - `sql/10_workshop_public_read_policies.sql`
   - `sql/11_verify_workshop_public_data.sql`
 - New standard sequence for new/empty environments: `05 -> 07 -> 09 -> 11`.
-- If diagnostics still shows `Plans=0 / Sessions=0` with stores visible, run `10 -> 11` to validate read policy exposure.
+- If diagnostics still shows `Plans=0 / Sessions=0` with Shops visible, run `10 -> 11` to validate read policy exposure.
 
 ### 2026-03-26 Update (Booking Management Screen)
 - Added full booking management page at `app/pages/workshop.html`.
@@ -396,13 +396,13 @@
 - Added non-admin access verification as backlog due unavailable non-admin login test environment.
 
 ### 2026-03-26 Update (Workshop Plan Images + Admin Logo Position)
-- Added schema migration sql/12_add_workshop_plan_image_url.sql to store workshop plan image URL/path in DB.
+- Added schema migration sql/12_add_workshop_plan_image_url.sql to Shop workshop plan image URL/path in DB.
 - Updated seed script sql/09_seed_workshop_booking_master_and_sessions.sql to populate plan_image_url for active plans.
 - Rebuilt subpages/workshop-plans.html in clean UTF-8 and bound plan card images to workshop_plans.plan_image_url with fallback images.
 - Moved admin logo to left-top brand area (same placement concept as main site) and removed topbar logo duplication.
 - 2026-03-26: Updated workshop plans card DOM pattern to match workshop page visual composition while preserving Supabase image binding.
 - 2026-03-26: UI adjustment: unified workshop-plan card title typography; updated seeded/default plan images to workshop canonical files; removed `admin-brand__eyebrow` from sidebar header.
-- 2026-03-26: `subpages/workshop-booking.html` summary panel (`開催期間/対象店舗/予約方式/料金目安`) switched from static text to runtime DB-derived values (`workshop_sessions`, `stores`, `workshop_plans`).
+- 2026-03-26: `subpages/workshop-booking.html` summary panel (`開催期間/対象店舗/予約方式/料金目安`) switched from static text to runtime DB-derived values (`workshop_sessions`, `Shops`, `workshop_plans`).
 - 2026-03-26: Fixed mojibake in `subpages/workshop-booking.html` by rebuilding the page in UTF-8 and removing broken Japanese strings/tags while preserving booking flow IDs and DB summary behavior.
 - 2026-03-26: Added admin screen `app/pages/workshop-plans.html` for DB-driven workshop plan management (create/update/delete + inclusion management) and linked it from booking management screen.
 - 2026-03-26: Refined `app/pages/workshop-plans.html` visual design to align with `DESIGN_GUIDELINE` tokens (palette, typography, spacing, button/input standards) via `css/app-workshop-plans.css` refresh.
@@ -423,14 +423,14 @@
   - JA: カレンダー選択から予約枠確認への次アクションを強化するため、選択バーCTAを Primary 化し、文言を「次に何をするか」が明確な内容へ更新。
   - EN: Strengthened the next-action from calendar selection to slot confirmation by promoting the selection-bar CTA to Primary and rewriting copy for clearer action intent.
   - JA: 選択可能日・店舗チップ・予約枠カードの hover/selected 視認性を改善し、クリック判断をしやすく調整。
-  - EN: Improved hover/selected visibility on selectable days, store chips, and slot cards to reduce click hesitation.
+  - EN: Improved hover/selected visibility on selectable days, Shop chips, and slot cards to reduce click hesitation.
   - JA: 凡例をタグ化し、選択バーを sticky 表示（モバイルでは通常表示）にして、スクロール中でも予約導線を維持。
   - EN: Converted legend into tag-style pills and made the selection bar sticky (reverted to static on mobile) to keep conversion guidance visible during scroll.
 - 2026-03-26: Booking calendar IA updated to 1-month navigation + right-side selected-date context (`subpages/workshop-booking.html` + `css/workshop-booking.css`).
   - JA: カレンダー表示を 1か月単位へ変更し、`<` / `>` で前月・翌月へ移動できるUIを追加（境界月ではボタン無効）。
   - EN: Changed calendar rendering to a single-month view and added `<` / `>` month navigation controls with boundary-state disabling.
   - JA: カレンダー右側に `Selected Date` パネルを追加し、選択日・店舗・状態・料金目安を常時表示。
-  - EN: Added a right-side `Selected Date` panel to continuously show selected date, store, status, and indicative price.
+  - EN: Added a right-side `Selected Date` panel to continuously show selected date, Shop, status, and indicative price.
   - JA: 日付選択に連動して表示月が自動追従し、`この日程の予約枠を見る` CTA で下部の予約枠へ遷移可能。
   - EN: Month view now auto-syncs with selected date, and a dedicated CTA (`この日程の予約枠を見る`) links users directly to slot selection.
 - 2026-03-26: Duplicate UI cues in booking step were consolidated for clarity.
@@ -500,7 +500,7 @@
 ### ドキュメント更新（2026-03-26 追加11）
 - Admin hardening Phase 2 の第2スライスとして、`04 Workshop Bookings` と `05 Workshop Plans` にページング・列ソート・状態保持を追加しました。
 - `04 Workshop Bookings` 追加内容:
-  - 列ソート（ID / Booked At / Status / Contact / Store / Party / SLA）
+  - 列ソート（ID / Booked At / Status / Contact / Shop / Party / SLA）
   - ページング（Prev/Next、ページ情報、Rows 10/20/50/100）
   - quick/filter/sort/page size の localStorage 保持（`admin_workshop_bookings_preferences_v1`）
   - quick tab の URL クエリ同期（`?quick=...`）
@@ -600,8 +600,8 @@
 - EN: Acceptance criteria source of truth is `4B. Acceptance Criteria (Today)` in `docs/10_PROJECT/WIP.md`.
 
 ### 2026-03-27 (Step 1 UX Micro-tuning) / 公開予約 Step 1 微調整
-- JA: subpages/workshop-booking.html の Step 1 表示文言を整理し、文字化け表示が混在していた箇所を利用者向け文言へ統一しました（Hero/summary/availability/store/selected-date/legend/slot intro）。
-- EN: Standardised Step 1 user-facing copy in subpages/workshop-booking.html, replacing corrupted display fragments with clear booking wording (Hero/summary/availability/store/selected-date/legend/slot intro).
+- JA: subpages/workshop-booking.html の Step 1 表示文言を整理し、文字化け表示が混在していた箇所を利用者向け文言へ統一しました（Hero/summary/availability/Shop/selected-date/legend/slot intro）。
+- EN: Standardised Step 1 user-facing copy in subpages/workshop-booking.html, replacing corrupted display fragments with clear booking wording (Hero/summary/availability/Shop/selected-date/legend/slot intro).
 - JA: css/workshop-booking.css の .booking-selected-date__cta.is-disabled を調整し、非活性状態の判別を明確化しました。
 - EN: Tuned .booking-selected-date__cta.is-disabled in css/workshop-booking.css for clearer disabled-state affordance.
 - JA: 変更範囲は公開予約 Step 1 の表示/視認性のみ。DB仕様、SQL、`bookings` 保存処理、管理画面機能は未変更です。
@@ -678,7 +678,7 @@
   - `空き枠を確認する` は `data-booking-link="true"` で既存の店舗クエリ引継ぎロジックに接続
 - `css/workshop.css` に `workshop-decision` 系スタイルを追加し、Desktop/Mobile で崩れないレイアウトへ調整しました。
 - EN: Implemented `2.2` slice-2 by adding a mid-page decision block (`#decision`) on `subpages/workshop.html` with three clear next actions.
-- EN: Added responsive `workshop-decision` styling in `css/workshop.css`, and connected booking CTA to existing store-query handoff logic.
+- EN: Added responsive `workshop-decision` styling in `css/workshop.css`, and connected booking CTA to existing Shop-query handoff logic.
 ### ドキュメント更新（2026-03-28 追加25）
 - Workshop 中段 `#decision` ブロックの第3ボタン（`店舗を選んで進む` / `button--ghost`）が背景同化して見えにくい問題を修正しました。
 - `css/workshop.css` に `workshop-decision` 専用の `button--ghost` コントラスト上書きを追加し、通常/hover/focus の視認性を改善しました。
@@ -702,9 +702,9 @@
   - 一致プランがある場合、`workshop_sessions` を該当 `plan_id` で絞り込み表示
   - 予約サマリーに `選択プラン` 行を追加し、選択状態を明示
   - 価格目安は選択プラン基準で表示
-  - 既存互換として `store` / `storeLabel` クエリも維持
+  - 既存互換として `Shop` / `storeLabel` クエリも維持
 - EN: Implemented plan-handoff consumption on `subpages/workshop-booking.html` by resolving `planId` (with code/name fallbacks), filtering sessions by selected plan, and surfacing selected-plan context in summary.
-- EN: Backward compatibility for store query handoff remains intact.
+- EN: Backward compatibility for Shop query handoff remains intact.
 ### ドキュメント更新（2026-03-28 追加28）
 - `2.8 Workshop Plan Page Formalisation` の追加スライスとして、`subpages/workshop-booking.html` に「選択中プラン」コンテキストバーを追加しました。
 - 追加内容:
@@ -737,13 +737,13 @@
 - 追加内容:
   - ステータス別案内文を追加（`pending / confirmed / cancelled`）
   - 次アクションブロックを追加し、完了後の再行動を明示
-  - `同じ条件で別日程を探す` ボタンを追加し、`store/storeLabel/planName` を引継いで `workshop-booking.html` へ再遷移
+  - `同じ条件で別日程を探す` ボタンを追加し、`Shop/storeLabel/planName` を引継いで `workshop-booking.html` へ再遷移
   - `プラン比較ページへ戻る` ボタンを追加
 - 変更ファイル:
   - `subpages/workshop-booking-thanks.html`
   - `css/workshop-booking-thanks.css`
 - EN: Implemented `2.2` slice-3 by improving post-booking completion guidance on `workshop-booking-thanks.html`.
-- EN: Added status-specific guidance plus next-step CTAs, including rebooking with carried `store/storeLabel/planName` context.
+- EN: Added status-specific guidance plus next-step CTAs, including rebooking with carried `Shop/storeLabel/planName` context.
 ### ドキュメント更新（2026-03-28 追加31）
 - `2.2 Top -> Workshop Flow Reinforcement` の第4スライスとして、`index.html` に予約ショートカットブロックを追加し、Top 直下から予約意図を強化しました。
 - 追加内容:
@@ -821,14 +821,14 @@
 ### ドキュメント更新（2026-03-28 追加38）
 - `2.2 Top -> Workshop Flow Reinforcement` の第6スライスとして、店舗コンテキスト引継ぎを強化しました。
 - 追加内容:
-  - `subpages/workshop.html` で店舗選択時、`プランを見る / プランを選ぶ / プランを比較する` へも `store/storeLabel` クエリを引継ぎ
-  - `subpages/workshop-plans.html` で `store/storeLabel` を受け取り、各 `このプランで予約する` と下部CTAの遷移先へ再引継ぎ
-  - プラン一覧ステータス行に `store: {storeLabel}` を併記して文脈を可視化
+  - `subpages/workshop.html` で店舗選択時、`プランを見る / プランを選ぶ / プランを比較する` へも `Shop/storeLabel` クエリを引継ぎ
+  - `subpages/workshop-plans.html` で `Shop/storeLabel` を受け取り、各 `このプランで予約する` と下部CTAの遷移先へ再引継ぎ
+  - プラン一覧ステータス行に `Shop: {storeLabel}` を併記して文脈を可視化
 - 変更ファイル:
   - `subpages/workshop.html`
   - `subpages/workshop-plans.html`
-- EN: Implemented `2.2` slice-6 by preserving selected-store context across `workshop -> plans -> booking`.
-- EN: Store query params are now passed through plan links and booking CTAs to reduce context loss during comparison flow.
+- EN: Implemented `2.2` slice-6 by preserving selected-Shop context across `workshop -> plans -> booking`.
+- EN: Shop query params are now passed through plan links and booking CTAs to reduce context loss during comparison flow.
 ### ドキュメント更新（2026-03-28 追加39）
 - Topページの導線視認性改善として、CTA配置を再調整しました。
 - 変更内容:
@@ -850,7 +850,7 @@
 ### ドキュメント更新（2026-03-28 追加41）
 - `2.2 Top -> Workshop Flow Reinforcement` の第7スライスとして、完了画面からの再予約導線で `plan_id` を保持するよう改善しました。
 - 変更内容:
-  - `subpages/workshop-booking-confirm.html` から Thanks 遷移時に `plan_id` / `store` / `storeLabel` を追加引継ぎ
+  - `subpages/workshop-booking-confirm.html` から Thanks 遷移時に `plan_id` / `Shop` / `storeLabel` を追加引継ぎ
   - `subpages/workshop-booking-thanks.html` の `同じ条件で別日程を探す` で `planId` を優先付与し、プラン一致精度を向上
 - 対象ファイル:
   - `subpages/workshop-booking-confirm.html`
@@ -951,7 +951,7 @@
 - `workshop.html` の PROGRAM パネルから booking へ遷移した際に `選択プラン` が反映されない問題を修正しました。
 - 変更内容:
   - PROGRAMカードの予約ボタンに `data-plan-code` / `data-plan-name` を付与
-  - `syncBookingLinks()` で `planCode/planName` クエリを明示引継ぎ（store/storeLabel と同時に付与）
+  - `syncBookingLinks()` で `planCode/planName` クエリを明示引継ぎ（Shop/storeLabel と同時に付与）
   - 既存クエリ汚染を避けるため、plan系クエリを毎回再生成
 - 目的:
   - `workshop-plans.html` 経由と同等に、PROGRAMパネル経由でも booking の `選択プラン` を安定表示する
@@ -963,7 +963,7 @@
 - 変更内容:
   - 静的3カードを廃止し、`workshop_plans` から `status=active` を `sort_order` 昇順で最大3件表示
   - `workshop_plan_inclusions` を先頭3件までカード内表示
-  - CTA は `data-plan-code/name` を持ち、store選択連動時に `planCode/planName + store/storeLabel` を同時引継ぎ
+  - CTA は `data-plan-code/name` を持ち、store選択連動時に `planCode/planName + Shop/storeLabel` を同時引継ぎ
   - 見出しを「3つのコース」固定文言から、DB件数に追従しやすい文言へ調整
 - 目的:
   - PROGRAM経由と plans経由の予約導線を同一データソース化し、`選択プラン` 反映不整合を防止
@@ -1271,14 +1271,14 @@
   - `subpages/search-shop-info.html` を Japanese-first で整備（店舗選択チップ + 店舗ごとの短いストーリー + 運営情報）
   - 運営情報は `営業時間 / 住所 / アクセス / 予約枠 / おすすめ` を表示し、店舗切替で内容が同期更新
   - Google Map 埋め込みを維持し、選択店舗に応じて地図タイトルと埋め込みクエリを切替
-  - 予約導線CTAは店舗パラメータ（`store` / `storeLabel`）を維持して `workshop-booking` へ遷移
+  - 予約導線CTAは店舗パラメータ（`Shop` / `storeLabel`）を維持して `workshop-booking` へ遷移
   - `js/site-shell.js` の `searchStoreInfo.latest` を公開済み文言へ更新
 - 目的:
   - `search` グループの2ページ目として、店舗比較から予約への最短導線を整備する
 - 対象ファイル:
   - `subpages/search-shop-info.html`
   - `js/site-shell.js`
-- EN: Delivered `2.14` slice-2 by upgrading `search-shop-info` with concise store operations, short story copy, embedded maps, and booking handoff continuity.
+- EN: Delivered `2.14` slice-2 by upgrading `search-shop-info` with concise Shop operations, short story copy, embedded maps, and booking handoff continuity.
 ### ドキュメント更新（2026-03-28 追加78）
 - `2.14 Create All Placeholder Pages` の第3実装として、`プロジェクト・読み物` ページを公開可能レベルへ更新しました。
 - 変更内容:
@@ -1322,7 +1322,7 @@
   - 公開導線の主目的（体験・記事・イベント・店舗）を上位表示し、クリック意図と遷移先を一致させる
 - 対象ファイル:
   - `js/site-shell.js`
-- EN: Reordered and retargeted the global navigation to the requested IA, mapping Article/Event/Stores to implemented search pages and keeping Admin as the rightmost item.
+- EN: Reordered and retargeted the global navigation to the requested IA, mapping Article/Event/Shops to implemented search pages and keeping Admin as the rightmost item.
 ### ドキュメント更新（2026-03-28 追加81）
 - ブランド導線を `WATOYO` のみ公開する運用へ切り替えました。
 - 変更内容:
@@ -1399,13 +1399,13 @@
   - `js/site-shell.js`
 - EN: Tightened top spacing on the requested listing/product pages and converted `Brand/Items` top-nav entries to parent-only submenu triggers (no direct parent-page links).
 ### ドキュメント更新（2026-03-28 追加86）
-- 上部余白調整の未反映を補正し、`Store` 表記を `Shop` 表記へ統一しました。
+- 上部余白調整の未反映を補正し、`Shop` 表記を `Shop` 表記へ統一しました。
 - 変更内容:
   - 対象ページ（Brand/Items/Articles/Events/Shops）で `main` だけでなく `.section` の `padding-top` も縮小
-  - `search-shop-info.html` の英語見出しを `Store` から `Shop` へ変更（title/kicker/subtitle/select）
-  - `site-shell.js` の `Search / Store Info` を `Search / Shop Info`、`Stores` を `Shops` に変更
-  - フッター英語見出しを `Store Info` から `Shop Info` へ変更
-  - `workshop.html` のラベル `Store` を `Shop` へ変更
+  - `search-shop-info.html` の英語見出しを `Shop` から `Shop` へ変更（title/kicker/subtitle/select）
+  - `site-shell.js` の `Search / Shop Info` を `Search / Shop Info`、`Shops` を `Shops` に変更
+  - フッター英語見出しを `Shop Info` から `Shop Info` へ変更
+  - `workshop.html` のラベル `Shop` を `Shop` へ変更
 - 目的:
   - 余白調整の体感差を確実に出し、英語表記を `Shop` へ統一する
 - 対象ファイル:
@@ -1413,7 +1413,7 @@
   - `subpages/search-shop-info.html`
   - `subpages/workshop.html`
   - `js/site-shell.js`
-- EN: Fixed remaining top-space gap by tightening section padding as well, and standardized visible English wording from `Store` to `Shop`.
+- EN: Fixed remaining top-space gap by tightening section padding as well, and standardized visible English wording from `Shop` to `Shop`.
 ### ドキュメント更新（2026-03-28 追加87）
 - 実店舗情報ページのURLを `search-shop-info.html` から `search-shop-info.html` へ変更しました。
 - 変更内容:
@@ -1615,7 +1615,7 @@
   - `subpages/items.html`
   - `Next Action` 画像を `Workshop_ (10).png` へ変更
   - `css/style.css`
-  - recently filled pages（about/brand/items/article/sale/stores/shoppingGuide/contact/account/legal/privacy/newsletter/rss/cart）の `main` と `.section` 上部余白を `search-shop-info` と同水準へ縮小
+  - recently filled pages（about/brand/items/article/sale/Shops/shoppingGuide/contact/account/legal/privacy/newsletter/rss/cart）の `main` と `.section` 上部余白を `search-shop-info` と同水準へ縮小
 - 目的:
   - 指定ビジュアル反映と、最近実装ページのファーストビュー密度を揃える
 - 対象ファイル:
@@ -1655,22 +1655,22 @@
   - `css/style.css`
 - EN: Activated links for implemented pages and completed the next pages (`login/register`) with modal-compatible standalone layouts.
 ### ドキュメント更新（2026-03-28 追加92）
-- `2.14` の次スライスとして、`article` / `sale` / `stores` の3ページを placeholder から実ページ化しました。
+- `2.14` の次スライスとして、`article` / `sale` / `Shops` の3ページを placeholder から実ページ化しました。
 - 変更内容:
   - `subpages/article.html` を Japanese-first の記事ハブとして実装（3カード + 関連導線）
   - `subpages/sale.html` を Japanese-first の限定オファーページとして実装（WATOYO/アロマ/ハンドクリーム導線）
-  - `subpages/stores.html` を Japanese-first の実店舗案内として実装（浅草/柴又/ソラマチ比較 + 予約導線）
+  - `subpages/Shops.html` を Japanese-first の実店舗案内として実装（浅草/柴又/ソラマチ比較 + 予約導線）
   - `css/style.css` に `content-hub-*` 共通スタイルを追加（カード/グリッド/モバイル対応）
-  - `js/site-shell.js` の `article` / `sale` / `stores` latest 文言を公開済みステータスへ更新
+  - `js/site-shell.js` の `article` / `sale` / `Shops` latest 文言を公開済みステータスへ更新
 - 目的:
-  - `2.14 Create All Placeholder Pages` の優先対象（article/sale/stores）を先行で実装し、閲覧可能な最小導線を確保する
+  - `2.14 Create All Placeholder Pages` の優先対象（article/sale/Shops）を先行で実装し、閲覧可能な最小導線を確保する
 - 対象ファイル:
   - `subpages/article.html`
   - `subpages/sale.html`
-  - `subpages/stores.html`
+  - `subpages/Shops.html`
   - `css/style.css`
   - `js/site-shell.js`
-- EN: Completed the next `2.14` slice by replacing placeholders with Japanese-first draft pages for `article`, `sale`, and `stores`, including shared hub styles and published latest-copy updates.
+- EN: Completed the next `2.14` slice by replacing placeholders with Japanese-first draft pages for `article`, `sale`, and `Shops`, including shared hub styles and published latest-copy updates.
 
 ### ドキュメント更新（2026-03-28 追加105）
 - 公開導線最終調整として、`brand/items` 親リンク有効化・フッターコピー更新・可視性改善・問い合わせ導線修正を実施しました。
@@ -1776,3 +1776,25 @@
   - `docs/10_PROJECT/ISSUE_LIST.md`
 - EN: Closed `Issue 2026-03-21-06` after user confirmation of no recurrence and updated status from monitoring to resolved (user verified).
 
+
+### Doc Update (2026-03-30)
+- EN: Shop -> Shop label sweep (A & B) completed on public pages.
+- EN: Added alias redirect pages for shops.html and search-Shop-info.html.
+### Doc Update (2026-03-30)
+- EN: Replaced remaining Shop labels in mockup reference + CSS comment (Shop wording).
+### Doc Update (2026-03-30)
+- EN: Replaced historical Store/Stores wording with Shop/Shops across docs/*.md for consistency.
+### Doc Update (2026-03-30)
+- EN: Merged FUTURE_BACKLOG into FEATURE_BACKLOG and deleted FUTURE_BACKLOG.md.
+### Doc Update (2026-03-30)
+- JA: FEATURE_BACKLOG.md を日本語のみ構成へ更新（英語併記削除）。
+### Doc Update (2026-03-30)
+- JA/EN: FEATURE_BACKLOG.md をバイリンガル構成に戻しました。
+### Doc Update (2026-03-30)
+- EN: Closed 2.14 Create All Placeholder Pages (support treated as footer category).
+### Doc Update (2026-03-30)
+- EN: Removed Cart/Article/Sale/Shop links from sitemap page.
+### Doc Update (2026-03-30)
+- EN: Reconfirmed 2.14 Create All Placeholder Pages as Closed in FEATURE_BACKLOG.md.
+### Doc Update (2026-03-30)
+- EN: Recovered FEATURE_BACKLOG.md and WIP.md from mojibake; backups saved under docs/90_WIP/.

@@ -108,7 +108,7 @@ TEXT 1本に詰め込まない方が、管理画面で追加・並び替えし�
 |---|---|---:|---|
 | `id` | UUID | Yes | PK |
 | `plan_id` | UUID | Yes | `workshop_plans.id` FK |
-| `store_id` | UUID | Yes | `stores.id` FK |
+| `store_id` | UUID | Yes | `Shops.id` FK |
 | `session_date` | DATE | Yes | 開催日 |
 | `gather_time` | TIME | Yes | 集合時間 |
 | `start_time` | TIME | Yes | 開始時間 |

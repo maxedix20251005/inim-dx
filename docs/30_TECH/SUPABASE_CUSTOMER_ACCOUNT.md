@@ -14,7 +14,7 @@
   - one-to-one with `auth.users`
   - customer-facing profile data
 - `public.customer_preferences`
-  - optional extension table for store preference and marketing consent
+  - optional extension table for Shop preference and marketing consent
 
 ## 3. Recommended columns / 推奨カラム
 #### `public.profiles`

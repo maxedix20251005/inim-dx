@@ -152,8 +152,8 @@
 - `発生日:` 2026-03-23
 - `発生箇所:` [`subpages/workshop-booking-confirm.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking-confirm.html)
 - `症状:` `Booking build: 20260322b` で予約送信すると、`店舗マスタで「浅草店」が見つかりません。` で保存失敗した。
-- `原因:` `store_id` 解決を `ilike("%浅草%")` の単純一致にしていたため、実DBの `stores.store_name` 表記ゆれ（英語名、接頭辞付き、表記差）を吸収できなかった。
-- `対策:` `stores` を一覧取得して、`store/storeLabel` と店舗キー別ヒント（`asakusa/shibamata/solamachi`）で正規化マッチする方式へ変更した。`deleted_at/is_active` がある場合は有効店舗を優先し、候補1件時はフォールバック採用する。
+- `原因:` `store_id` 解決を `ilike("%浅草%")` の単純一致にしていたため、実DBの `Shops.store_name` 表記ゆれ（英語名、接頭辞付き、表記差）を吸収できなかった。
+- `対策:` `Shops` を一覧取得して、`Shop/storeLabel` と店舗キー別ヒント（`asakusa/shibamata/solamachi`）で正規化マッチする方式へ変更した。`deleted_at/is_active` がある場合は有効店舗を優先し、候補1件時はフォールバック採用する。
 - `再発防止:` 参照マスタのキー解決は単純文字列一致を避け、表記ゆれ吸収ルールと候補表示付きエラーを実装する。
 - `ユーザー確認結果:` 2026-03-23 時点で、`Booking build: 20260322b` で予約送信成功、予約ID表示あり、Console エラーなしを確認済み。
 - `状態:` 解消済み
@@ -205,7 +205,7 @@
 ### Issue 2026-03-26-20
 - `発生日:` 2026-03-26
 - `発生箇所:` [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html), Supabase `workshop_plans` / `workshop_sessions`
-- `症状:` Diagnostics で `Plans=0`, `Sessions=0`（`Stores=3`, `Error=-`）となり、予約カレンダーが空状態になる。
+- `症状:` Diagnostics で `Plans=0`, `Sessions=0`（`Shops=3`, `Error=-`）となり、予約カレンダーが空状態になる。
 - `原因:` 公開予約ページが参照する seed データ未投入、または read policy 未整備で対象行が見えていない。
 - `対策:` `sql/09_seed_workshop_booking_master_and_sessions.sql` を追加し idempotent seed を標準化。あわせて `sql/10_workshop_public_read_policies.sql` と `sql/11_verify_workshop_public_data.sql` を追加。
 - `再発防止:` 新環境では `05 -> 07 -> 09 -> 11` を初期投入手順に固定し、`Plans/Sessions` が 0 の場合は `10 -> 11` で policy を確認する。
@@ -216,8 +216,8 @@
 - `発生日:` 2026-03-26
 - `発生箇所:` [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html)
 - `症状:` Diagnostics で `Sessions > 0` でも、カレンダー上に予約可能日が表示されなかった。
-- `原因:` `workshop_sessions.store_id` 参照に対し、store lookup が slug key ベースだったため、`store_id` で店舗情報を引けず、全セルが実質 `closed` 扱いになっていた。
-- `対策:` store key 正規化関数を追加し、`store_id` 起点の map（`buildStoreByIdMap`）で `buildSchedule()` を構築するよう修正。
+- `原因:` `workshop_sessions.store_id` 参照に対し、Shop lookup が slug key ベースだったため、`store_id` で店舗情報を引けず、全セルが実質 `closed` 扱いになっていた。
+- `対策:` Shop key 正規化関数を追加し、`store_id` 起点の map（`buildStoreByIdMap`）で `buildSchedule()` を構築するよう修正。
 - `再発防止:` `id` 参照が必要な処理では slug map を直接流用せず、`id->entity` map を明示的に生成する。
 - `状態:` 解消済み（2026-03-27 確認反映）
 
@@ -303,7 +303,7 @@
 - `発生箇所:` [`subpages/workshop.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop.html), [`subpages/workshop-booking.html`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/subpages/workshop-booking.html), [`sql/09_seed_workshop_booking_master_and_sessions.sql`](C:/Users/maxsh/OneDrive/Documents/EDIX/src/inim-dx/sql/09_seed_workshop_booking_master_and_sessions.sql)
 - `症状:` `workshop.html` の PROGRAM パネルから遷移すると booking 側の `選択プラン` が未表示（`workshop-plans.html` 経由では表示される）。
 - `原因:` PROGRAM パネルが静的実装だったため、カード識別子と `workshop_plans.plan_code` の一致保証がなく、booking 側の plan 解決と乖離した。
-- `対策:` PROGRAM を DB連動化し、`workshop_plans`（`status=active`, `sort_order asc`, `limit 3`）からカードを生成するよう変更。CTA には `data-plan-code/name` を付与し、`syncBookingLinks()` で `planCode/planName` と `store/storeLabel` を同時引継ぎ。
+- `対策:` PROGRAM を DB連動化し、`workshop_plans`（`status=active`, `sort_order asc`, `limit 3`）からカードを生成するよう変更。CTA には `data-plan-code/name` を付与し、`syncBookingLinks()` で `planCode/planName` と `Shop/storeLabel` を同時引継ぎ。
 - `再発防止:` 予約導線で plan 文脈を渡す画面は、表示文言ではなく `plan_code` を正本キーとして単一運用する。
 - `ユーザー確認結果:` 2026-03-28 時点で「it works」を確認。
 - `状態:` 解消済み（ユーザー確認済み）

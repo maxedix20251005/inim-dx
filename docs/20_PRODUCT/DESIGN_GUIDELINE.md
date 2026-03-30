@@ -28,7 +28,7 @@
 
 ### 2.3 Left Sidebar IA / 左サイドナビ IA
 - JA: 基本カテゴリは `ブランド / アイテム / 香りから探す / 香りと遊ぶ！香游 / 記事 / Sale / 実店舗 / ショッピングガイド`。
-- EN: Core categories: `Brand / Items / Search by scent / Play with scent / Articles / Sale / Stores / Shopping guide`.
+- EN: Core categories: `Brand / Items / Search by scent / Play with scent / Articles / Sale / Shops / Shopping guide`.
 
 ## 3. Colour System / カラーシステム
 

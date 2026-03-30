@@ -140,18 +140,18 @@
 - 2026-03-22 の追加実装で、STEP 2 の入力 validity check として `contact_name` 必須、`contact_email` 必須 + 形式、`contact_phone` 必須 + 電話番号形式、`party_size` 1〜4名必須選択を実装した
 - 2026-03-22 の追加調整で、STEP 2 の必須ラベルには赤 `*` を付与し、blur 時に各フィールド下へエラー表示を出すようにした。電話番号は固定電話 / 携帯電話・IP 電話を判定して桁数を確認し、入力中に `-` を自動整形するようにした
 - 2026-03-22 の追加調整で、電話番号の局番判定を詳細化し、`03 / 06`、主要な 3 桁市外局番、その他固定電話、`050 / 070 / 080 / 090`、`0120`、`0800`、`0570` を認識して `-` パターンと桁数を出し分けるようにした
-- 2026-03-22 の追加実装で、STEP 1 → STEP 2 → STEP 3 の遷移時に `date_key`, `store`, `storeLabel`, `plan_id`, `session_id` をクエリ引き継ぎするようにした
+- 2026-03-22 の追加実装で、STEP 1 → STEP 2 → STEP 3 の遷移時に `date_key`, `Shop`, `storeLabel`, `plan_id`, `session_id` をクエリ引き継ぎするようにした
 - 2026-03-22 の追加実装で、STEP 3 確認画面 `subpages/workshop-booking-confirm.html` の送信ボタンを Supabase `bookings` 保存へ接続した
-- 保存時はログイン中ユーザーの `user_profiles.id` を `customer_profile_id` に使い、店舗名から `stores.id` を解決して insert する
+- 保存時はログイン中ユーザーの `user_profiles.id` を `customer_profile_id` に使い、店舗名から `Shops.id` を解決して insert する
 - ログイン未実施時やプロフィール不整合時は、確認画面内でエラーメッセージを表示し、`account.html#login` へ誘導する
 - 2026-03-22 の追加調整で、予約導線のキャッシュ判別用に `build=20260322b` をクエリ引き継ぎし、確認画面に `Booking build` を表示するようにした
-- 2026-03-23 の追加調整で、`store_id` 解決は `stores` 一覧に対する表記ゆれ吸収マッチへ変更し、`浅草店が見つからない` エラーの対策を入れた
+- 2026-03-23 の追加調整で、`store_id` 解決は `Shops` 一覧に対する表記ゆれ吸収マッチへ変更し、`浅草店が見つからない` エラーの対策を入れた
 - 2026-03-23 の追加調整で、`Multiple GoTrueClient instances` 警告対策として `window.__INIM_SUPABASE_CLIENT` の singleton 化を `js/site-shell.js` と確認画面側に適用した
 - 2026-03-23 のユーザー再確認で、`Booking build: 20260322b`、予約送信成功、予約ID表示あり、Console エラーなしを確認した
 - 別端末再開時の混乱防止として、`docs/10_PROJECT/WIP.md` に「必須ルール」と「再開ショート手順」を追記した
 - `app/` 配下も確認したが、現時点では電話番号入力フィールド自体が存在しないため、同ロジックの適用対象はまだない。今後 `app` 側に電話番号入力を追加する際は、同等の validity と整形を適用する前提とする
 - 2026-03-22 の導線整理で、`workshop.html` の `予約する` と 3 コースの各予約ボタンは、いったんすべて `./workshop-booking.html` へ統一した
-- 同日の追加調整で、`行き先を選ぶ` で選択した店舗を `store` クエリとして `workshop-booking.html` へ引き継ぎ、予約画面側でも選択状態を維持するようにした
+- 同日の追加調整で、`行き先を選ぶ` で選択した店舗を `Shop` クエリとして `workshop-booking.html` へ引き継ぎ、予約画面側でも選択状態を維持するようにした
 - DB 追加は不要だった。`workshop_sessions.store_id` と既存 `bookings.store_id` がすでに存在するため、SQL `07_` は未作成
 - 2026-03-22 のユーザー確認で、店舗引き継ぎ、予約画面の店舗選択表示、選択店舗の開催日のみ表示はすべて正常、Console エラーなしを確認した
 - Reminder: `workshop_plans` / `workshop_sessions` 確定後に、予約画面で各プランをどう見せるか、各コースボタンから何を初期反映するかを再設計する
@@ -330,7 +330,7 @@
 ## 18. 2026-03-28 PROGRAM DB Migration / 引継ぎ追記
 - JA: Issue `2026-03-28-29` の恒久対応として、`workshop.html` PROGRAMを静的3カードからDB連動表示へ移行。
 - JA: `workshop_plans`（active, sort_order asc, limit 3）を表示し、`workshop_plan_inclusions`（最大3件）をカード内反映。
-- JA: PROGRAMカードCTAは `data-plan-code/name` を保持し、store連動時に booking へ `planCode/planName + store/storeLabel` を引継ぎ。
+- JA: PROGRAMカードCTAは `data-plan-code/name` を保持し、store連動時に booking へ `planCode/planName + Shop/storeLabel` を引継ぎ。
 - EN: Permanent fix applied by migrating Workshop PROGRAM cards to DB-driven top-3 plans and preserving robust booking handoff parameters.
 
 ## 19. 2026-03-28 Issue Status Update / 引継ぎ追記
@@ -467,9 +467,9 @@
 ## 44. 2026-03-28 Placeholder Build Slice-2 / 引継ぎ追記
 - JA: `subpages/search-shop-info.html` を MVP-B（運営情報 + 短いストーリー + 地図埋め込み）方針で更新。
 - JA: 店舗選択チップ（浅草/柴又/ソラマチ）に連動して、`営業時間/住所/アクセス/予約枠/おすすめ` と地図表示が切替わる。
-- JA: `この店舗で予約枠を確認する` は `store/storeLabel` を維持して `workshop-booking` へ遷移。
+- JA: `この店舗で予約枠を確認する` は `Shop/storeLabel` を維持して `workshop-booking` へ遷移。
 - JA: `js/site-shell.js` の `searchStoreInfo.latest` を公開済み案内へ更新。
-- EN: Delivered `2.14` slice-2 by implementing a store info page with concise operations, short story copy, embedded map switching, and booking handoff continuity.
+- EN: Delivered `2.14` slice-2 by implementing a Shop info page with concise operations, short story copy, embedded map switching, and booking handoff continuity.
 
 ## 45. 2026-03-28 Placeholder Build Slice-3 / 引継ぎ追記
 - JA: `subpages/search-projects.html` を実装し、読み物ハブ（キーワード検索 + カテゴリフィルタ + カード一覧）を追加。
@@ -489,7 +489,7 @@
 - JA: 公開グローバルナビを指定順序へ再編（`Home -> 香りと遊ぶ -> ブランド -> アイテム -> 記事 -> イベント -> 実店舗 -> Admin`）。
 - JA: `記事` は `search-projects`、`イベント` は `search-events`、`実店舗` は `search-shop-info` へ遷移先を変更。
 - JA: `Admin` は既存ロジックのままグローバルナビ右端表示を維持。
-- EN: Reworked top-level public nav to the requested order and remapped Article/Event/Store links to implemented search pages while keeping Admin at the right edge.
+- EN: Reworked top-level public nav to the requested order and remapped Article/Event/Shop links to implemented search pages while keeping Admin at the right edge.
 
 ## 48. 2026-03-28 Brand WATOYO-only Activation / 引継ぎ追記
 - JA: ブランド公開方針を `WATOYOのみ有効` へ切替（top-level Brand は有効化、Brand詳細露出は WATOYO のみに制限）。
@@ -528,8 +528,8 @@
 
 ## 53. 2026-03-28 Top-space Correction + Shop Wording / 引継ぎ追記
 - JA: 上部余白の未調整箇所を補正するため、対象ページキーの `.section` にも `padding-top` 縮小を適用。
-- JA: `Store` 表記を `Shop` 表記へ更新（`search-shop-info` 見出し、footer title、workshopラベル、shell title）。
-- EN: Applied section-level top-padding tightening to fully remove remaining top gap and standardized visible English wording from `Store` to `Shop`.
+- JA: `Shop` 表記を `Shop` 表記へ更新（`search-shop-info` 見出し、footer title、workshopラベル、shell title）。
+- EN: Applied section-level top-padding tightening to fully remove remaining top gap and standardized visible English wording from `Shop` to `Shop`.
 
 ## 54. 2026-03-28 Route Rename (search-shop-info) / 引継ぎ追記
 - JA: `subpages/search-shop-info.html` を `subpages/search-shop-info.html` へリネーム。

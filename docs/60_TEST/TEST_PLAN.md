@@ -583,7 +583,7 @@
   - `subpages/workshop-booking.html`
   - `css/workshop-booking.css`
 - 手順:
-  1. 予約ページを開き、Hero/summary/availability/store/selected-date/legend/slot intro の文言が文字化けなく表示されることを確認する
+  1. 予約ページを開き、Hero/summary/availability/Shop/selected-date/legend/slot intro の文言が文字化けなく表示されることを確認する
   2. 日付未選択時、`この日程の予約枠を見る` が非活性表示（誤操作不能）であることを確認する
   3. 日付選択後、同CTAから `#booking-slots-panel` へ遷移できることを確認する
   4. Diagnostics、店舗選択、日付選択、予約枠表示が従来どおり動作することを確認する
@@ -732,11 +732,11 @@
   3. カレンダー/予約枠が対象プランのセッションのみに絞られて表示されることを確認する
   4. `planId` を外し `planCode` のみで遷移した場合でも一致解決できることを確認する
   5. 不一致値（存在しない `planId`）で遷移した場合、全体表示へフォールバックし、`選択プラン` が不一致表示になることを確認する
-  6. `store` / `storeLabel` クエリ併用時、店舗初期選択が維持されることを確認する
+  6. `Shop` / `storeLabel` クエリ併用時、店舗初期選択が維持されることを確認する
 - 期待結果:
   - プラン選択から予約枠表示まで一貫した文脈が維持される
   - 既存の店舗引継ぎ互換性を崩さない
-  - EN: Plan handoff context is consumed consistently while preserving store-handoff compatibility.
+  - EN: Plan handoff context is consumed consistently while preserving Shop-handoff compatibility.
 ## 2026-03-28 追加テスト / Added Test (Booking Plan Context Bar: Change/Clear)
 - 対象:
   - `subpages/workshop-booking.html`
@@ -776,7 +776,7 @@
 - 手順:
   1. 予約送信後に完了画面を開き、ステータス別案内文が表示されることを確認する（`pending/confirmed/cancelled`）
   2. `同じ条件で別日程を探す` を押下し、`workshop-booking.html` へ遷移することを確認する
-  3. 上記遷移URLに `store` / `storeLabel` / `planName` が含まれることを確認する（値が存在する場合）
+  3. 上記遷移URLに `Shop` / `storeLabel` / `planName` が含まれることを確認する（値が存在する場合）
   4. `プラン比較ページへ戻る` で `workshop-plans.html` に遷移できることを確認する
   5. 既存の `ワークショップページへ戻る` / `トップへ戻る` が引き続き動作することを確認する
 - 期待結果:
@@ -864,21 +864,21 @@
   - 予約開始時点で全体フローが明確に理解できる
   - 既存予約機能を維持したまま視認性が向上する
   - EN: Users can understand the full booking process from Step 1 without regressions.
-## 2026-03-28 追加テスト / Added Test (Store Context Handoff: Workshop -> Plans -> Booking)
+## 2026-03-28 追加テスト / Added Test (Shop Context Handoff: Workshop -> Plans -> Booking)
 - 対象:
   - `subpages/workshop.html`
   - `subpages/workshop-plans.html`
   - `subpages/workshop-booking.html`
 - 手順:
   1. `workshop.html` で店舗チップを `浅草店/柴又店/ソラマチ店` のいずれかに切替える
-  2. `プランを見る` または `プランを比較する` へ遷移し、URLに `store` / `storeLabel` が含まれることを確認する
-  3. `workshop-plans.html` の各 `このプランで予約する` を押下し、遷移先URLに `planId` と `store/storeLabel` が同時に含まれることを確認する
-  4. `workshop-plans.html` 下部CTA `空き枠を確認して予約へ進む` でも `store/storeLabel` が引継がれることを確認する
+  2. `プランを見る` または `プランを比較する` へ遷移し、URLに `Shop` / `storeLabel` が含まれることを確認する
+  3. `workshop-plans.html` の各 `このプランで予約する` を押下し、遷移先URLに `planId` と `Shop/storeLabel` が同時に含まれることを確認する
+  4. `workshop-plans.html` 下部CTA `空き枠を確認して予約へ進む` でも `Shop/storeLabel` が引継がれることを確認する
   5. `workshop-booking.html` で対象店舗が初期選択されていることを確認する
 - 期待結果:
   - 店舗選択後の比較導線でコンテキストが維持される
   - 比較ページ経由でも booking 画面の初期店舗選択が失われない
-  - EN: Store context remains intact across workshop, plans, and booking transitions.
+  - EN: Shop context remains intact across workshop, plans, and booking transitions.
 ## 2026-03-28 追加テスト / Added Test (Top CTA Alignment + Journey Per-Step Actions)
 - 対象:
   - `index.html`
@@ -912,13 +912,13 @@
   - `subpages/workshop-booking-thanks.html`
 - 手順:
   1. 通常予約フローで confirm から送信し、thanks へ遷移する
-  2. thanks URL に `plan_id` / `store` / `storeLabel` が含まれることを確認する
+  2. thanks URL に `plan_id` / `Shop` / `storeLabel` が含まれることを確認する
   3. `同じ条件で別日程を探す` を押下し、booking URL に `planId` が含まれることを確認する
   4. booking 画面で `選択プラン` と店舗初期選択が一致することを確認する
 - 期待結果:
   - 完了画面経由の再予約でもプラン・店舗の文脈が保持される
   - `planName` のみ依存より高い一致精度で再検索できる
-  - EN: Rebooking from thanks preserves exact plan/store context via `plan_id` handoff.
+  - EN: Rebooking from thanks preserves exact plan/Shop context via `plan_id` handoff.
 ## 2026-03-28 追加テスト / Added Test (Sticky Next-Action CTA + Copy Consistency)
 - 対象:
   - `subpages/workshop-plans.html`
@@ -927,7 +927,7 @@
   - `index.html`
 - 手順:
   1. `workshop-plans.html` を開き、右下（mobileは下部）に `予約枠を確認する` fixed CTA が表示されることを確認する
-  2. `store/storeLabel` クエリ付き遷移時、fixed CTA のリンク先にも同クエリが引継がれることを確認する
+  2. `Shop/storeLabel` クエリ付き遷移時、fixed CTA のリンク先にも同クエリが引継がれることを確認する
   3. `workshop-booking.html` を開き、初期状態では fixed CTA が非表示であることを確認する
   4. 予約可能日を選択すると fixed CTA が表示され、文言が `◯◯ の予約枠へ進む` へ更新されることを確認する
   5. Top/Workshop/Plans の主要CTA文言が `予約枠` 表現へ統一されていることを確認する
@@ -1278,7 +1278,7 @@
   - `香りから探す` が placeholder ではなく、実用的な検索起点として機能する
   - shared policy 上でも `scentSearch` が有効状態へ同期される
   - EN: `scentSearch` works as a functional search hub and is enabled consistently across shared policy/nav/sitemap.
-## 2026-03-28 追加テスト / Added Test (2.14 Slice-2: Search Store Info MVP-B)
+## 2026-03-28 追加テスト / Added Test (2.14 Slice-2: Search Shop Info MVP-B)
 - 対象:
   - `subpages/search-shop-info.html`
   - `js/site-shell.js`
@@ -1286,13 +1286,13 @@
   1. `subpages/search-shop-info.html` を開き、`浅草店/柴又店/ソラマチ店` の店舗チップが表示されることを確認する
   2. 店舗チップを切替えたとき、`営業時間/住所/アクセス/予約枠/おすすめ` が店舗ごとに更新されることを確認する
   3. ストーリー文と地図タイトルが店舗ごとに更新されることを確認する
-  4. `store-map-frame` の `src` が店舗切替に応じて変更されることを確認する（埋め込み地図が切替わる）
-  5. `この店舗で予約枠を確認する` CTA の遷移先に `store` と `storeLabel` が含まれることを確認する
+  4. `Shop-map-frame` の `src` が店舗切替に応じて変更されることを確認する（埋め込み地図が切替わる）
+  5. `この店舗で予約枠を確認する` CTA の遷移先に `Shop` と `storeLabel` が含まれることを確認する
   6. `js/site-shell.js` の `searchStoreInfo.latest` が「公開済み」文言へ更新されていることを確認する
 - 期待結果:
   - 実店舗情報ページが placeholder ではなく、比較可能な導線ページとして機能する
   - 店舗選択と地図/予約CTAの整合が維持される
-  - EN: `search-shop-info` works as a practical store-selection page with synced map + booking handoff behavior.
+  - EN: `search-shop-info` works as a practical Shop-selection page with synced map + booking handoff behavior.
 
 ## 2026-03-28 クイック確認チェックリスト / Quick QA Checklist (Search Flow)
 - 対象:
@@ -1305,10 +1305,10 @@
   3. カテゴリ `店舗` を選び、店舗関連カードに絞り込まれることを確認する
   4. `実店舗情報` カードから `search-shop-info.html` へ遷移できることを確認する
   5. `浅草店/柴又店/ソラマチ店` の切替で、情報ブロックと地図が連動して更新されることを確認する
-  6. `この店舗で予約枠を確認する` で `workshop-booking.html` へ遷移し、URLに `store/storeLabel` が含まれることを確認する
+  6. `この店舗で予約枠を確認する` で `workshop-booking.html` へ遷移し、URLに `Shop/storeLabel` が含まれることを確認する
 - 期待結果:
   - トップページから検索ハブ、店舗比較、予約ページまでの導線が途切れず機能する
-  - EN: End-to-end search flow works from top page to search hub, store compare, and booking handoff.
+  - EN: End-to-end search flow works from top page to search hub, Shop compare, and booking handoff.
 ## 2026-03-28 追加テスト / Added Test (2.14 Slice-3: Search Projects Story Hub)
 - 対象:
   - `subpages/search-projects.html`
@@ -1441,7 +1441,7 @@
   1. `brand-watoyo` / `item-home-fragrance` / `item-body-care` / `search-projects` / `search-events` / `search-shop-info` を開き、`news-strip` 直下の空白が以前より縮小していることを確認する
   2. `search-shop-info.html` の英語表記が `Shop Info / Shop Guide / Select Shop` になっていることを確認する
   3. フッター英語見出しが `Shop Info` になっていることを確認する
-  4. `workshop.html` の `Store` ラベルが `Shop` になっていることを確認する
+  4. `workshop.html` の `Shop` ラベルが `Shop` になっていることを確認する
 - 期待結果:
   - 上部余白の修正が対象ページすべてに反映される
   - 可視英語表記が `Shop` に統一される
@@ -1460,7 +1460,7 @@
   5. `sitemap` の `検索: 実店舗情報` が `search-shop-info.html` を指していることを確認する
 - 期待結果:
   - 実店舗情報ページの新URL (`search-shop-info.html`) へ導線が一本化される
-  - EN: All references resolve to the new shop-info route and no stale store-info path remains.
+  - EN: All references resolve to the new shop-info route and no stale Shop-info path remains.
 ## 2026-03-28 追加テスト / Added Test (Top Utility + Home About Submenu + Product Block Swap)
 - 対象:
   - `js/site-shell.js`
@@ -1522,19 +1522,19 @@
 - 対象:
   - `subpages/article.html`
   - `subpages/sale.html`
-  - `subpages/stores.html`
+  - `subpages/Shops.html`
   - `css/style.css`
   - `js/site-shell.js`
 - 手順:
   1. `article.html` を開き、3つの記事カードと各CTAが表示されることを確認する
   2. `sale.html` を開き、WATOYO/アロマ/ハンドクリームの3カードと各CTAが表示されることを確認する
-  3. `stores.html` を開き、浅草/柴又/ソラマチの3カードが表示され、`予約枠を確認する` CTAが押下可能であることを確認する
+  3. `Shops.html` を開き、浅草/柴又/ソラマチの3カードが表示され、`予約枠を確認する` CTAが押下可能であることを確認する
   4. 3ページともモバイル幅でカードが1カラム表示に切り替わることを確認する
   5. 各ページの news-strip 文言が「公開済み」内容に更新されていることを確認する
 - 期待結果:
-  - `article` / `sale` / `stores` が placeholder ではなく実ページとして表示される
+  - `article` / `sale` / `Shops` が placeholder ではなく実ページとして表示される
   - 3ページが共通 `content-hub-*` スタイルで整合表示される
-  - EN: `article/sale/stores` render as implemented draft pages (not placeholders), with consistent hub styling and published latest-copy status.
+  - EN: `article/sale/Shops` render as implemented draft pages (not placeholders), with consistent hub styling and published latest-copy status.
 ## 2026-03-28 追加テスト / Added Test (2.14 Slice-6: Shopping Guide / Contact / Account)
 - 対象:
   - `subpages/shopping-guide.html`
@@ -1630,7 +1630,7 @@
   1. `brand.html` の `Brand Policy` 画像が `Lineup image_ (5).png` に変更されていることを確認する
   2. `brand.html` の `Next Action` 画像が `Workshop_ (10).png` に変更されていることを確認する
   3. `items.html` の `Next Action` 画像が `Workshop_ (10).png` に変更されていることを確認する
-  4. recently filled pages（about/brand/items/article/sale/stores/shoppingGuide/contact/account/legal/privacy/newsletter/rss/cart）で、`search-shop-info` と同水準まで上部余白が縮小されていることを確認する
+  4. recently filled pages（about/brand/items/article/sale/Shops/shoppingGuide/contact/account/legal/privacy/newsletter/rss/cart）で、`search-shop-info` と同水準まで上部余白が縮小されていることを確認する
   5. `about.html` で左テキスト開始位置と右カード上端の視覚位置が揃っていることを確認する
 - 期待結果:
   - 指定画像の差し替えが反映される
@@ -1648,7 +1648,7 @@
 - 手順:
   1. `ISSUE_LIST.md` に `Issue 2026-03-28-30` が記録されていることを確認する
   2. `about.html` を開き、左カラム見出し/本文と右カードが同一行開始で上端整列して見えることを確認する
-  3. フッター/ナビで previously-disabled 公開リンク（article/sale/stores/shopping-guide/contact/newsletter/rss/cart など）へ遷移可能であることを確認する
+  3. フッター/ナビで previously-disabled 公開リンク（article/sale/Shops/shopping-guide/contact/newsletter/rss/cart など）へ遷移可能であることを確認する
   4. `login.html` / `register.html` を開き、ページ内容が表示されることを確認する
   5. `login.html` の `#login`、`register.html` の `#register` でモーダル導線が起動することを確認する
 - 期待結果:

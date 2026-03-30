@@ -40,7 +40,7 @@
 - JA: ログイン、ダッシュボード、トップ編集、導線設定、公開管理、ユーザー設定を中核として運用。
 - EN: Core admin screens include login, dashboard, top-content editing, journey settings, publish checks, and account settings.
 - JA: 仕様書上の管理機能群（カード/商品/店舗/記事/ユーザー/予約問い合わせ/アセット）は段階実装前提。
-- EN: Broader admin capabilities in the spec (cards/products/stores/articles/users/bookings-enquiries/assets) are phased.
+- EN: Broader admin capabilities in the spec (cards/products/Shops/articles/users/bookings-enquiries/assets) are phased.
 
 ### 3.3 Navigation Governance / ナビゲーション運用規約
 - JA: 管理運用導線は `app/dashboard.html` のサイドナビを正本入口とし、`Workshop予約管理`（`app/pages/workshop.html`）および `Workshopプラン管理`（`app/pages/workshop-plans.html`）を固定配置する。
@@ -80,7 +80,7 @@
 - JA: 一覧、詳細、ステータス更新、CSV出力を提供する。
 - EN: Provide listing, detail, status updates, and CSV export.
 - JA: 顧客・店舗への関連遷移を提供する。
-- EN: Support related navigation to customer/store contexts.
+- EN: Support related navigation to customer/Shop contexts.
 
 ## 5. Current Booking Flow (Public) / 現在の予約導線（公開）
 - JA: 現行導線は `workshop.html -> workshop-booking.html -> workshop-booking-entry.html -> workshop-booking-confirm.html`。
@@ -99,7 +99,7 @@
   - `roles`, `user_role_assignments` (RBAC)
   - `content_assets` (media metadata)
   - `top_hero_items`, `journey_steps` (public content)
-  - `stores` (store master)
+  - `Shops` (Shop master)
   - `bookings`, `booking_status_logs`
   - `enquiries`, `enquiry_status_logs`
 
@@ -110,8 +110,8 @@
 - EN: `roles` and `user_profiles` are many-to-many via `user_role_assignments`.
 - JA: `content_assets` は `top_hero_items` 等から参照される。
 - EN: `content_assets` is referenced from content tables such as `top_hero_items`.
-- JA: `stores` は `bookings` に 1:N で接続。
-- EN: `stores` has a 1:N relation to `bookings`.
+- JA: `Shops` は `bookings` に 1:N で接続。
+- EN: `Shops` has a 1:N relation to `bookings`.
 - JA: `bookings` / `enquiries` はそれぞれ履歴ログテーブルを持つ。
 - EN: `bookings` and `enquiries` each have status log tables.
 
