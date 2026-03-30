@@ -1,4 +1,4 @@
-# FEATURE BACKLOG / 機能追加バックログ
+﻿# FEATURE BACKLOG / 機能追加バックログ
 
 ## 1. Purpose / 目的
 - JA: 今後の機能追加アイデアを、実装判断可能な粒度で管理する。
@@ -16,19 +16,22 @@
   - JA: 一括更新、下書き/公開切替、変更履歴、更新差分プレビュー
   - EN: Bulk update, draft/publish switch, change history, diff preview
 
-### 2.2 Top -> Workshop Flow Reinforcement / トップからワークショップ導線強化（着手中）
-- Status: `In Progress`
+### 2.2 Top -> Workshop Flow Reinforcement / トップからワークショップ導線強化
+- Status: `Closed`
 - JA: CTA配置・比較導線・予約完了導線を改善し、到達率とCVRを高める。
 - EN: Improve CTA placement, comparison flow, and booking completion path to raise reach rate and CVR.
 - KPI link:
   - JA/EN: Reach rate (Top -> Workshop), CVR (Workshop -> Booking)
-- Remaining checks:
+- Completed checks:
+- 2.2 UAT closure / 2.2 UATクローズ
+  - JA: ユーザー確認により完了（2026-03-30）
+  - EN: Completed by user confirmation (2026-03-30)
   - JA: トップ〜ワークショップ間のCTA配置が最新構成で意図通りか確認
-  - EN: Confirm CTA placement from top to workshop matches the latest layout intent
+  - EN: Confirmed CTA placement from top to workshop matches the latest layout intent
   - JA: プラン比較→予約導線が迷いなく辿れるか再確認
-  - EN: Re-verify plan comparison → booking path clarity
+  - EN: Re-verified plan comparison → booking path clarity
   - JA: 予約完了後の次アクション（thanks/導線）が明確か確認
-  - EN: Ensure post-booking thank-you and next-action guidance are clear
+  - EN: Confirmed post-booking thank-you and next-action guidance are clear
 
 ### 2.3 Digital Blend AI Recommendation / デジタル調香AIレコメンド
 - Status: `Proposed`
@@ -78,9 +81,11 @@
 - EN: Non-admin login verification is blocked by environment constraints; keep deny-access scenario as backlog test item.
 
 ### 2.10 Workshop Plan/Course Management IA Optimisation / ワークショッププラン管理導線の情報設計最適化
-- Status: `Accepted`
+- Status: `Closed`
 - JA: 管理画面のプラン/コース管理導線が分かりにくいため、IAを再設計する。
 - EN: Redesign admin IA to make plan/course management entry points clear.
+- JA: 実装反映済み（管理サイドナビ常設、公開予約サマリー動的化、導線配置統一）。
+- EN: Completed in implementation (admin side-nav entries, dynamic public booking summary, unified routing placement).
 - Scope candidates:
   - JA: 管理画面グローバルナビ再編（Workshop管理セクションの明示）
   - EN: Restructure admin global navigation with explicit workshop-management section
@@ -90,14 +95,18 @@
   - EN: Define a consistent placement rule for plan-management links
 
 ### 2.11 Sitemap Page Creation + Footer Link Finalisation / サイトマップページ作成とフッター導線確定
-- Status: `Accepted`
+- Status: `Closed`
 - JA: `sitemap.html` を作成し、公開/管理導線を一覧化する。
 - EN: Create `sitemap.html` to list public/admin navigation paths.
 
 ### 2.12 Breadcrumb Navigation / パンくずナビゲーション整備
-- Status: `Accepted`
+- Status: `Closed`
 - JA: 主要ページにパンくずを追加し、階層把握を容易にする。
 - EN: Add breadcrumb navigation to major pages for hierarchy clarity.
+
+- 2.11/2.12 closure / 2.11/2.12 クローズ
+  - JA: ユーザー確認により完了（2026-03-30）
+  - EN: Closed by user confirmation (2026-03-30).
 
 ### 2.13 Site Structure Review + IA Refinement / サイト構造レビューとIA再設計
 - Status: `Accepted`

@@ -23,7 +23,7 @@
         <aside class="booking-summary">
           <div class="booking-summary__row"><span>選択プラン</span><strong id="summary-plan">未指定</strong></div>
           <div class="booking-summary__row"><span>開催期間</span><strong id="summary-period">読み込み中...</strong></div>
-          <div class="booking-summary__row"><span>対象店舗</span><strong id="summary-Shops">読み込み中...</strong></div>
+          <div class="booking-summary__row"><span>対象店舗</span><strong id="summary-stores">読み込み中...</strong></div>
           <div class="booking-summary__row"><span>予約方式</span><strong id="summary-methods">読み込み中...</strong></div>
           <div class="booking-summary__row"><span>料金目安</span><strong id="summary-price">読み込み中...</strong></div>
         </aside>
@@ -42,8 +42,8 @@
             <dd id="diag-plans">-</dd>
           </div>
           <div>
-            <dt>Shops</dt>
-            <dd id="diag-Shops">-</dd>
+            <dt>Stores</dt>
+            <dd id="diag-stores">-</dd>
           </div>
           <div>
             <dt>Sessions</dt>
@@ -106,15 +106,15 @@
           </div>
           <p>店舗を選ぶと、その店舗の開催日だけを表示します。</p>
         </div>
-        <div class="booking-Shop-bar">
-          <div class="booking-Shop-bar__head">
+        <div class="booking-store-bar">
+          <div class="booking-store-bar__head">
             <div>
-              <p class="section-kicker">Shop</p>
+              <p class="section-kicker">Store</p>
               <h3>選択店舗</h3>
             </div>
-            <p class="booking-Shop-bar__meta" id="booking-Shop-meta">店舗を選択してください。</p>
+            <p class="booking-store-bar__meta" id="booking-store-meta">店舗を選択してください。</p>
           </div>
-          <div class="booking-Shop-picker" id="booking-Shop-picker"></div>
+          <div class="booking-store-picker" id="booking-store-picker"></div>
         </div>
         <div class="booking-calendar-layout">
           <div class="booking-calendar-main">
@@ -133,7 +133,7 @@
             <dl class="booking-selected-date__grid">
               <div>
                 <dt>店舗</dt>
-                <dd id="booking-selected-date-Shop">-</dd>
+                <dd id="booking-selected-date-store">-</dd>
               </div>
               <div>
                 <dt>状態</dt>
@@ -194,7 +194,7 @@
       const requestedPlanId = param("planId", "plan_id");
       const requestedPlanCode = param("planCode", "plan_code");
       const requestedPlanName = param("planName", "plan_name");
-      const requestedStore = param("Shop");
+      const requestedStore = param("store");
       const requestedStoreLabel = param("storeLabel");
       const api = window.supabase || null;
       const supabase = (() => {
@@ -215,36 +215,36 @@
       const calNext = el("booking-cal-next");
       const calLabel = el("booking-cal-label");
       const selectedDateTitle = el("booking-selected-date-title");
-      const selectedDateStore = el("booking-selected-date-Shop");
+      const selectedDateStore = el("booking-selected-date-store");
       const selectedDateStatus = el("booking-selected-date-status");
       const selectedDatePrice = el("booking-selected-date-price");
       const selectedDateCta = el("booking-selected-date-cta");
       const stickyNext = el("booking-sticky-next");
       const stickyNextCta = el("booking-sticky-next-cta");
-      const picker = el("booking-Shop-picker");
-      const storeMeta = el("booking-Shop-meta");
+      const picker = el("booking-store-picker");
+      const storeMeta = el("booking-store-meta");
       const summaryPeriod = el("summary-period");
       const summaryPlan = el("summary-plan");
-      const summaryStores = el("summary-Shops");
+      const summaryStores = el("summary-stores");
       const summaryMethods = el("summary-methods");
       const summaryPrice = el("summary-price");
       const planContext = el("booking-plan-context");
       const planContextName = el("booking-plan-context-name");
       const planClearBtn = el("booking-plan-clear");
       const dHost = el("booking-diagnostics");
-      const diag = { src: el("diag-source"), plans: el("diag-plans"), Shops: el("diag-Shops"), sessions: el("diag-sessions"), range: el("diag-range"), err: el("diag-error") };
+      const diag = { src: el("diag-source"), plans: el("diag-plans"), stores: el("diag-stores"), sessions: el("diag-sessions"), range: el("diag-range"), err: el("diag-error") };
 
       const marks = { instant: "○", request: "□", few: "△", full: "×", closed: "-" };
       const days = ["月", "火", "水", "木", "金", "土", "日"];
       const fallbackStores = { asakusa: { label: "浅草店", caption: "Fri - Sun" }, shibamata: { label: "柴又店", caption: "Sat - Mon" }, solamachi: { label: "ソラマチ店", caption: "Daily" } };
       const norm = (v) => String(v || "").trim().toLowerCase();
-      let Shops = { ...fallbackStores }, schedule = {}, months = [], selectedStore = "asakusa", selectedKey = "", currentMonthIndex = 0;
+      let stores = { ...fallbackStores }, schedule = {}, months = [], selectedStore = "asakusa", selectedKey = "", currentMonthIndex = 0;
       let selectedPlan = null;
 
       const setDiag = (v) => {
         diag.src.textContent = v.source;
         diag.plans.textContent = v.plans;
-        diag.Shops.textContent = v.Shops;
+        diag.stores.textContent = v.stores;
         diag.sessions.textContent = v.sessions;
         diag.range.textContent = v.range;
         diag.err.textContent = v.error;
@@ -287,7 +287,7 @@
           const cells = []; for (let i = 0; i < ((first + 6) % 7); i++) cells.push(null);
           for (let d = 1; d <= dim; d++) {
             const iso = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`; const ss = map[iso] || [];
-            if (!ss.length) cells.push({ d, s: "closed", k: iso }); else { const p = ss[0]; cells.push({ d, s: p.status, p: { display: p.price.display }, k: iso, Shop: p.storeKey }); }
+            if (!ss.length) cells.push({ d, s: "closed", k: iso }); else { const p = ss[0]; cells.push({ d, s: p.status, p: { display: p.price.display }, k: iso, store: p.storeKey }); }
           }
           while (cells.length % 7 !== 0) cells.push(null); out.push({ label, year: y, month: m + 1, cells }); cur.setMonth(m + 1);
         } return out;
@@ -303,11 +303,11 @@
       };
 
       const renderPicker = () => {
-        picker.innerHTML = Object.entries(Shops).map(([k, v]) => `<button class="booking-Shop-chip${k === selectedStore ? " is-active" : ""}" type="button" data-Shop="${k}">${v.label} / ${v.caption}</button>`).join("");
-        storeMeta.textContent = `${Shops[selectedStore].label} の開催日を表示しています。`;
-        picker.querySelectorAll("[data-Shop]").forEach((b) => b.onclick = () => {
-          selectedStore = b.dataset.Shop;
-          const first = Object.keys(schedule).find((k) => schedule[k].Shop === selectedStore);
+        picker.innerHTML = Object.entries(stores).map(([k, v]) => `<button class="booking-store-chip${k === selectedStore ? " is-active" : ""}" type="button" data-store="${k}">${v.label} / ${v.caption}</button>`).join("");
+        storeMeta.textContent = `${stores[selectedStore].label} の開催日を表示しています。`;
+        picker.querySelectorAll("[data-store]").forEach((b) => b.onclick = () => {
+          selectedStore = b.dataset.store;
+          const first = Object.keys(schedule).find((k) => schedule[k].store === selectedStore);
           selectedKey = first || "";
           currentMonthIndex = monthIndexFromDateKey(selectedKey);
           renderPicker(); renderCal(); renderSlots();
@@ -316,7 +316,7 @@
 
       const href = (cur, s) => {
         const u = new URL("./workshop-booking-entry.html", window.location.href);
-        [["date_key", selectedKey], ["date", cur.label], ["label", cur.label], ["gather", s.g], ["start_time", s.start], ["end_time", s.end], ["price_display", s.price.display], ["price_jpy", String(s.price.jpy || "")], ["booking_method", s.method], ["note", s.n], ["Shop", cur.Shop], ["storeLabel", cur.storeLabel], ["plan_id", cur.planId || ""], ["session_id", s.sessionId || ""]].forEach(([k, v]) => u.searchParams.set(k, v));
+        [["date_key", selectedKey], ["date", cur.label], ["label", cur.label], ["gather", s.g], ["start_time", s.start], ["end_time", s.end], ["price_display", s.price.display], ["price_jpy", String(s.price.jpy || "")], ["booking_method", s.method], ["note", s.n], ["store", cur.store], ["storeLabel", cur.storeLabel], ["plan_id", cur.planId || ""], ["session_id", s.sessionId || ""]].forEach(([k, v]) => u.searchParams.set(k, v));
         return u.toString();
       };
 
@@ -349,7 +349,7 @@
         currentMonthIndex = Math.max(0, Math.min(currentMonthIndex, months.length - 1));
         const m = months[currentMonthIndex];
         calLabel.textContent = m.label;
-        cal.innerHTML = `<section class="booking-month"><div class="booking-month__header"><h3>${m.label}</h3><span>${Shops[selectedStore].label} の開催日</span></div><table><thead><tr>${days.map((d) => `<th>${d}</th>`).join("")}</tr></thead><tbody>${Array.from({ length: Math.ceil(m.cells.length / 7) }, (_, i) => `<tr>${m.cells.slice(i * 7, i * 7 + 7).map((c) => { if (!c) return "<td class='is-outside'></td>"; const f = c.Shop && c.Shop !== selectedStore ? { ...c, s: "closed", p: null, k: null } : c; const selectable = ["instant", "request", "few"].includes(f.s); return `<td><button class="booking-day${selectable ? " is-selectable" : ""}${f.k === selectedKey ? " is-selected" : ""}" type="button" ${f.k ? `data-key="${f.k}"` : ""} ${!selectable ? "disabled" : ""}><span class="booking-day__date">${f.d}</span><span class="booking-day__status"><i class="booking-mark" data-status="${f.s}">${marks[f.s]}</i></span>${f.p ? `<div class="booking-day__price">${f.p.display}</div>` : ""}</button></td>`; }).join("")}</tr>`).join("")}</tbody></table></section>`;
+        cal.innerHTML = `<section class="booking-month"><div class="booking-month__header"><h3>${m.label}</h3><span>${stores[selectedStore].label} の開催日</span></div><table><thead><tr>${days.map((d) => `<th>${d}</th>`).join("")}</tr></thead><tbody>${Array.from({ length: Math.ceil(m.cells.length / 7) }, (_, i) => `<tr>${m.cells.slice(i * 7, i * 7 + 7).map((c) => { if (!c) return "<td class='is-outside'></td>"; const f = c.store && c.store !== selectedStore ? { ...c, s: "closed", p: null, k: null } : c; const selectable = ["instant", "request", "few"].includes(f.s); return `<td><button class="booking-day${selectable ? " is-selectable" : ""}${f.k === selectedKey ? " is-selected" : ""}" type="button" ${f.k ? `data-key="${f.k}"` : ""} ${!selectable ? "disabled" : ""}><span class="booking-day__date">${f.d}</span><span class="booking-day__status"><i class="booking-mark" data-status="${f.s}">${marks[f.s]}</i></span>${f.p ? `<div class="booking-day__price">${f.p.display}</div>` : ""}</button></td>`; }).join("")}</tr>`).join("")}</tbody></table></section>`;
         if (calPrev) calPrev.disabled = currentMonthIndex <= 0;
         if (calNext) calNext.disabled = currentMonthIndex >= months.length - 1;
         cal.querySelectorAll("[data-key]").forEach((b) => b.onclick = () => { selectedKey = b.dataset.key; currentMonthIndex = monthIndexFromDateKey(selectedKey); renderCal(); renderSlots(); });
@@ -392,11 +392,11 @@
 
       const init = async () => {
         const range = `all sessions (ordered by session_date, limit 500)${requestedPlanId || requestedPlanCode || requestedPlanName ? " / with plan preselect" : ""}`;
-        if (!supabase) { setLed(false); setDiag({ source: "Supabase", plans: 0, Shops: 0, sessions: 0, range, error: "client unavailable" }); return; }
+        if (!supabase) { setLed(false); setDiag({ source: "Supabase", plans: 0, stores: 0, sessions: 0, range, error: "client unavailable" }); return; }
         try {
           const [p, s, w] = await Promise.all([
             supabase.from("workshop_plans").select("id,plan_code,plan_name,base_price_jpy,currency_code,min_party_size,max_party_size,status"),
-            supabase.from("Shops").select("id,store_name,is_active,deleted_at"),
+            supabase.from("stores").select("id,store_name,is_active,deleted_at"),
             supabase.from("workshop_sessions").select("id,plan_id,store_id,session_date,gather_time,start_time,end_time,booking_method,capacity_total,capacity_reserved,price_override_jpy,currency_code,min_party_size,max_party_size,session_status,public_note,published_at").order("session_date", { ascending: true }).limit(500)
           ]);
           if (p.error || s.error || w.error) throw (p.error || s.error || w.error);
@@ -409,13 +409,13 @@
           const sessions = selectedPlan
             ? allSessions.filter((row) => String(row.plan_id) === String(selectedPlan.id))
             : allSessions;
-          setLed(true); setDiag({ source: "Supabase", plans: selectedPlan ? 1 : plans.length, Shops: storeRows.length, sessions: sessions.length, range, error: "-" }); updateSummary(plans, storeRows, sessions);
-          Shops = storeRows.length ? storeRows.reduce((a, x) => { const k = normStore(x.store_name || x.id); a[k] = { label: x.store_name || k, caption: "" }; return a; }, {}) : { ...fallbackStores };
+          setLed(true); setDiag({ source: "Supabase", plans: selectedPlan ? 1 : plans.length, stores: storeRows.length, sessions: sessions.length, range, error: "-" }); updateSummary(plans, storeRows, sessions);
+          stores = storeRows.length ? storeRows.reduce((a, x) => { const k = normStore(x.store_name || x.id); a[k] = { label: x.store_name || k, caption: "" }; return a; }, {}) : { ...fallbackStores };
           if (requestedStore) {
             const normalizedRequestedStore = normStore(requestedStore);
-            if (Shops[normalizedRequestedStore]) {
+            if (stores[normalizedRequestedStore]) {
               selectedStore = normalizedRequestedStore;
-              if (requestedStoreLabel) Shops[normalizedRequestedStore].label = requestedStoreLabel;
+              if (requestedStoreLabel) stores[normalizedRequestedStore].label = requestedStoreLabel;
             }
           }
           const byPlan = Object.fromEntries(plans.map((x) => [x.id, x]));
@@ -427,11 +427,11 @@
             const payload = { sessionId: r.id, planId: r.plan_id, g: (r.gather_time || "").slice(0, 5), start: (r.start_time || "").slice(0, 5), end: (r.end_time || "").slice(0, 5), price: { display: jpy(price), jpy: Number(price || 0) }, n: r.public_note || (r.booking_method === "request" ? "リクエスト回答待ち" : "即時予約可"), method: r.booking_method || "instant", status: toStatus(r), storeKey: st.key, storeLabel: st.label };
             map[r.session_date] = map[r.session_date] || []; map[r.session_date].push(payload);
           });
-          Object.entries(map).forEach(([k, arr]) => { const e = arr[0]; list[k] = { label: new Date(k).toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric", weekday: "short" }), Shop: e.storeKey, storeLabel: e.storeLabel, planId: e.planId, status: e.status === "request" ? "リクエスト予約" : e.status === "few" ? "残席わずか" : e.status === "full" ? "満席" : "即時予約可", slots: arr }; });
+          Object.entries(map).forEach(([k, arr]) => { const e = arr[0]; list[k] = { label: new Date(k).toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric", weekday: "short" }), store: e.storeKey, storeLabel: e.storeLabel, planId: e.planId, status: e.status === "request" ? "リクエスト予約" : e.status === "few" ? "残席わずか" : e.status === "full" ? "満席" : "即時予約可", slots: arr }; });
           schedule = list;
-          const dates = Object.keys(map).sort(); if (dates.length) { months = buildCells(map, new Date(dates[0]), new Date(dates[dates.length - 1])); selectedStore = Shops[selectedStore] ? selectedStore : Object.keys(Shops)[0]; selectedKey = dates.find((d) => map[d][0].storeKey === selectedStore) || dates[0]; currentMonthIndex = monthIndexFromDateKey(selectedKey); }
+          const dates = Object.keys(map).sort(); if (dates.length) { months = buildCells(map, new Date(dates[0]), new Date(dates[dates.length - 1])); selectedStore = stores[selectedStore] ? selectedStore : Object.keys(stores)[0]; selectedKey = dates.find((d) => map[d][0].storeKey === selectedStore) || dates[0]; currentMonthIndex = monthIndexFromDateKey(selectedKey); }
         } catch (e) {
-          setLed(false); setDiag({ source: "Supabase", plans: 0, Shops: 0, sessions: 0, range, error: e.message || String(e) }); updateSummary([], [], []);
+          setLed(false); setDiag({ source: "Supabase", plans: 0, stores: 0, sessions: 0, range, error: e.message || String(e) }); updateSummary([], [], []);
         }
         if (calPrev) calPrev.onclick = () => { if (currentMonthIndex > 0) { currentMonthIndex -= 1; renderCal(); } };
         if (calNext) calNext.onclick = () => { if (currentMonthIndex < months.length - 1) { currentMonthIndex += 1; renderCal(); } };

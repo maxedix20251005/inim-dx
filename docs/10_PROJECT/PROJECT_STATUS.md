@@ -1798,3 +1798,11 @@
 - EN: Reconfirmed 2.14 Create All Placeholder Pages as Closed in FEATURE_BACKLOG.md.
 ### Doc Update (2026-03-30)
 - EN: Recovered FEATURE_BACKLOG.md and WIP.md from mojibake; backups saved under docs/90_WIP/.
+### Doc Update (2026-03-30)
+- EN: Restored subpages/workshop-booking.html from commit e486df8 to recover booking layout after selector/id mismatch regression.
+### Doc Update (2026-03-30)
+- EN: Closed 2.2 Top -> Workshop Flow Reinforcement based on user UAT confirmation.
+### Doc Update (2026-03-30)
+- EN: Updated backlog labels: removed （着手中） from 2.2 title and set 2.10 to Closed after implementation verification.
+### Doc Update (2026-03-30)
+- EN: Closed backlog items 2.11 (Sitemap) and 2.12 (Breadcrumb) based on user confirmation.
