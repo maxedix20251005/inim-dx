@@ -276,11 +276,11 @@
         <nav class="page-breadcrumb" aria-label="breadcrumb">
             <ol>
                 ${trail.map((key, index) => {
-                    const isLast = index === trail.length - 1;
-                    const label = pages[key]?.label || key;
-                    if (isLast) return `<li><span aria-current="page">${label}</span></li>`;
-                    return `<li><a href="${breadcrumbHref(key)}">${label}</a></li>`;
-                }).join("")}
+            const isLast = index === trail.length - 1;
+            const label = pages[key]?.label || key;
+            if (isLast) return `<li><span aria-current="page">${label}</span></li>`;
+            return `<li><a href="${breadcrumbHref(key)}">${label}</a></li>`;
+        }).join("")}
             </ol>
         </nav>`;
     };
@@ -340,14 +340,14 @@
     const renderGlobalNav = () => `
         <nav class="category-nav" aria-label="グローバルナビゲーション">
             ${globalNavItems.map((item) => {
-                const isDisabled = disabledGlobalNavKeys.has(item.key);
-                const hasChildren = !isDisabled && item.children.length > 0;
-                const parentOnly = item.parentOnly === true;
-                const linkClass = `${item.current ? 'is-current' : ''} ${isDisabled ? 'is-disabled' : ''}`.trim();
-                const linkOrLabel = parentOnly
-                    ? `<span class="category-nav__label ${linkClass}">${item.label}</span>`
-                    : `<a class="${linkClass}" href="${isDisabled ? '#' : item.href}" ${isDisabled ? disabledLinkAttrs : ''}>${item.label}</a>`;
-                return `
+        const isDisabled = disabledGlobalNavKeys.has(item.key);
+        const hasChildren = !isDisabled && item.children.length > 0;
+        const parentOnly = item.parentOnly === true;
+        const linkClass = `${item.current ? 'is-current' : ''} ${isDisabled ? 'is-disabled' : ''}`.trim();
+        const linkOrLabel = parentOnly
+            ? `<span class="category-nav__label ${linkClass}">${item.label}</span>`
+            : `<a class="${linkClass}" href="${isDisabled ? '#' : item.href}" ${isDisabled ? disabledLinkAttrs : ''}>${item.label}</a>`;
+        return `
                     <div class="category-nav__item ${hasChildren ? 'has-children' : ''} ${item.current ? 'is-current' : ''}">
                         ${linkOrLabel}
                         ${hasChildren ? `<button type="button" class="category-nav__toggle" aria-expanded="false" aria-label="${item.label} submenu"></button>
@@ -356,7 +356,7 @@
                         </div>` : ''}
                     </div>
                 `;
-            }).join('')}
+    }).join('')}
         </nav>
     `;
 
@@ -452,7 +452,7 @@
         <div class="site-footer__grid" id="footer-links">
             <div>
                 <p class="site-footer__title">Shop Info</p>
-                <p>inim-dx flagship atelier<br>Fragrance workshop and consultation by reservation.</p>
+                <p>inim-dx flagship atelier<br>An intimate space for fragrance workshops and personalised consultations, by booking.</p>
             </div>
             <div>
                 <p class="site-footer__title">Guide</p>
@@ -1514,4 +1514,3 @@
 
     document.dispatchEvent(new CustomEvent('site-shell:ready', { detail: { pageKey, root } }));
 })();
-

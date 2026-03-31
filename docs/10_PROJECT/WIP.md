@@ -82,3 +82,9 @@
 - EN: 2026-03-31 Fixed save-row height mismatch caused by the triple-row override and unified min-height to 42px; bumped CSS version to 20260331f.
 - JA: 2026-03-31 2.4C（複製/共有リンク）は On-hold に設定。次は 2.5 検討へ進む。
 - EN: 2026-03-31 Set 2.4C (duplicate/share-link) to On-hold. Next focus moves to 2.5.
+- JA: 2026-03-31 2A-2B として公開主要4ページの文言統一を実施（操作ガイド表記、Workshop概要ラベル、プラン読込文言、予約診断ラベルの日本語化）。
+- EN: 2026-03-31 Completed 2A-2B wording normalization on 4 core public pages (guide label, workshop proof labels, plan-loading text, and booking diagnostics labels in Japanese).
+- JA: 2026-03-31 2C-2D を実施。公開主要4ページで見出し/ラベル/説明文を日本語中心へ統一し、文言の可読性・一貫性を改善。
+- EN: 2026-03-31 Completed 2C-2D. Standardized headings/labels/copy to Japanese-first across 4 core public pages for improved readability and consistency.
+- JA: 2026-03-31 Step 4 実施。公開サブページ横断の文言整合チェックを行い、予約導線（plans/entry/confirm/thanks）と案内系ページ（shop-info/shopping-guide）の英語見出し・ラベルを日本語中心へ統一。
+- EN: 2026-03-31 Step 4 executed. Completed cross-subpage wording consistency sweep and normalized English headings/labels to Japanese-first on booking-flow pages (plans/entry/confirm/thanks) and guide pages (shop-info/shopping-guide).

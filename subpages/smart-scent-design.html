@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Scent Design | inim-dx</title>
+  <title>スマートセントデザイン | inim-dx</title>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/smart-scent-design-app.css?v=20260331f">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,10 +22,10 @@
         <div class="subhead">12種類の香りノートを選択し、比率を重ねて調香します</div>
       </div>
       <div class="top-actions">
-        <button id="openGuideBtn" class="guide-link" type="button">Operation Guide</button>
+        <button id="openGuideBtn" class="guide-link" type="button">操作ガイド</button>
         <div id="soundPill" class="sound-pill">
           <div style="font-weight:700">Sound</div>
-          <div id="soundToggle" class="toggle" aria-label="sound toggle"></div>
+          <div id="soundToggle" class="toggle" aria-label="サウンド切替"></div>
         </div>
       </div>
     </div>
@@ -40,29 +40,29 @@
           </div>
 
           <div class="overlay-result">
-            <div class="result-kicker">Your Fragrance</div>
+            <div class="result-kicker">あなたの香り</div>
             <h2 id="resultName" class="result-title">Citrus Bloom Veil</h2>
             <p id="resultCopy" class="result-copy">明るいシトラスに、透明な花とやわらかなムスクが重なる、軽やかで清潔感のある香りです。</p>
 
             <div class="result-grid">
               <div class="result-item">
-                <div class="label">Top Blend</div>
+                <div class="label">主要ブレンド</div>
                 <div id="resultTopBlend" class="value">ベルガモット 28 / レモン 18 / ミュゲ 14</div>
               </div>
               <div class="result-item">
-                <div class="label">Profile</div>
+                <div class="label">プロフィール</div>
                 <div id="resultProfile" class="value">さっぱり・スッキリ・万人受け</div>
               </div>
               <div class="result-item">
-                <div class="label">Character</div>
+                <div class="label">特徴</div>
                 <div id="resultCharacter" class="value">シトラスフローラル / 透明感 / やわらかな余韻</div>
               </div>
               <div class="result-item">
-                <div class="label">Impression</div>
+                <div class="label">印象</div>
                 <div id="resultImpression" class="value">朝の光のように軽く、親しみやすく、清潔感のあるブレンド</div>
               </div>
               <div class="result-item wide">
-                <div class="label">Ratio Summary</div>
+                <div class="label">比率サマリー</div>
                 <div id="resultRatioSummary" class="value">柑橘 46% / フローラル 22% / ティー&ハーブ 8% / ベースノート 24%</div>
               </div>
             </div>
@@ -76,15 +76,15 @@
         <div class="control-stack">
           <section class="panel notes-panel">
             <div class="panel-head">
-              <div class="panel-title">Fragrance Notes</div>
-              <div class="panel-sub">16 Items / Select a note</div>
+              <div class="panel-title">香りノート</div>
+              <div class="panel-sub">16種類 / ノートを選択</div>
             </div>
             <div id="notesGrid" class="notes-grid"></div>
           </section>
 
           <section class="panel adjust-panel">
             <div class="adjust-head">
-              <div class="adjust-title">Adjust Active Note</div>
+              <div class="adjust-title">選択中ノートの調整</div>
               <div id="activeName" class="active-name">BERGAMOT / ベルガモット</div>
             </div>
 
@@ -245,10 +245,10 @@
       ];
 
       const placeholders = [
-        { id: "option_a", no: "13", title: "OPTION COLOR A", sub: "Placeholder for future accent color", color: "#8ecae6" },
-        { id: "option_b", no: "14", title: "OPTION COLOR B", sub: "Placeholder for future accent color", color: "#ffb4a2" },
-        { id: "option_c", no: "15", title: "OPTION COLOR C", sub: "Placeholder for future accent color", color: "#cdb4db" },
-        { id: "option_d", no: "16", title: "OPTION COLOR D", sub: "Placeholder for future accent color", color: "#bde0a8" }
+        { id: "option_a", no: "13", title: "追加ノート A", sub: "将来拡張用プレースホルダー", color: "#8ecae6" },
+        { id: "option_b", no: "14", title: "追加ノート B", sub: "将来拡張用プレースホルダー", color: "#ffb4a2" },
+        { id: "option_c", no: "15", title: "追加ノート C", sub: "将来拡張用プレースホルダー", color: "#cdb4db" },
+        { id: "option_d", no: "16", title: "追加ノート D", sub: "将来拡張用プレースホルダー", color: "#bde0a8" }
       ];
 
       const INITIAL_SELECTED_ID = fragrances[0].id;
@@ -480,7 +480,7 @@
 
       function buildResultName() {
         const top = sortedByRatio().filter(f => f.ratio > 0).slice(0, 3);
-        if (!top.length) return "Blank Formula";
+        if (!top.length) return "未調香";
         const first = top[0].en.split(" ")[0];
         const second = top[1] ? top[1].en.split(" ")[0] : "Aura";
         const moodWord =

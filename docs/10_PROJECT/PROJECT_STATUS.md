@@ -1887,3 +1887,15 @@
 ### Doc Update (2026-03-31)
 - JA: 2.4C（複製/共有リンク）は現時点で必須ではないため On-hold（Deferred）へ変更し、次優先を 2.5 へ移行。
 - EN: Marked 2.4C (duplicate/share-link) as On-hold (Deferred) since it is not mandatory now; moved next priority to 2.5.
+
+### Doc Update (2026-03-31)
+- JA: 公開主要4ページ（index / smart-scent-design / workshop / workshop-booking）の文言一貫性改善 2A-2B を実施。英語ラベル混在を整理し、運用メッセージを日本語へ統一（例: 操作ガイド、対象/所要時間/開催店舗/体験フロー、プラン読込ステータス、予約診断ラベル）。
+- EN: Completed 2A-2B wording-consistency pass on 4 core public pages (index / smart-scent-design / workshop / workshop-booking). Reduced mixed-language labels and standardized operational messages in Japanese (e.g., guide label, workshop proof labels, plan-load status, booking diagnostics labels).
+
+### Doc Update (2026-03-31)
+- JA: 2C-2D として公開主要4ページのコピー最終調整を実施（section-kicker を日本語中心へ統一、説明文の混在語を整理、予約ページの日付/枠ラベルを日本語化、Smart Scent の主要UIラベルを日本語化）。
+- EN: Completed 2C-2D copy polish on 4 core public pages (Japanese-first section-kicker labels, cleaned mixed-language sentences, Japanese labels for booking date/slot sections, and Japanese localization of core Smart Scent UI labels).
+
+### Doc Update (2026-03-31)
+- JA: Step 4（公開サブページ全体の文言整合チェック）を実施。見出し/セクションラベル/予約導線の文言を日本語中心へ統一し、予約関連ページ（plans/entry/confirm/thanks）と案内ページ（shop-info/shopping-guide）の残存英語ラベルを整理。
+- EN: Executed Step 4 full public-subpage consistency sweep. Standardized headings/section labels/booking-flow copy to Japanese-first and cleaned remaining English labels in booking-related pages (plans/entry/confirm/thanks) and guide pages (shop-info/shopping-guide).

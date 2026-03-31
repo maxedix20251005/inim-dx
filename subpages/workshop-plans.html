@@ -34,7 +34,7 @@
                     </select>
                 </label>
             </section>
-            <p id="plans-status" class="plans-status">Loading plans...</p>
+            <p id="plans-status" class="plans-status">プランを読み込み中...</p>
             <div class="workshop-program-grid" id="plans-grid"></div>
             <div class="workshop-plan-cta">
                 <a class="button button--primary" id="plans-next-cta" href="./workshop-booking.html">予約枠を確認して予約へ進む</a>
@@ -266,7 +266,7 @@
                     .order("sort_order", { ascending: true });
 
                 if (planErr) {
-                    statusEl.textContent = `Failed to load plans: ${planErr.message}`;
+                    statusEl.textContent = `プランの読み込みに失敗しました: ${planErr.message}`;
                     renderCards(fallbackPlans);
                     return;
                 }

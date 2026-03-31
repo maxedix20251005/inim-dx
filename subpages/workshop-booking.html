@@ -15,7 +15,7 @@
     <section class="booking-hero">
       <div class="booking-wrap booking-hero__grid">
         <div>
-          <p class="section-kicker booking-hero__kicker"><span>Workshop Booking</span><span class="supabase-led"
+          <p class="section-kicker booking-hero__kicker"><span>ワークショップ予約</span><span class="supabase-led"
               id="connection-led"></span></p>
           <h1 class="booking-hero__title">予約日を選んで体験枠を確保する</h1>
           <p class="booking-hero__lead">まず店舗を選び、カレンダーから予約可能日を選択してください。選択後は下部の予約枠からそのまま申込へ進めます。</p>
@@ -31,30 +31,30 @@
     </section>
     <div class="booking-wrap">
       <div class="booking-diagnostics" id="booking-diagnostics" hidden>
-        <p class="booking-diagnostics__title">Data Diagnostics</p>
+        <p class="booking-diagnostics__title">データ診断</p>
         <dl class="booking-diagnostics__grid">
           <div>
-            <dt>Source</dt>
+            <dt>取得元</dt>
             <dd id="diag-source">-</dd>
           </div>
           <div>
-            <dt>Plans</dt>
+            <dt>プラン数</dt>
             <dd id="diag-plans">-</dd>
           </div>
           <div>
-            <dt>Stores</dt>
+            <dt>店舗数</dt>
             <dd id="diag-stores">-</dd>
           </div>
           <div>
-            <dt>Sessions</dt>
+            <dt>枠数</dt>
             <dd id="diag-sessions">-</dd>
           </div>
           <div>
-            <dt>Range</dt>
+            <dt>取得範囲</dt>
             <dd id="diag-range">-</dd>
           </div>
           <div>
-            <dt>Error</dt>
+            <dt>エラー</dt>
             <dd id="diag-error">-</dd>
           </div>
         </dl>
@@ -101,7 +101,7 @@
       <section class="booking-panel">
         <div class="booking-panel__head">
           <div>
-            <p class="section-kicker">Availability</p>
+            <p class="section-kicker">空き状況</p>
             <h2>予約可能日</h2>
           </div>
           <p>店舗を選ぶと、その店舗の開催日だけを表示します。</p>
@@ -109,7 +109,7 @@
         <div class="booking-store-bar">
           <div class="booking-store-bar__head">
             <div>
-              <p class="section-kicker">Store</p>
+              <p class="section-kicker">店舗</p>
               <h3>選択店舗</h3>
             </div>
             <p class="booking-store-bar__meta" id="booking-store-meta">店舗を選択してください。</p>
@@ -128,7 +128,7 @@
             <div class="booking-calendar-grid" id="booking-calendar"></div>
           </div>
           <aside class="booking-selected-date" id="booking-selected-date">
-            <p class="section-kicker">Selected Date</p>
+            <p class="section-kicker">選択中の日程</p>
             <h3 id="booking-selected-date-title">日付未選択</h3>
             <dl class="booking-selected-date__grid">
               <div>
@@ -162,7 +162,7 @@
       <section class="booking-panel" id="booking-slots-panel">
         <div class="booking-panel__head">
           <div>
-            <p class="section-kicker">Available Slots</p>
+            <p class="section-kicker">予約枠</p>
             <h2>予約枠一覧</h2>
           </div>
           <p>希望の時間帯を選んで予約へ進んでください。</p>
@@ -236,7 +236,7 @@
 
       const marks = { instant: "○", request: "□", few: "△", full: "×", closed: "-" };
       const days = ["月", "火", "水", "木", "金", "土", "日"];
-      const fallbackStores = { asakusa: { label: "浅草店", caption: "Fri - Sun" }, shibamata: { label: "柴又店", caption: "Sat - Mon" }, solamachi: { label: "ソラマチ店", caption: "Daily" } };
+      const fallbackStores = { asakusa: { label: "浅草店", caption: "金 - 日" }, shibamata: { label: "柴又店", caption: "土 - 月" }, solamachi: { label: "ソラマチ店", caption: "毎日" } };
       const norm = (v) => String(v || "").trim().toLowerCase();
       let stores = { ...fallbackStores }, schedule = {}, months = [], selectedStore = "asakusa", selectedKey = "", currentMonthIndex = 0;
       let selectedPlan = null;
@@ -406,9 +406,14 @@
             || plans.find((x) => requestedPlanCode && norm(x.plan_code) === norm(requestedPlanCode))
             || plans.find((x) => requestedPlanName && norm(x.plan_name) === norm(requestedPlanName))
             || null;
-          const sessions = selectedPlan
+          const planFilteredSessions = selectedPlan
             ? allSessions.filter((row) => String(row.plan_id) === String(selectedPlan.id))
             : allSessions;
+          let sessions = planFilteredSessions;
+          if (selectedPlan && !planFilteredSessions.length && allSessions.length) {
+            selectedPlan = null;
+            sessions = allSessions;
+          }
           setLed(true); setDiag({ source: "Supabase", plans: selectedPlan ? 1 : plans.length, stores: storeRows.length, sessions: sessions.length, range, error: "-" }); updateSummary(plans, storeRows, sessions);
           stores = storeRows.length ? storeRows.reduce((a, x) => { const k = normStore(x.store_name || x.id); a[k] = { label: x.store_name || k, caption: "" }; return a; }, {}) : { ...fallbackStores };
           if (requestedStore) {
