@@ -1,4 +1,4 @@
-# WIP / 作業メモ
+﻿# WIP / 作業メモ
 
 ## 1. Objective This Sprint / 目的
 - JA: Top -> Workshop 予約導線の完走率改善と、運用管理の安定化を進める。
@@ -53,3 +53,6 @@
 - 2026-03-31: Closed 2.9 (Non-admin Access Verification Backlog) after non-admin deny-access verification under admin_only mode.
 - 2026-03-31: WIP consistency cleanup after 2.6/2.9 closure (updated Current Status/In Progress/Next Actions).
 - 2026-03-31: 2.3A started. Added Digital Blend AI recommendation panel (mood/problem/change inputs + rule-based suggestions) to subpages/smart-scent-design.html.
+- 2026-03-31: 2.3B implemented. Added AI recommendation apply/undo controls with in-session blend backup on subpages/smart-scent-design.html.
+- 2026-03-31: Added user-blend total cap (max 100%) on smart-scent-design slider with total indicator (total: x / 100).
+

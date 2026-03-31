@@ -36,13 +36,16 @@
 ### 2.3 Digital Blend AI Recommendation / デジタル調香AIレコメンド
 - Status: `In Progress`
 - JA: 「気分」「悩み」「変えたいこと」入力からAIが香り候補を提案する機能を検討・追加する。
+- EN: Add AI-based fragrance recommendation from user mood/problem-to-change inputs.
 - 2.3A progress / 2.3A 進捗
   - JA: subpages/smart-scent-design.html に「気分・悩み・変えたいこと」入力と AI レコメンド結果カードを追加（ルールベース初期版）。
   - EN: Added mood/problem/change inputs and AI recommendation result card to subpages/smart-scent-design.html (rule-based initial version).
+- 2.3B progress / 2.3B 進捗
+  - JA: AI提案の「おすすめを適用」と「適用を取り消す」を追加し、適用前ブレンドをセッション内バックアップして1クリック復元できるようにした。
+  - EN: Added "Apply recommendation" and "Undo apply" with in-session backup/one-click restore of the pre-apply blend.
 - Scope candidates:
   - JA: テキスト入力、推奨ノート表示、理由説明、候補保存
   - EN: Text input, recommended notes, rationale, candidate save
-
 ### 2.4 Blend Save and Reuse / 調香データ保存・再利用
 - Status: `Proposed`
 - JA: 調香データを DB に保存し、再編集・再利用できる機能を追加する。
@@ -169,4 +172,7 @@
 ## Recovery Note / 復旧メモ
 - JA: 2026-03-30 に mojibake が発生したため、`docs/90_WIP/FEATURE_BACKLOG_mojibake_backup_20260330.md` にバックアップし、本文をUTF-8で再構築した。
 - EN: Mojibake detected on 2026-03-30; backed up to `docs/90_WIP/FEATURE_BACKLOG_mojibake_backup_20260330.md` and rebuilt this file in UTF-8.
+
+
+
 

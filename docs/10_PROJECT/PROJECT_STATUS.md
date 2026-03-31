@@ -1826,3 +1826,9 @@
 ### Doc Update (2026-03-31)
 - EN: Started 2.3A (Digital Blend AI initial version): added mood/problem/change inputs and a rule-based recommendation card to subpages/smart-scent-design.html.
 
+
+### Doc Update (2026-03-31)
+- EN: Implemented 2.3B on Digital Blend page: added apply/undo recommendation controls with in-session pre-apply blend backup and restore.
+
+### Doc Update (2026-03-31)
+- EN: Added total-ratio guard for Digital Blend user editing (sum capped at 100%) and displayed current total indicator.

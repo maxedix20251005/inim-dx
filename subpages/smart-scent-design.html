@@ -91,6 +91,7 @@
               <input id="ratioSlider" type="range" min="0" max="100" value="28" />
               <div id="sliderValue" class="slider-value">28</div>
             </div>
+            <div id="blendTotalStatus" class="adjust-total">合計: 0 / 100</div>
 
             <div class="adjust-help">
               選択中ノートの比率を調整します。変更はビジュアルとサウンドに即時反映されます。
@@ -157,6 +158,10 @@
               <div class="ai-result-item">
                 <div class="ai-result-label">推奨バランス</div>
                 <div id="aiRecommendRatio" class="ai-result-value">未生成</div>
+              </div>
+              <div class="ai-action-row">
+                <button id="aiApplyBtn" class="cta secondary ai-action-btn">おすすめを適用</button>
+                <button id="aiUndoBtn" class="cta secondary ai-action-btn" disabled>適用を取り消す</button>
               </div>
             </div>
           </section>
@@ -253,6 +258,9 @@
       const aiRecommendNotes = document.getElementById("aiRecommendNotes");
       const aiRecommendReason = document.getElementById("aiRecommendReason");
       const aiRecommendRatio = document.getElementById("aiRecommendRatio");
+      const aiApplyBtn = document.getElementById("aiApplyBtn");
+      const aiUndoBtn = document.getElementById("aiUndoBtn");
+      const blendTotalStatus = document.getElementById("blendTotalStatus");
 
       const canvas = document.getElementById("scene");
       const ctx = canvas.getContext("2d");
@@ -262,12 +270,26 @@
       let w = 0, h = 0, tick = 0;
       let particles = [];
       let lastSliderSoundAt = 0;
+      let aiRecommendation = null;
+      let aiBackupBlend = null;
 
       function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
       function hsl(h, s, l, a = 1) { return `hsla(${((h % 360) + 360) % 360}, ${s}%, ${l}%, ${a})`; }
 
       function totalRatio() {
         return fragrances.reduce((sum, f) => sum + (state.ratios[f.id] || 0), 0);
+      }
+
+      function maxAllowedForSelected() {
+        const id = state.selectedId;
+        const selectedCurrent = state.ratios[id] || 0;
+        const othersTotal = totalRatio() - selectedCurrent;
+        return clamp(100 - othersTotal, 0, 100);
+      }
+
+      function updateBlendTotalStatus() {
+        const total = totalRatio();
+        blendTotalStatus.textContent = `合計: ${total} / 100`;
       }
 
       function selectedFragrance() {
@@ -481,11 +503,66 @@
             return "ベース";
           });
 
-        aiRecommendNotes.textContent = picked.map(f => f.jp).join(" / ");
-        aiRecommendRatio.textContent = picked.map((f, i) => `${f.jp} ${i === 0 ? 45 : i === 1 ? 33 : 22}%`).join(" ・ ");
+        const recommendedMix = picked.map((f, i) => ({
+          id: f.id,
+          jp: f.jp,
+          ratio: i === 0 ? 45 : i === 1 ? 33 : 22
+        }));
+
+        aiRecommendNotes.textContent = recommendedMix.map(f => f.jp).join(" / ");
+        aiRecommendRatio.textContent = recommendedMix.map(f => `${f.jp} ${f.ratio}%`).join(" ・ ");
         aiRecommendReason.textContent = hasIntent
           ? `${familyRank.join(" × ")}の方向に寄せて、現在のブレンドとの連続性も考慮して提案しました。`
           : "入力がないため、現在の比率上位ノートから暫定提案を表示しています。";
+
+        aiRecommendation = {
+          notes: recommendedMix,
+          reason: aiRecommendReason.textContent
+        };
+
+        return aiRecommendation;
+      }
+
+      function applyAiRecommendationToBlend() {
+        const rec = aiRecommendation || buildAiRecommendation();
+        if (!rec || !rec.notes || !rec.notes.length) return;
+
+        if (!aiBackupBlend) {
+          aiBackupBlend = {
+            ratios: { ...state.ratios },
+            selectedId: state.selectedId
+          };
+        }
+
+        fragrances.forEach(f => { state.ratios[f.id] = 0; });
+        rec.notes.forEach(n => {
+          if (state.ratios[n.id] !== undefined) state.ratios[n.id] = n.ratio;
+        });
+
+        state.selectedId = rec.notes[0].id;
+        updateCheckedState();
+        syncSlider();
+        updateMiniBars();
+        updateResults();
+        makeParticles();
+        state.flash = 0.6;
+        aiUndoBtn.disabled = false;
+      }
+
+      function undoAiRecommendationApply() {
+        if (!aiBackupBlend) return;
+
+        state.ratios = { ...aiBackupBlend.ratios };
+        state.selectedId = aiBackupBlend.selectedId;
+        aiBackupBlend = null;
+        aiUndoBtn.disabled = true;
+
+        updateCheckedState();
+        syncSlider();
+        updateMiniBars();
+        updateResults();
+        makeParticles();
+        state.flash = 0.4;
       }
 
       function alphaColor(hex, alpha) {
@@ -589,12 +666,16 @@
 
       function syncSlider() {
         const selected = selectedFragrance();
-        const value = state.ratios[selected.id] || 0;
+        const maxAllowed = maxAllowedForSelected();
+        const value = clamp(state.ratios[selected.id] || 0, 0, maxAllowed);
+        state.ratios[selected.id] = value;
         ratioSlider.disabled = false;
+        ratioSlider.max = String(maxAllowed);
         ratioSlider.value = value;
         sliderValue.textContent = value;
         activeName.textContent = `${selected.en} / ${selected.jp}`;
         activeVizName.textContent = selected.en;
+        updateBlendTotalStatus();
       }
 
       function updateMiniBars() {
@@ -1223,10 +1304,15 @@
 
       function applyCurrentSlider() {
         const id = state.selectedId;
-        state.ratios[id] = Number(ratioSlider.value);
+        const maxAllowed = maxAllowedForSelected();
+        const next = clamp(Number(ratioSlider.value), 0, maxAllowed);
+        ratioSlider.max = String(maxAllowed);
+        ratioSlider.value = String(next);
+        state.ratios[id] = next;
         sliderValue.textContent = String(state.ratios[id]);
         updateMiniBars();
         updateResults();
+        updateBlendTotalStatus();
         makeParticles();
       }
 
@@ -1305,6 +1391,7 @@
         updateMiniBars();
         updateResults();
         makeParticles();
+        updateBlendTotalStatus();
         state.flash = 0.65;
 
         if (notesGrid) {
@@ -1314,6 +1401,14 @@
 
       aiRecommendBtn.addEventListener("click", () => {
         buildAiRecommendation();
+      });
+      aiApplyBtn.addEventListener("click", () => {
+        applyAiRecommendationToBlend();
+        updateBlendTotalStatus();
+      });
+      aiUndoBtn.addEventListener("click", () => {
+        undoAiRecommendationApply();
+        updateBlendTotalStatus();
       });
 
       window.addEventListener("resize", resize);
