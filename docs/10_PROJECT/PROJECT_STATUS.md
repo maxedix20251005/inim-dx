@@ -1899,3 +1899,11 @@
 ### Doc Update (2026-03-31)
 - JA: Step 4（公開サブページ全体の文言整合チェック）を実施。見出し/セクションラベル/予約導線の文言を日本語中心へ統一し、予約関連ページ（plans/entry/confirm/thanks）と案内ページ（shop-info/shopping-guide）の残存英語ラベルを整理。
 - EN: Executed Step 4 full public-subpage consistency sweep. Standardized headings/section labels/booking-flow copy to Japanese-first and cleaned remaining English labels in booking-related pages (plans/entry/confirm/thanks) and guide pages (shop-info/shopping-guide).
+
+### Doc Update (2026-03-31)
+- JA: `workshop-booking-thanks.html` の重複CTAを整理し、下段の「トップへ戻る」ボタンを削除。
+- EN: Removed duplicate CTA on `workshop-booking-thanks.html` by deleting the lower "Back to Top" button.
+
+### Doc Update (2026-03-31)
+- JA: `workshop-booking-entry.html` で選択枠サマリーが未表示になる不具合を修正。URLパラメータ差異（`price_display` / `booking_method` / `start_time`+`end_time`）へ対応し、`session_id` を使ったDBフォールバック補完を追加。
+- EN: Fixed missing selected-slot summary on `workshop-booking-entry.html`. Added compatibility for URL param variants (`price_display` / `booking_method` / `start_time`+`end_time`) and DB fallback hydration via `session_id`.
