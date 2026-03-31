@@ -7,20 +7,20 @@
 ## 2. Current Status / 現在の状況
 - JA: 公開側の予約フロー（workshop → booking → entry → confirm → thanks）は動作確認済み。
 - EN: Public booking flow (workshop → booking → entry → confirm → thanks) is verified.
-- JA: 管理画面の予約・問い合わせ管理は read-only/権限制御を含めて整備済み。
-- EN: Admin booking/enquiry management is in place with read-only gating.
-- JA: 2.14 未実装ページ作成は完了（support はフッター区分のみ）。
-- EN: 2.14 placeholder page creation is complete (support is footer category only).
+- JA: 2.6（管理者アクセス制御 + 予約LED運用）および 2.9（非adminアクセス検証）はクローズ済み。
+- EN: 2.6 (admin access + booking LED governance) and 2.9 (non-admin access verification) are closed.
+- JA: 主要バックログは 2.x クローズ群の整合更新後、次フェーズ選定待ち。
+- EN: Major 2.x closures are documented; next-phase prioritisation is pending.
 
 ## 3. In Progress / 進行中
-- JA: 2.2 Top → Workshop 導線改善の最終チェックとクローズ判断。
-- EN: Final checks and close-out decision for 2.2 Top → Workshop flow reinforcement.
+- JA: 次フェーズ候補（Store/Shop高リスク改名、2.1/2.3/2.4）の優先順位整理。
+- EN: Prioritisation of next-phase items (high-risk Store/Shop rename, 2.1/2.3/2.4).
 
 ## 4. Next Actions / 次のアクション
-1. JA: 2.2 の残チェックを明文化し、未実施項目がなければ Close へ。
-   EN: Define remaining checks for 2.2 and close if all are satisfied.
-2. JA: 必要なら 2.10（管理導線最適化）の着手順を決定。
-   EN: If needed, decide kickoff order for 2.10 (admin IA optimisation).
+1. JA: Store/Shop 高リスク改名タスクのスコープと影響範囲を確定する。
+   EN: Define scope and impact boundary for high-risk Store/Shop renaming.
+2. JA: 2.1 / 2.3 / 2.4 の着手優先順位を決める。
+   EN: Decide kickoff priority among 2.1 / 2.3 / 2.4.
 3. JA: ドキュメント UTF-8/リンク整合の簡易チェックを継続。
    EN: Continue quick UTF-8 and link-validity checks.
 
@@ -44,7 +44,12 @@
 - 2026-03-30: Sitemap optimised and non-required links removed.
 - 2026-03-30: Store/Shop low-risk updates completed; high-risk follow-up deferred.
 - 2026-03-30: Mojibake recovery applied to FEATURE_BACKLOG.md and WIP.md (backups saved).
-- 2026-03-30: Restored subpages/workshop-booking.html from commit e486df8 to fix layout regression caused by accidental selector/id rename (ooking-store-* mismatch).
+- 2026-03-30: Restored subpages/workshop-booking.html from commit e486df8 to fix layout regression caused by accidental selector/id rename (booking-store-* mismatch).
 - 2026-03-30: Closed 2.2 Top -> Workshop Flow Reinforcement after user UAT pass (CTA/plan-to-booking/thanks actions).
 - 2026-03-30: Backlog text cleanup: removed （着手中） from 2.2 title and closed 2.10 after implementation re-check.
 - 2026-03-30: Closed 2.11 (Sitemap) and 2.12 (Breadcrumb) by user confirmation.
+- 2026-03-31: Reviewed Accepted backlog items; closed 2.7 / 2.8 / 2.13.
+- 2026-03-31: Closed 2.6 (Admin Access Restriction + Booking LED Governance) based on user test results (A/B/D pass, C blocked for non-admin).
+- 2026-03-31: Closed 2.9 (Non-admin Access Verification Backlog) after non-admin deny-access verification under admin_only mode.
+- 2026-03-31: WIP consistency cleanup after 2.6/2.9 closure (updated Current Status/In Progress/Next Actions).
+- 2026-03-31: 2.3A started. Added Digital Blend AI recommendation panel (mood/problem/change inputs + rule-based suggestions) to subpages/smart-scent-design.html.

@@ -1,10 +1,10 @@
-﻿(() => {
+(() => {
     const body = document.body;
     const main = document.getElementById("page-main");
     if (!body || !main) return;
 
     const root = body.dataset.root || ".";
-    const ADMIN_BUILD_VERSION = "20260327m";
+    const ADMIN_BUILD_VERSION = "20260331a";
     const pageKey = body.dataset.pageKey || "appLogin";
     const cfg = window.INIM_SITE_CONFIG || {};
     const adminAccessMode = String(cfg.adminAccessMode || "admin_only").trim().toLowerCase();
@@ -34,7 +34,7 @@
         appPagesJourney: ["admin", "editor"],
         appPagesWorkshop: ["admin"],
         appPagesWorkshopPlans: ["admin"],
-        appPagesEnquiries: ["admin", "operator"],
+        appPagesEnquiries: ["admin"],
         appPublish: ["admin", "editor", "operator"]
     };
     const navItems = [

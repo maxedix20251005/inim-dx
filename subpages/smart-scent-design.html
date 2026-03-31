@@ -105,6 +105,61 @@
 
             <div id="miniBars" class="mini-bars"></div>
           </section>
+
+          <section class="panel ai-panel">
+            <div class="panel-head ai-panel-head">
+              <div class="panel-title">AIレコメンド</div>
+              <div class="panel-sub">気分・悩み・変えたい印象から香り候補を提案します</div>
+            </div>
+
+            <div class="ai-field-grid">
+              <label class="ai-field">
+                <span class="ai-label">気分</span>
+                <select id="aiMoodInput" class="ai-input">
+                  <option value="">選択してください</option>
+                  <option value="refresh">すっきりしたい</option>
+                  <option value="uplift">気分を上げたい</option>
+                  <option value="calm">落ち着きたい</option>
+                  <option value="focus">集中したい</option>
+                  <option value="soft">やさしい印象にしたい</option>
+                </select>
+              </label>
+
+              <label class="ai-field">
+                <span class="ai-label">変えたいこと</span>
+                <select id="aiChangeInput" class="ai-input">
+                  <option value="">選択してください</option>
+                  <option value="brighter">もっと明るくしたい</option>
+                  <option value="less-sweet">甘さを抑えたい</option>
+                  <option value="deeper">深みを出したい</option>
+                  <option value="cleaner">清潔感を強めたい</option>
+                  <option value="more-elegant">大人っぽくしたい</option>
+                </select>
+              </label>
+
+              <label class="ai-field ai-field-wide">
+                <span class="ai-label">悩み（任意）</span>
+                <input id="aiConcernInput" class="ai-input" type="text" placeholder="例: 香りが重く感じる、印象が弱い" />
+              </label>
+            </div>
+
+            <button id="aiRecommendBtn" class="cta primary ai-cta">AIでおすすめを作成</button>
+
+            <div id="aiRecommendResult" class="ai-result-card">
+              <div class="ai-result-item">
+                <div class="ai-result-label">おすすめノート</div>
+                <div id="aiRecommendNotes" class="ai-result-value">未生成</div>
+              </div>
+              <div class="ai-result-item">
+                <div class="ai-result-label">理由</div>
+                <div id="aiRecommendReason" class="ai-result-value">気分・悩み・変えたいことを入力して生成してください。</div>
+              </div>
+              <div class="ai-result-item">
+                <div class="ai-result-label">推奨バランス</div>
+                <div id="aiRecommendRatio" class="ai-result-value">未生成</div>
+              </div>
+            </div>
+          </section>
         </div>
       </aside>
     </div>
@@ -191,6 +246,13 @@
       const soundToggle = document.getElementById("soundToggle");
       const soundPill = document.getElementById("soundPill");
       const soundStatusText = document.getElementById("soundStatusText");
+      const aiMoodInput = document.getElementById("aiMoodInput");
+      const aiChangeInput = document.getElementById("aiChangeInput");
+      const aiConcernInput = document.getElementById("aiConcernInput");
+      const aiRecommendBtn = document.getElementById("aiRecommendBtn");
+      const aiRecommendNotes = document.getElementById("aiRecommendNotes");
+      const aiRecommendReason = document.getElementById("aiRecommendReason");
+      const aiRecommendRatio = document.getElementById("aiRecommendRatio");
 
       const canvas = document.getElementById("scene");
       const ctx = canvas.getContext("2d");
@@ -357,6 +419,73 @@
         else text += "複数の表情がなめらかに重なった、バランスの良い香りです。";
 
         return text;
+      }
+
+      function getTopFamiliesFromIntent(mood, change, concern) {
+        const familyScore = { citrus: 0, floral: 0, herbal: 0, tea: 0, fruity: 0, woody: 0, base: 0 };
+        const add = (family, value) => { familyScore[family] = (familyScore[family] || 0) + value; };
+
+        if (mood === "refresh") { add("citrus", 2.2); add("herbal", 1.4); add("tea", 1.0); }
+        if (mood === "uplift") { add("floral", 1.8); add("fruity", 1.6); add("citrus", 1.2); }
+        if (mood === "calm") { add("base", 1.8); add("woody", 1.6); add("floral", 1.0); }
+        if (mood === "focus") { add("herbal", 1.9); add("tea", 1.6); add("citrus", 0.8); }
+        if (mood === "soft") { add("floral", 1.8); add("base", 1.4); add("fruity", 0.8); }
+
+        if (change === "brighter") { add("citrus", 2.0); add("fruity", 1.0); }
+        if (change === "less-sweet") { add("herbal", 1.3); add("tea", 1.3); add("citrus", 1.1); add("base", -0.6); add("fruity", -0.5); }
+        if (change === "deeper") { add("base", 2.0); add("woody", 1.6); }
+        if (change === "cleaner") { add("citrus", 1.4); add("herbal", 1.2); add("floral", 0.7); }
+        if (change === "more-elegant") { add("floral", 1.5); add("base", 1.2); add("woody", 0.9); }
+
+        const concernText = (concern || "").trim().toLowerCase();
+        if (concernText.includes("重")) { add("citrus", 1.3); add("herbal", 0.8); add("base", -0.9); add("woody", -0.6); }
+        if (concernText.includes("弱")) { add("base", 1.1); add("woody", 0.8); add("floral", 0.6); }
+        if (concernText.includes("甘")) { add("herbal", 1.2); add("tea", 1.0); add("base", -0.6); add("fruity", -0.5); }
+        if (concernText.includes("きつ") || concernText.includes("強")) { add("floral", 0.9); add("base", 0.7); add("citrus", -0.5); }
+
+        return familyScore;
+      }
+
+      function buildAiRecommendation() {
+        const mood = aiMoodInput?.value || "";
+        const change = aiChangeInput?.value || "";
+        const concern = aiConcernInput?.value || "";
+        const familyScore = getTopFamiliesFromIntent(mood, change, concern);
+
+        const ranked = fragrances
+          .map(f => {
+            const currentRatio = state.ratios[f.id] || 0;
+            const continuityBonus = currentRatio > 0 ? Math.min(currentRatio / 40, 0.8) : 0;
+            const score = (familyScore[f.family] || 0) + continuityBonus;
+            return { ...f, score };
+          })
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 3);
+
+        const hasIntent = Boolean(mood || change || (concern && concern.trim().length > 0));
+        const fallback = sortedByRatio().filter(f => f.ratio > 0).slice(0, 3);
+        const picked = hasIntent
+          ? ranked
+          : (fallback.length ? fallback : fragrances.slice(0, 3));
+
+        const familyRank = Object.entries(familyScore)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 2)
+          .map(([k]) => {
+            if (k === "citrus") return "柑橘";
+            if (k === "floral") return "フローラル";
+            if (k === "herbal") return "ハーバル";
+            if (k === "tea") return "ティー";
+            if (k === "fruity") return "フルーティ";
+            if (k === "woody") return "ウッディ";
+            return "ベース";
+          });
+
+        aiRecommendNotes.textContent = picked.map(f => f.jp).join(" / ");
+        aiRecommendRatio.textContent = picked.map((f, i) => `${f.jp} ${i === 0 ? 45 : i === 1 ? 33 : 22}%`).join(" ・ ");
+        aiRecommendReason.textContent = hasIntent
+          ? `${familyRank.join(" × ")}の方向に寄せて、現在のブレンドとの連続性も考慮して提案しました。`
+          : "入力がないため、現在の比率上位ノートから暫定提案を表示しています。";
       }
 
       function alphaColor(hex, alpha) {
@@ -1183,12 +1312,17 @@
         }
       });
 
+      aiRecommendBtn.addEventListener("click", () => {
+        buildAiRecommendation();
+      });
+
       window.addEventListener("resize", resize);
 
       renderNotesGrid();
       syncSlider();
       updateMiniBars();
       updateResults();
+      buildAiRecommendation();
       updateSoundUI();
       resize();
       animate();

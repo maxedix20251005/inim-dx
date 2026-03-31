@@ -34,9 +34,11 @@
   - EN: Confirmed post-booking thank-you and next-action guidance are clear
 
 ### 2.3 Digital Blend AI Recommendation / デジタル調香AIレコメンド
-- Status: `Proposed`
+- Status: `In Progress`
 - JA: 「気分」「悩み」「変えたいこと」入力からAIが香り候補を提案する機能を検討・追加する。
-- EN: Add AI-based fragrance recommendation from user mood/problem-to-change inputs.
+- 2.3A progress / 2.3A 進捗
+  - JA: subpages/smart-scent-design.html に「気分・悩み・変えたいこと」入力と AI レコメンド結果カードを追加（ルールベース初期版）。
+  - EN: Added mood/problem/change inputs and AI recommendation result card to subpages/smart-scent-design.html (rule-based initial version).
 - Scope candidates:
   - JA: テキスト入力、推奨ノート表示、理由説明、候補保存
   - EN: Text input, recommended notes, rationale, candidate save
@@ -58,7 +60,7 @@
   - EN: Coupon issuance criteria, validity, stackability, anti-abuse rules
 
 ### 2.6 Admin Access Restriction + Booking LED Governance / 管理者アクセス制御と予約LED運用
-- Status: `Accepted`
+- Status: `Closed`
 - JA: 予約管理画面は `role_code = admin` のみに制限し、公開予約画面の Supabase 接続LED を運用監視項目として明文化する。
 - EN: Restrict booking-management screen visibility to users with `role_code = admin`, and formalise booking-page Supabase LED as an operational monitoring item.
 - Scope candidates:
@@ -66,19 +68,29 @@
   - EN: enforced admin-role check, deny access for non-admin users, LED state monitoring runbook
 
 ### 2.7 Dashboard Link Exposure / ダッシュボード導線の明示
-- Status: `Accepted`
+- Status: `Closed`
 - JA: 公開/関連ページから管理ダッシュボードへの導線を明示する。
 - EN: Expose clear navigation links to admin dashboard from relevant pages.
 
+- 2.6 closure / 2.6 クローズ
+  - JA: ユーザーテスト結果により完了（2026-03-31）。
+  - EN: Closed based on user test results (2026-03-31).
+  - JA: Test-A/B/D は Pass、Test-C は非adminでアクセス不可（login redirect）を確認。
+  - EN: Test-A/B/D passed; Test-C confirmed non-admin blocked (login redirect behavior).
+
 ### 2.8 Workshop Plan Page Formalisation / ワークショッププラン専用ページ整備
-- Status: `Accepted`
+- Status: `Closed`
 - JA: 「プランを見る」の遷移先として専用ページを設ける。
 - EN: Provide a dedicated plan page for “View Plans”.
 
 ### 2.9 Non-admin Access Verification Backlog / 非adminアクセス検証バックログ
-- Status: `Proposed`
-- JA: 非adminロールでの検証環境が未整備のため、アクセス拒否シナリオを後続テストとして管理する。
-- EN: Non-admin login verification is blocked by environment constraints; keep deny-access scenario as backlog test item.
+- Status: `Closed`
+- JA: 非adminロールでのアクセス拒否シナリオ検証を完了し、運用確認済み。
+- EN: Non-admin deny-access verification has been completed and operationally confirmed.
+
+- 2.9 closure / 2.9 クローズ
+  - JA: 非adminアカウントでのアクセス拒否検証を実施し、後続バックログ条件を満たしたためクローズ（2026-03-31）。
+  - EN: Closed after non-admin deny-access verification met backlog criteria (2026-03-31).
 
 ### 2.10 Workshop Plan/Course Management IA Optimisation / ワークショッププラン管理導線の情報設計最適化
 - Status: `Closed`
@@ -109,7 +121,7 @@
   - EN: Closed by user confirmation (2026-03-30).
 
 ### 2.13 Site Structure Review + IA Refinement / サイト構造レビューとIA再設計
-- Status: `Accepted`
+- Status: `Closed`
 - JA: 公開/管理の導線を棚卸しし、階層/命名を再整理する。
 - EN: Review public/admin structure and refine IA and naming.
 
@@ -117,6 +129,16 @@
 - Status: `Closed`
 - JA: 主要な公開ページを作成済み（support はフッター区分のみ）。
 - EN: Placeholder pages completed (support is footer category only).
+
+- 2.7/2.8/2.13 closure / 2.7/2.8/2.13 クローズ
+  - JA: 実装と導線確認の再点検により完了へ更新（2026-03-31）。
+  - EN: Closed after implementation and flow re-check (2026-03-31).
+  - JA: 2.7 管理ダッシュボード導線は公開ナビ/フッター/関連ページで有効化済み。
+  - EN: 2.7 dashboard entry links are active across public nav/footer/relevant pages.
+  - JA: 2.8 workshop-plans.html 専用ページ化と プランを見る 遷移先統一を確認。
+  - EN: 2.8 dedicated workshop-plans.html and unified “View Plans” routing are confirmed.
+  - JA: 2.13 サイトマップ・命名統一・パンくず/ナビ整合の反映を確認。
+  - EN: 2.13 sitemap, naming normalization, and breadcrumb/nav consistency updates are confirmed.
 
 ### Store/Shop Renaming Follow-up / Store/Shop表記の残作業
 - Status: `Proposed`
@@ -147,3 +169,4 @@
 ## Recovery Note / 復旧メモ
 - JA: 2026-03-30 に mojibake が発生したため、`docs/90_WIP/FEATURE_BACKLOG_mojibake_backup_20260330.md` にバックアップし、本文をUTF-8で再構築した。
 - EN: Mojibake detected on 2026-03-30; backed up to `docs/90_WIP/FEATURE_BACKLOG_mojibake_backup_20260330.md` and rebuilt this file in UTF-8.
+

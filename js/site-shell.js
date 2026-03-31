@@ -75,6 +75,8 @@
     let authStateReady = false;
     let recoveryFlowActive = initialHashParams.get('type') === 'recovery';
     const siteConfig = window.INIM_SITE_CONFIG || {};
+    const rawAdminAccessMode = String(siteConfig.adminAccessMode || 'admin_only').trim().toLowerCase();
+    const adminAccessMode = rawAdminAccessMode === 'open_demo' ? 'open_demo' : 'admin_only';
     const showPublicSideNav = siteConfig.enablePublicSideNav === true;
     const supabaseConfig = {
         url: siteConfig.supabaseUrl || '',
@@ -572,23 +574,29 @@
     };
 
     const renderAdminLinks = () => {
-        const show = isAdminUser();
+        const show = adminAccessMode === 'open_demo' ? true : isAdminUser();
         const isAdminPage = String(pageKey || '').startsWith('app');
 
         const globalNav = header.querySelector('.category-nav');
         if (globalNav) {
             let item = globalNav.querySelector('[data-admin-link="global"]');
-            if (!item) {
+            if (show && !item) {
                 item = document.createElement('div');
                 item.className = 'category-nav__item';
                 item.dataset.adminLink = 'global';
                 item.innerHTML = `<a href="${link('appDashboard')}">Admin</a>`;
                 globalNav.appendChild(item);
             }
-            item.classList.toggle('is-current', isAdminPage);
-            const linkNode = item.querySelector('a');
-            if (linkNode) {
-                linkNode.classList.toggle('is-current', isAdminPage);
+            if (!show && item) {
+                item.remove();
+                item = null;
+            }
+            if (item) {
+                item.classList.toggle('is-current', isAdminPage);
+                const linkNode = item.querySelector('a');
+                if (linkNode) {
+                    linkNode.classList.toggle('is-current', isAdminPage);
+                }
             }
             syncGlobalNavA11y();
         }

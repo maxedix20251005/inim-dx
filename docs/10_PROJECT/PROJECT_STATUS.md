@@ -1,4 +1,4 @@
-# PROJECT STATUS / inim-dx
+﻿# PROJECT STATUS / inim-dx
 
 ## 1. このドキュメントの目的 / Purpose
 - このファイルは、`inim-dx` プロジェクトの現在地を第三者でも短時間で把握できるように整理する常設ステータス資料です。
@@ -1806,3 +1806,23 @@
 - EN: Updated backlog labels: removed （着手中） from 2.2 title and set 2.10 to Closed after implementation verification.
 ### Doc Update (2026-03-30)
 - EN: Closed backlog items 2.11 (Sitemap) and 2.12 (Breadcrumb) based on user confirmation.
+
+### Doc Update (2026-03-31)
+- EN: Re-reviewed Accepted backlog items and closed 2.7 (Dashboard Link Exposure), 2.8 (Workshop Plan Page Formalisation), and 2.13 (Site Structure Review + IA Refinement).
+### Doc Update (2026-03-31)
+- EN: Kept 2.6 open for final operation-level closure checks (admin_only baseline and non-admin deny verification scope).
+### Doc Update (2026-03-31)
+- EN: Re-validated PROJECT_STATUS.md and WIP.md with UTF-8 read path and confirmed no active mojibake in current source files.
+
+### Doc Update (2026-03-31)
+- EN: Closed 2.6 (Admin Access Restriction + Booking LED Governance) after user verification; non-admin access is blocked under admin_only mode.
+
+### Doc Update (2026-03-31)
+- EN: Closed 2.9 (Non-admin Access Verification Backlog) after verifying non-admin access denial behavior in admin_only mode.
+
+### Doc Update (2026-03-31)
+- EN: Applied WIP/FEATURE_BACKLOG consistency cleanup after 2.6/2.9 closure (removed stale in-progress wording).
+
+### Doc Update (2026-03-31)
+- EN: Started 2.3A (Digital Blend AI initial version): added mood/problem/change inputs and a rule-based recommendation card to subpages/smart-scent-design.html.
+
