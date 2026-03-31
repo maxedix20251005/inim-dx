@@ -56,13 +56,15 @@
   - JA: テキスト入力、推奨ノート表示、理由説明、候補保存
   - EN: Text input, recommended notes, rationale, candidate save
 ### 2.4 Blend Save and Reuse / 調香データ保存・再利用
-- Status: `Proposed`
+- Status: `In Progress`
 - JA: 調香データを DB に保存し、再編集・再利用できる機能を追加する。
 - EN: Save blended scent data to DB for reuse and re-editing.
+- 2.4C plan / 2.4C 計画
+  - JA: 複製・共有リンク案は一旦 On-hold（Deferred）とし、優先順位を下げる。
+  - EN: Duplicate/share-link proposal is placed on hold (Deferred) for now with lower priority.
 - Scope candidates:
   - JA: マイ調香一覧、再読み込み、複製、共有リンク（任意）
   - EN: My blends list, reload, duplicate, optional share link
-
 ### 2.5 Workshop x Product Discount Logic / ワークショップ×製品購入の相互特典
 - Status: `Proposed`
 - JA: 参加で製品割引、購入でワークショップ割引の相互特典を検討する。
@@ -181,6 +183,10 @@
 ## Recovery Note / 復旧メモ
 - JA: 2026-03-30 に mojibake が発生したため、`docs/90_WIP/FEATURE_BACKLOG_mojibake_backup_20260330.md` にバックアップし、本文をUTF-8で再構築した。
 - EN: Mojibake detected on 2026-03-30; backed up to `docs/90_WIP/FEATURE_BACKLOG_mojibake_backup_20260330.md` and rebuilt this file in UTF-8.
+
+
+
+
 
 
 

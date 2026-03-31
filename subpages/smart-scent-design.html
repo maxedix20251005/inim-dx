@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Smart Scent Design | inim-dx</title>
   <link rel="stylesheet" href="../css/style.css">
-  <link rel="stylesheet" href="../css/smart-scent-design-app.css">
+  <link rel="stylesheet" href="../css/smart-scent-design-app.css?v=20260331f">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -171,8 +171,9 @@
                   <input id="aiSaveNameInput" class="ai-input" type="text" placeholder="候補名（必須）" />
                   <input id="aiSaveMemoInput" class="ai-input" type="text" placeholder="メモ（任意）" />
                 </div>
-                <div class="ai-action-row">
+                <div class="ai-action-row ai-action-row--triple">
                   <button id="aiSaveBtn" class="cta primary ai-action-btn">この候補を保存</button>
+                  <button id="aiCancelEditBtn" class="cta secondary ai-action-btn is-hidden">編集をキャンセル</button>
                   <button id="aiToggleSavedBtn" class="cta secondary ai-action-btn">保存済み候補を見る</button>
                 </div>
                 <div id="aiSaveMessage" class="ai-save-message" aria-live="polite"></div>
@@ -319,6 +320,7 @@
       const aiSaveNameInput = document.getElementById("aiSaveNameInput");
       const aiSaveMemoInput = document.getElementById("aiSaveMemoInput");
       const aiSaveBtn = document.getElementById("aiSaveBtn");
+      const aiCancelEditBtn = document.getElementById("aiCancelEditBtn");
       const aiToggleSavedBtn = document.getElementById("aiToggleSavedBtn");
       const aiSaveMessage = document.getElementById("aiSaveMessage");
       const aiSavedPanel = document.getElementById("aiSavedPanel");
@@ -339,7 +341,12 @@
       let aiRecommendation = null;
       let aiBackupBlend = null;
       const AI_SAVED_KEY = "inim_dx_digital_blend_saved_candidates_v1";
+      const AI_DB_TABLE = "smart_scent_blends";
       let aiSavedCandidates = [];
+      let blendStorageMode = "local";
+      let blendDbClient = null;
+      let blendAuthUserId = null;
+      let editingCandidateId = null;
 
       function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
       function hsl(h, s, l, a = 1) { return `hsla(${((h % 360) + 360) % 360}, ${s}%, ${l}%, ${a})`; }
@@ -656,7 +663,39 @@
         document.body.classList.remove("modal-open");
       }
 
-      function loadSavedCandidates() {
+      async function initBlendStorage() {
+        const cfg = window.INIM_SITE_CONFIG || {};
+        const api = window.supabase || null;
+        blendDbClient = window.__INIM_SUPABASE_CLIENT
+          || (cfg.supabaseUrl && cfg.supabasePublishableKey && api?.createClient
+            ? api.createClient(cfg.supabaseUrl, cfg.supabasePublishableKey)
+            : null);
+
+        if (!blendDbClient) {
+          blendStorageMode = "local";
+          setAiSaveMessage("ローカル保存モードで利用します（DB未接続）。");
+          return;
+        }
+
+        try {
+          const { data, error } = await blendDbClient.auth.getSession();
+          if (error) throw error;
+          blendAuthUserId = data?.session?.user?.id || null;
+          if (!blendAuthUserId) {
+            blendStorageMode = "local";
+            setAiSaveMessage("ログインすると候補をクラウド保存できます（現在はローカル保存）。");
+            return;
+          }
+          blendStorageMode = "db";
+          setAiSaveMessage("クラウド保存モードで利用中です。");
+        } catch (err) {
+          console.error("Blend storage init fallback:", err);
+          blendStorageMode = "local";
+          setAiSaveMessage("ローカル保存モードで利用します（DB接続エラー）。");
+        }
+      }
+
+      function loadSavedCandidatesFromLocal() {
         try {
           const raw = localStorage.getItem(AI_SAVED_KEY);
           const parsed = raw ? JSON.parse(raw) : [];
@@ -666,8 +705,38 @@
         }
       }
 
-      function persistSavedCandidates() {
+      function persistSavedCandidatesToLocal() {
         localStorage.setItem(AI_SAVED_KEY, JSON.stringify(aiSavedCandidates));
+      }
+
+      async function loadSavedCandidates() {
+        if (blendStorageMode !== "db" || !blendDbClient || !blendAuthUserId) {
+          loadSavedCandidatesFromLocal();
+          return;
+        }
+        try {
+          const { data, error } = await blendDbClient
+            .from(AI_DB_TABLE)
+            .select("id, blend_name, blend_memo, notes_json, recommendation_reason, created_at, updated_at")
+            .eq("auth_user_id", blendAuthUserId)
+            .order("created_at", { ascending: false })
+            .limit(20);
+          if (error) throw error;
+          aiSavedCandidates = (data || []).map((row) => ({
+            id: row.id,
+            name: row.blend_name || "(no name)",
+            memo: row.blend_memo || "",
+            notes: Array.isArray(row.notes_json) ? row.notes_json : [],
+            reason: row.recommendation_reason || "",
+            createdAt: row.created_at,
+            updatedAt: row.updated_at || row.created_at
+          }));
+        } catch (err) {
+          console.error("Load cloud candidates failed, fallback local:", err);
+          blendStorageMode = "local";
+          setAiSaveMessage("クラウド保存の取得に失敗したため、ローカル保存へ切り替えました。", true);
+          loadSavedCandidatesFromLocal();
+        }
       }
 
       function renderSavedCandidates() {
@@ -687,6 +756,7 @@
                 </div>
                 <div class="ai-saved-actions">
                   <button class="ai-mini-btn" data-action="load" data-id="${item.id}">読み込む</button>
+                  <button class="ai-mini-btn" data-action="edit" data-id="${item.id}">編集</button>
                   <button class="ai-mini-btn danger" data-action="delete" data-id="${item.id}">削除</button>
                 </div>
               </div>
@@ -695,7 +765,33 @@
           .join("");
       }
 
-      function saveAiCandidate() {
+      function clearCandidateEditor() {
+        editingCandidateId = null;
+        aiSaveNameInput.value = "";
+        aiSaveMemoInput.value = "";
+        aiSaveBtn.textContent = "この候補を保存";
+        aiCancelEditBtn.classList.add("is-hidden");
+      }
+
+      function startCandidateEdit(id) {
+        const target = aiSavedCandidates.find(item => item.id === id);
+        if (!target) return;
+        editingCandidateId = id;
+        aiRecommendation = {
+          notes: target.notes || [],
+          reason: target.reason || ""
+        };
+        aiRecommendNotes.textContent = (target.notes || []).map(n => n.jp).join(" / ") || "未生成";
+        aiRecommendRatio.textContent = (target.notes || []).map(n => `${n.jp} ${n.ratio}%`).join(" ・ ") || "未生成";
+        aiRecommendReason.textContent = target.reason || "保存済み候補を編集中です。";
+        aiSaveNameInput.value = target.name || "";
+        aiSaveMemoInput.value = target.memo || "";
+        aiSaveBtn.textContent = "この候補を更新";
+        aiCancelEditBtn.classList.remove("is-hidden");
+        setAiSaveMessage("編集中です。内容を変更して「この候補を更新」を押してください。");
+      }
+
+      async function saveAiCandidate() {
         const name = (aiSaveNameInput.value || "").trim();
         if (!name) {
           setAiSaveMessage("候補名を入力してください。", true);
@@ -708,18 +804,77 @@
           return;
         }
 
-        aiSavedCandidates.unshift({
-          id: `c_${Date.now()}`,
-          name,
-          memo: (aiSaveMemoInput.value || "").trim(),
-          notes: rec.notes,
-          reason: rec.reason || "",
-          createdAt: new Date().toISOString()
-        });
+        const memo = (aiSaveMemoInput.value || "").trim();
+        const nowIso = new Date().toISOString();
+        const isUpdate = Boolean(editingCandidateId);
+
+        if (blendStorageMode === "db" && blendDbClient && blendAuthUserId) {
+          try {
+            if (isUpdate) {
+              const payload = {
+                blend_name: name,
+                blend_memo: memo,
+                notes_json: rec.notes,
+                recommendation_reason: rec.reason || "",
+                updated_at: nowIso
+              };
+              const { error } = await blendDbClient
+                .from(AI_DB_TABLE)
+                .update(payload)
+                .eq("id", editingCandidateId)
+                .eq("auth_user_id", blendAuthUserId);
+              if (error) throw error;
+            } else {
+              const payload = {
+                auth_user_id: blendAuthUserId,
+                blend_name: name,
+                blend_memo: memo,
+                notes_json: rec.notes,
+                recommendation_reason: rec.reason || ""
+              };
+              const { error } = await blendDbClient.from(AI_DB_TABLE).insert(payload);
+              if (error) throw error;
+            }
+            await loadSavedCandidates();
+            renderSavedCandidates();
+            setAiSaveMessage(isUpdate ? "クラウド上の候補を更新しました。" : "クラウドに保存しました。");
+            clearCandidateEditor();
+            return;
+          } catch (err) {
+            console.error("Save cloud candidate failed, fallback local:", err);
+            blendStorageMode = "local";
+            setAiSaveMessage("クラウド保存に失敗したため、ローカル保存へ切り替えました。", true);
+          }
+        }
+
+        if (isUpdate) {
+          aiSavedCandidates = aiSavedCandidates.map((item) => item.id === editingCandidateId
+            ? {
+              ...item,
+              name,
+              memo,
+              notes: rec.notes,
+              reason: rec.reason || "",
+              updatedAt: nowIso
+            }
+            : item
+          );
+        } else {
+          aiSavedCandidates.unshift({
+            id: `c_${Date.now()}`,
+            name,
+            memo,
+            notes: rec.notes,
+            reason: rec.reason || "",
+            createdAt: nowIso,
+            updatedAt: nowIso
+          });
+        }
         aiSavedCandidates = aiSavedCandidates.slice(0, 20);
-        persistSavedCandidates();
+        persistSavedCandidatesToLocal();
         renderSavedCandidates();
-        setAiSaveMessage("保存しました。");
+        setAiSaveMessage(isUpdate ? "ローカル候補を更新しました。" : "ローカルに保存しました。");
+        clearCandidateEditor();
       }
 
       function applySavedCandidate(id) {
@@ -736,11 +891,32 @@
         setAiSaveMessage("保存済み候補を読み込みました。");
       }
 
-      function deleteSavedCandidate(id) {
+      async function deleteSavedCandidate(id) {
+        if (blendStorageMode === "db" && blendDbClient && blendAuthUserId) {
+          try {
+            const { error } = await blendDbClient
+              .from(AI_DB_TABLE)
+              .delete()
+              .eq("id", id)
+              .eq("auth_user_id", blendAuthUserId);
+            if (error) throw error;
+            aiSavedCandidates = aiSavedCandidates.filter(item => item.id !== id);
+            if (editingCandidateId === id) clearCandidateEditor();
+            renderSavedCandidates();
+            setAiSaveMessage("クラウドから削除しました。");
+            return;
+          } catch (err) {
+            console.error("Delete cloud candidate failed:", err);
+            setAiSaveMessage("削除に失敗しました。時間をおいて再試行してください。", true);
+            return;
+          }
+        }
+
         aiSavedCandidates = aiSavedCandidates.filter(item => item.id !== id);
-        persistSavedCandidates();
+        if (editingCandidateId === id) clearCandidateEditor();
+        persistSavedCandidatesToLocal();
         renderSavedCandidates();
-        setAiSaveMessage("削除しました。");
+        setAiSaveMessage("ローカルから削除しました。");
       }
 
       function alphaColor(hex, alpha) {
@@ -1594,8 +1770,12 @@
         undoAiRecommendationApply();
         updateBlendTotalStatus();
       });
-      aiSaveBtn.addEventListener("click", () => {
-        saveAiCandidate();
+      aiSaveBtn.addEventListener("click", async () => {
+        await saveAiCandidate();
+      });
+      aiCancelEditBtn.addEventListener("click", () => {
+        clearCandidateEditor();
+        setAiSaveMessage("編集をキャンセルしました。");
       });
       aiToggleSavedBtn.addEventListener("click", () => {
         aiSavedPanel.classList.toggle("is-hidden");
@@ -1603,13 +1783,14 @@
           ? "保存済み候補を見る"
           : "保存済み候補を隠す";
       });
-      aiSavedList.addEventListener("click", (event) => {
+      aiSavedList.addEventListener("click", async (event) => {
         const btn = event.target.closest("button[data-action][data-id]");
         if (!btn) return;
         const action = btn.getAttribute("data-action");
         const id = btn.getAttribute("data-id");
         if (action === "load") applySavedCandidate(id);
-        if (action === "delete") deleteSavedCandidate(id);
+        if (action === "edit") startCandidateEdit(id);
+        if (action === "delete") await deleteSavedCandidate(id);
       });
       openGuideBtn.addEventListener("click", () => {
         openGuideModal();
@@ -1636,8 +1817,15 @@
       renderNotesGrid();
       resetBlendToInitialState();
       buildAiRecommendation();
-      loadSavedCandidates();
-      renderSavedCandidates();
+      clearCandidateEditor();
+      initBlendStorage()
+        .then(() => loadSavedCandidates())
+        .then(() => renderSavedCandidates())
+        .catch((err) => {
+          console.error("Blend storage init failed:", err);
+          loadSavedCandidatesFromLocal();
+          renderSavedCandidates();
+        });
       updateSoundUI();
       resize();
       animate();

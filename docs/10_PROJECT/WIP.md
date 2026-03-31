@@ -64,3 +64,21 @@
 
 - JA: 2026-03-31 Smart Scent変更まとめ（2.3A-2.3D）: AI提案、適用/取り消し、100%上限、候補保存、操作ガイド、表示時リセットを実装。
 - EN: 2026-03-31 Smart Scent change summary (2.3A-2.3D): implemented AI suggestion, apply/undo, 100% cap, candidate save, operation guide, and open-time reset.
+- JA: 2026-03-31 2.4A 着手。候補保存を DB 優先化（smart_scent_blends + RLS）し、未ログイン/障害時はローカル保存へフォールバック。
+- EN: 2026-03-31 Started 2.4A. Candidate persistence is now DB-first (smart_scent_blends + RLS) with local fallback for no-login/error cases.
+- JA: 2026-03-31 2.4B 実装。保存済み候補の編集/更新（DB + local）と updated_at トリガーSQL（sql/19）を追加。
+- EN: 2026-03-31 Implemented 2.4B. Added edit/update for saved candidates (DB + local) and updated_at trigger SQL (sql/19).
+- JA: 2026-03-31 Smart Scent 候補保存3ボタンのラベル折返しを解消（1行表示化）。
+- EN: 2026-03-31 Fixed label wrapping on the 3 candidate-save action buttons in Smart Scent (single-line display).
+- JA: 2026-03-31 候補保存3ボタンのはみ出し対策として、3列幅/余白/文字サイズを再調整。
+- EN: 2026-03-31 Re-tuned triple action button row (column width/padding/font size) to prevent overflow outside the frame.
+- JA: 2026-03-31 Smart Scent のボタンサイズを全体調整（main/secondary/mini を段階的に縮小）。
+- EN: 2026-03-31 Normalized Smart Scent button sizes across main/secondary/mini actions for better overall balance.
+- JA: 2026-03-31 Smart Scent ボタン縮小を追加調整し、CSSバージョンを更新して反映漏れを回避。
+- EN: 2026-03-31 Applied an additional Smart Scent button-size reduction and bumped CSS version to avoid cache-miss reflection issues.
+- JA: 2026-03-31 候補保存3ボタンの高さを再調整（36px）し、他アクションボタンとの高さ整合を改善。
+- EN: 2026-03-31 Re-adjusted the candidate-save 3-button row height to 36px to align with other action buttons.
+- JA: 2026-03-31 保存行ボタンの高さ差分原因（triple専用ルール）を是正し、min-height を 42px に統一。CSS版を 20260331f に更新。
+- EN: 2026-03-31 Fixed save-row height mismatch caused by the triple-row override and unified min-height to 42px; bumped CSS version to 20260331f.
+- JA: 2026-03-31 2.4C（複製/共有リンク）は On-hold に設定。次は 2.5 検討へ進む。
+- EN: 2026-03-31 Set 2.4C (duplicate/share-link) to On-hold. Next focus moves to 2.5.
