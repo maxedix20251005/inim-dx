@@ -22,6 +22,7 @@
         <div class="subhead">12種類の香りノートを選択し、比率を重ねて調香します</div>
       </div>
       <div class="top-actions">
+        <button id="openGuideBtn" class="guide-link" type="button">Operation Guide</button>
         <div id="soundPill" class="sound-pill">
           <div style="font-weight:700">Sound</div>
           <div id="soundToggle" class="toggle" aria-label="sound toggle"></div>
@@ -163,6 +164,24 @@
                 <button id="aiApplyBtn" class="cta secondary ai-action-btn">おすすめを適用</button>
                 <button id="aiUndoBtn" class="cta secondary ai-action-btn" disabled>適用を取り消す</button>
               </div>
+
+              <div class="ai-save-block">
+                <div class="ai-result-label">候補を保存</div>
+                <div class="ai-save-grid">
+                  <input id="aiSaveNameInput" class="ai-input" type="text" placeholder="候補名（必須）" />
+                  <input id="aiSaveMemoInput" class="ai-input" type="text" placeholder="メモ（任意）" />
+                </div>
+                <div class="ai-action-row">
+                  <button id="aiSaveBtn" class="cta primary ai-action-btn">この候補を保存</button>
+                  <button id="aiToggleSavedBtn" class="cta secondary ai-action-btn">保存済み候補を見る</button>
+                </div>
+                <div id="aiSaveMessage" class="ai-save-message" aria-live="polite"></div>
+              </div>
+            </div>
+
+            <div id="aiSavedPanel" class="ai-saved-panel is-hidden">
+              <div class="ai-result-label">保存済み候補</div>
+              <div id="aiSavedList" class="ai-saved-list"></div>
             </div>
           </section>
         </div>
@@ -170,6 +189,38 @@
     </div>
           </div>
         </section>
+
+        <div id="guideModal" class="guide-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="guideModalTitle">
+          <div class="guide-modal__backdrop" data-guide-close="backdrop"></div>
+          <div class="guide-modal__dialog">
+            <div class="guide-modal__header">
+              <h2 id="guideModalTitle">スマートセントデザインの楽しみ方</h2>
+              <button id="closeGuideBtn" class="guide-modal__close" type="button" aria-label="ガイドを閉じる">×</button>
+            </div>
+            <div class="guide-modal__body">
+              <ol class="guide-steps">
+                <li><strong>ノートを選ぶ</strong><br>右側のノート一覧から気になる香りを選択します。</li>
+                <li><strong>比率を調整する</strong><br>スライダーで比率を調整します。合計は <strong>100</strong> が上限です。</li>
+                <li><strong>香りを確認する</strong><br>「この香りを見る」で現在のブレンド結果を確認します。</li>
+                <li><strong>AIレコメンドを使う</strong><br>気分・変えたいこと・悩みを入力し、提案を作成します。</li>
+                <li><strong>提案を試す</strong><br>「おすすめを適用」で即反映し、必要なら「適用を取り消す」で戻せます。</li>
+                <li><strong>候補を保存する</strong><br>候補名をつけて保存し、あとで「読み込む」で再利用できます。</li>
+              </ol>
+
+              <div class="guide-tip">
+                <div class="guide-tip__title">使い方のコツ</div>
+                <ul>
+                  <li>初期表示は人気バランス例（おすすめ開始点）です。ここから好みに合わせて調整してください。</li>
+                  <li>「リセット」を押すと初期バランス例に戻ります。</li>
+                  <li>最初は 3 ノート（45 / 33 / 22）から始めるとバランスを取りやすいです。</li>
+                  <li>重く感じる場合は柑橘・ハーバルを少し増やすと軽さが出ます。</li>
+                  <li>迷ったら AI 提案を適用して、1ノートずつ微調整するのがおすすめです。</li>
+                  <li>Sound を ON にすると、ブレンド変化を感覚的に捉えやすくなります。</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
   </main>
   <script src="../js/site-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -199,9 +250,14 @@
         { id: "option_d", no: "16", title: "OPTION COLOR D", sub: "Placeholder for future accent color", color: "#bde0a8" }
       ];
 
+      const INITIAL_SELECTED_ID = fragrances[0].id;
+      const INITIAL_RATIOS = Object.fromEntries(
+        fragrances.map((f, i) => [f.id, i === 0 ? 28 : i === 1 ? 18 : i === 4 ? 14 : i === 9 ? 10 : i === 10 ? 8 : 0])
+      );
+
       const state = {
-        selectedId: fragrances[0].id,
-        ratios: Object.fromEntries(fragrances.map((f, i) => [f.id, i === 0 ? 28 : i === 1 ? 18 : i === 4 ? 14 : i === 9 ? 10 : i === 10 ? 8 : 0])),
+        selectedId: INITIAL_SELECTED_ID,
+        ratios: { ...INITIAL_RATIOS },
         flash: 0,
         soundOn: false,
         audioReady: false
@@ -260,7 +316,17 @@
       const aiRecommendRatio = document.getElementById("aiRecommendRatio");
       const aiApplyBtn = document.getElementById("aiApplyBtn");
       const aiUndoBtn = document.getElementById("aiUndoBtn");
+      const aiSaveNameInput = document.getElementById("aiSaveNameInput");
+      const aiSaveMemoInput = document.getElementById("aiSaveMemoInput");
+      const aiSaveBtn = document.getElementById("aiSaveBtn");
+      const aiToggleSavedBtn = document.getElementById("aiToggleSavedBtn");
+      const aiSaveMessage = document.getElementById("aiSaveMessage");
+      const aiSavedPanel = document.getElementById("aiSavedPanel");
+      const aiSavedList = document.getElementById("aiSavedList");
       const blendTotalStatus = document.getElementById("blendTotalStatus");
+      const openGuideBtn = document.getElementById("openGuideBtn");
+      const closeGuideBtn = document.getElementById("closeGuideBtn");
+      const guideModal = document.getElementById("guideModal");
 
       const canvas = document.getElementById("scene");
       const ctx = canvas.getContext("2d");
@@ -272,6 +338,8 @@
       let lastSliderSoundAt = 0;
       let aiRecommendation = null;
       let aiBackupBlend = null;
+      const AI_SAVED_KEY = "inim_dx_digital_blend_saved_candidates_v1";
+      let aiSavedCandidates = [];
 
       function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
       function hsl(h, s, l, a = 1) { return `hsla(${((h % 360) + 360) % 360}, ${s}%, ${l}%, ${a})`; }
@@ -523,28 +591,34 @@
         return aiRecommendation;
       }
 
-      function applyAiRecommendationToBlend() {
-        const rec = aiRecommendation || buildAiRecommendation();
-        if (!rec || !rec.notes || !rec.notes.length) return;
+      function ensureBackupBeforeApply() {
+        if (aiBackupBlend) return;
+        aiBackupBlend = {
+          ratios: { ...state.ratios },
+          selectedId: state.selectedId
+        };
+      }
 
-        if (!aiBackupBlend) {
-          aiBackupBlend = {
-            ratios: { ...state.ratios },
-            selectedId: state.selectedId
-          };
-        }
-
+      function applyBlendByNotes(notes) {
+        if (!notes || !notes.length) return;
         fragrances.forEach(f => { state.ratios[f.id] = 0; });
-        rec.notes.forEach(n => {
+        notes.forEach(n => {
           if (state.ratios[n.id] !== undefined) state.ratios[n.id] = n.ratio;
         });
-
-        state.selectedId = rec.notes[0].id;
+        state.selectedId = notes[0].id;
         updateCheckedState();
         syncSlider();
         updateMiniBars();
         updateResults();
         makeParticles();
+        updateBlendTotalStatus();
+      }
+
+      function applyAiRecommendationToBlend() {
+        const rec = aiRecommendation || buildAiRecommendation();
+        if (!rec || !rec.notes || !rec.notes.length) return;
+        ensureBackupBeforeApply();
+        applyBlendByNotes(rec.notes);
         state.flash = 0.6;
         aiUndoBtn.disabled = false;
       }
@@ -563,6 +637,110 @@
         updateResults();
         makeParticles();
         state.flash = 0.4;
+      }
+
+      function setAiSaveMessage(message, isError = false) {
+        aiSaveMessage.textContent = message || "";
+        aiSaveMessage.classList.toggle("error", Boolean(isError));
+      }
+
+      function openGuideModal() {
+        guideModal.classList.add("is-open");
+        guideModal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("modal-open");
+      }
+
+      function closeGuideModal() {
+        guideModal.classList.remove("is-open");
+        guideModal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("modal-open");
+      }
+
+      function loadSavedCandidates() {
+        try {
+          const raw = localStorage.getItem(AI_SAVED_KEY);
+          const parsed = raw ? JSON.parse(raw) : [];
+          aiSavedCandidates = Array.isArray(parsed) ? parsed : [];
+        } catch (err) {
+          aiSavedCandidates = [];
+        }
+      }
+
+      function persistSavedCandidates() {
+        localStorage.setItem(AI_SAVED_KEY, JSON.stringify(aiSavedCandidates));
+      }
+
+      function renderSavedCandidates() {
+        if (!aiSavedCandidates.length) {
+          aiSavedList.innerHTML = `<div class="ai-empty">保存済み候補はありません</div>`;
+          return;
+        }
+
+        aiSavedList.innerHTML = aiSavedCandidates
+          .map(item => {
+            const summary = (item.notes || []).map(n => `${n.jp}${n.ratio}`).join(" / ");
+            return `
+              <div class="ai-saved-item">
+                <div class="ai-saved-main">
+                  <div class="ai-saved-name">${item.name}</div>
+                  <div class="ai-saved-meta">${summary}</div>
+                </div>
+                <div class="ai-saved-actions">
+                  <button class="ai-mini-btn" data-action="load" data-id="${item.id}">読み込む</button>
+                  <button class="ai-mini-btn danger" data-action="delete" data-id="${item.id}">削除</button>
+                </div>
+              </div>
+            `;
+          })
+          .join("");
+      }
+
+      function saveAiCandidate() {
+        const name = (aiSaveNameInput.value || "").trim();
+        if (!name) {
+          setAiSaveMessage("候補名を入力してください。", true);
+          return;
+        }
+
+        const rec = aiRecommendation || buildAiRecommendation();
+        if (!rec || !rec.notes || !rec.notes.length) {
+          setAiSaveMessage("先におすすめを作成してください。", true);
+          return;
+        }
+
+        aiSavedCandidates.unshift({
+          id: `c_${Date.now()}`,
+          name,
+          memo: (aiSaveMemoInput.value || "").trim(),
+          notes: rec.notes,
+          reason: rec.reason || "",
+          createdAt: new Date().toISOString()
+        });
+        aiSavedCandidates = aiSavedCandidates.slice(0, 20);
+        persistSavedCandidates();
+        renderSavedCandidates();
+        setAiSaveMessage("保存しました。");
+      }
+
+      function applySavedCandidate(id) {
+        const target = aiSavedCandidates.find(item => item.id === id);
+        if (!target) return;
+        aiRecommendation = { notes: target.notes, reason: target.reason || "" };
+        aiRecommendNotes.textContent = (target.notes || []).map(n => n.jp).join(" / ");
+        aiRecommendRatio.textContent = (target.notes || []).map(n => `${n.jp} ${n.ratio}%`).join(" ・ ");
+        aiRecommendReason.textContent = target.reason || "保存済み候補を読み込みました。";
+        ensureBackupBeforeApply();
+        applyBlendByNotes(target.notes || []);
+        state.flash = 0.5;
+        aiUndoBtn.disabled = false;
+        setAiSaveMessage("保存済み候補を読み込みました。");
+      }
+
+      function deleteSavedCandidate(id) {
+        aiSavedCandidates = aiSavedCandidates.filter(item => item.id !== id);
+        persistSavedCandidates();
+        renderSavedCandidates();
+        setAiSaveMessage("削除しました。");
       }
 
       function alphaColor(hex, alpha) {
@@ -1320,6 +1498,20 @@
         generateBtn.textContent = state.soundOn ? "この香りを見る（音が流れます）" : "この香りを見る";
       }
 
+      function resetBlendToInitialState() {
+        state.ratios = { ...INITIAL_RATIOS };
+        state.selectedId = INITIAL_SELECTED_ID;
+        aiBackupBlend = null;
+        aiUndoBtn.disabled = true;
+        updateCheckedState();
+        syncSlider();
+        updateMiniBars();
+        updateResults();
+        updateBlendTotalStatus();
+        makeParticles();
+        state.flash = 0;
+      }
+
       function updateSoundUI() {
         soundToggle.classList.toggle("on", state.soundOn);
         soundPill.classList.toggle("active", state.soundOn);
@@ -1383,15 +1575,7 @@
       });
 
       resetBtn.addEventListener("click", () => {
-        fragrances.forEach(f => state.ratios[f.id] = 0);
-        state.ratios[fragrances[0].id] = 24;
-        state.selectedId = fragrances[0].id;
-        updateCheckedState();
-        syncSlider();
-        updateMiniBars();
-        updateResults();
-        makeParticles();
-        updateBlendTotalStatus();
+        resetBlendToInitialState();
         state.flash = 0.65;
 
         if (notesGrid) {
@@ -1410,14 +1594,50 @@
         undoAiRecommendationApply();
         updateBlendTotalStatus();
       });
+      aiSaveBtn.addEventListener("click", () => {
+        saveAiCandidate();
+      });
+      aiToggleSavedBtn.addEventListener("click", () => {
+        aiSavedPanel.classList.toggle("is-hidden");
+        aiToggleSavedBtn.textContent = aiSavedPanel.classList.contains("is-hidden")
+          ? "保存済み候補を見る"
+          : "保存済み候補を隠す";
+      });
+      aiSavedList.addEventListener("click", (event) => {
+        const btn = event.target.closest("button[data-action][data-id]");
+        if (!btn) return;
+        const action = btn.getAttribute("data-action");
+        const id = btn.getAttribute("data-id");
+        if (action === "load") applySavedCandidate(id);
+        if (action === "delete") deleteSavedCandidate(id);
+      });
+      openGuideBtn.addEventListener("click", () => {
+        openGuideModal();
+      });
+      closeGuideBtn.addEventListener("click", () => {
+        closeGuideModal();
+      });
+      guideModal.addEventListener("click", (event) => {
+        const closeTarget = event.target.closest("[data-guide-close]");
+        if (closeTarget) closeGuideModal();
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && guideModal.classList.contains("is-open")) {
+          closeGuideModal();
+        }
+      });
 
       window.addEventListener("resize", resize);
+      window.addEventListener("pageshow", () => {
+        resetBlendToInitialState();
+        buildAiRecommendation();
+      });
 
       renderNotesGrid();
-      syncSlider();
-      updateMiniBars();
-      updateResults();
+      resetBlendToInitialState();
       buildAiRecommendation();
+      loadSavedCandidates();
+      renderSavedCandidates();
       updateSoundUI();
       resize();
       animate();

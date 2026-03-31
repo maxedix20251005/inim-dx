@@ -56,3 +56,11 @@
 - 2026-03-31: 2.3B implemented. Added AI recommendation apply/undo controls with in-session blend backup on subpages/smart-scent-design.html.
 - 2026-03-31: Added user-blend total cap (max 100%) on smart-scent-design slider with total indicator (total: x / 100).
 
+- 2026-03-31: 2.3C step-1 implemented. Added local candidate save/list/load/delete UI (localStorage) on smart-scent-design page.
+- 2026-03-31: Updated Digital Blend layout so the left motion pane stays sticky while scrolling on desktop/tablet (mobile keeps normal flow).
+- 2026-03-31: Added Operation Guide link + Japanese guide modal on smart-scent-design (close by X/backdrop/Esc).
+- 2026-03-31: Updated Operation Guide link style (16px blue hyperlink tone) and enforced Smart Scent initial blend reset on page open (including bfcache pageshow).
+- 2026-03-31: Strengthened Smart Scent open-reset by applying initial blend reset on every pageshow event (not only persisted=true).
+
+- JA: 2026-03-31 Smart Scent変更まとめ（2.3A-2.3D）: AI提案、適用/取り消し、100%上限、候補保存、操作ガイド、表示時リセットを実装。
+- EN: 2026-03-31 Smart Scent change summary (2.3A-2.3D): implemented AI suggestion, apply/undo, 100% cap, candidate save, operation guide, and open-time reset.

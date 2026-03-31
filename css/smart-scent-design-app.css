@@ -102,6 +102,130 @@
   min-width: 0;
 }
 
+.guide-link {
+  border: none;
+  background: transparent;
+  color: #0b57d0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  padding: 8px 2px;
+}
+
+.guide-link:hover {
+  color: #174ea6;
+}
+
+.guide-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: none;
+}
+
+.guide-modal.is-open {
+  display: block;
+}
+
+.guide-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(18, 20, 26, 0.44);
+}
+
+.guide-modal__dialog {
+  position: relative;
+  width: min(760px, calc(100vw - 32px));
+  max-height: calc(100vh - 48px);
+  margin: 24px auto;
+  border-radius: 14px;
+  border: 1px solid rgba(201, 201, 195, 0.85);
+  background: #f9f8f4;
+  box-shadow: 0 24px 64px rgba(20, 22, 28, 0.26);
+  overflow: hidden;
+}
+
+.guide-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(201, 201, 195, 0.85);
+  background: #ffffff;
+}
+
+.guide-modal__header h2 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.guide-modal__close {
+  border: 1px solid #c9c9c3;
+  background: #fff;
+  color: #2c2c2c;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.guide-modal__body {
+  padding: 18px 20px 22px;
+  overflow: auto;
+  max-height: calc(100vh - 132px);
+  color: #3a3f46;
+}
+
+.guide-steps {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 12px;
+}
+
+.guide-steps li {
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.guide-tip {
+  margin-top: 16px;
+  border: 1px solid rgba(201, 201, 195, 0.85);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.84);
+  padding: 12px 14px;
+}
+
+.guide-tip__title {
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: #4a4f58;
+}
+
+.guide-tip ul {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+}
+
+.guide-tip li {
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
 canvas {
   position: absolute;
   inset: 0;
@@ -473,6 +597,95 @@ input[type="range"]::-moz-range-thumb {
   opacity: 0.5;
 }
 
+.ai-save-block {
+  border-top: 1px solid rgba(201, 201, 195, 0.72);
+  padding-top: 10px;
+  display: grid;
+  gap: 10px;
+}
+
+.ai-save-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.ai-save-message {
+  min-height: 18px;
+  font-size: 12px;
+  color: #6f7884;
+}
+
+.ai-save-message.error {
+  color: var(--accent);
+}
+
+.ai-saved-panel {
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.7);
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.ai-saved-panel.is-hidden {
+  display: none;
+}
+
+.ai-saved-list {
+  display: grid;
+  gap: 8px;
+}
+
+.ai-saved-item {
+  border: 1px solid rgba(201, 201, 195, 0.72);
+  border-radius: 10px;
+  padding: 10px;
+  display: grid;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.ai-saved-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #4a4f58;
+}
+
+.ai-saved-meta {
+  font-size: 12px;
+  color: #6f7884;
+  line-height: 1.4;
+}
+
+.ai-saved-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.ai-mini-btn {
+  border: 1px solid #c9c9c3;
+  background: #fff;
+  color: #2c2c2c;
+  border-radius: 8px;
+  min-height: 34px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ai-mini-btn.danger {
+  color: var(--accent);
+  border-color: rgba(178, 69, 49, 0.35);
+}
+
+.ai-empty {
+  font-size: 12px;
+  color: #6f7884;
+}
+
 .cta-row {
   display: grid;
   grid-template-columns: 1fr 120px;
@@ -570,6 +783,7 @@ input[type="range"]::-moz-range-thumb {
   .result-grid,
   .cta-row,
   .ai-field-grid,
+  .ai-save-grid,
   .ai-action-row {
     grid-template-columns: 1fr;
   }
@@ -580,5 +794,24 @@ input[type="range"]::-moz-range-thumb {
 
   .overlay-result {
     max-width: none;
+  }
+
+  .guide-modal__dialog {
+    width: calc(100vw - 20px);
+    margin: 10px auto;
+    max-height: calc(100vh - 20px);
+  }
+
+  .guide-modal__header {
+    padding: 12px 14px;
+  }
+
+  .guide-modal__header h2 {
+    font-size: 17px;
+  }
+
+  .guide-modal__body {
+    padding: 14px;
+    max-height: calc(100vh - 96px);
   }
 }

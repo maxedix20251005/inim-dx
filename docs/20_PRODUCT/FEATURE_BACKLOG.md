@@ -43,6 +43,15 @@
 - 2.3B progress / 2.3B 進捗
   - JA: AI提案の「おすすめを適用」と「適用を取り消す」を追加し、適用前ブレンドをセッション内バックアップして1クリック復元できるようにした。
   - EN: Added "Apply recommendation" and "Undo apply" with in-session backup/one-click restore of the pre-apply blend.
+- 2.3C progress / 2.3C 進捗
+  - JA: 候補保存UI（候補名/メモ/保存/一覧表示/読み込み/削除）を追加し、ローカル保存（localStorage）でセッション継続利用を可能化。
+  - EN: Added save-candidate UI (name/memo/save/list/load/delete) with localStorage persistence for session-continuous reuse.
+- 2.3D progress / 2.3D 進捗
+  - JA: Operation Guide リンクと「スマートセントデザインの楽しみ方」モーダルを追加（×/外側クリック/Esc で閉じる）。
+  - EN: Added Operation Guide link and Japanese usage-guide modal with close behavior via close button, backdrop click, and Esc.
+- 2.3 guide note / 2.3 ガイド注記
+  - JA: 操作ガイドに『初期表示は人気バランス例』『リセットで初期例に戻る』を追記。
+  - EN: Added guide notes: initial view is a popular starter blend; reset returns to that starter.
 - Scope candidates:
   - JA: テキスト入力、推奨ノート表示、理由説明、候補保存
   - EN: Text input, recommended notes, rationale, candidate save
@@ -172,6 +181,13 @@
 ## Recovery Note / 復旧メモ
 - JA: 2026-03-30 に mojibake が発生したため、`docs/90_WIP/FEATURE_BACKLOG_mojibake_backup_20260330.md` にバックアップし、本文をUTF-8で再構築した。
 - EN: Mojibake detected on 2026-03-30; backed up to `docs/90_WIP/FEATURE_BACKLOG_mojibake_backup_20260330.md` and rebuilt this file in UTF-8.
+
+
+
+
+
+
+
 
 
 

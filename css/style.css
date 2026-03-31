@@ -1592,6 +1592,12 @@ main {
     min-width: 0;
 }
 
+.experience-pane {
+    position: sticky;
+    top: 88px;
+    align-self: start;
+}
+
 .control-pane {
     position: static;
     align-self: start;
@@ -1612,6 +1618,11 @@ main {
 @media (max-width: 1180px) {
     .content {
         grid-template-columns: 1fr;
+    }
+
+    .experience-pane {
+        position: static;
+        top: auto;
     }
 
     .control-pane {

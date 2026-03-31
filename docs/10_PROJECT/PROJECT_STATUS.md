@@ -1832,3 +1832,22 @@
 
 ### Doc Update (2026-03-31)
 - EN: Added total-ratio guard for Digital Blend user editing (sum capped at 100%) and displayed current total indicator.
+
+### Doc Update (2026-03-31)
+- EN: Implemented 2.3C step-1 UI for Digital Blend candidate persistence (localStorage-based save/list/load/delete).
+
+### Doc Update (2026-03-31)
+- EN: Updated smart-scent-design layout to keep the left visual/motion pane sticky during scroll on desktop/tablet.
+
+### Doc Update (2026-03-31)
+- EN: Added Operation Guide modal to smart-scent-design with Japanese usage steps and quick tips (X/backdrop/Esc close).
+
+### Doc Update (2026-03-31)
+- EN: Updated Operation Guide link visual style and added deterministic initial-blend reset on smart-scent-design page open (including bfcache restore path).
+
+### Doc Update (2026-03-31)
+- EN: Strengthened smart-scent-design open-reset logic to run on every pageshow event so browser-restored scale state is always overwritten.
+
+### Doc Update (2026-03-31)
+- JA: Smart Scent の直近更新（2.3A-2.3D）を文書上も JA/EN で統一追記。ガイドには『初期表示は人気バランス例』『リセットで初期例へ戻る』を明記。
+- EN: Added a bilingual JA/EN summary for recent Smart Scent updates (2.3A-2.3D). Guide now explicitly states that initial view is a popular starter blend and reset returns to that starter.
