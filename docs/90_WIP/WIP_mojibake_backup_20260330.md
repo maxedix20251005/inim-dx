@@ -551,13 +551,13 @@
   - EN: Reordered top navigation to `Home -> Workshop -> Brand -> Items -> Articles -> Events -> Shops -> Admin`.
   - JA: `記事` は `search-projects`、`イベント` は `search-events`、`実店舗` は `search-shop-info` へ遷移するよう再設定。
   - EN: Retargeted links so `Articles` -> `search-projects`, `Events` -> `search-events`, `Shops` -> `search-shop-info`.
-- 2026-03-28: Brand activation policy switched to WATOYO-only.
+- 2026-03-28: Brand activation policy switched to WAtoYO-only.
   - JA: `disabledPublicPageKeys` から `brand` を除外し、トップレベル `ブランド` を有効化。
   - EN: Enabled top-level `Brand` by removing `brand` from `disabledPublicPageKeys`.
-  - JA: `ブランド` サブメニューは `WATOYO` のみ表示に変更。
-  - EN: Limited Brand submenu exposure to `WATOYO` only.
-  - JA: sitemap のブランド詳細一覧も `ブランド: WATOYO` のみに整理。
-  - EN: Reduced sitemap brand-detail listing to `Brand: WATOYO` only.
+  - JA: `ブランド` サブメニューは `WAtoYO` のみ表示に変更。
+  - EN: Limited Brand submenu exposure to `WAtoYO` only.
+  - JA: sitemap のブランド詳細一覧も `ブランド: WAtoYO` のみに整理。
+  - EN: Reduced sitemap brand-detail listing to `Brand: WAtoYO` only.
 - 2026-03-28: Items activation policy switched to 2 groups.
   - JA: `disabledPublicPageKeys` から `items` を除外し、トップレベル `アイテム` を有効化。
   - EN: Enabled top-level `Items` by removing `items` from `disabledPublicPageKeys`.
@@ -565,9 +565,9 @@
   - EN: Limited Items submenu to two entries: `Aroma` and `Hand Cream`.
   - JA: sitemap のアイテム詳細一覧も `アイテム: アロマ` / `アイテム: ハンドクリーム` のみに整理。
   - EN: Reduced sitemap item-detail listing to `Item: Aroma` and `Item: Hand Cream` only.
-- 2026-03-28: Draft pages created for WATOYO/Aroma/Hand Cream.
-  - JA: `brand-watoyo.html` に3画像（`WATOYO_WA/YO/WAYO`）を使ったブランド紹介ページを実装。
-  - EN: Implemented `brand-watoyo.html` with a 3-image brand showcase (`WATOYO_WA/YO/WAYO`).
+- 2026-03-28: Draft pages created for WAtoYO/Aroma/Hand Cream.
+  - JA: `brand-watoyo.html` に3画像（`WAtoYO_WA/YO/WAYO`）を使ったブランド紹介ページを実装。
+  - EN: Implemented `brand-watoyo.html` with a 3-image brand showcase (`WAtoYO_WA/YO/WAYO`).
   - JA: `item-home-fragrance.html`（アロマ）と `item-body-care.html`（ハンドクリーム）を、各3商品画像で実装。
   - EN: Implemented `item-home-fragrance.html` (Aroma) and `item-body-care.html` (Hand Cream) with 3 product images each.
   - JA: `style.css` に共通 `catalog-*` スタイルを追加し、3ページのUIを統一。
@@ -595,8 +595,8 @@
 - 2026-03-28: Home utility/nav/product placement refinement.
   - JA: 右上ユーティリティの `検索` / `カート` を削除し、アカウント導線のみ表示へ変更。
   - EN: Removed `Search` and `Cart` from top-right utility links, leaving account-related actions only.
-  - JA: `Pick Up` を WATOYO 3商品、`New Arrivals` を アロマ3商品 + ハンドクリーム3商品に再構成。
-  - EN: Swapped content blocks to `Pick Up = 3 WATOYO` and `New Arrivals = 3 Aroma + 3 Hand Cream`.
+  - JA: `Pick Up` を WAtoYO 3商品、`New Arrivals` を アロマ3商品 + ハンドクリーム3商品に再構成。
+  - EN: Swapped content blocks to `Pick Up = 3 WAtoYO` and `New Arrivals = 3 Aroma + 3 Hand Cream`.
   - JA: グローバルナビの `Home` 配下に `About` サブメニューを追加し、`#about` へ直接遷移可能にした。
   - EN: Added an `About` submenu under `Home` in global nav, linking directly to `index.html#about`.
   - JA: `ABOUT` セクションに `images/others/about.png` を配置して情報量を補強。
@@ -607,8 +607,8 @@
   - JA: 影響範囲は `pickup-grid` / `product-grid` のみで、共通カード比率は維持。
   - EN: Scope is limited to `pickup-grid`/`product-grid`; shared card ratio remains unchanged globally.
 - 2026-03-28: Catalog page image height adjustment.
-  - JA: `WATOYO / アロマ / ハンドクリーム` ページの `.catalog-card img` を `240px` から `280px` へ変更。
-  - EN: Raised `.catalog-card img` height from `240px` to `280px` on WATOYO/Aroma/Hand Cream pages.
+  - JA: `WAtoYO / アロマ / ハンドクリーム` ページの `.catalog-card img` を `240px` から `280px` へ変更。
+  - EN: Raised `.catalog-card img` height from `240px` to `280px` on WAtoYO/Aroma/Hand Cream pages.
   - JA: 商品画像の縦方向の情報量を増やし、見切れ感を軽減。
   - EN: Improves vertical visual presence and reduces the “too short” impression on product images.
 - 2026-03-28: Catalog image sizing aligned to index ratio behavior.
@@ -619,8 +619,8 @@
 - 2026-03-28: Continued `2.14` (slice-5: article/sale/Shops page implementation).
   - JA: `subpages/article.html` を記事ハブとして実装（3カード + 関連導線）。
   - EN: Implemented `subpages/article.html` as a compact article hub with 3 cards and related links.
-  - JA: `subpages/sale.html` を限定オファーページとして実装（WATOYO/アロマ/ハンドクリーム導線）。
-  - EN: Implemented `subpages/sale.html` as a limited-offer page connected to WATOYO/Aroma/Hand Cream.
+  - JA: `subpages/sale.html` を限定オファーページとして実装（WAtoYO/アロマ/ハンドクリーム導線）。
+  - EN: Implemented `subpages/sale.html` as a limited-offer page connected to WAtoYO/Aroma/Hand Cream.
   - JA: `subpages/Shops.html` を実店舗案内ページとして実装（浅草/柴又/ソラマチ比較 + 予約導線）。
   - EN: Implemented `subpages/Shops.html` as a shop-guide page for Asakusa/Shibamata/Solamachi with booking handoff.
   - JA: `content-hub-*` 共通スタイルを追加し、3ページの見た目を統一。

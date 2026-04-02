@@ -1354,20 +1354,20 @@
 - 期待結果:
   - 指定順序・指定リンク先どおりにグローバルナビが動作する
   - EN: Global nav order and destinations match the requested IA, with Admin preserved at the right edge.
-## 2026-03-28 追加テスト / Added Test (Brand WATOYO-only Activation)
+## 2026-03-28 追加テスト / Added Test (Brand WAtoYO-only Activation)
 - 対象:
   - `js/site-config.js`
   - `js/site-shell.js`
   - `subpages/sitemap.html`
 - 手順:
   1. 公開グローバルナビの `ブランド` が disabled ではなく遷移可能であることを確認する
-  2. `ブランド` のサブメニュー（hover展開）に `WATOYO` のみ表示されることを確認する
-  3. `WATOYO` をクリックして `subpages/brand-watoyo.html` へ遷移できることを確認する
+  2. `ブランド` のサブメニュー（hover展開）に `WAtoYO` のみ表示されることを確認する
+  3. `WAtoYO` をクリックして `subpages/brand-watoyo.html` へ遷移できることを確認する
   4. `subpages/sitemap.html` の「公開ナビ（トップレベル）」で `ブランド` に `準備中` 表示がないことを確認する
-  5. sitemap の「公開ページ（カテゴリ詳細）」でブランド項目が `ブランド: WATOYO` のみであることを確認する
+  5. sitemap の「公開ページ（カテゴリ詳細）」でブランド項目が `ブランド: WAtoYO` のみであることを確認する
 - 期待結果:
-  - ブランド導線は `WATOYO` のみ公開状態として一貫表示される
-  - EN: Brand navigation is consistently active with WATOYO as the only exposed brand detail entry.
+  - ブランド導線は `WAtoYO` のみ公開状態として一貫表示される
+  - EN: Brand navigation is consistently active with WAtoYO as the only exposed brand detail entry.
 ## 2026-03-28 追加テスト / Added Test (Items 2-group Activation: Aroma / Hand Cream)
 - 対象:
   - `js/site-config.js`
@@ -1383,14 +1383,14 @@
 - 期待結果:
   - アイテム導線は `アロマ / ハンドクリーム` の2グループ公開方針として一貫表示される
   - EN: Items navigation is consistently active with only two exposed groups (Aroma and Hand Cream).
-## 2026-03-28 追加テスト / Added Test (Draft Pages: WATOYO / Aroma / Hand Cream)
+## 2026-03-28 追加テスト / Added Test (Draft Pages: WAtoYO / Aroma / Hand Cream)
 - 対象:
   - `subpages/brand-watoyo.html`
   - `subpages/item-home-fragrance.html`
   - `subpages/item-body-care.html`
   - `css/style.css`
 - 手順:
-  1. `subpages/brand-watoyo.html` を開き、ヒーロー画像と3つのWATOYOカード画像が表示されることを確認する
+  1. `subpages/brand-watoyo.html` を開き、ヒーロー画像と3つのWAtoYOカード画像が表示されることを確認する
   2. `subpages/item-home-fragrance.html` を開き、`aroma_neroli / aroma_vanilla / aroma_musk` の3画像が表示されることを確認する
   3. `subpages/item-body-care.html` を開き、`handcream_rose / handcream_daphne / handcream_seablue` の3画像が表示されることを確認する
   4. 3ページとも `catalog` レイアウト（hero + grid + cards）が崩れず表示されることを確認する
@@ -1470,19 +1470,19 @@
   1. 任意の公開ページで右上ユーティリティに `検索` / `カート` が表示されないことを確認する
   2. グローバルナビ `Home` のホバーで `About` サブメニューが表示されることを確認する
   3. `Home > About` をクリックし、トップページ `#about` セクションへスクロール遷移することを確認する
-  4. トップページ `Pick Up` に `WATOYO_WA / WATOYO_YO / WATOYO_WAYO` の3カードが表示されることを確認する
+  4. トップページ `Pick Up` に `WAtoYO_WA / WAtoYO_YO / WAtoYO_WAYO` の3カードが表示されることを確認する
   5. トップページ `New Arrivals` に `アロマ3点 + ハンドクリーム3点` の計6カードが表示されることを確認する
   6. `ABOUT` セクション右側に `images/others/about.png` が表示され、補足説明文が読めることを確認する
 - 期待結果:
   - ヘッダー導線が簡素化され、`Home > About` から `ABOUT` へ直接到達できる
-  - 商品訴求ブロックが指定された構成（Pick Up=WATOYO3 / New Arrivals=Aroma3+HandCream3）で表示される
+  - 商品訴求ブロックが指定された構成（Pick Up=WAtoYO3 / New Arrivals=Aroma3+HandCream3）で表示される
   - EN: Utility links are simplified, Home-About jump works, and top-page product blocks reflect the requested lineup.
 ## 2026-03-28 追加テスト / Added Test (Top-page Card Image Height Increase)
 - 対象:
   - `css/style.css`
   - `index.html`
 - 手順:
-  1. トップページ `Pick Up` の3カード（WATOYO）画像が、以前より縦長（4:5）で表示されることを確認する
+  1. トップページ `Pick Up` の3カード（WAtoYO）画像が、以前より縦長（4:5）で表示されることを確認する
   2. トップページ `New Arrivals` の6カード（アロマ3 + ハンドクリーム3）画像が、以前より縦長（4:5）で表示されることを確認する
   3. 他ページの共通カードが極端に縦長化していないことを確認する
 - 期待結果:
@@ -1502,7 +1502,7 @@
   4. 商品カード画像が縦方向に伸びても、カード枠・テキストとの重なり崩れがないことを確認する
 - 期待結果:
   - 3ページすべてで `.catalog-card img` が `280px` 高さとして表示され、見え量が改善される
-  - EN: Catalog card images on WATOYO/Aroma/Hand Cream pages render at the increased `280px` height without layout breakage.
+  - EN: Catalog card images on WAtoYO/Aroma/Hand Cream pages render at the increased `280px` height without layout breakage.
 ## 2026-03-28 追加テスト / Added Test (Catalog Image Ratio Match with Index)
 - 対象:
   - `css/style.css`
@@ -1517,7 +1517,7 @@
   4. `item-body-care.html` のカード画像が同等の縦比率で表示されることを確認する
 - 期待結果:
   - 3ページの `.catalog-card img` が固定px高ではなく、`index.html` と同じ比率ベース（`aspect-ratio: 4 / 5`）で表示される
-  - EN: Catalog cards on WATOYO/Aroma/Hand Cream pages match index card image ratio behavior (`4:5`) rather than fixed pixel height.
+  - EN: Catalog cards on WAtoYO/Aroma/Hand Cream pages match index card image ratio behavior (`4:5`) rather than fixed pixel height.
 ## 2026-03-28 追加テスト / Added Test (2.14 Slice-5: Article/Sale/Shops Pages)
 - 対象:
   - `subpages/article.html`
@@ -1527,7 +1527,7 @@
   - `js/site-shell.js`
 - 手順:
   1. `article.html` を開き、3つの記事カードと各CTAが表示されることを確認する
-  2. `sale.html` を開き、WATOYO/アロマ/ハンドクリームの3カードと各CTAが表示されることを確認する
+  2. `sale.html` を開き、WAtoYO/アロマ/ハンドクリームの3カードと各CTAが表示されることを確認する
   3. `Shops.html` を開き、浅草/柴又/ソラマチの3カードが表示され、`予約枠を確認する` CTAが押下可能であることを確認する
   4. 3ページともモバイル幅でカードが1カラム表示に切り替わることを確認する
   5. 各ページの news-strip 文言が「公開済み」内容に更新されていることを確認する
@@ -1612,7 +1612,7 @@
 - 手順:
   1. `about.html` を開き、左テキスト列と右画像カード列の上端が揃って見えることを確認する
   2. フッターの `プライバシーポリシー` / `法的表示` をクリックし、各ページへ遷移できることを確認する
-  3. `brand.html` を開き、WATOYO導線を含む3カード構成が表示されることを確認する
+  3. `brand.html` を開き、WAtoYO導線を含む3カード構成が表示されることを確認する
   4. `items.html` を開き、アロマ/ハンドクリーム導線を含む3カード構成が表示されることを確認する
   5. `brand/items` の news-strip 文言が公開済み内容になっていることを確認する
 - 期待結果:

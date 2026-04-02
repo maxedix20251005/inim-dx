@@ -491,12 +491,12 @@
 - JA: `Admin` は既存ロジックのままグローバルナビ右端表示を維持。
 - EN: Reworked top-level public nav to the requested order and remapped Article/Event/Shop links to implemented search pages while keeping Admin at the right edge.
 
-## 48. 2026-03-28 Brand WATOYO-only Activation / 引継ぎ追記
-- JA: ブランド公開方針を `WATOYOのみ有効` へ切替（top-level Brand は有効化、Brand詳細露出は WATOYO のみに制限）。
+## 48. 2026-03-28 Brand WAtoYO-only Activation / 引継ぎ追記
+- JA: ブランド公開方針を `WAtoYOのみ有効` へ切替（top-level Brand は有効化、Brand詳細露出は WAtoYO のみに制限）。
 - JA: `site-config.js` の `disabledPublicPageKeys` から `brand` を除外。
 - JA: `site-shell.js` の Brandサブメニューを `brandWatoyo` 単独へ変更し、`latest` 文言を公開状態へ更新。
-- JA: `sitemap.html` で top-level `ブランド` の default-disabled を解除し、ブランド詳細一覧を `ブランド: WATOYO` のみに整理。
-- EN: Switched Brand policy to WATOYO-only exposure by enabling top-level Brand and limiting submenu/sitemap detail entries to WATOYO.
+- JA: `sitemap.html` で top-level `ブランド` の default-disabled を解除し、ブランド詳細一覧を `ブランド: WAtoYO` のみに整理。
+- EN: Switched Brand policy to WAtoYO-only exposure by enabling top-level Brand and limiting submenu/sitemap detail entries to WAtoYO.
 
 ## 49. 2026-03-28 Items 2-group Activation / 引継ぎ追記
 - JA: アイテム公開方針を `アロマ / ハンドクリーム` の2グループ有効へ切替（top-level Items を有効化）。
@@ -505,17 +505,17 @@
 - JA: `sitemap.html` で top-level `アイテム` の default-disabled を解除し、カテゴリ詳細のアイテム一覧を2件のみに整理。
 - EN: Switched Items policy to two active groups (Aroma/Hand Cream) by enabling top-level Items and limiting submenu/sitemap detail entries accordingly.
 
-## 50. 2026-03-28 Draft Page Build (WATOYO/Aroma/Hand Cream) / 引継ぎ追記
+## 50. 2026-03-28 Draft Page Build (WAtoYO/Aroma/Hand Cream) / 引継ぎ追記
 - JA: `brand-watoyo.html` / `item-home-fragrance.html` / `item-body-care.html` を画像資産ベースでドラフト実装。
 - JA: 使用画像:
-  - WATOYO: `images/inim-dx_watoyo/WATOYO_WA.png`, `WATOYO_YO.png`, `WATOYO_WAYO.png`
+  - WAtoYO: `images/inim-dx_watoyo/WATOYO_WA.png`, `WATOYO_YO.png`, `WATOYO_WAYO.png`
   - Aroma: `images/inim-dx_items/aroma_neroli.png`, `aroma_vanilla.png`, `aroma_musk.png`
   - Hand Cream: `images/inim-dx_items/handcream_rose.png`, `handcream_daphne.png`, `handcream_seablue.png`
 - JA: `css/style.css` に共通 `catalog-*` スタイルを追加し、3ページ共通UI（hero/grid/card）を適用。
 - EN: Drafted the three requested pages with provided assets and introduced shared `catalog-*` styles for consistent UI across Brand/Item pages.
 
 ## 51. 2026-03-28 Product Hero Simplification / 引継ぎ追記
-- JA: 3ページ（WATOYO/Aroma/Hand Cream）のヒーローからCTAボタン2件を削除。
+- JA: 3ページ（WAtoYO/Aroma/Hand Cream）のヒーローからCTAボタン2件を削除。
 - JA: ヒーロー右側の大画像を削除し、`catalog-hero--single` で1カラム表示へ変更。
 - JA: 下段の3商品カード（画像 + 説明）はそのまま維持。
 - EN: Simplified all three product-page heroes by removing CTA buttons and right hero image, while keeping the bottom three product cards unchanged.
@@ -547,3 +547,4 @@
 - EN: Recovery method: restore `js/site-shell.js` from known-good source, then reapply only approved theme-switcher changes.
 - EN: Validation: UTF-8 save, mojibake scan (`rg -n -F "\\uFFFD" docs`) no-hit on shell assets, and user confirmation.
 - EN: Ongoing rule: perform mojibake + UTF-8 verification after each shell/doc edit task before closure.
+

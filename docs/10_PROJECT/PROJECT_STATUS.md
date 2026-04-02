@@ -1324,20 +1324,20 @@
   - `js/site-shell.js`
 - EN: Reordered and retargeted the global navigation to the requested IA, mapping Article/Event/Shops to implemented search pages and keeping Admin as the rightmost item.
 ### ドキュメント更新（2026-03-28 追加81）
-- ブランド導線を `WATOYO` のみ公開する運用へ切り替えました。
+- ブランド導線を `WAtoYO` のみ公開する運用へ切り替えました。
 - 変更内容:
   - `js/site-config.js` の `disabledPublicPageKeys` から `brand` を除外し、トップレベル `ブランド` を有効化
-  - `js/site-shell.js` の `ブランド` サブメニューを `WATOYO` 単独表示へ変更
+  - `js/site-shell.js` の `ブランド` サブメニューを `WAtoYO` 単独表示へ変更
   - `subpages/sitemap.html` でトップレベル `ブランド` の default-disabled 指定を解除
-  - `subpages/sitemap.html` のブランド詳細一覧を `ブランド: WATOYO` のみに整理
+  - `subpages/sitemap.html` のブランド詳細一覧を `ブランド: WAtoYO` のみに整理
   - `js/site-shell.js` の `brand` / `brandWatoyo` の latest 文言を公開状態に更新
 - 目的:
-  - 現時点の公開方針（BrandはWATOYOのみ有効）をナビとサイトマップへ一貫反映する
+  - 現時点の公開方針（BrandはWAtoYOのみ有効）をナビとサイトマップへ一貫反映する
 - 対象ファイル:
   - `js/site-config.js`
   - `js/site-shell.js`
   - `subpages/sitemap.html`
-- EN: Activated Brand with WATOYO-only exposure by enabling top-level brand and limiting Brand submenu/sitemap detail links to WATOYO.
+- EN: Activated Brand with WAtoYO-only exposure by enabling top-level brand and limiting Brand submenu/sitemap detail links to WAtoYO.
 ### ドキュメント更新（2026-03-28 追加82）
 - アイテム導線を `アロマ / ハンドクリーム` の2グループ公開へ切り替えました。
 - 変更内容:
@@ -1355,9 +1355,9 @@
   - `subpages/sitemap.html`
 - EN: Activated Items with a two-group policy (Aroma/Hand Cream) and synchronized nav/sitemap exposure to those two item groups only.
 ### ドキュメント更新（2026-03-28 追加83）
-- `WATOYO / アロマ / ハンドクリーム` の3ページを、提供画像を用いてドラフト実装しました。
+- `WAtoYO / アロマ / ハンドクリーム` の3ページを、提供画像を用いてドラフト実装しました。
 - 変更内容:
-  - `subpages/brand-watoyo.html` にブランド紹介ヒーロー + 3ビジュアルカード（`WATOYO_WA/WATOYO_YO/WATOYO_WAYO`）を追加
+  - `subpages/brand-watoyo.html` にブランド紹介ヒーロー + 3ビジュアルカード（`WAtoYO_WA/WAtoYO_YO/WAtoYO_WAYO`）を追加
   - `subpages/item-home-fragrance.html` にアロマページを実装（`aroma_neroli / aroma_vanilla / aroma_musk`）
   - `subpages/item-body-care.html` にハンドクリームページを実装（`handcream_rose / handcream_daphne / handcream_seablue`）
   - `css/style.css` に3ページ共通の `catalog-*` スタイル群を追加（hero/grid/card + responsive）
@@ -1368,9 +1368,9 @@
   - `subpages/item-home-fragrance.html`
   - `subpages/item-body-care.html`
   - `css/style.css`
-- EN: Delivered draft implementations for the three requested pages (WATOYO, Aroma, Hand Cream) using the provided image assets and shared catalog UI styles.
+- EN: Delivered draft implementations for the three requested pages (WAtoYO, Aroma, Hand Cream) using the provided image assets and shared catalog UI styles.
 ### ドキュメント更新（2026-03-28 追加84）
-- `WATOYO / アロマ / ハンドクリーム` ページのヒーロー構成を、商品ページ向けに簡素化しました。
+- `WAtoYO / アロマ / ハンドクリーム` ページのヒーロー構成を、商品ページ向けに簡素化しました。
 - 変更内容:
   - 3ページ共通でヒーロー内のCTAボタン2件を削除
   - 3ページ共通でヒーロー右側の大画像を削除
@@ -1435,7 +1435,7 @@
 - トップページのヘッダー導線と商品掲載順を調整し、`About` への直接導線を追加しました。
 - 変更内容:
   - 右上ユーティリティから `検索` / `カート` を削除（アカウント導線のみ表示）
-  - `Pick Up` を `WATOYO` 3点構成へ差し替え（`WA / YO / WAYO`）
+  - `Pick Up` を `WAtoYO` 3点構成へ差し替え（`WA / YO / WAYO`）
   - `New Arrivals` を `アロマ3点 + ハンドクリーム3点` 構成へ差し替え
   - グローバルナビ `Home` 配下に `About` サブメニューを追加し、`index.html#about` へジャンプ可能に変更
   - `ABOUT` セクションへ `images/others/about.png` を追加し、説明文を補強
@@ -1446,7 +1446,7 @@
   - `js/site-shell.js`
   - `index.html`
   - `css/style.css`
-- EN: Refined top-page navigation/content by removing Search/Cart utility links, swapping Pick Up/New Arrivals to the requested WATOYO/Aroma/Hand Cream lineup, and adding a `Home > About` submenu jump with enriched About section imagery.
+- EN: Refined top-page navigation/content by removing Search/Cart utility links, swapping Pick Up/New Arrivals to the requested WAtoYO/Aroma/Hand Cream lineup, and adding a `Home > About` submenu jump with enriched About section imagery.
 ### ドキュメント更新（2026-03-28 追加89）
 - トップページの `Pick Up` / `New Arrivals` 画像の縦寸を拡張し、商品ビジュアルの見え方を改善しました。
 - 変更内容:
@@ -1459,7 +1459,7 @@
   - `css/style.css`
 - EN: Increased image height for top-page `Pick Up` and `New Arrivals` cards by overriding their aspect ratio to `4/5`, while keeping global card behavior unchanged elsewhere.
 ### ドキュメント更新（2026-03-28 追加90）
-- `WATOYO / アロマ / ハンドクリーム` の各ページで、商品画像の縦寸を拡張しました。
+- `WAtoYO / アロマ / ハンドクリーム` の各ページで、商品画像の縦寸を拡張しました。
 - 変更内容:
   - `css/style.css` の `.catalog-card img` 高さを `240px -> 280px` に変更
   - 対象は `catalog-card` を利用する3ページ（`brand-watoyo` / `item-home-fragrance` / `item-body-care`）
@@ -1467,9 +1467,9 @@
   - 3ページの商品画像表示が低く見える状態を改善し、視認性を向上
 - 対象ファイル:
   - `css/style.css`
-- EN: Increased product image height on WATOYO/Aroma/Hand Cream catalog cards by updating `.catalog-card img` from `240px` to `280px`.
+- EN: Increased product image height on WAtoYO/Aroma/Hand Cream catalog cards by updating `.catalog-card img` from `240px` to `280px`.
 ### ドキュメント更新（2026-03-28 追加91）
-- `WATOYO / アロマ / ハンドクリーム` の画像高さ指定を、`index.html` と同じ比率制御へ修正しました。
+- `WAtoYO / アロマ / ハンドクリーム` の画像高さ指定を、`index.html` と同じ比率制御へ修正しました。
 - 変更内容:
   - `.catalog-card img` の固定高 (`280px`) を廃止
   - `index.html` と同じ `aspect-ratio: 4 / 5` + `height: auto` へ変更
@@ -1582,7 +1582,7 @@
 ### ドキュメント更新（2026-03-28 追加100）
 - `brand` / `items` 親ページを placeholder から professional hub へ刷新しました。
 - 変更内容:
-  - `subpages/brand.html` をブランドハブ化（WATOYO導線 + 方針 + 次アクション）
+  - `subpages/brand.html` をブランドハブ化（WAtoYO導線 + 方針 + 次アクション）
   - `subpages/items.html` をアイテムハブ化（アロマ/ハンドクリーム導線 + 次アクション）
   - `css/style.css` に `content-hub-card--primary` を追加して主導線カードを強調
   - `js/site-shell.js` の `brand/items` latest 文言を公開済みステータスへ更新
@@ -1658,7 +1658,7 @@
 - `2.14` の次スライスとして、`article` / `sale` / `Shops` の3ページを placeholder から実ページ化しました。
 - 変更内容:
   - `subpages/article.html` を Japanese-first の記事ハブとして実装（3カード + 関連導線）
-  - `subpages/sale.html` を Japanese-first の限定オファーページとして実装（WATOYO/アロマ/ハンドクリーム導線）
+  - `subpages/sale.html` を Japanese-first の限定オファーページとして実装（WAtoYO/アロマ/ハンドクリーム導線）
   - `subpages/Shops.html` を Japanese-first の実店舗案内として実装（浅草/柴又/ソラマチ比較 + 予約導線）
   - `css/style.css` に `content-hub-*` 共通スタイルを追加（カード/グリッド/モバイル対応）
   - `js/site-shell.js` の `article` / `sale` / `Shops` latest 文言を公開済みステータスへ更新

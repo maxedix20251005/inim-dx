@@ -11,7 +11,7 @@
         brandNezs: { path: 'subpages/brand-nezs.html', label: "NEZ's", title: "Brand / NEZ's", latest: 'ブランド詳細ページは現在作成準備中です。' },
         brandAromaCrops: { path: 'subpages/brand-aroma-crops.html', label: 'AROMA CROPS', title: 'Brand / AROMA CROPS', latest: 'ブランド詳細ページは現在作成準備中です。' },
         brandKosaido: { path: 'subpages/brand-kosaido.html', label: '香彩堂', title: 'Brand / 香彩堂', latest: 'ブランド詳細ページは現在作成準備中です。' },
-        brandWatoyo: { path: 'subpages/brand-watoyo.html', label: 'WATOYO', title: 'Brand / WATOYO', latest: 'ブランド詳細ページは現在作成準備中です。' },
+        brandWatoyo: { path: 'subpages/brand-watoyo.html', label: 'WAtoYO', title: 'Brand / WAtoYO', latest: 'ブランド詳細ページは現在作成準備中です。' },
         brandCocktailSoap: { path: 'subpages/brand-cocktail-soap.html', label: 'COCKTAIL SOAP', title: 'Brand / COCKTAIL SOAP', latest: 'ブランド詳細ページは現在作成準備中です。' },
         brandEnjoyth: { path: 'subpages/brand-enjoyth.html', label: 'ENJOYNTH', title: 'Brand / ENJOYNTH', latest: 'ブランド詳細ページは現在作成準備中です。' },
         brandAwaji: { path: 'subpages/brand-awaji.html', label: 'AWAJI', title: 'Brand / AWAJI', latest: 'ブランド詳細ページは現在作成準備中です。' },

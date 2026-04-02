@@ -9,8 +9,15 @@
     const initialHash = window.location.hash.startsWith('#') ? window.location.hash.slice(1) : '';
     const initialHashParams = initialHash.includes('=') ? new URLSearchParams(initialHash) : new URLSearchParams();
     const themeStorageKey = 'inim-theme';
+    const defaultThemeId = 'p45';
     const themeOptions = [
         { id: 'p01', label: 'Floral Breeze' },
+        { id: 'p41', label: 'Velvet Petal' },
+        { id: 'p42', label: 'Amber Morning' },
+        { id: 'p43', label: 'Silky Memory' },
+        { id: 'p44', label: 'Apricot Mist' },
+        { id: 'p45', label: 'Sunset Linen' },
+        { id: 'p46', label: 'Honey Glow' },
         { id: 'p04', label: 'Clean Linen' },
         { id: 'p05', label: 'Violet Mist' },
         { id: 'p06', label: 'Cool Water' },
@@ -39,12 +46,12 @@
         { id: 'p37', label: 'Dried Rose' },
         { id: 'p40', label: 'Solar Flare' }
     ];
-    const normalizeThemeId = (value) => themeOptions.some((opt) => opt.id === value) ? value : 'p01';
+    const normalizeThemeId = (value) => themeOptions.some((opt) => opt.id === value) ? value : defaultThemeId;
     const readStoredTheme = () => {
         try {
-            return normalizeThemeId(localStorage.getItem(themeStorageKey) || 'p01');
+            return normalizeThemeId(localStorage.getItem(themeStorageKey) || defaultThemeId);
         } catch (error) {
-            return 'p01';
+            return defaultThemeId;
         }
     };
     let currentTheme = readStoredTheme();
@@ -68,7 +75,7 @@
         brandNezs: { path: 'subpages/brand-nezs.html', label: "NEZ's", title: "Brand / NEZ's", latest: 'ブランド詳細ページ（NEZ\'s）を公開しました。' },
         brandAromaCrops: { path: 'subpages/brand-aroma-crops.html', label: 'AROMA CROPS', title: 'Brand / AROMA CROPS', latest: 'ブランド詳細ページ（AROMA CROPS）を公開しました。' },
         brandKosaido: { path: 'subpages/brand-kosaido.html', label: '香彩堂', title: 'Brand / 香彩堂', latest: 'ブランド詳細ページ（香彩堂）を公開しました。' },
-        brandWatoyo: { path: 'subpages/brand-watoyo.html', label: 'WATOYO', title: 'Brand / WATOYO', latest: 'WATOYO ブランドページを公開中です。' },
+        brandWatoyo: { path: 'subpages/brand-watoyo.html', label: 'WAtoYO', title: 'Brand / WAtoYO', latest: 'WAtoYO ブランドページを公開中です。' },
         brandCocktailSoap: { path: 'subpages/brand-cocktail-soap.html', label: 'COCKTAIL SOAP', title: 'Brand / COCKTAIL SOAP', latest: 'ブランド詳細ページ（COCKTAIL SOAP）を公開しました。' },
         brandEnjoyth: { path: 'subpages/brand-enjoyth.html', label: 'ENJOYNTH', title: 'Brand / ENJOYNTH', latest: 'ブランド詳細ページ（ENJOYNTH）を公開しました。' },
         brandAwaji: { path: 'subpages/brand-awaji.html', label: 'AWAJI', title: 'Brand / AWAJI', latest: 'ブランド詳細ページ（AWAJI）を公開しました。' },
@@ -93,7 +100,7 @@
         workshopBookingThanks: { path: 'subpages/workshop-booking-thanks.html', label: '予約完了', title: 'Workshop / Booking Thanks', latest: 'ワークショップ予約完了画面を公開しました。次のアクションを選んで継続できます。' },
         smartScent: { path: 'subpages/smart-scent-design.html', label: 'Smart Scent Design', title: 'Smart Scent Design', latest: '色・粒子・サウンドを使って、自分の香りを視覚的に編集するデジタル調香ページです。' },
         article: { path: 'subpages/article.html', label: '記事', title: 'Article', latest: '体験設計・予約導線・店舗背景を短く読める記事ページを公開しました。' },
-        sale: { path: 'subpages/sale.html', label: 'セール', title: 'Sale', latest: 'WATOYO / アロマ / ハンドクリームの限定オファーを確認できるセールページを公開しました。' },
+        sale: { path: 'subpages/sale.html', label: 'セール', title: 'Sale', latest: 'WAtoYO / アロマ / ハンドクリームの限定オファーを確認できるセールページを公開しました。' },
         sitemap: { path: 'subpages/sitemap.html', label: 'サイトマップ', title: 'Site Map', latest: 'サイト構造の見直しに向け、公開ページと管理ページの導線一覧を公開しました。' },
         stores: { path: 'subpages/stores.html', label: '実店舗', title: 'Shops', latest: '浅草・柴又・ソラマチの比較導線を備えた実店舗案内ページを公開しました。' },
         account: { path: 'subpages/account.html', label: 'マイアカウント', title: 'My Account', latest: 'ログイン・会員登録・プロフィール設定への入口をまとめたアカウントページを公開しました。' },
@@ -1588,6 +1595,8 @@
 
     document.dispatchEvent(new CustomEvent('site-shell:ready', { detail: { pageKey, root } }));
 })();
+
+
 
 
 

@@ -5,7 +5,7 @@ $pages = @(
     @{ File = 'subpages/brand-nezs.html'; Key = 'brandNezs'; Title = "NEZ's | inim-dx" },
     @{ File = 'subpages/brand-aroma-crops.html'; Key = 'brandAromaCrops'; Title = 'AROMA CROPS | inim-dx' },
     @{ File = 'subpages/brand-kosaido.html'; Key = 'brandKosaido'; Title = '香彩堂 | inim-dx' },
-    @{ File = 'subpages/brand-watoyo.html'; Key = 'brandWatoyo'; Title = 'WATOYO | inim-dx' },
+    @{ File = 'subpages/brand-watoyo.html'; Key = 'brandWatoyo'; Title = 'WAtoYO | inim-dx' },
     @{ File = 'subpages/brand-cocktail-soap.html'; Key = 'brandCocktailSoap'; Title = 'COCKTAIL SOAP | inim-dx' },
     @{ File = 'subpages/brand-enjoyth.html'; Key = 'brandEnjoyth'; Title = 'ENJOYNTH | inim-dx' },
     @{ File = 'subpages/brand-awaji.html'; Key = 'brandAwaji'; Title = 'AWAJI | inim-dx' },
