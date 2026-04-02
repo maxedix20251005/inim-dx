@@ -9,7 +9,7 @@
 - EN: Prioritise short-term impact through improved reach rate and CVR, not traffic growth, by minimising friction from top page to workshop booking.
 - JA: 体験価値（高評価のワークショップ）を、視覚とコピーで即時理解させる。
 - EN: Make workshop value (already highly rated) instantly understandable through visuals and copy.
-- JA: 魅力訴求に加え、不安解消（価格、所要時間、初心者歓迎、FAQ）を上部〜中段で明示する。
+- JA: 魅力訴求に加え、不安解消（価格、所要時間、初心者歓迎、FAQ）を上部?中段で明示する。
 - EN: Pair appeal with reassurance elements (price, duration, beginner-friendliness, FAQ) in upper-to-middle sections.
 
 ## 2. Layout Architecture / レイアウト構成
@@ -41,7 +41,22 @@
   - Text Primary: `#1A1A1A`
   - Text Secondary: `#666666`
 
-### 3.2 Alert/Status Colours / アラート色
+### 3.2 Theme Palettes / テーマパレット
+- JA: 公開サイトは `body[data-theme="p01"...]` の切替で 28 パレットを適用する（可読性重視で一部パレットを除外）。
+- EN: The public site applies 28 palettes via `body[data-theme="p01"...]` after removing low-readability sets.
+- JA: テーマ切替はヘッダーの `テーマ` ドロップダウンから行い、選択は `localStorage` キー `inim-theme` に保存する。
+- EN: Theme selection is done via the header `Theme` dropdown and persisted in `localStorage` key `inim-theme`.
+- JA: テーマ名はパレット名のみを表示し、`P01-40` の接頭表記は UI に出さない。
+- EN: Theme labels show the palette name only; do not display the `P01-40` prefix in the UI.
+- JA: テーマ名は色の印象を想像しやすい英語名（例: Floral Breeze）を基本とする。
+- EN: Theme labels use approved descriptive English names for quick color imagination (for example, `Floral Breeze`).
+- JA: 除外IDは `p02, p03, p11, p20, p21, p22, p24, p27, p28, p36, p38, p39`。
+- EN: Removed IDs are `p02, p03, p11, p20, p21, p22, p24, p27, p28, p36, p38, p39`.
+- JA: ヘッダーではテーマを常時全件表示し、分類ドロップダウンは使用しない。
+- EN: The header always shows all active theme options; no group dropdown is used.
+- JA: 色の参照は CSS 変数（`--color-bg`, `--color-main`, `--color-accent`, `--color-line-strong` など）で統一し、直接色指定は避ける。
+- EN: Use CSS variables (`--color-bg`, `--color-main`, `--color-accent`, `--color-line-strong`, etc.) for color usage; avoid direct hex values.
+### 3.3 Alert/Status Colours / アラート色
 - JA/EN:
   - Info: left border `#2C2C2C`, bg `#F3F3F3`
   - Success: left border `#2F7A4A`, bg `#EDF7F0`
@@ -57,6 +72,8 @@
   - Body: 16px / 400 / line-height 1.8 / letter-spacing 0.01em
   - Caption: 13px / 400 / line-height 1.6 / letter-spacing 0.03em
   - Button text: 16px / 500 / line-height 1.4 / letter-spacing 0.02em
+- JA: ヘッダー補助要素（テーマ選択、アカウントリンク）は同一サイズ/ウェイトで統一する。
+- EN: Header utility elements (theme selector, account links) share the same font size/weight.
 
 ## 5. Components / コンポーネント規則
 
@@ -139,3 +156,11 @@
 - `references/design/05-wireframe.html`
 - `references/design/06-design-guide.html`
 - `references/design/01-proposal.html`
+
+
+
+
+
+
+
+

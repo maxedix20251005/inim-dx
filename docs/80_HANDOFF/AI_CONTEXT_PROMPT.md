@@ -1,4 +1,4 @@
-# AI CONTEXT PROMPT / inim-dx 完全復元用
+﻿# AI CONTEXT PROMPT / inim-dx 完全復元用
 
 このファイルは、作業途中からでも `inim-dx` の現状を正確に復元し、同じ前提で開発を再開するための AI 向けコンテキストです。新しい AI に渡す場合は、このファイルをそのまま読ませたうえで、必要に応じて `PROJECT_STATUS.md` と `WIP.md` を続けて参照させてください。
 
@@ -541,3 +541,9 @@
 
 
 
+
+## 56. 2026-04-02 Mojibake Recurrence Recovery (Public Shell)
+- EN: Resolved recurrent mojibake in public shell labels (header/global nav/footer).
+- EN: Recovery method: restore `js/site-shell.js` from known-good source, then reapply only approved theme-switcher changes.
+- EN: Validation: UTF-8 save, mojibake scan (`rg -n -F "\\uFFFD" docs`) no-hit on shell assets, and user confirmation.
+- EN: Ongoing rule: perform mojibake + UTF-8 verification after each shell/doc edit task before closure.

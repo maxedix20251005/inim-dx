@@ -1900,10 +1900,40 @@
 - JA: Step 4（公開サブページ全体の文言整合チェック）を実施。見出し/セクションラベル/予約導線の文言を日本語中心へ統一し、予約関連ページ（plans/entry/confirm/thanks）と案内ページ（shop-info/shopping-guide）の残存英語ラベルを整理。
 - EN: Executed Step 4 full public-subpage consistency sweep. Standardized headings/section labels/booking-flow copy to Japanese-first and cleaned remaining English labels in booking-related pages (plans/entry/confirm/thanks) and guide pages (shop-info/shopping-guide).
 
-### Doc Update (2026-03-31)
-- JA: `workshop-booking-thanks.html` の重複CTAを整理し、下段の「トップへ戻る」ボタンを削除。
-- EN: Removed duplicate CTA on `workshop-booking-thanks.html` by deleting the lower "Back to Top" button.
+### Documentation Update (2026-04-02 Add 115)
+- EN: Recovered recurrent public-shell mojibake by restoring `js/site-shell.js` from a known-good revision and reapplying only approved theme-switcher changes.
+- EN: Confirmed render recovery on header/global nav/footer after UTF-8 re-save.
+- EN: Added mandatory close-out checks for shell/doc edits: mojibake scan and UTF-8 verification before task closure.
+- Files:
+  - `js/site-shell.js`
+  - `css/style.css`
+  - `docs/10_PROJECT/PROJECT_STATUS.md`
+  - `docs/10_PROJECT/ISSUE_LIST.md`
+  - `docs/10_PROJECT/WIP.md`
+  - `docs/80_HANDOFF/AI_CONTEXT_PROMPT.md`
 
-### Doc Update (2026-03-31)
-- JA: `workshop-booking-entry.html` で選択枠サマリーが未表示になる不具合を修正。URLパラメータ差異（`price_display` / `booking_method` / `start_time`+`end_time`）へ対応し、`session_id` を使ったDBフォールバック補完を追加。
-- EN: Fixed missing selected-slot summary on `workshop-booking-entry.html`. Added compatibility for URL param variants (`price_display` / `booking_method` / `start_time`+`end_time`) and DB fallback hydration via `session_id`.
+### Documentation Update (2026-04-02 Add 116)
+- EN: Pruned low-readability theme palettes from public styling and selector options.
+- EN: Removed 12 palettes from both CSS tokens and header theme dropdown: `p02`, `p03`, `p11`, `p20`, `p21`, `p22`, `p24`, `p27`, `p28`, `p36`, `p38`, `p39`.
+- EN: Active theme count is now 28 palettes.
+- Files:
+  - `css/style.css`
+  - `js/site-shell.js`
+  - `docs/20_PRODUCT/DESIGN_GUIDELINE.md`
+
+
+### Documentation Update (2026-04-02 Add 117)
+- EN: Applied user-approved English label set for all active 28 theme options.
+- EN: This update changes display names only; IDs, tier groups, and color tokens remain unchanged.
+- Files:
+  - `js/site-shell.js`
+  - `docs/20_PRODUCT/DESIGN_GUIDELINE.md`
+
+### Documentation Update (2026-04-02 Add 118)
+- EN: Removed the theme type/group selector (`Safe / Creative / Strong`) from the header.
+- EN: Theme dropdown now always shows all active 28 themes.
+- EN: Scope is selector behavior only; IDs and color tokens remain unchanged.
+- Files:
+  - `js/site-shell.js`
+  - `docs/20_PRODUCT/DESIGN_GUIDELINE.md`
+

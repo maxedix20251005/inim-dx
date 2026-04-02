@@ -1,4 +1,4 @@
-(() => {
+﻿(() => {
     const body = document.body;
     const main = document.getElementById('page-main');
     if (!main) {
@@ -8,6 +8,57 @@
     const pageKey = body.dataset.pageKey || 'home';
     const initialHash = window.location.hash.startsWith('#') ? window.location.hash.slice(1) : '';
     const initialHashParams = initialHash.includes('=') ? new URLSearchParams(initialHash) : new URLSearchParams();
+    const themeStorageKey = 'inim-theme';
+    const themeOptions = [
+        { id: 'p01', label: 'Floral Breeze' },
+        { id: 'p04', label: 'Clean Linen' },
+        { id: 'p05', label: 'Violet Mist' },
+        { id: 'p06', label: 'Cool Water' },
+        { id: 'p07', label: 'Herbal Air' },
+        { id: 'p08', label: 'Dark Roast' },
+        { id: 'p09', label: 'Sweet Scent' },
+        { id: 'p10', label: 'Iron Smoke' },
+        { id: 'p12', label: 'Fruity Pop' },
+        { id: 'p13', label: 'Forest Path' },
+        { id: 'p14', label: 'Bold Wine' },
+        { id: 'p15', label: 'Aqueous Calm' },
+        { id: 'p16', label: 'Milky Tea' },
+        { id: 'p17', label: 'Soft Velvet' },
+        { id: 'p18', label: 'Silent Storm' },
+        { id: 'p19', label: 'Refreshing Chill' },
+        { id: 'p23', label: 'Silk Touch' },
+        { id: 'p25', label: 'Sea Salt' },
+        { id: 'p26', label: 'Orchid Fragrance' },
+        { id: 'p29', label: 'Spring Sprout' },
+        { id: 'p30', label: 'Deep Graphite' },
+        { id: 'p31', label: 'Berry Fizz' },
+        { id: 'p32', label: 'Jungle Leaf' },
+        { id: 'p33', label: 'Dark Shadow' },
+        { id: 'p34', label: 'Sparkling Wine' },
+        { id: 'p35', label: 'Marshmallow Cloud' },
+        { id: 'p37', label: 'Dried Rose' },
+        { id: 'p40', label: 'Solar Flare' }
+    ];
+    const normalizeThemeId = (value) => themeOptions.some((opt) => opt.id === value) ? value : 'p01';
+    const readStoredTheme = () => {
+        try {
+            return normalizeThemeId(localStorage.getItem(themeStorageKey) || 'p01');
+        } catch (error) {
+            return 'p01';
+        }
+    };
+    let currentTheme = readStoredTheme();
+    const applyTheme = (nextTheme) => {
+        const themeId = normalizeThemeId(nextTheme);
+        currentTheme = themeId;
+        body.dataset.theme = themeId;
+        try {
+            localStorage.setItem(themeStorageKey, themeId);
+        } catch (error) {
+            return;
+        }
+    };
+    applyTheme(currentTheme);
 
     const pages = {
         home: { path: 'index.html', label: 'Home', title: 'inim-dx top page', latest: 'デジタル調香体験からワークショップ予約までをつなぐ新しいトップページ構成を公開しました。' },
@@ -551,9 +602,32 @@
     const renderHeaderTools = () => {
         const tools = header.querySelector('.utility-header__tools');
         if (!tools) { return; }
-        tools.innerHTML = currentUser
+        const renderThemeSwitcherMarkup = () => `
+            <div class="theme-switcher" data-theme-switcher>
+                <div class="theme-switcher__field">
+                    <label for="theme-selector">テーマ</label>
+                    <select id="theme-selector" name="theme" aria-label="Theme selector">
+                        ${themeOptions.map((opt) => `<option value="${opt.id}">${opt.label}</option>`).join('')}
+                    </select>
+                </div>
+            </div>
+        `;
+        const bindThemeSwitcher = () => {
+            const switcher = header.querySelector('[data-theme-switcher]');
+            if (!switcher) { return; }
+            const select = switcher.querySelector('#theme-selector');
+            if (!select) { return; }
+            select.value = currentTheme;
+            select.addEventListener('change', (event) => {
+                applyTheme(event.target.value);
+                select.value = currentTheme;
+            });
+        };
+        const accountLinks = currentUser
             ? `${accountModalLink('account', 'マイアカウント')}${accountLogoutLink()}`
             : `${accountModalLink('login', 'ログイン')}${accountModalLink('register', '会員登録')}`;
+        tools.innerHTML = `${renderThemeSwitcherMarkup()}${accountLinks}`;
+        bindThemeSwitcher();
     };
 
     const renderSidebarAccountLinks = () => {
@@ -1514,3 +1588,14 @@
 
     document.dispatchEvent(new CustomEvent('site-shell:ready', { detail: { pageKey, root } }));
 })();
+
+
+
+
+
+
+
+
+
+
+

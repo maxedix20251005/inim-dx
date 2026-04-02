@@ -175,7 +175,7 @@
 - `症状:` 日本語テキストが文字化けし、見出し・本文・HTMLタグの一部が崩れて画面表示が破綻した。
 - `原因:` 文字コード非固定の一括置換により、UTF-8テキストが誤ったエンコーディングで再保存された。
 - `対策:` 対象2ファイルを `HEAD` の正常UTF-8版へ復元し、必要差分（確認画面の必須値再検証、`internal_note` ラベル修正）のみ再適用した。
-- `再発防止:` 日本語を含むHTML編集では UTF-8 を明示し、保存前後で文字化けパターン（`繝/譛ｪ/蜈･蜉` 等）とタグ破損（`/h1>` 等）を必ず grep 確認する。
+- `再発防止:` 日本語を含むHTML編集では UTF-8 を明示し、保存前後でmojibake markers (for example: replacement character `U+FFFD` or unreadable JP fragments)とタグ破損（`/h1>` 等）を必ず grep 確認する。
 - `ユーザー確認結果:` 2026-03-28 時点で再確認完了（OK）。
 - `状態:` 解消済み（ユーザー確認済み）
 ## 3. 今後の運用ルール / Operational Rules
@@ -236,7 +236,7 @@
 - 症状: 日本語テキストの文字化け（mojibake）と壊れたHTML断片が混在し、表示品質と保守性が低下。
 - 原因: 過去編集時のエンコーディング不整合により、ファイル全体へ文字化けが波及。
 - 対策: subpages/workshop-booking.html を UTF-8 で再構築し、文字化け文字列・壊れたタグを除去。必要なID/動線（Diagnostics、Summary、Calendar、Slots）を維持。
-- 再発防止: 文字化けが出たファイルは部分修正ではなくUTF-8再構成を優先し、編集後に mojibake パターン（縺,繝,�）をスキャンする。
+- 再発防止: 文字化けが出たファイルは部分修正ではなくUTF-8再構成を優先し、編集後に mojibake markers (e.g., U+FFFD or unreadable JP fragments)をスキャンする。
 - 状態: 解消済み（2026-03-27 確認反映）
 
 ### Issue 2026-03-27-24
@@ -307,4 +307,25 @@
 - `再発防止:` 予約導線で plan 文脈を渡す画面は、表示文言ではなく `plan_code` を正本キーとして単一運用する。
 - `ユーザー確認結果:` 2026-03-28 時点で「it works」を確認。
 - `状態:` 解消済み（ユーザー確認済み）
+
+
+
+### Issue 2026-04-02-31
+- Date: 2026-04-02
+- Environment: Public site shell (`header`, `global nav`, `footer`)
+- Summary: Public shell labels became mojibake and unreadable.
+- Detail: `js/site-shell.js` was saved with an incompatible encoding, so Japanese shell text became corrupted on render.
+- Status: Closed
+- Solution: Re-saved `js/site-shell.js` as UTF-8 and reapplied approved theme-switcher logic.
+- Closed Date: 2026-04-02 (superseded by Issue `2026-04-02-32` and user confirmed)
+
+### Issue 2026-04-02-32
+- Date: 2026-04-02
+- Environment: Public site shell (`header`, `global nav`, `footer`), file `js/site-shell.js`
+- Summary: Mojibake recurred after the initial encoding fix.
+- Detail: `js/site-shell.js` contained already-corrupted string literals; encoding-only re-save could not recover original text.
+- Status: Closed
+- Solution: Restored `js/site-shell.js` from a known-good revision, reapplied only approved theme-switcher updates (`Theme` selector label `テーマ`, palette labels without `P01-40`, selector order/theme persistence), then validated UTF-8 save + no mojibake marker.
+- Closed Date: 2026-04-02 (user confirmed)
+- Cross Reference: Follow-up of Issue `2026-04-02-31`.
 

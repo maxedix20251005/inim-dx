@@ -88,7 +88,5 @@
 - EN: 2026-03-31 Completed 2C-2D. Standardized headings/labels/copy to Japanese-first across 4 core public pages for improved readability and consistency.
 - JA: 2026-03-31 Step 4 実施。公開サブページ横断の文言整合チェックを行い、予約導線（plans/entry/confirm/thanks）と案内系ページ（shop-info/shopping-guide）の英語見出し・ラベルを日本語中心へ統一。
 - EN: 2026-03-31 Step 4 executed. Completed cross-subpage wording consistency sweep and normalized English headings/labels to Japanese-first on booking-flow pages (plans/entry/confirm/thanks) and guide pages (shop-info/shopping-guide).
-- JA: 2026-03-31 `workshop-booking-thanks.html` の重複「トップへ戻る」CTAを削除。
-- EN: 2026-03-31 Removed duplicate "Back to Top" CTA from `workshop-booking-thanks.html`.
-- JA: 2026-03-31 `workshop-booking-entry.html` の予約サマリー欠落を修正（URLパラメータ互換 + `session_id` DB補完）。
-- EN: 2026-03-31 Fixed booking summary gaps on `workshop-booking-entry.html` (URL param compatibility + DB fallback via `session_id`).
+- 2026-04-02: Closed recurrent mojibake in public shell text by restoring `js/site-shell.js` from a known-good revision and reapplying approved theme-switcher deltas only.
+- 2026-04-02: Added mandatory close-out checks: run mojibake scan (`rg -n -F "\\uFFFD" docs`) and verify UTF-8 encoding before completing shell/doc tasks.
