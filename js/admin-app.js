@@ -164,9 +164,9 @@
     const visibleNav = () => isOpenDemoMode
         ? navItems
         : navItems.filter(([key]) => {
-        const allowed = accessRules[key];
-        return !allowed || state.roles.some((r) => allowed.includes(r));
-    });
+            const allowed = accessRules[key];
+            return !allowed || state.roles.some((r) => allowed.includes(r));
+        });
     const setNotice = (msg, type = "info") => {
         state.notice = msg;
         state.noticeType = type;
@@ -186,7 +186,7 @@
     const renderSidebar = () => `
         <aside class="admin-sidebar">
             <div class="admin-brand">
-                <a class="admin-brand__logo" href="${escapeHtml(`${root}/index.html`)}" aria-label="メインサイトへ戻る"><img src="${escapeHtml(`${root}/images/logo/logo-inim-dx.jpg`)}" alt="inim-dx ロゴ"></a>
+                <a class="admin-brand__logo" href="${escapeHtml(`${root}/index.html`)}" aria-label="メインサイトへ戻る"><img src="${escapeHtml(`${root}/images/logo/logo-inim-dx.png`)}" alt="inim-dx ロゴ"></a>
                 <strong class="admin-brand__title">管理ポータル</strong>
             </div>
             <div class="admin-sidebar__profile">
@@ -227,11 +227,11 @@
             <nav class="admin-breadcrumb" aria-label="パンくず">
                 <ol>
                     ${trail.map((key, index) => {
-                        const isLast = index === trail.length - 1;
-                        const label = pages[key]?.[1] || key;
-                        if (isLast) return `<li><span aria-current="page">${escapeHtml(label)}</span></li>`;
-                        return `<li><a href="${escapeHtml(toPath(key))}">${escapeHtml(label)}</a></li>`;
-                    }).join("")}
+            const isLast = index === trail.length - 1;
+            const label = pages[key]?.[1] || key;
+            if (isLast) return `<li><span aria-current="page">${escapeHtml(label)}</span></li>`;
+            return `<li><a href="${escapeHtml(toPath(key))}">${escapeHtml(label)}</a></li>`;
+        }).join("")}
                 </ol>
             </nav>
         `;
@@ -297,9 +297,9 @@
             <select name="asset_id">
                 <option value="">未設定</option>
                 ${getFilteredAssets(selectedAssetId).map((asset) => {
-            const summary = [asset.file_type, asset.file_path, asset.alt_text].filter(Boolean).join(" / ");
-            return `<option value="${escapeHtml(asset.id)}" ${String(asset.id) === String(selectedAssetId || "") ? "selected" : ""}>${escapeHtml(summary || asset.id)}</option>`;
-        }).join("")}
+        const summary = [asset.file_type, asset.file_path, asset.alt_text].filter(Boolean).join(" / ");
+        return `<option value="${escapeHtml(asset.id)}" ${String(asset.id) === String(selectedAssetId || "") ? "selected" : ""}>${escapeHtml(summary || asset.id)}</option>`;
+    }).join("")}
             </select>
             <div class="admin-field-note">候補: ${escapeHtml(String(getFilteredAssets(selectedAssetId).length))}件 / 全${escapeHtml(String(state.contentAssets.length))}件</div>
         </div>
@@ -968,28 +968,3 @@
     };
     init().catch((e) => setNotice(`初期化エラー: ${e.message}`, "error"));
 })();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

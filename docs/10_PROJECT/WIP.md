@@ -90,3 +90,4 @@
 - EN: 2026-03-31 Step 4 executed. Completed cross-subpage wording consistency sweep and normalized English headings/labels to Japanese-first on booking-flow pages (plans/entry/confirm/thanks) and guide pages (shop-info/shopping-guide).
 - 2026-04-02: Closed recurrent mojibake in public shell text by restoring `js/site-shell.js` from a known-good revision and reapplying approved theme-switcher deltas only.
 - 2026-04-02: Added mandatory close-out checks: run mojibake scan (`rg -n -F "\\uFFFD" docs`) and verify UTF-8 encoding before completing shell/doc tasks.
+- 2026-04-03: Added Issue `2026-04-03-33` for shell render regression (`Unexpected token '}'` in `js/site-shell.js`) after mobile nav refactor; removed duplicated `renderMobileNav()` fragment and moved status to Monitoring until user confirms.

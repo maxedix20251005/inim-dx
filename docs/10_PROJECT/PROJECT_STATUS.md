@@ -1937,3 +1937,16 @@
   - `js/site-shell.js`
   - `docs/20_PRODUCT/DESIGN_GUIDELINE.md`
 
+
+### Documentation Update (2026-04-03 Add 119)
+- EN: Logged and fixed a public-shell regression where `header/global nav/footer` disappeared due to a JavaScript syntax error after mobile-nav refactor.
+- EN: Root cause was a duplicated template fragment in `renderMobileNav()` causing `Unexpected token '}'` in `js/site-shell.js`.
+- EN: Added Issue `2026-04-03-33` and applied hotfix by removing the duplicate block.
+- EN: Current status is `Monitoring` until user re-verifies visual recovery.
+- Files:
+  - `js/site-shell.js`
+  - `docs/10_PROJECT/ISSUE_LIST.md`
+  - `docs/10_PROJECT/PROJECT_STATUS.md`
+  - `docs/10_PROJECT/WIP.md`
+  - `docs/80_HANDOFF/AI_CONTEXT_PROMPT.md`
+  - `docs/20_PRODUCT/DESIGN_GUIDELINE.md`

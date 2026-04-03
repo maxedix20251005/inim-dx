@@ -164,3 +164,11 @@
 
 
 
+
+## Mobile Navigation Pattern (2026-04-03)
+- JA: 画面幅 `980px` 以下では、従来の横並びグローバルナビを非表示とし、`sticky compact trigger + bottom-sheet accordion` を標準とする。
+- EN: For viewport `<= 980px`, hide desktop horizontal global nav and use `sticky compact trigger + bottom-sheet accordion` as the standard.
+- JA: 目的は、常時コンテンツ可視を維持しつつ、タップ領域と操作性を確保すること。
+- EN: Objective is to keep content visible while improving tap targets and navigation usability.
+- JA: 実装要件: トリガーは `position: sticky`、メニューは `max-height` 制限付き内部スクロール、`Esc/Backdrop/LinkClick` で閉じる。
+- EN: Implementation requirements: sticky trigger, internal scroll with capped sheet height, close on `Esc/backdrop/link click`.

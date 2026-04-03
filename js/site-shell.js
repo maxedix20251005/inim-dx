@@ -8,8 +8,7 @@
     const pageKey = body.dataset.pageKey || 'home';
     const initialHash = window.location.hash.startsWith('#') ? window.location.hash.slice(1) : '';
     const initialHashParams = initialHash.includes('=') ? new URLSearchParams(initialHash) : new URLSearchParams();
-    const themeStorageKey = 'inim-theme';
-    const defaultThemeId = 'p45';
+    const defaultThemeId = 'p44';
     const themeOptions = [
         { id: 'p01', label: 'Floral Breeze' },
         { id: 'p41', label: 'Velvet Petal' },
@@ -47,23 +46,11 @@
         { id: 'p40', label: 'Solar Flare' }
     ];
     const normalizeThemeId = (value) => themeOptions.some((opt) => opt.id === value) ? value : defaultThemeId;
-    const readStoredTheme = () => {
-        try {
-            return normalizeThemeId(localStorage.getItem(themeStorageKey) || defaultThemeId);
-        } catch (error) {
-            return defaultThemeId;
-        }
-    };
-    let currentTheme = readStoredTheme();
+    let currentTheme = defaultThemeId;
     const applyTheme = (nextTheme) => {
         const themeId = normalizeThemeId(nextTheme);
         currentTheme = themeId;
         body.dataset.theme = themeId;
-        try {
-            localStorage.setItem(themeStorageKey, themeId);
-        } catch (error) {
-            return;
-        }
     };
     applyTheme(currentTheme);
 
@@ -418,6 +405,47 @@
         </nav>
     `;
 
+    const renderMobileNav = () => `
+        <button type="button" class="mobile-nav-trigger" aria-expanded="false" aria-controls="mobile-nav-panel">
+            <span class="mobile-nav-trigger__label">メニュー</span>
+            <span class="mobile-nav-trigger__current">${currentPage.label}</span>
+            <span class="mobile-nav-trigger__caret" aria-hidden="true"></span>
+        </button>
+        <div class="mobile-nav-backdrop" hidden></div>
+        <nav id="mobile-nav-panel" class="mobile-nav-panel" aria-label="モバイルナビゲーション" hidden>
+            <div class="mobile-nav-panel__sheet">
+                <div class="mobile-nav-panel__head">
+                    <p>ナビゲーション</p>
+                    <button type="button" class="mobile-nav-panel__close" data-mobile-nav-close aria-label="close menu">閉じる</button>
+                </div>
+                <div class="mobile-nav-panel__inner">
+                    ${globalNavItems.map((item) => {
+        const isDisabled = disabledGlobalNavKeys.has(item.key);
+        const hasChildren = !isDisabled && item.children.length > 0;
+        const parentOnly = item.parentOnly === true;
+        const linkClass = `${item.current ? 'is-current' : ''} ${isDisabled ? 'is-disabled' : ''}`.trim();
+        const parent = parentOnly
+            ? `<span class="mobile-nav-panel__parent ${linkClass}">${item.label}</span>`
+            : `<a class="mobile-nav-panel__parent ${linkClass}" href="${isDisabled ? '#' : item.href}" ${isDisabled ? disabledLinkAttrs : ''}>${item.label}</a>`;
+        if (!hasChildren) {
+            return `<div class="mobile-nav-panel__item">${parent}</div>`;
+        }
+        return `
+                    <div class="mobile-nav-panel__item has-children">
+                        <div class="mobile-nav-panel__row">
+                            ${parent}
+                            <button type="button" class="mobile-nav-panel__toggle" aria-expanded="false" aria-label="${item.label} submenu"></button>
+                        </div>
+                        <div class="mobile-nav-panel__children" hidden>
+                            ${item.children.map((child) => `<a class="${child.current ? 'is-current' : ''}" href="${child.href}">${child.label}</a>`).join('')}
+                        </div>
+                    </div>
+                `;
+    }).join('')}
+                </div>
+            </div>
+        </nav>
+    `;
     const openGroups = new Set();
     const currentTopLevel = {
         about: null,
@@ -472,7 +500,7 @@
 
     const sidebarHtml = `
         <a class="sidebar__brand" href="${link('home')}" aria-label="inim-dx top">
-            <img class="sidebar__brand-logo" src="${root}/images/logo/logo-inim-dx.jpg" alt="inim-dx logo">
+            <img class="sidebar__brand-logo" src="${root}/images/logo/logo-inim-dx.png" alt="inim-dx logo">
             <span class="sidebar__brand-note">Fragrance Experience Platform</span>
         </a>
         <nav class="sidebar__nav" aria-label="サイドナビゲーション">
@@ -491,7 +519,7 @@
     const headerHtml = `
         <div class="utility-header">
             <a class="utility-header__brand-logo" href="${link('home')}" aria-label="inim-dx top">
-                <img src="${root}/images/logo/logo-inim-dx.jpg" alt="inim-dx logo">
+                <img src="${root}/images/logo/logo-inim-dx.png" alt="inim-dx logo">
             </a>
             <div class="utility-header__tools">
                 ${accountModalLink('login', 'ログイン')}
@@ -499,6 +527,7 @@
             </div>
         </div>
         ${renderGlobalNav()}
+        ${renderMobileNav()}
         ${renderBreadcrumb()}
         <div class="news-strip">
             <span>Latest</span>
@@ -974,6 +1003,78 @@
         });
     };
 
+    const initMobileNav = () => {
+        const trigger = header.querySelector('.mobile-nav-trigger');
+        const backdrop = header.querySelector('.mobile-nav-backdrop');
+        const panel = header.querySelector('.mobile-nav-panel');
+        const closeButton = header.querySelector('[data-mobile-nav-close]');
+        if (!trigger || !panel || !backdrop) return;
+
+        const closePanel = () => {
+            panel.hidden = true;
+            backdrop.hidden = true;
+            panel.classList.remove('is-open');
+            backdrop.classList.remove('is-open');
+            trigger.classList.remove('is-open');
+            trigger.setAttribute('aria-expanded', 'false');
+            body.classList.remove('mobile-nav-open');
+            panel.querySelectorAll('.mobile-nav-panel__item.has-children').forEach((item) => {
+                item.classList.remove('is-open');
+                const toggle = item.querySelector('.mobile-nav-panel__toggle');
+                const children = item.querySelector('.mobile-nav-panel__children');
+                if (toggle) toggle.setAttribute('aria-expanded', 'false');
+                if (children) children.hidden = true;
+            });
+        };
+
+        const openPanel = () => {
+            panel.hidden = false;
+            backdrop.hidden = false;
+            panel.classList.add('is-open');
+            backdrop.classList.add('is-open');
+            trigger.classList.add('is-open');
+            trigger.setAttribute('aria-expanded', 'true');
+            body.classList.add('mobile-nav-open');
+        };
+
+        trigger.addEventListener('click', () => {
+            if (panel.classList.contains('is-open')) {
+                closePanel();
+            } else {
+                openPanel();
+            }
+        });
+
+        panel.querySelectorAll('.mobile-nav-panel__toggle').forEach((toggle) => {
+            toggle.addEventListener('click', () => {
+                const item = toggle.closest('.mobile-nav-panel__item.has-children');
+                if (!item) return;
+                const children = item.querySelector('.mobile-nav-panel__children');
+                const willOpen = !item.classList.contains('is-open');
+                item.classList.toggle('is-open', willOpen);
+                toggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+                if (children) children.hidden = !willOpen;
+            });
+        });
+
+        panel.querySelectorAll('a').forEach((linkNode) => {
+            linkNode.addEventListener('click', () => closePanel());
+        });
+
+        backdrop.addEventListener('click', () => closePanel());
+        if (closeButton) {
+            closeButton.addEventListener('click', () => closePanel());
+        }
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') closePanel();
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 980) closePanel();
+        });
+    };
+
     pageContent.appendChild(header);
     pageContent.appendChild(main);
     pageContent.appendChild(footer);
@@ -989,6 +1090,7 @@
     body.appendChild(modalHost.firstElementChild);
     syncGlobalNavA11y();
     initGlobalNavDrilldown();
+    initMobileNav();
 
     const modal = document.getElementById('account-modal');
     const modalTitle = document.getElementById('account-modal-title');
@@ -1595,6 +1697,12 @@
 
     document.dispatchEvent(new CustomEvent('site-shell:ready', { detail: { pageKey, root } }));
 })();
+
+
+
+
+
+
 
 
 

@@ -548,3 +548,11 @@
 - EN: Validation: UTF-8 save, mojibake scan (`rg -n -F "\\uFFFD" docs`) no-hit on shell assets, and user confirmation.
 - EN: Ongoing rule: perform mojibake + UTF-8 verification after each shell/doc edit task before closure.
 
+
+## 57. 2026-04-03 Mobile Nav Regression Hotfix / 引継ぎ追記
+- JA: モバイルナビ改修後、`header / global nav / footer` が非表示になる重大回帰を確認（Console: `Unexpected token '}' at js/site-shell.js:463`）。
+- JA: 原因は `renderMobileNav()` テンプレート断片の重複混入（重複ブロックが構文を破壊）。
+- JA: 重複ブロックを除去して `js/site-shell.js` を修正。Issue `2026-04-03-33` を追加し、状態はユーザー再確認待ち（Monitoring）。
+- EN: Critical regression found after mobile-nav refactor: shell (`header/global nav/footer`) failed to render due to `Unexpected token '}'` at `js/site-shell.js:463`.
+- EN: Root cause was duplicated template code inside `renderMobileNav()`.
+- EN: Applied hotfix by removing the duplicate block, logged as Issue `2026-04-03-33`, and set status to Monitoring pending user verification.

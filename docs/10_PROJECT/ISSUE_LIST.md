@@ -329,3 +329,13 @@
 - Closed Date: 2026-04-02 (user confirmed)
 - Cross Reference: Follow-up of Issue `2026-04-02-31`.
 
+
+### Issue 2026-04-03-33
+- Date: 2026-04-03
+- Environment: Public site shell (`header`, `global nav`, `footer`), `js/site-shell.js`
+- Summary: Header/global nav/footer disappeared after mobile nav refactor.
+- Detail: Browser console showed `Uncaught SyntaxError: Unexpected token '}'` at `js/site-shell.js:463`. The mobile-nav template block had duplicated code fragments, which broke script parsing and prevented shell rendering.
+- Status: Monitoring (fix applied, awaiting user verification)
+- Solution: Removed the duplicated fragment in `renderMobileNav()` (extra block around former lines 449-466), restored balanced braces/parens, and kept only one valid template block.
+- Closed Date: TBD (pending user confirmation)
+- Cross Reference: Follow-up of recent mobile navigation usability change (compact sticky + bottom-sheet accordion).
