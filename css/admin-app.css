@@ -145,6 +145,7 @@ textarea:focus {
     padding: 16px;
     border-radius: 16px;
     background: rgba(255, 255, 255, 0.06);
+    margin-top: 4px;
 }
 
 .admin-sidebar__profile span,
@@ -230,6 +231,15 @@ textarea:focus {
     display: grid;
     gap: 12px;
     margin-top: auto;
+    padding-top: 4px;
+}
+
+.admin-sidebar__footer .admin-link-button,
+.admin-sidebar__footer .admin-logout {
+    width: 100%;
+    white-space: nowrap;
+    word-break: keep-all;
+    overflow-wrap: normal;
 }
 
 .admin-content {
