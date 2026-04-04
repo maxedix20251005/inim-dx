@@ -874,6 +874,33 @@ input[type="range"]::-moz-range-thumb {
 }
 
 @media (max-width: 720px) {
+  .experience-shell {
+    min-height: 66vh;
+    padding-top: env(safe-area-inset-top, 0);
+  }
+
+  .overlay-top {
+    top: calc(10px + env(safe-area-inset-top, 0));
+    left: 12px;
+    right: 12px;
+    gap: 8px;
+  }
+
+  .overlay-pill {
+    padding: 8px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    line-height: 1.25;
+  }
+
+  .overlay-result {
+    top: calc(98px + env(safe-area-inset-top, 0));
+    left: 12px;
+    right: 12px;
+    max-width: calc(100% - 24px);
+    padding: 14px;
+  }
+
   .notes-grid,
   .result-grid,
   .cta-row,

@@ -2063,3 +2063,50 @@
   - `subpages/smart-scent-design.html`
   - `favicon.ico`
 - EN: Reduced Smart Scent console noise by lazy-loading Tone.js after user gesture and fixing favicon resolution (`/favicon.ico` 404).
+### ドキュメント更新（2026-04-04 追加119）
+- SP表示の軽微崩れに対して、Smart Scent のオーバーレイ配置をモバイル向けに補正しました。
+- 変更内容:
+  - `css/smart-scent-design-app.css`
+  - `@media (max-width: 720px)` で `experience-shell / overlay-top / overlay-pill / overlay-result` の余白・位置・サイズを調整
+  - `subpages/smart-scent-design.html`
+  - CSS クエリを `smart-scent-design-app.css?v=20260404b` に更新
+- 目的:
+  - SPで上部ピルが見切れる、または結果カードと近接しすぎる表示を是正する
+- 対象ファイル:
+  - `css/smart-scent-design-app.css`
+  - `subpages/smart-scent-design.html`
+- EN: Applied a mobile-only cosmetic fix for Smart Scent overlay layout (top pills/result card spacing) and bumped CSS version to ensure immediate reflection.
+### ドキュメント更新（2026-04-04 追加120）
+- SP視認性の微調整として、Smart Scent の「上部ヘッダー」と「あなたの香り」カードの縦間隔を最適化しました。
+- 変更内容:
+  - `css/smart-scent-design-app.css`
+  - SP向け `overlay-result` の `top` を `118px` 相当から `98px` 相当へ調整し、初期画面の間延びを抑制
+  - `css/style.css`
+  - SP向け `topbar` の `padding/gap` と `experience-page` の `gap` を縮小
+- 目的:
+  - 主要情報（タイトル→結果カード）を近接させ、スマホ初見時の視線移動量を減らす
+- 対象ファイル:
+  - `css/smart-scent-design-app.css`
+  - `css/style.css`
+- EN: Refined mobile spacing by reducing the vertical gap between Smart Scent topbar and the `あなたの香り` card, plus tighter topbar density for better first-view readability.
+### ドキュメント更新（2026-04-04 追加121）
+- SPギャップ調整の追加要望に対応し、Smart Scent ページの `topbar` と `content` の間隔を明示的に `20px` へ設定しました。
+- 変更内容:
+  - `css/style.css`
+  - `@media (max-width: 720px)` の `.experience-page` `gap` を `20px` に調整
+- 目的:
+  - SP初期表示でヘッダー直下の余白を適切に確保し、見た目の詰まりを防止する
+- 対象ファイル:
+  - `css/style.css`
+- EN: Applied follow-up SP spacing request by setting the Smart Scent `topbar` to `content` gap to `20px` at mobile breakpoint.
+### ドキュメント更新（2026-04-04 追加122）
+- 上記ギャップ調整の適用先を是正しました。`topbar` と `content` は `.experience-page` ではなく `.app` 配下のため、実効ギャップは `.app` の `row-gap` で管理します。
+- 変更内容:
+  - `css/style.css`
+  - `.app` に `row-gap: 20px` を追加
+  - 誤設定だった SP向け `.experience-page` の `gap` 指定を削除
+- 目的:
+  - 画面幅に関係なく、`topbar` と `content` の間隔を確実に `20px` で表示する
+- 対象ファイル:
+  - `css/style.css`
+- EN: Corrected the gap implementation target to `.app` and enforced `row-gap: 20px` so topbar/content spacing works consistently across viewports.

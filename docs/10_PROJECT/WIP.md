@@ -120,3 +120,19 @@
   - EN: Switched `smart-scent-design` Tone.js to lazy-load so AudioContext warnings do not appear on initial page load.
   - JA: `favicon.ico` 404 を解消するため、ページfavicon指定とルート `favicon.ico` を追加。
   - EN: Resolved favicon 404 by adding explicit page favicon link and root `favicon.ico`.
+- 2026-04-04: Smart Scent SP cosmetic fix (overlay clipping).
+  - JA: SP幅で `overlay-top` と `overlay-result` の余白/位置を再調整し、上部ピルの見切れと重なりを抑制。
+  - EN: Tuned mobile spacing/position for `overlay-top` and `overlay-result` to prevent top pill clipping/overlap.
+  - JA: 反映漏れ回避のため CSS クエリを `v=20260404b` へ更新。
+  - EN: Bumped CSS cache version to `v=20260404b` to avoid stale-style rendering.
+- 2026-04-04: Smart Scent SP spacing refinement (topbar-to-result gap).
+  - JA: SP表示で `香りを体験する！デジタル調香` から `あなたの香り` までの間隔を縮小（`overlay-result` の開始位置を上方調整）。
+  - EN: Reduced the mobile vertical gap between the Smart Scent topbar and `あなたの香り` by moving the result overlay upward.
+  - JA: 併せて SP の topbar 余白/ギャップを詰め、見た目密度を最適化。
+  - EN: Also tightened mobile topbar padding/gap for a denser and cleaner first-view layout.
+- 2026-04-04: Smart Scent SP gap tuning follow-up.
+  - JA: 要望に合わせて SP の `topbar` と `content` 間ギャップを `20px` に調整。
+  - EN: Updated SP gap between `topbar` and `content` to `20px` per user request.
+- 2026-04-04: Smart Scent gap fix correction (`.experience-page` -> `.app`).
+  - JA: ギャップ指定先を修正。`topbar` と `content` の親は `.app` のため、`row-gap: 20px` を `.app` に適用。
+  - EN: Corrected gap target: since `topbar`/`content` are children of `.app`, applied `row-gap: 20px` on `.app`.

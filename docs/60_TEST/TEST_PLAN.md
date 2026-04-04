@@ -1803,3 +1803,48 @@
   - 音声機能はユーザー操作後に正常起動する
   - favicon 404 が解消される
   - EN: No initial AudioContext warning, sound initializes on user action, and `/favicon.ico` 404 is resolved.
+## 2026-04-04 追加テスト / Added Test (Smart Scent SP Cosmetic: Overlay Top Clipping)
+- 対象:
+  - `subpages/smart-scent-design.html`
+  - `css/smart-scent-design-app.css`
+- 手順:
+  1. SP幅（例: 390x844）で `smart-scent-design.html` を開く
+  2. 体験ビジュアル上部の3ピル（選択ノート / Blend Score / Sound）が上端で見切れないことを確認する
+  3. 上部ピルと `あなたの香り` カードが重ならず、十分な間隔で表示されることを確認する
+  4. 画面回転（縦→横→縦）後も配置崩れが再発しないことを確認する
+- 期待結果:
+  - SP表示で上部オーバーレイが視認性を保ち、見切れ・重なりが発生しない
+  - EN: Mobile view keeps top overlay pills fully visible with stable spacing above the result card, including after orientation changes.
+## 2026-04-04 追加テスト / Added Test (Smart Scent SP Cosmetic: Topbar-to-Result Gap)
+- 対象:
+  - `subpages/smart-scent-design.html`
+  - `css/smart-scent-design-app.css`
+  - `css/style.css`
+- 手順:
+  1. SP幅（例: 390x844）で `smart-scent-design.html` を開く
+  2. `香りを体験する！デジタル調香` ヘッダー直下の体験カードまでの余白が過大でないことを確認する
+  3. `あなたの香り` カードがヘッダーと離れすぎず、かつ上部ピルと重ならないことを確認する
+- 期待結果:
+  - SP初期画面でタイトル→結果カードの導線が詰まりすぎず/離れすぎずのバランスで表示される
+  - EN: Mobile first-view spacing between topbar and result card is tightened while preserving non-overlap with top pills.
+## 2026-04-04 追加テスト / Added Test (Smart Scent SP Gap Follow-up: topbar-content = 20px)
+- 対象:
+  - `css/style.css`
+  - `subpages/smart-scent-design.html`
+- 手順:
+  1. SP幅（例: 390x844）で `smart-scent-design.html` を開く
+  2. `topbar` と `content` の縦間隔が `20px` 相当で表示されることを確認する
+- 期待結果:
+  - 要望どおり、SPで `topbar` と `content` の間隔が 20px に調整される
+  - EN: Mobile layout shows a `20px` gap between `topbar` and `content` as requested.
+## 2026-04-04 追加テスト / Added Test (Smart Scent Gap Target Correction: `.app` row-gap)
+- 対象:
+  - `css/style.css`
+  - `subpages/smart-scent-design.html`
+- 手順:
+  1. `smart-scent-design.html` を PC/SP の両方で開く
+  2. `topbar` と `content` の間隔が常に `20px` で表示されることを確認する
+  3. DevTools で `.app` の `row-gap: 20px` が有効になっていることを確認する
+- 期待結果:
+  - gap指定先の誤りが解消され、ビュー幅に依存せず `topbar` と `content` の間隔が安定表示される
+  - EN: Gap now comes from `.app` and remains a stable `20px` between topbar/content on both desktop and mobile.
