@@ -1997,3 +1997,13 @@
   2. Deferred項目が `FEATURE_BACKLOG.md` と一致することを確認（2.1 / 2.4C / 2.5）
 - 出力 / Output:
   - `docs/80_HANDOFF/RELEASE_HANDOVER_2026-04-04.md`
+  - `docs/80_HANDOFF/RELEASE_NOTE_DRAFT_2026-04-04.md`
+
+### 7) Release preflight read-only audit (routes + static links)
+- 結果 / Result: `Pass`
+- 実施内容 / What was checked:
+  1. 主要公開ルート（Top/Workshop/Booking/Smart Scent/検索/ガイド/法務/問い合わせ）のファイル存在を確認
+  2. `index.html` + `subpages/*.html` で静的相対 `href` 監査を実施（`${...}` テンプレート式は除外）
+- 監査結果 / Audit result:
+  - 主要ルートファイル存在: 全件 `True`
+  - 静的相対リンク切れ: `0`

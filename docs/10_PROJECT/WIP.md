@@ -170,6 +170,11 @@
   - EN: Final-reviewed admin mode runbook (`open_demo <-> admin_only`) including SQL 13/14 and config switch expectations.
   - JA: handoverパックとして `docs/80_HANDOFF/RELEASE_HANDOVER_2026-04-04.md` を新規作成し、Deferredのみ残課題一覧を確定。
   - EN: Added `docs/80_HANDOFF/RELEASE_HANDOVER_2026-04-04.md` with final summary and deferred-only residual items.
+- 2026-04-04: Release note draft + final read-only audit prepared.
+  - JA: 限定公開向けのリリースノート草案 `docs/80_HANDOFF/RELEASE_NOTE_DRAFT_2026-04-04.md` を追加（JA/EN併記）。
+  - EN: Added bilingual release note draft for limited GitHub Pages rollout.
+  - JA: 公開主要ルート存在確認と静的相対リンク監査を再実行し、`index/subpages` の相対リンク切れ 0 件を確認。
+  - EN: Re-ran route existence check and static relative-link audit; confirmed 0 broken relative links in `index/subpages`.
 - 2026-04-04: Cleanup Link Audit pass-1 (header/footer/cards).
   - JA: 公開HTMLの相対 `href` を点検し、実在しない favicon 参照（`logo-inim-dx.jpg`）を 7ページで `logo-inim-dx.png` へ修正。
   - EN: Audited relative `href` links across public HTML and fixed non-existent favicon targets (`logo-inim-dx.jpg`) to `logo-inim-dx.png` on 7 pages.

@@ -2278,3 +2278,13 @@
   - JA: 公開導線（Top→Workshop→Booking）と Smart Scent 候補操作（保存/編集/読込）は現行実装で整合
   - JA: `adminAccessMode` は未知値を `admin_only` 扱いに正規化され、`open_demo`/`admin_only` の切替手順は SQL 13/14 + config 変更で再現可能
   - EN: Public flow and Smart Scent candidate operations are consistent; admin mode switching remains reproducible via SQL 13/14 and config toggle with safe normalization fallback.
+### ドキュメント更新（2026-04-04 追加135）
+- 限定公開向けのリリースノート草案と最終read-only監査結果を追加しました。
+- 変更内容:
+  - `docs/80_HANDOFF/RELEASE_NOTE_DRAFT_2026-04-04.md`（新規、JA/EN併記）
+  - 公開主要ルート（Top/Workshop/Booking/Smart Scent/検索/ガイド/法務/問い合わせ）のファイル存在確認
+  - `index.html` + `subpages/*.html` の静的相対 `href` 監査（テンプレート式除外）を実施
+- 監査結果:
+  - JA: 主要ルートファイルは全件存在
+  - JA: 静的相対リンク切れは `0` 件（`index/subpages`）
+  - EN: All key route files exist, and static relative-link audit found `0` broken links in `index/subpages`.
