@@ -522,7 +522,7 @@
   - サイドナビOFF時のモバイル余白補正（左余白過大の解消）
 - 対象ファイル: `js/site-shell.js`, `css/style.css`, `js/site-config.js`.
 ### ドキュメント更新（2026-03-26 追加13）
-- 公開ヘッダーの左上表示をテキストからロゴへ変更しました（`images/logo/logo-inim-dx.jpg`）。
+- 公開ヘッダーの左上表示をテキストからロゴへ変更しました（`images/logo/logo-inim-dx.png`）。
 - notice bar の左テキスト（配送・返品・お支払い...）を削除し、導線リンクのみ表示に変更しました。
 - グローバルナビを drilldown 対応へ刷新し、子メニューを既存サイドナビ構成（group items）から抽出して表示するようにしました。
 - グローバルナビ改善内容:
@@ -2122,3 +2122,159 @@
   - JA: `2.1` 管理画面更新機能のMVP定義（下書き/公開・履歴・差分）
   - JA: `2.5` 相互特典ロジックの要件定義（運用/会計連携判断）
   - EN: Next candidates are 2.4 scope finalisation, 2.1 admin-update MVP definition, and 2.5 reciprocal-discount requirement design.
+### ドキュメント更新（2026-04-04 追加124）
+- 2.4（Blend Save and Reuse）をクローズしました（2.4C Deferred維持）。
+- 変更内容:
+  - `subpages/smart-scent-design.html`
+  - 保存候補のローカル読込時にデータ正規化を追加
+  - 保存候補一覧を `updatedAt/createdAt` 降順に統一
+  - 保存候補上限を定数化（20件）し、保存/読込時に同一ルールを適用
+  - クラウド保存失敗時のローカルフォールバックメッセージを具体化（更新失敗時も誤解がない文言へ）
+- クローズ範囲:
+  - JA: 2.4A/2.4B（DB保存、編集更新、ローカルフォールバック、運用ハードニング）
+  - EN: 2.4A/2.4B including DB persistence, edit/update, local fallback, and operational hardening
+- 継続保留:
+  - JA: 2.4C（複製/共有リンク）は Deferred を維持し、別優先で再評価
+  - EN: 2.4C (duplicate/share-link) remains Deferred for later reprioritisation
+### ドキュメント更新（2026-04-04 追加125）
+- 2.1 / 2.5 を On-hold（Deferred）へ移行し、終盤フェーズの優先を「全体クリーンアップ」に変更しました。
+- 変更内容:
+  - `docs/20_PRODUCT/FEATURE_BACKLOG.md`
+  - 2.1 `Content Update Enhancement` の status を `Deferred` へ更新
+  - 2.5 `Workshop x Product Discount Logic` の status を `Deferred` へ更新
+  - `docs/10_PROJECT/WIP.md`
+  - In Progress / Next Actions をクリーンアップ中心へ更新
+- 目的:
+  - 新規機能追加を凍結し、品質・整合・運用手順の最終仕上げを優先する
+- EN: Moved 2.1 and 2.5 to On-hold (Deferred) and shifted current priority to site-wide cleanup and handover readiness.
+### ドキュメント更新（2026-04-04 追加126）
+- クリーンアップ #1 として、公開ページのリンク有効性監査（pass-1）を実施しました。
+- 変更内容:
+  - `subpages/sitemap.html`
+  - `subpages/workshop.html`
+  - `subpages/workshop-booking.html`
+  - `subpages/workshop-booking-entry.html`
+  - `subpages/workshop-booking-confirm.html`
+  - `subpages/workshop-booking-thanks.html`
+  - `subpages/workshop-plans.html`
+  - 上記 7ページの favicon 参照を `../images/logo/logo-inim-dx.jpg` から実在ファイル `../images/logo/logo-inim-dx.png` へ修正
+- 監査結果:
+  - JA: query/hash/template 正規化込みで、公開HTML相対 `href` のリンク切れは 0 件
+  - EN: After normalization (query/hash/template), broken relative `href` count is 0 across public HTML files.
+### ドキュメント更新（2026-04-04 追加127）
+- クリーンアップ #2（文言/CTA整合 pass-1）として、公開主要ページの日本語優先ラベル統一を実施しました。
+- 変更内容:
+  - `js/site-shell.js`
+  - news-strip `Latest` を `最新情報` へ変更
+  - フッター見出しを `ショップ情報 / ガイド / サポート / アカウント` へ統一
+  - page label の一部を日本語優先へ更新（`itemSale: セール`, `smartScent: デジタル調香`）
+  - 動的フッター再描画経路と account gateway のラベル `Account / Customer Account` を `アカウント` へ統一
+  - `subpages/smart-scent-design.html`
+  - `Sound` / `Blend Score` / `Sound：...` を `サウンド` / `調香スコア` へ統一
+  - `subpages/workshop-plans.html`
+  - キッカー `Workshop Plans` を `ワークショッププラン` へ変更
+  - `subpages/sale.html`
+  - `<title>Sale` とキッカー `Sale` を `セール` へ変更
+  - `subpages/brand*.html`, `subpages/items.html`, `subpages/item-*.html`
+  - カードmeta `Next Action` と `alt=\"next action\"` を日本語（`次のアクション`）へ統一
+  - `subpages/item-*.html`, `subpages/brand-*.html`
+  - 汎用ラベル `Item Detail` / `Overview` を `アイテム詳細` / `概要` へ統一
+  - `subpages/contact.html`
+  - カードmetaを `ワークショップ / 商品 / 法人・協業` へ変更
+  - account gateway の説明文を日本語化
+- 目的:
+  - 公開導線で英語ラベル混在を減らし、日本語中心の情報認知を揃える
+- EN: Executed cleanup #2 copy/CTA consistency pass-1 with Japanese-first labels across footer, Smart Scent, workshop plans, sale page, and hub card meta text.
+### ドキュメント更新（2026-04-04 追加128）
+- デザイン方針の再確認により、`section-kicker` の英語表記を優先し、Smart Scent の `Sound` 表記を復帰しました。
+- 変更内容:
+  - `subpages/workshop-plans.html`: `section-kicker` を `Workshop Plans` へ復帰
+  - `subpages/sale.html`: `section-kicker` を `Sale` へ復帰
+  - `subpages/item-*.html`: `section-kicker` を `Item Detail` へ復帰
+  - `subpages/ex-workshop.html`: `section-kicker` を `Overview` へ復帰
+  - `subpages/smart-scent-design.html`: `Sound` ラベル/ステータス文言（OFF/ERROR含む）を英語表記へ復帰
+- 目的:
+  - `section-kicker` の視覚トーンを英語で統一し、既存デザイン意図（cool/compact）を維持する
+- EN: Restored English `section-kicker` tone and reverted Smart Scent `Sound` wording per UI direction.
+### ドキュメント更新（2026-04-04 追加129）
+- `section-kicker` 英語方針を `index/workshop` へ拡張適用しました。
+- 変更内容:
+  - `index.html`
+  - `予約ショートカット / 体験バナー / 体験フロー / ピックアップ / 新着` を
+    `Booking Shortcut / Experience Banner / Experience Flow / Pick Up / New Arrival` へ変更
+  - `subpages/workshop.html`
+  - `ワークショップ / 価値 / シーン / フロー / 次の一歩 / プログラム / よくある質問 / 店舗` を
+    `Workshop / Value / Scene / Flow / Next Step / Program / FAQ / Shops` へ変更
+- 目的:
+  - Top〜Workshop の主要導線で `section-kicker` デザイン言語を英語トーンで統一する
+- EN: Expanded the English `section-kicker` design rule to top/workshop key sections for consistent visual tone.
+### ドキュメント更新（2026-04-04 追加130）
+- `subpages/`（admin除く）の `section-kicker` 整合チェックを実施し、残っていた日本語キッカーを英語トーンへ統一しました。
+- 変更内容:
+  - `subpages/search-shop-info.html`
+    - `店舗情報` / `店舗選択` -> `Shop Info` / `Shop Selection`
+  - `subpages/shopping-guide.html`
+    - `ショッピングガイド` -> `Shopping Guide`
+  - `subpages/workshop-booking.html`
+    - `ワークショップ予約` / `空き状況` / `店舗` / `選択中の日程` / `予約枠`
+      -> `Workshop Booking` / `Availability` / `Shops` / `Selected Date` / `Time Slots`
+  - `subpages/workshop-booking-entry.html`
+    - `予約情報入力` / `予約フォーム` / `予約ガイド` / `選択中の枠`
+      -> `Booking Entry` / `Booking Form` / `Booking Guide` / `Selected Slot`
+  - `subpages/workshop-booking-confirm.html`
+    - `予約内容確認` -> `Booking Confirmation`
+  - `subpages/workshop-booking-thanks.html`
+    - `予約完了` -> `Booking Complete`
+  - `subpages/workshop.html`（コメント化セクション内）
+    - `予約` -> `Reservation`
+- 目的:
+  - 公開サブページ全体で `section-kicker` の英語デザインルールを維持し、視覚トーンのばらつきを解消する
+- EN: Completed a consistency sweep across public `subpages` and converted remaining Japanese `section-kicker` labels to English for a unified visual tone.
+### ドキュメント更新（2026-04-04 追加131）
+- フッター見出しの英語トーン要望に合わせ、共通シェルのタイトルを再調整しました。
+- 変更内容:
+  - `js/site-shell.js`
+  - `ショップ情報 / ガイド / サポート / アカウント`
+    -> `SHOP INFO / GUIDE / SUPPORT / ACCOUNT`
+  - ログイン状態で再描画されるフッター列見出しも `ACCOUNT` に統一
+- 目的:
+  - フッター見出しの視覚トーンを英語で統一し、既存デザイン方針（section-kicker英語）と整合させる
+- EN: Reverted shared footer titles to English and aligned both initial render and auth-state re-render paths.
+### ドキュメント更新（2026-04-04 追加132）
+- Final responsive sweep（pass-1）として、公開サブページのSP基礎耐性を補強しました。
+- 変更内容:
+  - `subpages/search-store-info.html`
+  - `subpages/shops.html`
+    - `meta name="viewport"` を追加（旧URLリダイレクトページのSP表示を安定化）
+  - `css/workshop-booking.css`
+    - `@media (max-width: 720px)` で `booking-detail__table` に横スクロール対応を追加
+    - `th/td` の nowrap 指定で列崩れを抑え、必要時スクロールで閲覧可能化
+- 目的:
+  - 旧エントリページ経由時のSP表示不整合を予防し、予約詳細テーブルの横はみ出しを回避する
+- EN: Final responsive sweep pass-1 hardened mobile behavior for legacy redirect pages and booking detail table overflow handling.
+### ドキュメント更新（2026-04-04 追加133）
+- Final responsive sweep（pass-2）として、SP狭幅時の折返し安定性を改善しました。
+- 変更内容:
+  - `css/style.css`
+    - `@media (max-width: 720px)` の `.top-actions` に `flex-wrap` を追加
+    - `.top-actions .sound-pill` を右寄せ維持（`margin-left: auto`）
+  - `css/workshop.css`
+    - `.workshop-reserve__actions .button` の `white-space` を `normal` 化し、改行許可
+    - SP時 `.workshop-sticky-next__text` を改行許可（`white-space: normal` + `line-height` 調整）
+- 目的:
+  - SP狭幅（特に 320-390px）で、固定CTAとヘッダー操作部のテキスト詰まり/見切れを防止する
+- EN: Final responsive sweep pass-2 improved small-screen text wrapping stability in Smart Scent header actions and Workshop CTA elements.
+### ドキュメント更新（2026-04-04 追加134）
+- 最終クリーンアップとして、E2Eスモーク検証記録・admin mode runbook検証・handoverパック整理を実施しました。
+- 変更内容:
+  - `docs/60_TEST/TEST_PLAN.md`
+    - `Top -> Workshop -> Booking` と `Smart Scent save/edit/load` の実施ログ項目を追加
+    - `open_demo <-> admin_only` 切替 runbook の検証ログ項目を追加
+  - `docs/10_PROJECT/WIP.md`
+    - クリーンアップ項目 3/4 の完了ログを追記
+  - `docs/80_HANDOFF/RELEASE_HANDOVER_2026-04-04.md`（新規）
+    - 最終ステータス要約、admin mode手順、Deferredのみの残課題一覧を整理
+- 検証要点:
+  - JA: 公開導線（Top→Workshop→Booking）と Smart Scent 候補操作（保存/編集/読込）は現行実装で整合
+  - JA: `adminAccessMode` は未知値を `admin_only` 扱いに正規化され、`open_demo`/`admin_only` の切替手順は SQL 13/14 + config 変更で再現可能
+  - EN: Public flow and Smart Scent candidate operations are consistent; admin mode switching remains reproducible via SQL 13/14 and config toggle with safe normalization fallback.

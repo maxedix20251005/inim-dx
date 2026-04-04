@@ -9,12 +9,15 @@
 ## 2. Prioritised Ideas / 優先アイデア
 
 ### 2.1 Content Update Enhancement / コンテンツ更新新機能の充実
-- Status: `Proposed`
+- Status: `Deferred`
 - JA: 管理画面のコンテンツ更新機能（記事・カード・導線・素材）の運用性を高める。
 - EN: Improve admin operability for content updates (articles, cards, journey, assets).
 - Scope candidates:
   - JA: 一括更新、下書き/公開切替、変更履歴、更新差分プレビュー
   - EN: Bulk update, draft/publish switch, change history, diff preview
+- 2.1 hold / 2.1 保留
+  - JA: プロジェクト終盤のクリーンアップ優先のため、2.1 は一旦 On-hold（Deferred）へ移行（2026-04-04）。
+  - EN: Moved 2.1 to On-hold (Deferred) to prioritize end-phase project cleanup (2026-04-04).
 
 ### 2.2 Top -> Workshop Flow Reinforcement / トップからワークショップ導線強化
 - Status: `Closed`
@@ -59,7 +62,7 @@
   - JA: 実装・UI改善・SP調整・運用不具合修正（保存先同期/consoleノイズ）を反映し、ユーザー確認完了のためクローズ（2026-04-04）。
   - EN: Closed after implementation, UI polish, SP tuning, and operational fixes (storage sync/console-noise), with user confirmation complete (2026-04-04).
 ### 2.4 Blend Save and Reuse / 調香データ保存・再利用
-- Status: `In Progress`
+- Status: `Closed`
 - JA: 調香データを DB に保存し、再編集・再利用できる機能を追加する。
 - EN: Save blended scent data to DB for reuse and re-editing.
 - 2.4C plan / 2.4C 計画
@@ -68,13 +71,21 @@
 - Scope candidates:
   - JA: マイ調香一覧、再読み込み、複製、共有リンク（任意）
   - EN: My blends list, reload, duplicate, optional share link
+- 2.4 closure / 2.4 クローズ
+  - JA: 2.4A/2.4B（DB保存、編集更新、ローカルフォールバック）に加え、保存候補のソート/上限管理とフォールバック挙動を硬化し、クローズ（2026-04-04）。
+  - EN: Closed after completing 2.4A/2.4B (DB save, edit/update, local fallback) plus hardening for candidate sort/limit and fallback behavior (2026-04-04).
+  - JA: 2.4C（複製/共有リンク）は Deferred を維持し、本クローズ範囲から除外。
+  - EN: 2.4C (duplicate/share-link) remains Deferred and is explicitly out of the closure scope.
 ### 2.5 Workshop x Product Discount Logic / ワークショップ×製品購入の相互特典
-- Status: `Proposed`
+- Status: `Deferred`
 - JA: 参加で製品割引、購入でワークショップ割引の相互特典を検討する。
 - EN: Evaluate reciprocal discount logic between workshop participation and product purchase.
 - Scope candidates:
   - JA: クーポン発行条件、適用期限、併用可否、不正防止ルール
   - EN: Coupon issuance criteria, validity, stackability, anti-abuse rules
+- 2.5 hold / 2.5 保留
+  - JA: 運用設計と会計連携検討が必要なため、現フェーズでは On-hold（Deferred）へ移行（2026-04-04）。
+  - EN: Moved 2.5 to On-hold (Deferred) in this phase due to required operational/accounting design work (2026-04-04).
 
 ### 2.6 Admin Access Restriction + Booking LED Governance / 管理者アクセス制御と予約LED運用
 - Status: `Closed`

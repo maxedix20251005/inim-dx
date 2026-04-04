@@ -71,7 +71,7 @@
         itemHomeFragrance: { path: 'subpages/item-home-fragrance.html', label: 'アロマ', title: 'Item / Aroma', latest: 'アロマグループページを公開中です。' },
         itemBodyCare: { path: 'subpages/item-body-care.html', label: 'ハンドクリーム', title: 'Item / Hand Cream', latest: 'ハンドクリームグループページを公開中です。' },
         itemDiy: { path: 'subpages/item-diy.html', label: 'DIY', title: 'Item / DIY', latest: 'アイテム詳細ページ（DIY）を公開しました。' },
-        itemSale: { path: 'subpages/item-sale.html', label: 'SALE', title: 'Item / Sale', latest: 'アイテム詳細ページ（SALE）を公開しました。' },
+        itemSale: { path: 'subpages/item-sale.html', label: 'セール', title: 'Item / セール', latest: 'アイテム詳細ページ（セール）を公開しました。' },
         itemEcology: { path: 'subpages/item-ecology.html', label: 'エコロジー', title: 'Item / Ecology', latest: 'アイテム詳細ページ（エコロジー）を公開しました。' },
         itemRefillTools: { path: 'subpages/item-refill-tools.html', label: '詰め替えツール', title: 'Item / Refill Tools', latest: 'アイテム詳細ページ（詰め替えツール）を公開しました。' },
         itemGiftSet: { path: 'subpages/item-gift-set.html', label: 'ギフトセット', title: 'Item / Gift Set', latest: 'アイテム詳細ページ（ギフトセット）を公開しました。' },
@@ -85,7 +85,7 @@
         workshopBookingEntry: { path: 'subpages/workshop-booking-entry.html', label: '申込情報入力', title: 'Workshop / Booking Entry', latest: 'ワークショップ予約入力画面のドラフトを公開しました。選択した枠の内容を確認しながら申込情報を整理できます。' },
         workshopBookingConfirm: { path: 'subpages/workshop-booking-confirm.html', label: '予約内容確認', title: 'Workshop / Booking Confirm', latest: 'ワークショップ予約確認画面のドラフトを公開しました。送信前に予約枠と申込情報をまとめて確認できます。' },
         workshopBookingThanks: { path: 'subpages/workshop-booking-thanks.html', label: '予約完了', title: 'Workshop / Booking Thanks', latest: 'ワークショップ予約完了画面を公開しました。次のアクションを選んで継続できます。' },
-        smartScent: { path: 'subpages/smart-scent-design.html', label: 'Smart Scent Design', title: 'Smart Scent Design', latest: '色・粒子・サウンドを使って、自分の香りを視覚的に編集するデジタル調香ページです。' },
+        smartScent: { path: 'subpages/smart-scent-design.html', label: 'デジタル調香', title: 'デジタル調香', latest: '色・粒子・サウンドを使って、自分の香りを視覚的に編集するデジタル調香ページです。' },
         article: { path: 'subpages/article.html', label: '記事', title: 'Article', latest: '体験設計・予約導線・店舗背景を短く読める記事ページを公開しました。' },
         sale: { path: 'subpages/sale.html', label: 'セール', title: 'Sale', latest: 'WAtoYO / アロマ / ハンドクリームの限定オファーを確認できるセールページを公開しました。' },
         sitemap: { path: 'subpages/sitemap.html', label: 'サイトマップ', title: 'Site Map', latest: 'サイト構造の見直しに向け、公開ページと管理ページの導線一覧を公開しました。' },
@@ -530,7 +530,7 @@
         ${renderMobileNav()}
         ${renderBreadcrumb()}
         <div class="news-strip">
-            <span>Latest</span>
+            <span>最新情報</span>
             <p>${currentPage.latest}</p>
         </div>
     `;
@@ -538,23 +538,23 @@
     const footerHtml = `
         <div class="site-footer__grid" id="footer-links">
             <div>
-                <p class="site-footer__title">Shop Info</p>
+                <p class="site-footer__title">SHOP INFO</p>
                 <p>inim-dx flagship atelier<br>An intimate space for fragrance workshops and personalised consultations, by booking.</p>
             </div>
             <div>
-                <p class="site-footer__title">Guide</p>
+                <p class="site-footer__title">GUIDE</p>
                 ${renderPublicPageLink('sitemap', 'サイトマップ')}
                 ${renderPublicPageLink('shoppingGuide', 'ショッピングガイド')}
                 ${renderPublicPageLink('legal', '法的表示')}
             </div>
             <div>
-                <p class="site-footer__title">Support</p>
+                <p class="site-footer__title">SUPPORT</p>
                 ${renderPublicPageLink('privacy', 'プライバシーポリシー')}
                 ${renderPublicPageLink('newsletter', 'メルマガ登録・解除')}
                 ${renderPublicPageLink('rss', 'RSS / ATOM')}
             </div>
             <div>
-                <p class="site-footer__title">Account</p>
+                <p class="site-footer__title">ACCOUNT</p>
                 ${accountModalLink('account', 'マイアカウント')}
                 ${accountModalLink('register', '会員登録')}
                 ${accountModalLink('login', 'ログイン')}
@@ -567,9 +567,9 @@
     const accountGatewayHtml = `
             <section class="account-gateway">
                 <div class="account-gateway__panel">
-                    <p class="account-gateway__eyebrow">Customer Account</p>
+                    <p class="account-gateway__eyebrow">アカウント</p>
                     <h1>${modalTitles[pageKey] || "マイアカウント"}</h1>
-                    <p class="account-gateway__lead">This entry page opens the shared customer account modal. The final implementation will connect to Supabase Auth and profile data.</p>
+                    <p class="account-gateway__lead">このページは共通アカウントモーダルへの入口です。最終実装では Supabase Auth とプロフィールデータに接続します。</p>
                     <div class="account-gateway__actions">
                         ${accountModalLink("login", "ログイン", "button button--secondary")}
                         ${accountModalLink("register", "新規会員登録", "button")}
@@ -679,8 +679,8 @@
         const accountColumn = footer.querySelector('.site-footer__grid > div:last-child');
         if (!accountColumn) { return; }
         accountColumn.innerHTML = currentUser
-            ? `<p class="site-footer__title">Account</p>${accountModalLink('account', 'マイアカウント')}${accountLogoutLink()}${renderPublicPageLink('contact', 'お問い合わせ')}`
-            : `<p class="site-footer__title">Account</p>${accountModalLink('register', '会員登録')}${accountModalLink('login', 'ログイン')}${renderPublicPageLink('contact', 'お問い合わせ')}`;
+            ? `<p class="site-footer__title">ACCOUNT</p>${accountModalLink('account', 'マイアカウント')}${accountLogoutLink()}${renderPublicPageLink('contact', 'お問い合わせ')}`
+            : `<p class="site-footer__title">ACCOUNT</p>${accountModalLink('register', '会員登録')}${accountModalLink('login', 'ログイン')}${renderPublicPageLink('contact', 'お問い合わせ')}`;
     };
 
     const renderAdminLinks = () => {

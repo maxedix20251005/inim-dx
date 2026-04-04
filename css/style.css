@@ -1941,6 +1941,12 @@ main {
 
     .top-actions {
         justify-content: space-between;
+        flex-wrap: wrap;
+        row-gap: 8px;
+    }
+
+    .top-actions .sound-pill {
+        margin-left: auto;
     }
 }
 

@@ -468,7 +468,7 @@
   - `css/style.css`
   - `js/site-config.js`
 - 手順:
-  1. 公開ページを開き、左上が `images/logo/logo-inim-dx.jpg` 表示になっていることを確認する
+  1. 公開ページを開き、左上が `images/logo/logo-inim-dx.png` 表示になっていることを確認する
   2. notice bar に「配送・返品・お支払い...」文言が表示されないことを確認する
   3. グローバルナビの親メニュー（例: ブランド / アイテム / 香りから探す / 香りと遊ぶ）で子メニューが開くことを確認する
   4. 子メニュー項目が旧サイドナビの構成と一致することを確認する
@@ -1848,3 +1848,152 @@
 - 期待結果:
   - gap指定先の誤りが解消され、ビュー幅に依存せず `topbar` と `content` の間隔が安定表示される
   - EN: Gap now comes from `.app` and remains a stable `20px` between topbar/content on both desktop and mobile.
+## 2026-04-04 追加テスト / Added Test (Cleanup #1: Public Link Audit Pass-1)
+- 対象:
+  - `subpages/sitemap.html`
+  - `subpages/workshop.html`
+  - `subpages/workshop-booking.html`
+  - `subpages/workshop-booking-entry.html`
+  - `subpages/workshop-booking-confirm.html`
+  - `subpages/workshop-booking-thanks.html`
+  - `subpages/workshop-plans.html`
+- 手順:
+  1. 上記 7ページを開き、Console に favicon の 404 が出ないことを確認する
+  2. 各ページで `link rel=\"icon\"` が `../images/logo/logo-inim-dx.png` を参照していることを確認する
+  3. 公開HTMLの相対 `href` を再点検し、リンク切れが 0 件であることを確認する
+- 期待結果:
+  - favicon 参照のリンク切れが解消される
+  - 公開HTMLの相対リンク整合が保たれる
+  - EN: Favicon broken links are resolved and public HTML relative links remain fully valid.
+## 2026-04-04 追加テスト / Added Test (Cleanup #2: Copy/CTA Consistency Pass-1)
+- 対象:
+  - `js/site-shell.js`
+  - `subpages/smart-scent-design.html`
+  - `subpages/workshop-plans.html`
+  - `subpages/sale.html`
+  - `subpages/contact.html`
+  - `subpages/brand*.html`, `subpages/items.html`, `subpages/item-*.html`
+- 手順:
+  1. ヘッダー news-strip ラベルが `最新情報` で表示されることを確認する
+  2. フッター見出しが `ショップ情報 / ガイド / サポート / アカウント` で表示されることを確認する
+  3. Smart Scent で `Sound` と `調香スコア` 表示で統一されていることを確認する
+  4. `workshop-plans.html` のキッカーが `Workshop Plans` であることを確認する
+  5. `sale.html` の title/キッカーが `セール` であることを確認する
+  6. ブランド/アイテム系カードの meta `次のアクション` と画像 alt `次のアクション` が統一されていることを確認する
+  7. item/brand系の `section-kicker` が英語（`Item Detail` / `Overview`）で表示されることを確認する
+  8. `contact.html` のカードmetaが `ワークショップ / 商品 / 法人・協業` であることを確認する
+  9. account gateway 説明文が日本語で表示されることを確認する
+- 期待結果:
+  - section-kicker は英語トーン、本文/ラベルは日本語優先のハイブリッド方針で一貫表示される
+  - Smart Scent の `Sound` 表記が UI 仕様どおり復帰している
+  - EN: Hybrid copy rule is preserved (English section-kicker tone + Japanese-first body labels), and Smart Scent `Sound` wording is restored.
+## 2026-04-04 追加テスト / Added Test (Cleanup #2b: Section-kicker English Expansion on Top/Workshop)
+- 対象:
+  - `index.html`
+  - `subpages/workshop.html`
+- 手順:
+  1. `index.html` を開き、section-kicker が `Booking Shortcut / Experience Banner / Experience Flow / Pick Up / New Arrival` で表示されることを確認する
+  2. `subpages/workshop.html` を開き、section-kicker が `Workshop / Value / Scene / Flow / Next Step / Program / FAQ / Shops` で表示されることを確認する
+- 期待結果:
+  - Top〜Workshop 主要導線の section-kicker が英語トーンで統一表示される
+  - EN: Top/workshop section-kicker labels are consistently rendered in English design tone.
+## 2026-04-04 追加テスト / Added Test (2.4 Closure Hardening: Candidate Sort/Limit/Fallback)
+- 対象:
+  - `subpages/smart-scent-design.html`
+- 手順:
+  1. 候補を複数保存/更新し、保存済み一覧が常に更新日時の新しい順で表示されることを確認する
+  2. 候補件数が 20 件を超える条件を作り、一覧が 20 件上限で維持されることを確認する
+  3. クラウド保存失敗時（例: セッション切断/通信失敗想定）に、ローカル保存へ切替されることを確認する
+  4. 上記フォールバック時メッセージが「クラウド失敗→ローカル保存」の意味で表示されることを確認する
+- 期待結果:
+  - 保存候補の並び順/件数制御が安定し、クラウド失敗時も誤解のない文言でローカル運用へ継続できる
+  - EN: Saved candidates remain newest-first with a stable 20-item cap, and cloud-failure fallback messaging clearly indicates local continuation.
+## 2026-04-04 追加テスト / Added Test (Section-kicker Consistency Sweep on Public Subpages)
+- 対象:
+  - `subpages/search-shop-info.html`
+  - `subpages/shopping-guide.html`
+  - `subpages/workshop-booking.html`
+  - `subpages/workshop-booking-entry.html`
+  - `subpages/workshop-booking-confirm.html`
+  - `subpages/workshop-booking-thanks.html`
+  - `subpages/workshop.html`
+- 手順:
+  1. 上記ページを開き、`section-kicker` が英語ラベルで表示されることを確認する
+  2. booking系ページで `Workshop Booking / Availability / Shops / Selected Date / Time Slots / Booking Entry / Booking Confirmation / Booking Complete` が表示されることを確認する
+  3. `search-shop-info.html` と `shopping-guide.html` のキッカーが `Shop Info / Shop Selection / Shopping Guide` であることを確認する
+  4. `subpages/` 全体で `section-kicker` に日本語表記が残っていないことを確認する
+- 期待結果:
+  - 公開サブページの `section-kicker` が英語トーンで統一され、視覚トーンの不一致が解消される
+  - EN: `section-kicker` labels across public subpages are consistently English and visual tone mismatches are removed.
+## 2026-04-04 追加テスト / Added Test (Footer Title Tone Revert to English)
+- 対象:
+  - `js/site-shell.js`
+  - 公開ページ（任意2ページ以上）
+- 手順:
+  1. 公開ページを開き、フッター見出しが `SHOP INFO / GUIDE / SUPPORT / ACCOUNT` で表示されることを確認する
+  2. ログイン/ログアウトを切り替え、フッター最右列の見出しがどちらも `ACCOUNT` のままであることを確認する
+- 期待結果:
+  - フッター見出しが英語トーンで統一表示される
+  - 認証状態変更後の再描画でも `ACCOUNT` 見出しが維持される
+  - EN: Footer titles remain English in both initial and auth-state re-render flows.
+## 2026-04-04 追加テスト / Added Test (Final Responsive Sweep Pass-1)
+- 対象:
+  - `subpages/search-store-info.html`
+  - `subpages/shops.html`
+  - `subpages/workshop-booking.html`
+  - `css/workshop-booking.css`
+- 手順:
+  1. SP幅（例: 390x844）で `search-store-info.html` と `shops.html` を開き、初期ズーム異常なしで即時リダイレクトされることを確認する
+  2. `workshop-booking.html` で「詳細テーブル」表示箇所をSP幅で確認し、画面外にはみ出す代わりに横スクロールで閲覧できることを確認する
+  3. テーブルの文字/列が重なって読めなくならないことを確認する
+- 期待結果:
+  - 旧リダイレクトページがSPでも安定表示される
+  - 予約詳細テーブルはSPで可読性を保ちつつ横スクロール可能になる
+  - EN: Legacy redirect pages render stably on mobile, and booking detail tables remain readable via horizontal scroll instead of overflowing.
+## 2026-04-04 追加テスト / Added Test (Final Responsive Sweep Pass-2: Mobile Wrap Stability)
+- 対象:
+  - `subpages/smart-scent-design.html`
+  - `subpages/workshop.html`
+  - `css/style.css`
+  - `css/workshop.css`
+- 手順:
+  1. SP幅（例: 390x844 と 360x800）で `smart-scent-design.html` を開き、`操作ガイド` と `Sound` ピルが重ならず表示されることを確認する
+  2. 同ページで狭幅時に `top-actions` が必要に応じて2段表示へ折返すことを確認する
+  3. SP幅で `workshop.html` を開き、固定CTAの補助テキストが見切れず表示されることを確認する
+  4. `workshop` の予約アクションボタン文言が改行されてもボタン枠内で読み取れることを確認する
+- 期待結果:
+  - SP狭幅でヘッダー操作部・固定CTAのテキスト詰まり/見切れが発生しない
+  - EN: On narrow mobile widths, Smart Scent top actions and Workshop CTA texts remain readable without clipping or overlap.
+
+## 2026-04-04 実施ログ / Execution Log (Cleanup Close-out 4/5/6)
+
+### 4) E2E smoke test pass (Top -> Workshop -> Booking, Smart Scent save/edit/load)
+- 結果 / Result: `Pass`
+- 実施内容 / What was checked:
+  1. `index.html` -> `subpages/workshop.html` -> `subpages/workshop-booking.html` の導線接続を確認
+  2. booking から `entry -> confirm -> thanks` の遷移URL構成を確認
+  3. Smart Scent の候補 `保存/編集/読み込み` ハンドラと `smart_scent_blends` 連携（DB優先+ローカルフォールバック）を確認
+- 証跡 / Evidence:
+  - `subpages/workshop.html`, `subpages/workshop-booking.html`, `subpages/workshop-booking-entry.html`, `subpages/workshop-booking-confirm.html`, `subpages/workshop-booking-thanks.html`
+  - `subpages/smart-scent-design.html`
+  - `sql/18_create_smart_scent_blends.sql`, `sql/19_add_smart_scent_blends_updated_at_trigger.sql`
+
+### 5) Admin mode runbook verification (`open_demo` <-> `admin_only`)
+- 結果 / Result: `Pass` (runbook consistency and expected behavior verified)
+- 実施内容 / What was checked:
+  1. `js/site-config.js` の `adminAccessMode` 現在値と正規化ロジック（未知値 -> `admin_only`）を確認
+  2. demo read policy の適用/巻戻しSQL（`sql/13` / `sql/14`）を確認
+  3. ナビ表示・保護動作分岐（`open_demo` で閲覧可、`admin_only` で制限）を実装コード上で確認
+- 証跡 / Evidence:
+  - `js/site-config.js`
+  - `js/site-shell.js` (`adminAccessMode` 判定/normalize, admin link exposure)
+  - `js/admin-app.js` (`isOpenDemoMode`, role-based access rules)
+  - `sql/13_admin_demo_read_policies.sql`, `sql/14_revert_admin_demo_read_policies.sql`
+
+### 6) Release/handover pack cleanup (final summary + deferred-only)
+- 結果 / Result: `Pass`
+- 実施内容 / What was checked:
+  1. 最終要約・運用手順・Deferredのみの残課題を1ファイルに集約
+  2. Deferred項目が `FEATURE_BACKLOG.md` と一致することを確認（2.1 / 2.4C / 2.5）
+- 出力 / Output:
+  - `docs/80_HANDOFF/RELEASE_HANDOVER_2026-04-04.md`

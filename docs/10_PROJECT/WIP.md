@@ -11,22 +11,24 @@
 - EN: 2.6 (admin access + booking LED governance) and 2.9 (non-admin access verification) are closed.
 - JA: 2.3（Digital Blend AI Recommendation）は実装・改善・不具合修正まで完了し、2026-04-04 にクローズ。
 - EN: 2.3 (Digital Blend AI Recommendation) has been completed end-to-end and closed on 2026-04-04.
-- JA: 現在は 2.4（保存再利用の仕上げ）と 2.1（管理画面更新機能強化）の優先順位確定フェーズ。
-- EN: Current focus is prioritisation between 2.4 (save/reuse finishing) and 2.1 (admin content-update enhancement).
+- JA: 2.4（Blend Save and Reuse）は 2.4C Deferred 維持のままクローズし、現フォーカスは 2.1 / 2.5 / Store-Shop 高リスク改名。
+- EN: 2.4 (Blend Save and Reuse) is now closed with 2.4C kept Deferred; current focus is 2.1 / 2.5 / high-risk Store-Shop rename.
+- JA: 2.1 / 2.5 は On-hold（Deferred）へ移行し、現フェーズはプロジェクト全体のクリーンアップを優先。
+- EN: 2.1 / 2.5 moved to On-hold (Deferred); this phase prioritizes full-project cleanup.
 
 ## 3. In Progress / 進行中
-- JA: 次フェーズ候補（2.4 / 2.1 / 2.5 / Store-Shop高リスク改名）の優先順位整理。
-- EN: Prioritisation of next-phase candidates (2.4 / 2.1 / 2.5 / high-risk Store-Shop rename).
+- JA: クリーンアップ計画（リンク整合・文言統一・テスト最終化・運用手順整備）の優先順位整理。
+- EN: Prioritising cleanup plan items (link consistency, copy consistency, test finalisation, operation runbook tidy-up).
 
 ## 4. Next Actions / 次のアクション
-1. JA: 2.4 の残スコープ（2.4C deferred方針の確定、必要なら最小共有機能）を確定する。
-   EN: Finalise 2.4 remaining scope (confirm 2.4C deferred policy, and decide minimal sharing need if required).
-2. JA: 2.1 の最小実装範囲（下書き/公開、履歴、差分プレビュー）を優先順で確定する。
-   EN: Lock 2.1 MVP scope and order (draft/publish, history, diff preview).
-3. JA: Store/Shop 高リスク改名の影響範囲（URL/identifier/redirect）を棚卸しする。
-   EN: Inventory high-risk Store/Shop rename impact (URL/identifier/redirect).
-4. JA: ドキュメント UTF-8/リンク整合の簡易チェックを継続。
-   EN: Continue quick UTF-8 and link-validity checks.
+1. JA: 公開ページ全体のリンク有効性と disabled方針を最終点検する（ヘッダー/フッター/カードCTA）。
+   EN: Final-check active/disabled link consistency across public pages (header/footer/card CTAs).
+2. JA: 文言最終統一（日本語優先、英語補助）とボタンラベル一貫性を横断確認する。
+   EN: Run final copy consistency pass (Japanese-first with English support) including button labels.
+3. JA: TEST_PLAN の主要シナリオを実行し、結果ログを PROJECT_STATUS/WIP に反映する。
+   EN: Execute key TEST_PLAN scenarios and reflect outcomes in PROJECT_STATUS/WIP.
+4. JA: 運用切替手順（demo/open_demo -> admin_only）と SQL 手順を最終レビューする。
+   EN: Final-review operational switch steps (demo/open_demo -> admin_only) and SQL runbook.
 
 ## 5. On Hold / 保留
 - JA: Spring Boot/Java API は規模拡大時の将来フェーズ。
@@ -140,3 +142,53 @@
 - 2026-04-04: Smart Scent gap fix correction (`.experience-page` -> `.app`).
   - JA: ギャップ指定先を修正。`topbar` と `content` の親は `.app` のため、`row-gap: 20px` を `.app` に適用。
   - EN: Corrected gap target: since `topbar`/`content` are children of `.app`, applied `row-gap: 20px` on `.app`.
+- 2026-04-04: 2.4 hardening + closure.
+  - JA: 保存候補の正規化/降順ソート/上限管理（20件）を追加し、DB失敗時のローカル保存メッセージを明確化。
+  - EN: Added saved-candidate normalization/newest-first sorting/20-item cap and clarified local-fallback messaging on DB failure.
+  - JA: 2.4C（複製/共有リンク）は Deferred のまま維持し、2.4本体をクローズ。
+  - EN: Kept 2.4C (duplicate/share-link) Deferred and closed the main 2.4 scope.
+- 2026-04-04: Section-kicker consistency sweep on `subpages/` (excluding admin pages).
+  - JA: `subpages/` 配下の公開ページを横断点検し、`section-kicker` の日本語表記を英語トーンへ統一（Shop/Booking/Guide 系を含む）。
+  - EN: Performed a cross-page sweep in `subpages/` and unified remaining Japanese `section-kicker` labels to English tone (including shop/booking/guide pages).
+- 2026-04-04: Footer title tone reverted to English.
+  - JA: 共通シェルのフッター見出しを `SHOP INFO / GUIDE / SUPPORT / ACCOUNT` に戻し、デザイン方針に合わせて英語トーンを維持。
+  - EN: Reverted shared-footer titles to `SHOP INFO / GUIDE / SUPPORT / ACCOUNT` to keep the intended English visual tone.
+- 2026-04-04: Final responsive sweep pass-1 (public subpages).
+  - JA: 旧リダイレクトページ `search-store-info.html` / `shops.html` に viewport meta を追加し、SP表示時の拡大崩れリスクを解消。
+  - EN: Added viewport meta to legacy redirect pages (`search-store-info.html` / `shops.html`) to prevent mobile scaling/layout issues.
+  - JA: `workshop-booking` の詳細テーブルにSP横スクロール対応を追加し、狭幅でのはみ出しを抑制。
+  - EN: Added mobile horizontal-scroll handling for `workshop-booking` detail tables to avoid overflow on narrow screens.
+- 2026-04-04: Final responsive sweep pass-2 (mobile wrap/tap stability).
+  - JA: Smart Scent の `top-actions` をSPで折返し可能化し、狭幅端末で `操作ガイド` と `Sound` ピルの重なり/詰まりを回避。
+  - EN: Enabled wrapping for Smart Scent `top-actions` on mobile to avoid overlap/clipping between guide link and sound pill.
+  - JA: Workshop の固定CTA文言と予約ボタン文言を折返し許可し、SPでのテキスト見切れを防止。
+  - EN: Allowed wrapping for Workshop sticky CTA text and reserve-action button labels to prevent truncation on small screens.
+- 2026-04-04: Cleanup close-out verification batch (items 4/5/6).
+  - JA: TEST_PLAN の E2Eスモーク対象（Top→Workshop→Booking、Smart Scent保存/編集/読込）を実施ログ化。
+  - EN: Logged TEST_PLAN E2E smoke closure for Top→Workshop→Booking and Smart Scent save/edit/load.
+  - JA: `open_demo <-> admin_only` 切替 runbook（SQL 13/14 + config）を最終レビューし、想定挙動を再確認。
+  - EN: Final-reviewed admin mode runbook (`open_demo <-> admin_only`) including SQL 13/14 and config switch expectations.
+  - JA: handoverパックとして `docs/80_HANDOFF/RELEASE_HANDOVER_2026-04-04.md` を新規作成し、Deferredのみ残課題一覧を確定。
+  - EN: Added `docs/80_HANDOFF/RELEASE_HANDOVER_2026-04-04.md` with final summary and deferred-only residual items.
+- 2026-04-04: Cleanup Link Audit pass-1 (header/footer/cards).
+  - JA: 公開HTMLの相対 `href` を点検し、実在しない favicon 参照（`logo-inim-dx.jpg`）を 7ページで `logo-inim-dx.png` へ修正。
+  - EN: Audited relative `href` links across public HTML and fixed non-existent favicon targets (`logo-inim-dx.jpg`) to `logo-inim-dx.png` on 7 pages.
+  - JA: query/hash/template 正規化込みの再監査で、相対リンク切れ 0 件を確認。
+  - EN: Re-audit with query/hash/template normalization confirmed 0 broken relative links.
+- 2026-04-04: Cleanup Copy/CTA consistency pass-1 (Japanese-first).
+  - JA: フッター見出し（Shop Info/Guide/Support/Account）と news-strip `Latest` を日本語化（ショップ情報/ガイド/サポート/アカウント/最新情報）。
+  - EN: Localized footer titles and news-strip label to Japanese-first wording.
+  - JA: Smart Scent の主要表示ラベルを `Sound/Blend Score` から `サウンド/調香スコア` へ統一。
+  - EN: Standardized Smart Scent labels from `Sound/Blend Score` to `サウンド/調香スコア`.
+  - JA: `Workshop Plans` キッカー、`Sale` タイトル/キッカー、`Next Action`（カードmeta/alt）を日本語表記へ統一。
+  - EN: Unified `Workshop Plans`, `Sale`, and `Next Action` card meta/alt labels into Japanese wording.
+  - JA: 追補として、フッターの動的再描画経路に残っていた `Account` 表記と `Customer Account` 表記を `アカウント` へ統一。
+  - EN: Follow-up fix: unified remaining runtime `Account`/`Customer Account` labels to `アカウント`.
+  - JA: item系/brand系の汎用ラベル `Item Detail` / `Overview` を `アイテム詳細` / `概要` に統一。
+  - EN: Unified generic item/brand labels `Item Detail` / `Overview` to `アイテム詳細` / `概要`.
+- 2026-04-04: Copy preference follow-up (section-kicker + Sound revert).
+  - JA: デザイン方針に合わせ、`section-kicker` は英語表記へ戻し（例: `Sale`, `Workshop Plans`, `Item Detail`, `Overview`）、Smart Scent の `Sound` 表記を復帰。
+  - EN: Per design preference, restored `section-kicker` labels to English and reverted Smart Scent `Sound` wording.
+- 2026-04-04: Section-kicker English expansion (index/workshop).
+  - JA: `index.html` と `workshop.html` の `section-kicker` も英語トーンへ統一（Booking Shortcut / Experience Banner / Experience Flow / Pick Up / New Arrival / Workshop / Value / Scene / Flow / Next Step / Program / FAQ / Shops）。
+  - EN: Expanded English section-kicker rule to `index.html` and `workshop.html` with consistent tone labels.

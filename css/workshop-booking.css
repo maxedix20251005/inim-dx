@@ -193,5 +193,12 @@
     .booking-slot { grid-template-columns: 1fr; }
     .booking-slot__actions { justify-items: stretch; }
     .booking-slot__button { width: 100%; min-width: 0; }
+    .booking-detail__table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .booking-detail__table th,
+    .booking-detail__table td { white-space: nowrap; }
     .booking-diagnostics__grid { grid-template-columns: 1fr; }
 }

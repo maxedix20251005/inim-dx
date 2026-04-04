@@ -36,7 +36,7 @@
         <div id="experienceShell" class="experience-shell">
           <div class="overlay-top">
             <div class="overlay-pill">選択中ノート：<span id="activeVizName">BERGAMOT</span></div>
-            <div class="overlay-pill">Blend Score：<span id="blendScore">72</span></div>
+            <div class="overlay-pill">調香スコア：<span id="blendScore">72</span></div>
             <div class="overlay-pill" id="soundStatusText">Sound：OFF</div>
           </div>
 
@@ -370,6 +370,7 @@
       let aiBackupBlend = null;
       const AI_SAVED_KEY = "inim_dx_digital_blend_saved_candidates_v1";
       const AI_DB_TABLE = "smart_scent_blends";
+      const MAX_SAVED_CANDIDATES = 20;
       let aiSavedCandidates = [];
       let blendStorageMode = "local";
       let blendDbClient = null;
@@ -730,14 +731,49 @@
         try {
           const raw = localStorage.getItem(AI_SAVED_KEY);
           const parsed = raw ? JSON.parse(raw) : [];
-          aiSavedCandidates = Array.isArray(parsed) ? parsed : [];
+          const items = Array.isArray(parsed) ? parsed : [];
+          aiSavedCandidates = items
+            .map((item) => normalizeSavedCandidate(item))
+            .filter(Boolean);
+          sortAndTrimSavedCandidates();
         } catch (err) {
           aiSavedCandidates = [];
         }
       }
 
       function persistSavedCandidatesToLocal() {
+        sortAndTrimSavedCandidates();
         localStorage.setItem(AI_SAVED_KEY, JSON.stringify(aiSavedCandidates));
+      }
+
+      function normalizeSavedCandidate(item) {
+        if (!item || typeof item !== "object") return null;
+        const notes = Array.isArray(item.notes)
+          ? item.notes.filter((n) => n && typeof n === "object")
+          : [];
+        const createdAt = item.createdAt || item.updatedAt || new Date().toISOString();
+        const updatedAt = item.updatedAt || item.createdAt || createdAt;
+        return {
+          id: item.id || `c_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+          name: String(item.name || "(no name)"),
+          memo: String(item.memo || ""),
+          notes,
+          reason: String(item.reason || ""),
+          createdAt,
+          updatedAt
+        };
+      }
+
+      function toEpoch(isoText) {
+        const value = new Date(isoText || "").getTime();
+        return Number.isFinite(value) ? value : 0;
+      }
+
+      function sortAndTrimSavedCandidates() {
+        aiSavedCandidates = (aiSavedCandidates || [])
+          .filter(Boolean)
+          .sort((a, b) => toEpoch(b.updatedAt || b.createdAt) - toEpoch(a.updatedAt || a.createdAt))
+          .slice(0, MAX_SAVED_CANDIDATES);
       }
 
       function registerBlendAuthStateListener() {
@@ -767,10 +803,10 @@
             .from(AI_DB_TABLE)
             .select("id, blend_name, blend_memo, notes_json, recommendation_reason, created_at, updated_at")
             .eq("auth_user_id", blendAuthUserId)
-            .order("created_at", { ascending: false })
-            .limit(20);
+            .order("updated_at", { ascending: false })
+            .limit(MAX_SAVED_CANDIDATES);
           if (error) throw error;
-          aiSavedCandidates = (data || []).map((row) => ({
+          aiSavedCandidates = (data || []).map((row) => normalizeSavedCandidate({
             id: row.id,
             name: row.blend_name || "(no name)",
             memo: row.blend_memo || "",
@@ -778,7 +814,8 @@
             reason: row.recommendation_reason || "",
             createdAt: row.created_at,
             updatedAt: row.updated_at || row.created_at
-          }));
+          })).filter(Boolean);
+          sortAndTrimSavedCandidates();
         } catch (err) {
           console.error("Load cloud candidates failed, fallback local:", err);
           blendStorageMode = "local";
@@ -876,6 +913,7 @@
         const memo = (aiSaveMemoInput.value || "").trim();
         const nowIso = new Date().toISOString();
         const isUpdate = Boolean(editingCandidateId);
+        let fallbackFromCloudError = false;
 
         if (blendStorageMode === "db" && blendDbClient && blendAuthUserId) {
           try {
@@ -912,11 +950,13 @@
           } catch (err) {
             console.error("Save cloud candidate failed, fallback local:", err);
             blendStorageMode = "local";
+            fallbackFromCloudError = true;
             setAiSaveMessage("クラウド保存に失敗したため、ローカル保存へ切り替えました。", true);
           }
         }
 
         if (isUpdate) {
+          let updated = false;
           aiSavedCandidates = aiSavedCandidates.map((item) => item.id === editingCandidateId
             ? {
               ...item,
@@ -928,6 +968,18 @@
             }
             : item
           );
+          updated = aiSavedCandidates.some((item) => item.id === editingCandidateId);
+          if (!updated) {
+            aiSavedCandidates.unshift({
+              id: `c_${Date.now()}`,
+              name,
+              memo,
+              notes: rec.notes,
+              reason: rec.reason || "",
+              createdAt: nowIso,
+              updatedAt: nowIso
+            });
+          }
         } else {
           aiSavedCandidates.unshift({
             id: `c_${Date.now()}`,
@@ -939,10 +991,16 @@
             updatedAt: nowIso
           });
         }
-        aiSavedCandidates = aiSavedCandidates.slice(0, 20);
+        sortAndTrimSavedCandidates();
         persistSavedCandidatesToLocal();
         renderSavedCandidates();
-        setAiSaveMessage(isUpdate ? "ローカル候補を更新しました。" : "ローカルに保存しました。");
+        if (fallbackFromCloudError && isUpdate) {
+          setAiSaveMessage("クラウド更新に失敗したため、ローカルへ保存しました。", true);
+        } else if (fallbackFromCloudError) {
+          setAiSaveMessage("クラウド保存に失敗したため、ローカルへ保存しました。", true);
+        } else {
+          setAiSaveMessage(isUpdate ? "ローカル候補を更新しました。" : "ローカルに保存しました。");
+        }
         clearCandidateEditor();
       }
 
