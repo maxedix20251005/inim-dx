@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>スマートセントデザイン | inim-dx</title>
+  <link rel="icon" href="../images/logo/logo-inim-dx.png" type="image/png" />
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/smart-scent-design-app.css?v=20260331f">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -236,11 +237,27 @@
         </div>
   </main>
   <script src="../js/site-config.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/site-shell.js"></script>
-  <script src="https://unpkg.com/tone@14.8.49/build/Tone.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/site-shell.js"></script>
   <script>
     (() => {
+      const TONE_JS_URL = "https://unpkg.com/tone@14.8.49/build/Tone.js";
+      let toneLoadPromise = null;
+
+      function ensureToneLoaded() {
+        if (window.Tone) return Promise.resolve(window.Tone);
+        if (toneLoadPromise) return toneLoadPromise;
+        toneLoadPromise = new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = TONE_JS_URL;
+          script.async = true;
+          script.onload = () => resolve(window.Tone);
+          script.onerror = () => reject(new Error("Tone.js の読み込みに失敗しました。"));
+          document.head.appendChild(script);
+        });
+        return toneLoadPromise;
+      }
+
       const fragrances = [
         { id: "bergamot", no: "01", en: "BERGAMOT", jp: "ベルガモット", color: "#b8cc59", tags: ["さっぱり", "大人っぽい"], family: "citrus", weightGroup: "top", character: ["bright", "fresh", "clean"], hue: 76 },
         { id: "lemon", no: "02", en: "LEMON", jp: "レモン", color: "#ecd94a", tags: ["スッキリ", "ナチュラル"], family: "citrus", weightGroup: "top", character: ["sharp", "fresh", "clean"], hue: 55 },
@@ -1133,6 +1150,7 @@
 
         async init() {
           if (this.ready) return;
+          await ensureToneLoaded();
 
           try {
             await Tone.start();

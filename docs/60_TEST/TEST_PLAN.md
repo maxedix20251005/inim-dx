@@ -1790,3 +1790,16 @@
   - 認証状態が変わった時点で保存先モードが自動で切り替わる
   - ページリロード不要で候補一覧と保存先ラベルが最新状態に同期される
   - EN: Storage mode and saved-candidate source labels auto-sync to auth changes (sign-in/out) without requiring a page reload.
+## 2026-04-04 追加テスト / Added Test (Smart Scent Console Cleanup: Audio/Favicon)
+- 対象:
+  - `subpages/smart-scent-design.html`
+  - `favicon.ico`
+- 手順:
+  1. `smart-scent-design.html` を開き、Sound を触る前の初期表示で AudioContext 警告が出ないことを確認する
+  2. 右上 Sound を ON にして音声初期化と再生が正常に動作することを確認する
+  3. Console に `/favicon.ico` の `404` が出ないことを確認する
+- 期待結果:
+  - 初期表示時の不要な音声警告が抑制される
+  - 音声機能はユーザー操作後に正常起動する
+  - favicon 404 が解消される
+  - EN: No initial AudioContext warning, sound initializes on user action, and `/favicon.ico` 404 is resolved.

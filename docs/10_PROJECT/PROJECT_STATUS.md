@@ -2050,3 +2050,16 @@
 - 対象ファイル:
   - `subpages/smart-scent-design.html`
 - EN: Added an auth-state sync hotfix for Smart Scent. Storage mode now follows live sign-in/sign-out state via `onAuthStateChange`, refreshes saved candidates without reload, and unsubscribes on unload.
+### ドキュメント更新（2026-04-04 追加118）
+- Smart Scent のコンソール警告抑制対応を実施しました（機能影響なし）。
+- 変更内容:
+  - `subpages/smart-scent-design.html`
+  - Tone.js の静的読込を廃止し、Sound ON 操作時のみ遅延読込する方式へ変更
+  - `<link rel="icon">` を追加し、ページ側の favicon 参照を明示
+  - ルート `favicon.ico` を追加して `/favicon.ico` 404 を解消
+- 目的:
+  - 初期表示時の不要な AudioContext 警告と favicon 404 ノイズを減らし、検証時のエラー判別を容易にする
+- 対象ファイル:
+  - `subpages/smart-scent-design.html`
+  - `favicon.ico`
+- EN: Reduced Smart Scent console noise by lazy-loading Tone.js after user gesture and fixing favicon resolution (`/favicon.ico` 404).

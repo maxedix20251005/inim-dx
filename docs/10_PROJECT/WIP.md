@@ -115,3 +115,8 @@
 - 2026-04-04: 2.4 storage-mode sync hotfix (post-login auto switch).
   - JA: `smart-scent-design` で認証状態変更リスナーを追加し、ページ表示中にログイン/ログアウトしても保存先を自動切替（クラウド/ローカル）できるよう修正。
   - EN: Added auth-state listener on `smart-scent-design` so in-page sign-in/sign-out automatically switches candidate storage mode (cloud/local) without reload.
+- 2026-04-04: Smart Scent console-noise cleanup (audio + favicon).
+  - JA: `smart-scent-design` の Tone.js を遅延読込化し、初期表示時の AudioContext 警告発生を抑制。
+  - EN: Switched `smart-scent-design` Tone.js to lazy-load so AudioContext warnings do not appear on initial page load.
+  - JA: `favicon.ico` 404 を解消するため、ページfavicon指定とルート `favicon.ico` を追加。
+  - EN: Resolved favicon 404 by adding explicit page favicon link and root `favicon.ico`.
