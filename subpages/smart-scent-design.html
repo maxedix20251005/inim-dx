@@ -357,6 +357,7 @@
       let blendStorageMode = "local";
       let blendDbClient = null;
       let blendAuthUserId = null;
+      let blendAuthSubscription = null;
       let editingCandidateId = null;
 
       function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
@@ -688,6 +689,8 @@
           return;
         }
 
+        registerBlendAuthStateListener();
+
         try {
           const { data, error } = await blendDbClient.auth.getSession();
           if (error) throw error;
@@ -718,6 +721,23 @@
 
       function persistSavedCandidatesToLocal() {
         localStorage.setItem(AI_SAVED_KEY, JSON.stringify(aiSavedCandidates));
+      }
+
+      function registerBlendAuthStateListener() {
+        if (!blendDbClient?.auth?.onAuthStateChange || blendAuthSubscription) return;
+        const { data } = blendDbClient.auth.onAuthStateChange(async (_event, session) => {
+          blendAuthUserId = session?.user?.id || null;
+          blendStorageMode = blendAuthUserId ? "db" : "local";
+          setAiSaveMessage(
+            blendAuthUserId
+              ? "クラウド保存モードに切り替わりました。"
+              : "ログインすると候補をクラウド保存できます（現在はローカル保存）。"
+          );
+          clearCandidateEditor();
+          await loadSavedCandidates();
+          renderSavedCandidates();
+        });
+        blendAuthSubscription = data?.subscription || null;
       }
 
       async function loadSavedCandidates() {
@@ -1820,6 +1840,12 @@
       window.addEventListener("pageshow", () => {
         resetBlendToInitialState();
         buildAiRecommendation();
+      });
+      window.addEventListener("beforeunload", () => {
+        if (blendAuthSubscription?.unsubscribe) {
+          blendAuthSubscription.unsubscribe();
+          blendAuthSubscription = null;
+        }
       });
 
       renderNotesGrid();

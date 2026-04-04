@@ -112,3 +112,6 @@
   - EN: Added source/memo/timestamp metadata to saved-candidate cards for better reuse decisions.
   - JA: 1180px以下で 3ボタン行を 2列+1列に最適化、720px以下で保存カードとミニボタンの可読性を改善。
   - EN: Optimized triple action row for medium width and improved saved-card/mobile button readability under 720px.
+- 2026-04-04: 2.4 storage-mode sync hotfix (post-login auto switch).
+  - JA: `smart-scent-design` で認証状態変更リスナーを追加し、ページ表示中にログイン/ログアウトしても保存先を自動切替（クラウド/ローカル）できるよう修正。
+  - EN: Added auth-state listener on `smart-scent-design` so in-page sign-in/sign-out automatically switches candidate storage mode (cloud/local) without reload.

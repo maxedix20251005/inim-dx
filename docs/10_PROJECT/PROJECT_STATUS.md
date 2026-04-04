@@ -2038,3 +2038,15 @@
   - `subpages/smart-scent-design.html`
   - `css/smart-scent-design-app.css`
 - EN: Improved saved-candidate readability and responsive density for 2.3 polish by adding source/memo/timestamp metadata, clearer empty-state guidance, and better medium/mobile action-row layouts.
+### ドキュメント更新（2026-04-04 追加117）
+- 2.4 運用修正として、Smart Scent の保存先判定を `初期化時のみ` から `認証状態追従` に更新しました。
+- 変更内容:
+  - `subpages/smart-scent-design.html`
+  - `supabase.auth.onAuthStateChange` リスナーを追加し、ページ表示中のログイン/ログアウトで `blendStorageMode` を即時再判定
+  - 判定更新後に保存候補一覧を再読込/再描画し、リロード不要でクラウド保存へ遷移可能に変更
+  - 終了時に subscription を解除する `beforeunload` クリーンアップを追加
+- 目的:
+  - 「ログイン済みなのにローカル保存のまま」になる状態を解消し、保存先表示と実際の保存先の不一致を防止する
+- 対象ファイル:
+  - `subpages/smart-scent-design.html`
+- EN: Added an auth-state sync hotfix for Smart Scent. Storage mode now follows live sign-in/sign-out state via `onAuthStateChange`, refreshes saved candidates without reload, and unsubscribes on unload.

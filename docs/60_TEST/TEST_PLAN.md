@@ -1778,3 +1778,15 @@
   - 保存候補情報の比較/再利用がしやすくなる
   - 中間幅/モバイル幅で操作要素の詰まりが軽減される
   - EN: Saved-candidate cards are more scannable and responsive action layouts remain readable/tap-friendly on medium and mobile widths.
+## 2026-04-04 追加テスト / Added Test (2.4 Hotfix: Smart Scent Storage Mode Auto-Sync on Auth Change)
+- 対象:
+  - `subpages/smart-scent-design.html`
+- 手順:
+  1. 未ログインで `smart-scent-design.html` を開き、保存メッセージがローカル保存モードで表示されることを確認する
+  2. 同一タブのままログインし、ページリロードなしで保存メッセージがクラウド保存モードへ切り替わることを確認する
+  3. 候補を1件保存し、カード右上ラベルが `クラウド保存` で表示されることを確認する
+  4. 同一タブのままログアウトし、保存メッセージがローカル保存モード案内へ戻ることを確認する
+- 期待結果:
+  - 認証状態が変わった時点で保存先モードが自動で切り替わる
+  - ページリロード不要で候補一覧と保存先ラベルが最新状態に同期される
+  - EN: Storage mode and saved-candidate source labels auto-sync to auth changes (sign-in/out) without requiring a page reload.
