@@ -1725,3 +1725,56 @@
   - Issue境界が正しく保たれ、状態判定（確認待ち/解消済み）が誤読されない
   - EN: Issue boundaries are clean, and pending vs resolved status can be read without ambiguity.
 
+## 2026-04-04 追加テスト / Added Test (Pre-2.3: Workshop Menu/CTA Wording Consistency)
+- 対象:
+  - `js/site-shell.js`
+  - `index.html`
+  - `subpages/workshop.html`
+  - `subpages/workshop-booking.html`
+  - `subpages/workshop-booking-thanks.html`
+  - `subpages/brand.html`
+  - `subpages/scent-search.html`
+  - `subpages/search-projects.html`
+  - `subpages/smart-scent-design.html`
+- 手順:
+  1. グローバルナビの該当メニューが `香りを体験する` 表示であることを確認する
+  2. プルダウン項目が `ワークショップ体験ガイド / プランを見る / 予約する / 体験ステップ / デジタル調香を試す` になっていることを確認する
+  3. `index/workshop/booking/thanks/brand` の比較系CTAが `プランを見る` に統一されていることを確認する
+  4. デジタル調香導線の主要CTAが `デジタル調香を試す` 表示で揃っていることを確認する
+- 期待結果:
+  - 訪問者向けのメニュー/CTA文言が一貫し、次アクションの意図が直感的に理解できる
+  - EN: Workshop navigation and CTA wording are consistently action-oriented and easy to understand for first-time visitors.
+## 2026-04-04 追加テスト / Added Test (2.3 Layout Polish Step-1: Hierarchy + CTA Grouping)
+- 対象:
+  - `subpages/smart-scent-design.html`
+  - `css/smart-scent-design-app.css`
+- 手順:
+  1. 右側コントロールが `STEP 1`〜`STEP 4` の順で表示されることを確認する
+  2. `AIレコメンド` の主CTAが `おすすめを提案する` 表示であることを確認する
+  3. `候補を保存` が独立セクションとして表示され、保存操作と保存済み一覧が同セクションで確認できることを確認する
+  4. 主要パネル見出し/サブ文言で次アクション意図が読み取れることを確認する
+- 期待結果:
+  - 画面の操作順序が段階的に理解しやすくなり、AI提案と保存操作の役割が分離表示される
+  - EN: The control flow becomes step-oriented and easier to follow, with clearer separation between AI recommendation and save-management actions.
+## 2026-04-04 追加テスト / Added Test (2.3 Layout Polish Step-1b: AI-first Step Order)
+- 対象:
+  - `subpages/smart-scent-design.html`
+- 手順:
+  1. 右側パネル表示順が `STEP 1 AIレコメンド` → `STEP 2 香りノート調整` → `STEP 3 現在の調香を確認` → `STEP 4 候補を保存` であることを確認する
+  2. 各STEP番号とセクションの実際の表示順が一致していることを確認する
+- 期待結果:
+  - AI先行の操作イメージがUI順序で明確になり、ステップ番号と表示順の不一致がない
+  - EN: The UI reflects an AI-first journey with step numbers matching actual visual order.
+## 2026-04-04 追加テスト / Added Test (2.3 Layout Polish Step-2: Saved Candidate Readability + Responsive)
+- 対象:
+  - `subpages/smart-scent-design.html`
+  - `css/smart-scent-design-app.css`
+- 手順:
+  1. 保存済み候補カードに `候補名 / 保存種別 / 比率サマリー / （任意）メモ / 更新日時` が表示されることを確認する
+  2. 候補が0件時、空状態文言が「保存の次アクション」を含む表現で表示されることを確認する
+  3. 画面幅 1180px 前後で保存3ボタン行が窮屈にならず `2列+最下段1列` で表示されることを確認する
+  4. 画面幅 720px 以下で保存カード上段が縦積みになり、ミニボタンが押しやすい幅で表示されることを確認する
+- 期待結果:
+  - 保存候補情報の比較/再利用がしやすくなる
+  - 中間幅/モバイル幅で操作要素の詰まりが軽減される
+  - EN: Saved-candidate cards are more scannable and responsive action layouts remain readable/tap-friendly on medium and mobile widths.

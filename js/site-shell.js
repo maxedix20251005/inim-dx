@@ -79,8 +79,8 @@
         searchStoreInfo: { path: 'subpages/search-shop-info.html', label: '実店舗情報', title: 'Search / Shop Info', latest: '浅草・柴又・ソラマチの店舗情報を比較し、地図確認から予約導線へ進めるページを公開しました。' },
         searchProjects: { path: 'subpages/search-projects.html', label: 'プロジェクト・読み物', title: 'Search / Projects', latest: '体験導線・デジタル調香・店舗背景の読み物を目的別に探せるストーリーハブを公開しました。' },
         searchEvents: { path: 'subpages/search-events.html', label: 'イベント情報', title: 'Search / Events', latest: '開催ステータスと対象店舗で絞り込めるイベント一覧ページを公開しました。' },
-        workshop: { path: 'subpages/workshop.html', label: '香りと遊ぶ', title: 'Workshop', latest: '香りのワークショップ予約ページを公開しました。デジタル体験から店頭予約まで一続きで案内します。' },
-        workshopPlans: { path: 'subpages/workshop-plans.html', label: 'プラン比較', title: 'Workshop / Plans', latest: 'ワークショッププラン比較ページを公開しました。目的や所要時間を比較しながら選べます。' },
+        workshop: { path: 'subpages/workshop.html', label: '香りを体験する', title: 'Workshop', latest: '香りのワークショップ予約ページを公開しました。デジタル体験から店頭予約まで一続きで案内します。' },
+        workshopPlans: { path: 'subpages/workshop-plans.html', label: 'プランを見る', title: 'Workshop / Plans', latest: 'ワークショッププランページを公開しました。目的や所要時間を確認しながら選べます。' },
         workshopBooking: { path: 'subpages/workshop-booking.html', label: '予約枠選択', title: 'Workshop / Booking', latest: 'ワークショップ予約画面のドラフトを公開しました。空き状況を見ながら日付と時間帯を選べます。' },
         workshopBookingEntry: { path: 'subpages/workshop-booking-entry.html', label: '申込情報入力', title: 'Workshop / Booking Entry', latest: 'ワークショップ予約入力画面のドラフトを公開しました。選択した枠の内容を確認しながら申込情報を整理できます。' },
         workshopBookingConfirm: { path: 'subpages/workshop-booking-confirm.html', label: '予約内容確認', title: 'Workshop / Booking Confirm', latest: 'ワークショップ予約確認画面のドラフトを公開しました。送信前に予約枠と申込情報をまとめて確認できます。' },
@@ -224,14 +224,14 @@
             items: ['searchStoreInfo', 'searchProjects', 'searchEvents']
         },
         {
-            title: '香りと遊ぶ',
+            title: '香りを体験する',
             key: 'workshop',
             items: [
-                { label: '香游について', href: link('workshop') },
-                { label: 'プラン比較', href: link('workshopPlans') },
+                { label: 'ワークショップ体験ガイド', href: link('workshop') },
+                { label: 'プランを見る', href: link('workshopPlans') },
                 { label: '予約する', href: link('workshopBooking') },
-                { label: '体験の流れ', href: `${root}/index.html#journey` },
-                { label: '体験を始める', href: link('smartScent') }
+                { label: '体験ステップ', href: `${root}/index.html#journey` },
+                { label: 'デジタル調香を試す', href: link('smartScent') }
             ]
         },
         {
@@ -341,7 +341,7 @@
         },
         {
             key: 'workshop',
-            label: '香りと遊ぶ',
+            label: '香りを体験する',
             href: link('workshop'),
             current: ['workshop', 'workshopPlans', 'workshopBooking', 'workshopBookingEntry', 'workshopBookingConfirm', 'workshopBookingThanks', 'smartScent'].includes(pageKey),
             children: buildGlobalChildren('workshop')

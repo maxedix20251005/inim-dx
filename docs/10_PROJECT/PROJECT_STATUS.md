@@ -1776,6 +1776,33 @@
   - `docs/10_PROJECT/ISSUE_LIST.md`
 - EN: Closed `Issue 2026-03-21-06` after user confirmation of no recurrence and updated status from monitoring to resolved (user verified).
 
+### ドキュメント更新（2026-04-04 追加112）
+- 2.3着手前の導線文言統一として、`ワークショップ系ナビ/CTA` のラベルを visitor 向けに再整理しました。
+- 変更内容:
+  - `js/site-shell.js`
+  - グローバルナビ: `香りと遊ぶ` → `香りを体験する`
+  - ドロップダウン: `ワークショップ体験ガイド / プランを見る / 予約する / 体験ステップ / デジタル調香を試す` に統一
+  - `workshopPlans` ラベル/最新情報文言を `プランを見る` ベースへ調整
+  - `index.html`
+  - ワークショップ関連CTA文言を `プランを見る` / `デジタル調香を試す` 基準へ統一
+  - `subpages/workshop.html`, `subpages/workshop-booking.html`, `subpages/workshop-booking-thanks.html`, `subpages/brand.html`
+  - 比較導線のCTA文言を `プランを見る` 基準に統一
+  - `subpages/scent-search.html`, `subpages/search-projects.html`, `subpages/smart-scent-design.html`
+  - 検索/導線カード文言も新命名へ整合
+- 目的:
+  - グローバルナビ、プルダウン、主要CTAの表現を統一し、初回訪問者が次アクションを即判断できるようにする
+- 対象ファイル:
+  - `js/site-shell.js`
+  - `index.html`
+  - `subpages/workshop.html`
+  - `subpages/workshop-booking.html`
+  - `subpages/workshop-booking-thanks.html`
+  - `subpages/brand.html`
+  - `subpages/scent-search.html`
+  - `subpages/search-projects.html`
+  - `subpages/smart-scent-design.html`
+- EN: As a pre-2.3 terminology pass, unified workshop-related global-nav/dropdown/CTA wording to visitor-friendly action labels (`Experience`, `View Plans`, `Try Digital Blend`) across key pages.
+
 
 ### Doc Update (2026-03-30)
 - EN: Shop -> Shop label sweep (A & B) completed on public pages.
@@ -1950,3 +1977,64 @@
   - `docs/10_PROJECT/WIP.md`
   - `docs/80_HANDOFF/AI_CONTEXT_PROMPT.md`
   - `docs/20_PRODUCT/DESIGN_GUIDELINE.md`
+### ドキュメント更新（2026-04-04 追加113）
+- 2.3 レイアウト改善の第1段として、smart-scent-design の情報階層とCTA配置を整理しました。
+- 変更内容:
+  - `subpages/smart-scent-design.html`
+  - 右側コントロールを `STEP 1 香りノート` → `STEP 2 AIレコメンド` → `STEP 3 現在の調香を確認` → `STEP 4 候補を保存` へ再編
+  - AI提案CTAを `おすすめを提案する` へ変更
+  - 保存操作を独立セクション化し、読み込み一覧との関係を明確化
+  - `css/smart-scent-design-app.css`
+  - ステップバッジ (`.panel-step`) を追加
+  - AIパネル強調、提案結果見出し (`.ai-result-head`) を追加
+  - 保存セクション (`.save-panel`) スタイルを追加
+- 目的:
+  - 初回訪問者が「次に何をすべきか」を段階的に理解できる画面構造にする
+- 対象ファイル:
+  - `subpages/smart-scent-design.html`
+  - `css/smart-scent-design-app.css`
+- EN: Implemented 2.3 layout polish step-1 by restructuring the right control flow into clear steps and improving action grouping (AI suggestion, current blend check, and saved-candidate management).
+### ドキュメント更新（2026-04-04 追加114）
+- 2.3 レイアウト改善の方針調整として、smart-scent-design を `AI先行フロー` に並べ替えました。
+- 変更内容:
+  - `subpages/smart-scent-design.html`
+  - パネル順序を `AIレコメンド` → `香りノート調整` → `現在の調香を確認` → `候補を保存` に変更
+  - ステップ表示を `STEP 1`〜`STEP 4` へ再採番
+  - `香りノート` タイトルを `香りノート調整` に変更
+- 目的:
+  - 初回訪問者が「まずAIで方向性を作ってから微調整する」体験を自然に理解できる順序へ整える
+- 対象ファイル:
+  - `subpages/smart-scent-design.html`
+- EN: Reordered smart-scent-design controls to an AI-first flow and renumbered steps to match display order (Step1 AI → Step2 Manual Tuning → Step3 Review → Step4 Save).
+### ドキュメント更新（2026-04-04 追加115）
+- 2.3 レイアウト改善の微調整として、STEP 3 から冗長CTAを削除しました。
+- 変更内容:
+  - `subpages/smart-scent-design.html`
+  - `STEP 3` タイトルを `香りの最終調整` に変更
+  - `この香りを見る` ボタンを削除（リアルタイム反映のため不要）
+  - ガイド文言を「左側結果はリアルタイム更新」に更新
+  - `css/smart-scent-design-app.css`
+  - STEP 3 の単一ボタン行レイアウトに合わせて `.cta-row` を右寄せ単一列へ調整
+- 目的:
+  - 操作重複を減らし、ユーザーに「比率変更 = 即時反映」の理解を明確化する
+- 対象ファイル:
+  - `subpages/smart-scent-design.html`
+  - `css/smart-scent-design-app.css`
+- EN: Removed the redundant Step-3 “view blend” CTA and renamed Step 3 to `香りの最終調整`, clarifying that the left blend result updates in real time.
+### ドキュメント更新（2026-04-04 追加116）
+- 2.3 レイアウト改善の次スライスとして、保存済み候補の可読性とレスポンシブ密度を改善しました。
+- 変更内容:
+  - `subpages/smart-scent-design.html`
+  - 保存候補カードに `保存種別（クラウド/ローカル）`、`メモ`、`更新日時` 表示を追加
+  - 候補比率表示を `%` 付きに統一
+  - 空状態文言を「次アクション付き」の案内へ変更
+  - `css/smart-scent-design-app.css`
+  - 保存候補カードの情報階層（name/source/meta/memo/stamp）をスタイル追加
+  - 中間幅（<=1180px）で 3ボタン行を 2列+最下段1列へ最適化
+  - モバイル（<=720px）で保存カード上段とミニボタンの可読性を改善
+- 目的:
+  - 保存済み候補の比較・再利用判断をしやすくし、端末幅ごとの詰まりを減らす
+- 対象ファイル:
+  - `subpages/smart-scent-design.html`
+  - `css/smart-scent-design-app.css`
+- EN: Improved saved-candidate readability and responsive density for 2.3 polish by adding source/memo/timestamp metadata, clearer empty-state guidance, and better medium/mobile action-row layouts.

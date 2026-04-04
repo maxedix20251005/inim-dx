@@ -18,7 +18,7 @@
           <div class="app">
     <div class="topbar">
       <div>
-        <div class="title">香りと遊ぶ！ 香游（デジタル調香）</div>
+        <div class="title">香りを体験する！ デジタル調香</div>
         <div class="subhead">12種類の香りノートを選択し、比率を重ねて調香します</div>
       </div>
       <div class="top-actions">
@@ -74,44 +74,11 @@
 
       <aside class="control-pane">
         <div class="control-stack">
-          <section class="panel notes-panel">
-            <div class="panel-head">
-              <div class="panel-title">香りノート</div>
-              <div class="panel-sub">16種類 / ノートを選択</div>
-            </div>
-            <div id="notesGrid" class="notes-grid"></div>
-          </section>
-
-          <section class="panel adjust-panel">
-            <div class="adjust-head">
-              <div class="adjust-title">選択中ノートの調整</div>
-              <div id="activeName" class="active-name">BERGAMOT / ベルガモット</div>
-            </div>
-
-            <div id="sliderWrap" class="slider-wrap">
-              <input id="ratioSlider" type="range" min="0" max="100" value="28" />
-              <div id="sliderValue" class="slider-value">28</div>
-            </div>
-            <div id="blendTotalStatus" class="adjust-total">合計: 0 / 100</div>
-
-            <div class="adjust-help">
-              選択中ノートの比率を調整します。変更はビジュアルとサウンドに即時反映されます。
-            </div>
-          </section>
-
-          <section class="panel action-panel">
-            <div class="cta-row">
-              <button id="generateBtn" class="cta primary">この香りを見る</button>
-              <button id="resetBtn" class="cta secondary">リセット</button>
-            </div>
-
-            <div id="miniBars" class="mini-bars"></div>
-          </section>
-
           <section class="panel ai-panel">
             <div class="panel-head ai-panel-head">
+              <div class="panel-step">STEP 1</div>
               <div class="panel-title">AIレコメンド</div>
-              <div class="panel-sub">気分・悩み・変えたい印象から香り候補を提案します</div>
+              <div class="panel-sub">気分・悩み・変えたい印象から、次の一手を提案します</div>
             </div>
 
             <div class="ai-field-grid">
@@ -145,9 +112,10 @@
               </label>
             </div>
 
-            <button id="aiRecommendBtn" class="cta primary ai-cta">AIでおすすめを作成</button>
+            <button id="aiRecommendBtn" class="cta primary ai-cta">おすすめを提案する</button>
 
             <div id="aiRecommendResult" class="ai-result-card">
+              <div class="ai-result-head">提案結果</div>
               <div class="ai-result-item">
                 <div class="ai-result-label">おすすめノート</div>
                 <div id="aiRecommendNotes" class="ai-result-value">未生成</div>
@@ -164,9 +132,54 @@
                 <button id="aiApplyBtn" class="cta secondary ai-action-btn">おすすめを適用</button>
                 <button id="aiUndoBtn" class="cta secondary ai-action-btn" disabled>適用を取り消す</button>
               </div>
+            </div>
+          </section>
 
+          <section class="panel notes-panel">
+            <div class="panel-head">
+              <div class="panel-step">STEP 2</div>
+              <div class="panel-title">香りノート調整</div>
+              <div class="panel-sub">16種類 / ノートを選択</div>
+            </div>
+            <div id="notesGrid" class="notes-grid"></div>
+          </section>
+
+          <section class="panel adjust-panel">
+            <div class="adjust-head">
+              <div class="adjust-title">選択中ノートの調整</div>
+              <div id="activeName" class="active-name">BERGAMOT / ベルガモット</div>
+            </div>
+
+            <div id="sliderWrap" class="slider-wrap">
+              <input id="ratioSlider" type="range" min="0" max="100" value="28" />
+              <div id="sliderValue" class="slider-value">28</div>
+            </div>
+            <div id="blendTotalStatus" class="adjust-total">合計: 0 / 100</div>
+
+            <div class="adjust-help">
+              選択中ノートの比率を調整します。変更はビジュアルとサウンドに即時反映されます。
+            </div>
+          </section>
+
+          <section class="panel action-panel">
+            <div class="panel-head">
+              <div class="panel-step">STEP 3</div>
+              <div class="panel-title">香りの最終調整</div>
+              <div class="panel-sub">比率を反映して、今の香りバランスをチェックします</div>
+            </div>
+            <div class="cta-row">
+              <button id="resetBtn" class="cta secondary">リセット</button>
+            </div>
+            <div id="miniBars" class="mini-bars"></div>
+          </section>
+
+          <section class="panel save-panel">
+            <div class="panel-head">
+              <div class="panel-step">STEP 4</div>
+              <div class="panel-title">候補を保存</div>
+              <div class="panel-sub">名前を付けて保存し、あとで読み込み・編集できます</div>
+            </div>
               <div class="ai-save-block">
-                <div class="ai-result-label">候補を保存</div>
                 <div class="ai-save-grid">
                   <input id="aiSaveNameInput" class="ai-input" type="text" placeholder="候補名（必須）" />
                   <input id="aiSaveMemoInput" class="ai-input" type="text" placeholder="メモ（任意）" />
@@ -178,7 +191,6 @@
                 </div>
                 <div id="aiSaveMessage" class="ai-save-message" aria-live="polite"></div>
               </div>
-            </div>
 
             <div id="aiSavedPanel" class="ai-saved-panel is-hidden">
               <div class="ai-result-label">保存済み候補</div>
@@ -202,7 +214,7 @@
               <ol class="guide-steps">
                 <li><strong>ノートを選ぶ</strong><br>右側のノート一覧から気になる香りを選択します。</li>
                 <li><strong>比率を調整する</strong><br>スライダーで比率を調整します。合計は <strong>100</strong> が上限です。</li>
-                <li><strong>香りを確認する</strong><br>「この香りを見る」で現在のブレンド結果を確認します。</li>
+                <li><strong>香りを確認する</strong><br>左側の「あなたの香り」は比率変更にあわせてリアルタイム更新されます。</li>
                 <li><strong>AIレコメンドを使う</strong><br>気分・変えたいこと・悩みを入力し、提案を作成します。</li>
                 <li><strong>提案を試す</strong><br>「おすすめを適用」で即反映し、必要なら「適用を取り消す」で戻せます。</li>
                 <li><strong>候補を保存する</strong><br>候補名をつけて保存し、あとで「読み込む」で再利用できます。</li>
@@ -303,7 +315,6 @@
       const resultImpression = document.getElementById("resultImpression");
       const resultRatioSummary = document.getElementById("resultRatioSummary");
       const blendScoreEl = document.getElementById("blendScore");
-      const generateBtn = document.getElementById("generateBtn");
       const resetBtn = document.getElementById("resetBtn");
       const soundToggle = document.getElementById("soundToggle");
       const soundPill = document.getElementById("soundPill");
@@ -740,19 +751,40 @@
       }
 
       function renderSavedCandidates() {
+        const formatCandidateStamp = (isoText) => {
+          if (!isoText) return "日時未設定";
+          const date = new Date(isoText);
+          if (Number.isNaN(date.getTime())) return "日時未設定";
+          return date.toLocaleString("ja-JP", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit"
+          });
+        };
+
         if (!aiSavedCandidates.length) {
-          aiSavedList.innerHTML = `<div class="ai-empty">保存済み候補はありません</div>`;
+          aiSavedList.innerHTML = `<div class="ai-empty">保存済み候補はまだありません。まずはAI提案を作成して保存してください。</div>`;
           return;
         }
 
         aiSavedList.innerHTML = aiSavedCandidates
           .map(item => {
-            const summary = (item.notes || []).map(n => `${n.jp}${n.ratio}`).join(" / ");
+            const summary = (item.notes || []).map(n => `${n.jp}${n.ratio}%`).join(" / ");
+            const memoText = (item.memo || "").trim();
+            const stampText = formatCandidateStamp(item.updatedAt || item.createdAt);
+            const sourceText = blendStorageMode === "db" ? "クラウド保存" : "ローカル保存";
             return `
               <div class="ai-saved-item">
                 <div class="ai-saved-main">
-                  <div class="ai-saved-name">${item.name}</div>
+                  <div class="ai-saved-top">
+                    <div class="ai-saved-name">${item.name}</div>
+                    <span class="ai-saved-source">${sourceText}</span>
+                  </div>
                   <div class="ai-saved-meta">${summary}</div>
+                  ${memoText ? `<div class="ai-saved-memo">メモ: ${memoText}</div>` : ""}
+                  <div class="ai-saved-stamp">更新: ${stampText}</div>
                 </div>
                 <div class="ai-saved-actions">
                   <button class="ai-mini-btn" data-action="load" data-id="${item.id}">読み込む</button>
@@ -1670,10 +1702,6 @@
         makeParticles();
       }
 
-      function updateGenerateLabel() {
-        generateBtn.textContent = state.soundOn ? "この香りを見る（音が流れます）" : "この香りを見る";
-      }
-
       function resetBlendToInitialState() {
         state.ratios = { ...INITIAL_RATIOS };
         state.selectedId = INITIAL_SELECTED_ID;
@@ -1692,7 +1720,6 @@
         soundToggle.classList.toggle("on", state.soundOn);
         soundPill.classList.toggle("active", state.soundOn);
         soundStatusText.textContent = `Sound：${state.soundOn ? "ON" : "OFF"}`;
-        updateGenerateLabel();
       }
 
       ratioSlider.addEventListener("input", async () => {
@@ -1729,25 +1756,6 @@
         }
 
         updateSoundUI();
-      });
-
-      generateBtn.addEventListener("click", async () => {
-        state.flash = 1;
-        generateBtn.classList.add("flash");
-        setTimeout(() => generateBtn.classList.remove("flash"), 260);
-        updateResults();
-
-        if (!state.soundOn) return;
-
-        try {
-          await audioEngine.playBlend();
-        } catch (err) {
-          console.error("Audio playback error:", err);
-          soundStatusText.textContent = `Sound：ERROR`;
-          if (audioEngine?.lastError) {
-            soundStatusText.textContent = `Sound：ERROR (${audioEngine.lastError})`;
-          }
-        }
       });
 
       resetBtn.addEventListener("click", () => {

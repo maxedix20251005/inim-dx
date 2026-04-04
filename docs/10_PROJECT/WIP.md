@@ -91,3 +91,24 @@
 - 2026-04-02: Closed recurrent mojibake in public shell text by restoring `js/site-shell.js` from a known-good revision and reapplying approved theme-switcher deltas only.
 - 2026-04-02: Added mandatory close-out checks: run mojibake scan (`rg -n -F "\\uFFFD" docs`) and verify UTF-8 encoding before completing shell/doc tasks.
 - 2026-04-03: Added Issue `2026-04-03-33` for shell render regression (`Unexpected token '}'` in `js/site-shell.js`) after mobile nav refactor; removed duplicated `renderMobileNav()` fragment and moved status to Monitoring until user confirms.
+- 2026-04-04: Pre-2.3 wording alignment (global nav + workshop CTA).
+  - JA: グローバルナビ `香りと遊ぶ` を `香りを体験する` に変更し、プルダウンを `ワークショップ体験ガイド / プランを見る / 予約する / 体験ステップ / デジタル調香を試す` へ統一。
+  - EN: Renamed workshop top nav to `香りを体験する` and standardized dropdown labels to action-oriented wording.
+  - JA: `index/workshop/booking/thanks/brand` の比較系CTAを `プランを見る` に統一し、`デジタル調香` 導線文言も整合。
+  - EN: Standardized key workshop CTAs to `プランを見る` and aligned digital-blend CTA wording across related pages.
+- 2026-04-04: 2.3 layout polish step-1 implemented (smart-scent-design).
+  - JA: コントロール側UIを STEP 1〜4 の構成へ再編し、AI提案・現在確認・候補保存の役割を分離。
+  - EN: Reorganized control-side UI into STEP 1–4 and separated AI suggestion, current-check, and candidate-save responsibilities.
+  - JA: AI CTA を `おすすめを提案する` へ統一し、提案結果カードの見出しとステップバッジを追加。
+  - EN: Unified AI CTA wording to `おすすめを提案する` and added result heading + step badges.
+- 2026-04-04: 2.3 layout polish step-1b (AI-first flow order).
+  - JA: smart-scent-design の操作順序を AI先行へ変更（STEP1 AI提案 → STEP2 手動調整 → STEP3 確認 → STEP4 保存）。
+  - EN: Switched smart-scent-design to AI-first operation order and renumbered the step sequence accordingly.
+- 2026-04-04: 2.3 layout polish step-1c (remove redundant Step-3 CTA).
+  - JA: `この香りを見る` を削除し、STEP 3 を `香りの最終調整` へ変更。結果はリアルタイム更新前提に統一。
+  - EN: Removed redundant `この香りを見る` in Step 3 and renamed it to `香りの最終調整`, fully aligning with real-time result updates.
+- 2026-04-04: 2.3 layout polish step-2 implemented (saved-candidate readability + responsive density).
+  - JA: 保存済み候補カードに保存種別/メモ/更新日時を追加し、再利用判断情報を強化。
+  - EN: Added source/memo/timestamp metadata to saved-candidate cards for better reuse decisions.
+  - JA: 1180px以下で 3ボタン行を 2列+1列に最適化、720px以下で保存カードとミニボタンの可読性を改善。
+  - EN: Optimized triple action row for medium width and improved saved-card/mobile button readability under 720px.
