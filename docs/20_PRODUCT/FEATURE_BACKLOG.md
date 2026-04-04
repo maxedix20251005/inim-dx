@@ -34,7 +34,7 @@
   - EN: Confirmed post-booking thank-you and next-action guidance are clear
 
 ### 2.3 Digital Blend AI Recommendation / デジタル調香AIレコメンド
-- Status: `In Progress`
+- Status: `Closed`
 - JA: 「気分」「悩み」「変えたいこと」入力からAIが香り候補を提案する機能を検討・追加する。
 - EN: Add AI-based fragrance recommendation from user mood/problem-to-change inputs.
 - 2.3A progress / 2.3A 進捗
@@ -55,6 +55,9 @@
 - Scope candidates:
   - JA: テキスト入力、推奨ノート表示、理由説明、候補保存
   - EN: Text input, recommended notes, rationale, candidate save
+- 2.3 closure / 2.3 クローズ
+  - JA: 実装・UI改善・SP調整・運用不具合修正（保存先同期/consoleノイズ）を反映し、ユーザー確認完了のためクローズ（2026-04-04）。
+  - EN: Closed after implementation, UI polish, SP tuning, and operational fixes (storage sync/console-noise), with user confirmation complete (2026-04-04).
 ### 2.4 Blend Save and Reuse / 調香データ保存・再利用
 - Status: `In Progress`
 - JA: 調香データを DB に保存し、再編集・再利用できる機能を追加する。

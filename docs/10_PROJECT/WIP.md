@@ -9,19 +9,23 @@
 - EN: Public booking flow (workshop → booking → entry → confirm → thanks) is verified.
 - JA: 2.6（管理者アクセス制御 + 予約LED運用）および 2.9（非adminアクセス検証）はクローズ済み。
 - EN: 2.6 (admin access + booking LED governance) and 2.9 (non-admin access verification) are closed.
-- JA: 主要バックログは 2.x クローズ群の整合更新後、次フェーズ選定待ち。
-- EN: Major 2.x closures are documented; next-phase prioritisation is pending.
+- JA: 2.3（Digital Blend AI Recommendation）は実装・改善・不具合修正まで完了し、2026-04-04 にクローズ。
+- EN: 2.3 (Digital Blend AI Recommendation) has been completed end-to-end and closed on 2026-04-04.
+- JA: 現在は 2.4（保存再利用の仕上げ）と 2.1（管理画面更新機能強化）の優先順位確定フェーズ。
+- EN: Current focus is prioritisation between 2.4 (save/reuse finishing) and 2.1 (admin content-update enhancement).
 
 ## 3. In Progress / 進行中
-- JA: 次フェーズ候補（Store/Shop高リスク改名、2.1/2.3/2.4）の優先順位整理。
-- EN: Prioritisation of next-phase items (high-risk Store/Shop rename, 2.1/2.3/2.4).
+- JA: 次フェーズ候補（2.4 / 2.1 / 2.5 / Store-Shop高リスク改名）の優先順位整理。
+- EN: Prioritisation of next-phase candidates (2.4 / 2.1 / 2.5 / high-risk Store-Shop rename).
 
 ## 4. Next Actions / 次のアクション
-1. JA: Store/Shop 高リスク改名タスクのスコープと影響範囲を確定する。
-   EN: Define scope and impact boundary for high-risk Store/Shop renaming.
-2. JA: 2.1 / 2.3 / 2.4 の着手優先順位を決める。
-   EN: Decide kickoff priority among 2.1 / 2.3 / 2.4.
-3. JA: ドキュメント UTF-8/リンク整合の簡易チェックを継続。
+1. JA: 2.4 の残スコープ（2.4C deferred方針の確定、必要なら最小共有機能）を確定する。
+   EN: Finalise 2.4 remaining scope (confirm 2.4C deferred policy, and decide minimal sharing need if required).
+2. JA: 2.1 の最小実装範囲（下書き/公開、履歴、差分プレビュー）を優先順で確定する。
+   EN: Lock 2.1 MVP scope and order (draft/publish, history, diff preview).
+3. JA: Store/Shop 高リスク改名の影響範囲（URL/identifier/redirect）を棚卸しする。
+   EN: Inventory high-risk Store/Shop rename impact (URL/identifier/redirect).
+4. JA: ドキュメント UTF-8/リンク整合の簡易チェックを継続。
    EN: Continue quick UTF-8 and link-validity checks.
 
 ## 5. On Hold / 保留

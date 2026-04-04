@@ -2110,3 +2110,15 @@
 - 対象ファイル:
   - `css/style.css`
 - EN: Corrected the gap implementation target to `.app` and enforced `row-gap: 20px` so topbar/content spacing works consistently across viewports.
+### ドキュメント更新（2026-04-04 追加123）
+- 2.3（Digital Blend AI Recommendation）をクローズしました。
+- クローズ根拠:
+  - JA: 機能本体（AI提案、適用/取消、候補保存、操作ガイド）に加え、保存先同期（ログイン後自動クラウド切替）とコンソール警告抑制、SP表示調整まで完了。
+  - EN: Core features (AI suggestion, apply/undo, candidate save, operation guide) plus storage-mode sync, console-noise cleanup, and SP layout tuning are completed.
+  - JA: ユーザー確認として機能動作・表示改善・SPギャップ調整の OK を取得済み。
+  - EN: User confirmation received for functional behavior, visual refinements, and SP gap adjustments.
+- 次候補（優先検討）:
+  - JA: `2.4` 残スコープ整理（特に 2.4C の扱い確定）
+  - JA: `2.1` 管理画面更新機能のMVP定義（下書き/公開・履歴・差分）
+  - JA: `2.5` 相互特典ロジックの要件定義（運用/会計連携判断）
+  - EN: Next candidates are 2.4 scope finalisation, 2.1 admin-update MVP definition, and 2.5 reciprocal-discount requirement design.
