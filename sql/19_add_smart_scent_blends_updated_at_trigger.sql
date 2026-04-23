@@ -8,6 +8,7 @@ begin;
 create or replace function public.set_smart_scent_blends_updated_at()
 returns trigger
 language plpgsql
+set search_path = pg_catalog, public
 as $$
 begin
   new.updated_at = now();
